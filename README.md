@@ -1,3 +1,4 @@
 Davide Liuzzo
 ingegneria informatica 2024-...
-tutto i file contenente codice
+tutti i file contenente codice
+
