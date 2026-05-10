@@ -1,5 +1,4 @@
 package Produttore_Consumatore;
-// test git
 
 import java.util.Arrays;
 
