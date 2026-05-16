@@ -2,7 +2,7 @@ package Produttore_Consumatore;
 
 import java.util.concurrent.locks.*;
 
-public class BufferLC extends Buffer{
+public class BufferLC extends Buffer {
     protected int numElementi = 0;
 
     protected Lock l = new ReentrantLock();
@@ -35,25 +35,25 @@ public class BufferLC extends Buffer{
     }
 
     public int get() throws InterruptedException {
-        int item;
+        int i;
         l.lock(); // chiusura del lucchetto
         try {
             while (numElementi == 0) {
                 bufferVuoto.await();
             }
-            item = buffer[out];
+            i = buffer[out];
             out = (out + 1) % buffer.length;
             numElementi--;
             bufferPieno.signal(); // manda un segnale a chi (se presente) è in attesa che il buffer non sia pieno
             // stampa per verifica
-            System.out.println("[C] get: " + item
+            System.out.println("[C] get: " + i
                     + " | elementi=" + numElementi
                     + "/" + buffer.length
                     + " | buffer=" + stampaBuffer());
         } finally {
             l.unlock();
         }
-        return item;
+        return i;
     }
 
 
