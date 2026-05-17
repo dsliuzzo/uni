@@ -927,16 +927,16 @@ Dividiamo quindi le correnti dei generatori (note) dai rami resistivi (la cui co
 >>Chiameremo $-\hat{A} i_g=I$, le correnti note.
 >
 >>[!blank]
->Riscriviamo invece le correnti resistive utilizzando la [[#Relazione costitutiva (resistore)|legge di Ohm]] $i = G \cdot v$$$i_R = \hat{G} \cdot \vec{v}$$
+>Riscriviamo invece le correnti resistive utilizzando la [[#Relazione costitutiva (resistore)|legge di Ohm]] $i = G \cdot v$$$i_R = \hat{G}_O \cdot \vec{v}$$
 
 $$
 \therefore \hat{A} (\hat{G} \cdot \vec{v}) = I
 $$
 Utilizziamo quindi la 2° equazione per riscrivere $\vec{v}$
 $$
-\hat{A} \cdot \hat{G} \cdot \hat{B} \cdot \vec{e} = I
+\hat{A} \cdot \hat{G}_O \cdot \hat{B} \cdot \vec{e} = I
 $$
-Ricordando che $\hat{B}$ è la trasposta di $\hat{A}$ e che una matrice moltiplicata per la sua trasposta dà $1$ otteniamo:
+Chiameremo $\hat{G}$ la matrice composta da $\hat{A} \cdot \hat{G}_O \cdot \hat{B}$
 $$
 \hat{G} \cdot \vec{e} = I
 $$
@@ -1020,16 +1020,16 @@ $$
 >>Chiameremo $-\hat{L} v_g=\hat{V}$, le tensioni note.
 >
 >>[!blank]
->Riscriviamo invece le tensioni resistive utilizzando la [[#Relazione costitutiva (resistore)|legge di Ohm]] $v = R \cdot i$$$v_R = \hat{R} \cdot \vec{i}$$
+>Riscriviamo invece le tensioni resistive utilizzando la [[#Relazione costitutiva (resistore)|legge di Ohm]] $v = R \cdot i$$$v_R = \hat{R}_O \cdot \vec{i}$$
 
 $$
-\therefore \hat{L}(\hat{R}\cdot \vec{i}) =\hat{V}
+\therefore \hat{L}(\hat{R}_O\cdot \vec{i}) =\hat{V}
 $$
 utilizziamo quindi la 2° equazione per riscrivere $\vec{i}$
 $$
-\hat{L} \cdot \hat{R} \cdot \hat{M} \cdot \vec{I}_a = \hat{V}
+\hat{L} \cdot \hat{R}_O \cdot \hat{M} \cdot \vec{I}_a = \hat{V}
 $$
-Ricordando che $\hat{M}$ è la trasposta di $\hat{L}$ e che una matrice moltiplicata per la sua trasposta dà $1$ otteniamo:
+Chiameremo $\hat{R}$ la matrice composta da $\hat{L} \cdot \hat{R}_O \cdot \hat{M}$
 $$
 \hat{R} \cdot \vec{I}_a = \hat{V}
 $$
