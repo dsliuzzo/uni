@@ -1043,6 +1043,67 @@ Il generatore di corrente $I_g$ vincola la corrente
 Riduce il numero di KVL da scrivere a $R-N+1-N_{I_g}$
 
 >[!quote] Se è presente un solo generatore di corrente, scelgo come nodo di riferimento quello del generatore o, se ce ne sono di più, scelgo quello con più generatori
+
+## Applicazione del PSE
+I metodi di analisi per circuiti resistivi scritti in forma matriciale sono:
+
+1. **metodo dei nodi**
+$$
+\left[G_{jk}\right] \left[\begin{array}{c}e_{1} \\ e_{2} \\ \vdots \\ e_k\end{array}\right] = \underbrace{\left[\begin{array}{c}\sum_e \gamma_e V_{ge} + \sum_m \delta_m I_{gm} \\ \vdots \\ \vdots
+\end{array}\right]}_{\begin{array}{c}
+\text{vettore dei termini noti} \\ \text{contributo dei generatori}
+\end{array}}
+$$
+2. **metodo degli anelli**
+$$
+\left[R_{jk}\right] \left[\begin{array}{c}i_{1} \\ i_{2} \\ \vdots \\ i_k\end{array}\right] = \underbrace{\left[\begin{array}{c}\sum_e \alpha_e V_{ge} + \sum_m \beta_m I_{gm} \\ \vdots \\ \vdots
+\end{array}\right]}_{\begin{array}{c}
+\text{vettore dei termini noti} \\ \text{contributo dei generatori}
+\end{array}}
+$$
+
+$\therefore$ le grandezze incognite (corrente nodale / potenziale nodale) sono combinazione lineare del contributo dei generatori.
+$\implies$ accendendo un generatore $e$ o $m$, sommando i risultati parziali otteniamo i valori.
+## Teorema di Tellegen
+In qualsiasi istante di tempo $t$ il **bilancio energetico** può essere espresso come
+$$
+\sum_{k=1}^R p_k(t) = \sum_{k=1}^R v_k(t) \cdot i_k(t) = 0
+$$
+dove $R$ numero di rami, $v_k$ tensione nel ramo $k$ e $i_k$ corrente nel ramo $k$.
+In forma vettoriale otteniamo
+$$
+\sum_{k=1}^R v_k(t) \cdot i_k(t) = \underbrace{\vec{V} \cdot \vec{I}}_{\begin{array}{c}\text{prodotto} \\ \text{vettoriale}\end{array}} = \vec{V}^T \vec{I}
+$$
+con
+$$
+\vec{V} = \left[\begin{array}{c}v_{1}(t) \\ v_{2}(t) \\ \vdots \\ v_k(t)\end{array}\right] \hspace{8ex} \vec{I} = \left[\begin{array}{c}i_{1}(t) \\ i_{2}(t) \\ \vdots \\ i_k(t)\end{array}\right] 
+$$
+
+>[!important] Nella teoria dei circuiti ci permette di:
+>- dimostrare la conservazione della potenza istantanea a partire da considerazioni topologiche
+>- permette di effettuare analisi di sensibilità degli elementi circuitali tramite potenze virtuali
+
+#dimostrazione 1
+Scriviamo in forma matriciale le leggi di [[#Leggi di Kirchoff|Kirchoff]]
+- **KCL**: $\hat{A} \vec{I} = \vec{0}$   dove $\hat{A}$ matrice di incidenza e $\vec{0}$, $\vec{I}$ vettori $[N\times1]$
+- **KVL**: $\vec{V} = \hat{B} \vec{e} = \hat{A}^T \vec{e}$
+Sostituendo questi elementi nella formula del bilancio energetico otteniamo
+$$
+\sum_{k=1}^R v_k(t) \cdot i_k(t) = \vec{V}^T \vec{I} = (\hat{A}^T \vec{e})^T \vec{I} = \vec{e}^T(\hat{A}\vec{I}) = \vec{e} \vec{0} = \vec{0}
+$$
+>[!question] Osservazione
+>La conservazione delle potenze è assicurata dalla **matrice di incidenza** che rappresenta la topologia del circuito: **non** esiste ipotesi su tipi di componenti o eccitazioni del sistema
+
+$\therefore$ circuito con diversi componenti ma con uguale topologia hanno uguale matrice di incidenza $\hat{A}$ 
+
+#dimostrazione 2
+considerando due circuiti $a$ e $b$
+![[Elettrotecnica-1779038951934.webp|center|500]]
+1. calcolando la potenza e scambiando i componenti dei circuiti si ha:
+- **potenza virtuale**: $p_v = <\vec{v}_a^T(t),\vec{i}_b(t)> = <\vec{v}_b^T(t), \vec{i}_a(t)>$
+2. possiamo verificare che le potenze per il principio di conservazione:
+   $$\begin{array}{c}\vec{V}_a^T \vec{I}_b = \vec{0} = \vec{e}_a^T \hat{A} \vec{I}_b \\ \vec{V}_b^T \vec{I}_a = \vec{0} = \vec{e}_b^T \hat{A} \vec{I}_a\end{array}$$
+   si basano entrambi sulla stessa matrice di incidenza $\hat{A} \implies$ anche la potenza virtuale si conserva
 # Regime sinusoidale
 >[!important] Una sinusoide è un segnale periodico elementare: $\sin(\cdot)$ o $\cos(\cdot)$
 >$\therefore$ una corrente sinusoidale o alternata è una corrente descritta da un segnale periodico elementare
