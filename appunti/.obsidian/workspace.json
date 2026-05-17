@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "38ee46d0586c6051",
+        "id": "c01f4a151599813c",
         "type": "tabs",
         "children": [
           {
-            "id": "077dd9362b61e89e",
+            "id": "82c946823ebf4d5f",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -170,10 +170,12 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "077dd9362b61e89e",
+  "active": "82c946823ebf4d5f",
   "lastOpenFiles": [
-    "elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md",
+    "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
     "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
+    "_Allegati/Elettrotecnica-1779038951934.webp",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md",
     "elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md",
     "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "_Allegati/Programmazione concorrente-1778940725450.webp",
@@ -194,12 +196,10 @@
     "_Allegati/Algoritmi-1778758992681.webp",
     "_Allegati/Algoritmi-1778758976581.webp",
     "_Allegati/Algoritmi-1778758960878.webp",
-    "_Allegati/Algoritmi-1778758949698.webp",
     "fondamenti_di_automatica/Appunti/numeri complessi (automatica).md",
     "sistemi_operativi/Appunti/0. Intro sistemi operativi.md",
     "sistemi_operativi/Sistemi operativi.canvas",
     "sistemi_operativi/Appunti/7. Interprete dei comandi.md",
-    "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
     "fondamenti_di_automatica/Appunti/Trasformate.md",
     "tldraw/Tldraw 11-05-2026 6.18PM.md",
     "sistemi_operativi/Appunti/2. Gestione della memoria centrale.md",
@@ -210,7 +210,6 @@
     "reti_logiche_e_calcolatori/Appunti/1. Reti logiche.md",
     "algebra_lineare/appunti/2. I vettori (algebra).md",
     "algebra_lineare/algebra lineare.md",
-    "Home.md",
     "LaTeX-Math-Symbols.pdf"
   ]
 }
