@@ -1,0 +1,38 @@
+/* --- FIX OBSIDIAN EXPORT DARK MODE --- */
+
+/* 1. Forza lo sfondo scuro e il testo chiaro sul contenitore principale */
+.print .markdown-preview-view pre,
+.markdown-rendered pre {
+    background-color: #1e1e1e !important;
+    border: 1px solid #444 !important;
+}
+
+/* 2. IL PUNTO CRITICO: Resetta il tag 'code' interno */
+/* Questo rimuove quell'effetto "evidenziatore" grigio su ogni riga */
+.print .markdown-preview-view pre code,
+.markdown-rendered pre code {
+    background-color: transparent !important; /* Fondamentale: rende trasparente lo sfondo del testo */
+    color: #e0e0e0 !important;                /* Forza il testo a essere quasi bianco */
+    border: none !important;                  /* Via i bordi interni */
+    display: block !important;                /* Assicura l'allineamento corretto */
+}
+
+/* 3. Gestisce la colorazione della sintassi (se presente) */
+/* Assicura che i colori della sintassi (blu, viola, ecc) siano leggibili o li resetta al bianco se danno problemi */
+.print .markdown-preview-view pre code span,
+.markdown-rendered pre code span {
+    background-color: transparent !important; /* Nessuno sfondo sui singoli pezzi di codice */
+}
+
+/* --- FIX INLINE CODE (Codice dentro al testo) --- */
+
+/* Seleziona tutti i tag 'code' che NON sono dentro un blocco 'pre' */
+.markdown-rendered code:not(pre code) {
+    background-color: #363636 !important; /* Un grigio più chiaro dello sfondo pagina */
+    color: #e0e0e0 !important;            /* Un colore arancione/chiaro che risalta bene (o metti white) */
+    border: 1px solid #555 !important;    /* Un bordino sottile per definirlo */
+    border-radius: 4px !important;        /* Angoli leggermente arrotondati */
+    padding: 2px 6px !important;          /* Un po' di spazio intorno alla lettera */
+    font-family: monospace !important;    /* Assicura che usi il font da codice */
+}
+

@@ -1,0 +1,15 @@
+{
+  "focusNewTab": false,
+  "attachmentFolderPath": "_Allegati",
+  "pdfExportSettings": {
+    "includeName": true,
+    "pageSize": "Tabloid",
+    "landscape": false,
+    "margin": "1",
+    "downscalePercent": 100
+  },
+  "alwaysUpdateLinks": true,
+  "promptDelete": false,
+  "showLineNumber": false,
+  "readableLineLength": true
+}

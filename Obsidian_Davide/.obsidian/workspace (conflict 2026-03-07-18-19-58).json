@@ -1,0 +1,239 @@
+{
+  "main": {
+    "id": "89fb42fb882cebf9",
+    "type": "split",
+    "children": [
+      {
+        "id": "e9f6155a806421a9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "95ee03b9451522e4",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "metodi_probabilistici_della_ricerca_operativa/appunti/Modelli matematici.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Modelli matematici"
+            }
+          },
+          {
+            "id": "74d66ac76f8329cc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "metodi_probabilistici_della_ricerca_operativa/appunti/2. Variabili aleatorie.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2. Variabili aleatorie"
+            }
+          },
+          {
+            "id": "b3170180319e0862",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "latex symbols.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "latex symbols"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1a2f133a2df8f9fa",
+    "type": "split",
+    "children": [
+      {
+        "id": "808d9a10f7f850a0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0332016aca8cfbab",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "5c9d5e1a6fcde14a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "b2642edaad529f9a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 317.5024719238281
+  },
+  "right": {
+    "id": "a29c90137693134c",
+    "type": "split",
+    "children": [
+      {
+        "id": "54bcb603b2c01b34",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "76f21b9aa8549c82",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "programmazione_orientata_agli_oggetti/appunti/Java.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Java"
+            }
+          },
+          {
+            "id": "b89633f0d46f6088",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "programmazione_orientata_agli_oggetti/appunti/Java.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Java"
+            }
+          },
+          {
+            "id": "7da6df0cbec05aff",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "87f27c8d832bf0b6",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "latex symbols.pdf",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of latex symbols"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "tldraw:Create new tldrawing": false
+    }
+  },
+  "active": "b3170180319e0862",
+  "lastOpenFiles": [
+    "metodi_probabilistici_della_ricerca_operativa/appunti/2. Variabili aleatorie.md",
+    "metodi_probabilistici_della_ricerca_operativa/appunti/4. Variabili aleatorie congiunte, regressione e test d'ipotesi.md",
+    "metodi_probabilistici_della_ricerca_operativa/appunti/Modelli matematici.md",
+    "latex symbols.pdf",
+    "metodi_probabilistici_della_ricerca_operativa/appunti/3. Statistica.md",
+    "_Allegati/Pasted image 20260214104928.png",
+    "metodi_probabilistici_della_ricerca_operativa/appunti/1. Fondamenti di probabilità.md",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md",
+    "_Allegati/Pasted image 20260214101229.png",
+    "fisica/appunti/3. Dinamica.md",
+    "_Allegati/Pasted image 20251002171058.png",
+    "fisica/appunti/2. Cinematica.md",
+    "fisica/appunti/5. Quantità di moto e centro di massa.md",
+    "fisica/appunti/6. Termodinamica.md",
+    "elettromagnetismo_ed_elettrotecnica/Elettromagnetismo ed elettrotecnica.md",
+    "fisica/appunti/4. Lavoro ed energia.md",
+    "fondamenti_di_informatica_I/Appunti/Algoritmi.md",
+    "fondamenti_di_informatica_I/Appunti/Ricerca.md",
+    "fondamenti_di_informatica_I/Appunti/Ordinamento.md",
+    "fondamenti_di_informatica_I/Appunti/Concetti di base.md",
+    "fondamenti_di_informatica_I/Appunti/C.md",
+    "matematica_II/appunti/1. Equazioni differenziali.md",
+    "matematica_II/appunti/3. Funzioni reali di più variabili.md",
+    "matematica_II/appunti/4. Funzioni vettoriali di più variabili.md",
+    "matematica_II/appunti/5. Integrali multipli.md",
+    "matematica_II/appunti/6. Serie di funzioni.md",
+    "matematica_II/appunti/2. Funzioni vettoriali di variabile reale.md",
+    "matematica_I/appunti/4. Calcolo differenziale.md",
+    "programmazione_orientata_agli_oggetti/appunti/Java.md",
+    "_Allegati/Pasted image 20260119172513.png",
+    "_Allegati/Pasted image 20251220123555.png",
+    "_Allegati/Pasted image 20251219193430.png",
+    "_Allegati/Pasted image 20251219193309.png",
+    "_Allegati/Pasted image 20251219185446.png",
+    "_Allegati/Pasted image 20251219184423.png",
+    "_Allegati/Pasted image 20251219154307.png"
+  ]
+}
