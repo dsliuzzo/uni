@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 262.5044631958008
+    "width": 200
   },
   "right": {
     "id": "7f1ed145b6191c95",
