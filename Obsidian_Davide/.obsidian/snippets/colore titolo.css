@@ -1,0 +1,69 @@
+:root {
+    /* --- COLORI TITOLI (SEMPRE UGUALI) --- */
+    --h1-color: #9d68d3;
+    --h2-color: #d15896;
+    --h3-color: #379ad3;
+    --h4-color: #8df7e7;
+}
+
+body {
+    --h1-size: 1.7em !important;  /* H1 Molto grande */
+    --h2-size: 1.4em !important;  /* H2 Grande */
+    --h3-size: 1.2em !important;  /* H3 Medio */
+    --h4-size: 1.1em !important;  /* H4 Piccolo */
+    --h5-size: 1.1em !important;
+    --h6-size: 1em !important;
+}
+
+/* colore grassetto */
+strong, .cm-strong {
+    color: #9d68d3; /* Un viola medio, scelto per bilanciarsi tra chiaro e scuro */
+}
+
+
+/* ============================================================
+   FORCE IMAGE CENTER per sintassi ![[img|center|300]]
+   ============================================================ */
+
+/* 1. MODALITÀ LETTURA (Reading View) */
+.markdown-preview-view img[alt*="center"] {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important; /* Previene allineamenti laterali indesiderati */
+}
+
+/* 2. MODALITÀ MODIFICA (Live Preview) - Il caso più difficile */
+
+/* Caso A: Il wrapper dell'immagine */
+.markdown-source-view .image-embed[alt*="center"] {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important; /* Centra il contenuto inline */
+}
+
+/* Caso B: L'immagine diretta dentro la Live Preview */
+.markdown-source-view img[alt*="center"] {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Caso C: Correzione per alcuni temi che usano flexbox */
+.image-embed[alt*="center"] .image-embed-internal {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block !important;
+}
+
+
+/* nuovi callout */
+.callout[data-callout="structure"] {
+    --callout-color: 168, 130, 255;
+    --callout-icon: boxes;
+}
+.callout[data-callout="operazioni"] {
+    --callout-color: 233, 151, 63;
+    --callout-icon: wrench;
+}

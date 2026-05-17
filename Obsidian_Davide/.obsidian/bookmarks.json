@@ -1,0 +1,53 @@
+{
+  "items": [
+    {
+      "type": "graph",
+      "ctime": 1740779807862,
+      "title": "graph view",
+      "options": {
+        "collapse-filter": true,
+        "search": "-tag:#tldraw  ",
+        "showTags": false,
+        "showAttachments": false,
+        "hideUnresolved": false,
+        "showOrphans": true,
+        "collapse-color-groups": true,
+        "colorGroups": [
+          {
+            "query": "file:Home",
+            "color": {
+              "a": 1,
+              "rgb": 8672478
+            }
+          },
+          {
+            "query": "tag:#materia",
+            "color": {
+              "a": 1,
+              "rgb": 14701242
+            }
+          },
+          {
+            "query": "tag:#appunti  ",
+            "color": {
+              "a": 1,
+              "rgb": 5431511
+            }
+          }
+        ],
+        "collapse-display": true,
+        "showArrow": false,
+        "textFadeMultiplier": 0,
+        "nodeSizeMultiplier": 1.5546875,
+        "lineSizeMultiplier": 1.91197916666667,
+        "collapse-forces": true,
+        "centerStrength": 0.338541666666667,
+        "repelStrength": 6.71875,
+        "linkStrength": 0.5546875,
+        "linkDistance": 30,
+        "scale": 1.4019828977761044,
+        "close": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "cssTheme": "",
+  "accentColor": "#a120cf",
+  "enabledCssSnippets": [
+    "obsidian_theme"
+  ],
+  "theme": "obsidian",
+  "baseFontSizeAction": false,
+  "textFontFamily": "Baloo 2,Dongle,Nunito",
+  "baseFontSize": 18,
+  "interfaceFontFamily": "Baloo 2,Dongle,Nunito"
+}

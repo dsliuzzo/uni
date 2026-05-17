@@ -1,0 +1,207 @@
+{
+  "main": {
+    "id": "bf46f0e04cfaf689",
+    "type": "split",
+    "children": [
+      {
+        "id": "8b89479b909bc4a4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1be6ba16e8e65f87",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Algoritmi"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "a02bc05b67ebf999",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "23efe92639b3c432",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {
+            "sortOrder": "alphabetical",
+            "autoReveal": false
+          },
+          "icon": "lucide-folder-closed",
+          "title": "Esplora risorse"
+        }
+      },
+      {
+        "id": "c0c32bf624d235bd",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "dini",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          },
+          "icon": "lucide-search",
+          "title": "Search"
+        }
+      },
+      {
+        "id": "9380765020119bc2",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-tags",
+          "title": "Tags"
+        }
+      },
+      {
+        "id": "11e99a28b5b7bf9b",
+        "type": "leaf",
+        "state": {
+          "type": "bookmarks",
+          "state": {},
+          "icon": "lucide-bookmark",
+          "title": "Bookmarks"
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "40736b4fa7b7ceac",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "a596ccc58d9fbf86",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "file": "metodi_probabilistici_della_ricerca_operativa/appunti/1. Fondamenti di probabilità.md",
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-coming-in",
+          "title": "Backlinks"
+        }
+      },
+      {
+        "id": "b6716ff89b8cbc9c",
+        "type": "leaf",
+        "state": {
+          "type": "outgoing-link",
+          "state": {
+            "file": "metodi_della_ricerca_operativa/appunti/3. Studio di variabili aleatorie.md",
+            "linksCollapsed": false,
+            "unlinkedCollapsed": true
+          },
+          "icon": "links-going-out",
+          "title": "Outgoing links"
+        }
+      },
+      {
+        "id": "fe85851ba0a34f15",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+            "followCursor": false,
+            "showSearch": false,
+            "searchQuery": ""
+          },
+          "icon": "lucide-list",
+          "title": "Struttura"
+        }
+      }
+    ],
+    "currentTab": 2
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Apri selezione rapida": false,
+      "graph:Apri vista grafo": false,
+      "canvas:Crea nuova lavagna": false,
+      "daily-notes:Apri nota del giorno": false,
+      "templates:Inserisci modello": false,
+      "command-palette:Apri riquadro comandi": false,
+      "bases:Crea nuova Base": false,
+      "obsidian-file-cleaner:Clean files": false
+    }
+  },
+  "active": "fe85851ba0a34f15",
+  "lastOpenFiles": [
+    "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
+    "_Allegati/Bode_to_Nyquist.gif",
+    "_Allegati/Pasted image 20260513182209.png",
+    "_Allegati/Elettrotecnica-1778747212101.webp",
+    "_Allegati/Elettrotecnica-1778735631403.webp",
+    "_Allegati/2. Sistemi interconnessi-1778746537232.webp",
+    "_Allegati/2. Sistemi interconnessi-1778746518930.webp",
+    "_Allegati/2. Sistemi interconnessi-1778746506890.webp",
+    "_Allegati/2. Sistemi interconnessi-1778746493968.webp",
+    "_Allegati/2. Sistemi interconnessi-1778746442268.webp",
+    "_Allegati/2. Sistemi interconnessi-1778687779034.webp",
+    "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
+    "tldraw/Tldraw 29-04-2026 9.23PM.md",
+    "tmp/Untitled.md",
+    "tldraw/Tldraw 29-04-2026 9.09PM.md",
+    "tldraw/Tldraw 29-04-2026 8.45PM.md",
+    "tldraw/Tldraw 29-04-2026 8.09PM.md",
+    "tldraw/Tldraw 29-04-2026 6.21PM.md",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica (conflict 2026-04-30-10-44-57).md",
+    "fondamenti_di_automatica/Appunti/Esempi sistemi automatica.md",
+    "fondamenti_di_automatica/Appunti/Trasformate.md",
+    "fondamenti_di_automatica/Fondamenti di automatica.md",
+    "algoritmi_e_strutture_dati/Strutture dati.md",
+    "tldraw/Tldraw 14-04-2026 8.58PM.md",
+    "matematica_I/appunti/4. Calcolo differenziale.md",
+    "algoritmi_e_strutture_dati/Complessità algoritmi.md",
+    "algoritmi_e_strutture_dati/Algoritmi.md",
+    "sistemi_operativi/Appunti/1. Gestione dei processi.md",
+    "sistemi_operativi/Appunti/2. Gestione della memoria principale.md",
+    "sistemi_operativi/Appunti/3. Gestione dei file.md",
+    "programmazione_orientata_agli_oggetti/appunti/Java.md",
+    "fondamenti_di_informatica_II/appunti/Python.md",
+    "fondamenti_di_informatica_II/appunti/Linked lists.md",
+    "tmp/esercitazione so.md",
+    "metodi_probabilistici_della_ricerca_operativa/appunti/1. Fondamenti di probabilità.md",
+    "elettromagnetismo_ed_elettrotecnica/Gaia Bertolino - appunti elettromagnetismo/Elettromagnetismo_Parte2.pdf",
+    "programmazione_orientata_agli_oggetti/es/src",
+    "matematica_I/analisi 1.pdf",
+    "fisica/Fondamenti di fisica - David Halliday, Robert Resnick, Jearl Walker - Settima edizione (2015).pdf",
+    "fondamenti_di_informatica_II/code/algoritmi di ordinamento/albero.py",
+    "fondamenti_di_informatica_II/code/algoritmi di ordinamento/__pycache__/albero.cpython-313.pyc",
+    "fondamenti_di_informatica_II/code/albero binario di ricerca/main.py",
+    "fondamenti_di_informatica_II/code/albero binario di ricerca/listaconcatenata.py",
+    "fondamenti_di_informatica_II/code/algoritmi di ordinamento/__pycache__",
+    "fondamenti_di_informatica_II/code/algoritmi di ordinamento"
+  ]
+}

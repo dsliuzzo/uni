@@ -1,0 +1,15 @@
+{
+  "cssTheme": "Minimal",
+  "accentColor": "#62dbf3",
+  "enabledCssSnippets": [
+    "colore titolo",
+    "MCL Multi Column"
+  ],
+  "theme": "obsidian",
+  "baseFontSizeAction": false,
+  "textFontFamily": "Baloo 2,Dongle,Nunito,Minecraft",
+  "baseFontSize": 18,
+  "interfaceFontFamily": "Baloo 2,Dongle,Nunito,Minecraft",
+  "nativeMenus": false,
+  "showViewHeader": true
+}

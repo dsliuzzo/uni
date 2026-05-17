@@ -1,0 +1,16 @@
+{
+  "focusNewTab": false,
+  "attachmentFolderPath": "_Allegati",
+  "pdfExportSettings": {
+    "includeName": true,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "1",
+    "downscalePercent": 51
+  },
+  "alwaysUpdateLinks": true,
+  "promptDelete": false,
+  "showLineNumber": false,
+  "readableLineLength": true,
+  "showInlineTitle": true
+}

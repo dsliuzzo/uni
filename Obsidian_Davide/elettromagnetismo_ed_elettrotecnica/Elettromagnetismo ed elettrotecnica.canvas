@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"00c1405e0cca2e85","type":"file","file":"elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md","x":-156,"y":61,"width":400,"height":400},
+		{"id":"09cf40ba22850af2","type":"file","file":"elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md","x":-700,"y":61,"width":400,"height":400},
+		{"id":"5102434ea86e5a1c","type":"text","text":"#materia \n#elettromagnetismo_ed_elettrotecnica ","x":-340,"y":-100,"width":340,"height":60},
+		{"id":"2515665975c0ec4a","x":-156,"y":520,"width":400,"height":400,"type":"file","file":"elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md"}
+	],
+	"edges":[
+		{"id":"616f91f4ca4e4873","fromNode":"09cf40ba22850af2","fromSide":"right","toNode":"00c1405e0cca2e85","toSide":"left","color":"6"}
+	]
+}

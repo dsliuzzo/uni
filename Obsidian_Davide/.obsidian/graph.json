@@ -1,0 +1,121 @@
+{
+  "collapse-filter": false,
+  "search": "-tag:#tldraw  ",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": true,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "tag:#fisica",
+      "color": {
+        "a": 1,
+        "rgb": 16774912
+      }
+    },
+    {
+      "query": "tag:#fondamenti2",
+      "color": {
+        "a": 1,
+        "rgb": 7935
+      }
+    },
+    {
+      "query": "tag:#reti_logiche_e_calcolatori  ",
+      "color": {
+        "a": 1,
+        "rgb": 16711816
+      }
+    },
+    {
+      "query": "tag:#matematica1  ",
+      "color": {
+        "a": 1,
+        "rgb": 1179392
+      }
+    },
+    {
+      "query": "tag:#algebra_lineare  ",
+      "color": {
+        "a": 1,
+        "rgb": 5419488
+      }
+    },
+    {
+      "query": "tag:#fondamenti1  ",
+      "color": {
+        "a": 1,
+        "rgb": 10027263
+      }
+    },
+    {
+      "query": "tag:#computazionale  ",
+      "color": {
+        "a": 1,
+        "rgb": 16711731
+      }
+    },
+    {
+      "query": "tag:#programmazione_orientata_agli_oggetti  ",
+      "color": {
+        "a": 1,
+        "rgb": 12623615
+      }
+    },
+    {
+      "query": "tag:#matematica2  ",
+      "color": {
+        "a": 1,
+        "rgb": 13827968
+      }
+    },
+    {
+      "query": "tag:#elettromagnetismo_ed_elettrotecnica  ",
+      "color": {
+        "a": 1,
+        "rgb": 12755456
+      }
+    },
+    {
+      "query": "tag:#metodi_della_ricerca_operativa  ",
+      "color": {
+        "a": 1,
+        "rgb": 64511
+      }
+    },
+    {
+      "query": "tag:#so  ",
+      "color": {
+        "a": 1,
+        "rgb": 7437054
+      }
+    },
+    {
+      "query": "tag:#automatica  ",
+      "color": {
+        "a": 1,
+        "rgb": 1735194
+      }
+    },
+    {
+      "query": "tag:#asd  ",
+      "color": {
+        "a": 1,
+        "rgb": 5431473
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": false,
+  "textFadeMultiplier": -0.3,
+  "nodeSizeMultiplier": 2.14251559251559,
+  "lineSizeMultiplier": 1.95026041666667,
+  "collapse-forces": false,
+  "centerStrength": 0.408523908523909,
+  "repelStrength": 11.6632016632017,
+  "linkStrength": 1,
+  "linkDistance": 30,
+  "scale": 0.45199365479010667,
+  "close": true
+}
