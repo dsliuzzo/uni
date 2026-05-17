@@ -1424,4 +1424,4 @@ abbiamo quindi solo potenza attiva.
 
 
 
-[...] potenza efficacie
+[...] potenza efficace
