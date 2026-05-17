@@ -1138,7 +1138,7 @@ $$
 - $\omega$ **pulsazione**
 - $\varphi$ **sfasamento**
 
-[...] <-- disegno
+[...] <-- disegno - uomo pigro
 
 >[!quote] In elettrotecnica tendiamo a mantenere i segnali sottoforma di $\cos()$
 >nei complessi il coseno è associato alla parte reale del segnale ondoso (usiamo segnali reali nella vita reale)
