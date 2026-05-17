@@ -160,20 +160,21 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "obsidian-file-cleaner:Clean files": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "661345bbdb7d779b",
+  "active": "077dd9362b61e89e",
   "lastOpenFiles": [
-    "elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md",
     "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md",
     "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "_Allegati/Programmazione concorrente-1778940725450.webp",
     "sistemi_operativi/Appunti/1. Gestione dei processi.md",
@@ -210,7 +211,6 @@
     "algebra_lineare/appunti/2. I vettori (algebra).md",
     "algebra_lineare/algebra lineare.md",
     "Home.md",
-    "reti_logiche_e_calcolatori/Appunti/3. Linguaggio assembly.md",
     "LaTeX-Math-Symbols.pdf"
   ]
 }
