@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "38ee46d0586c6051",
+        "id": "786fb2d9af4f9e6c",
         "type": "tabs",
         "children": [
           {
-            "id": "077dd9362b61e89e",
+            "id": "efbb9370d956dafb",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
-                "mode": "preview",
+                "file": "sistemi_operativi/Appunti/6. Sistema di protezione e sicurezza.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Elettrotecnica"
+              "title": "6. Sistema di protezione e sicurezza"
             }
           }
         ]
@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 248.50446319580078
   },
   "right": {
     "id": "7f1ed145b6191c95",
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
+                "file": "sistemi_operativi/Appunti/6. Sistema di protezione e sicurezza.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Elettrotecnica"
+              "title": "Outline of 6. Sistema di protezione e sicurezza"
             }
           }
         ],
@@ -170,11 +170,17 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "077dd9362b61e89e",
+  "active": "efbb9370d956dafb",
   "lastOpenFiles": [
+    "_Allegati/6. Sistema di protezione e sicurezza-1779101764466.webp",
+    "_Allegati/6. Sistema di protezione e sicurezza-1779101548366.webp",
+    "_Allegati/6. Sistema di protezione e sicurezza-1779099590359.webp",
+    "_Allegati/6. Sistema di protezione e sicurezza-1779099513307.webp",
+    "_Allegati/6. Sistema di protezione e sicurezza-1779099362345.webp",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
+    "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
     "_Allegati/Elettrotecnica-1779038951934.webp",
     "elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md",
-    "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
     "elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md",
     "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "_Allegati/Programmazione concorrente-1778940725450.webp",
@@ -191,16 +197,10 @@
     "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
     "algebra_lineare/appunti/4. Numeri complessi (algebra).md",
     "_Allegati/Algoritmi-1778759011548.webp",
-    "_Allegati/Algoritmi-1778759001703.webp",
-    "_Allegati/Algoritmi-1778758992681.webp",
-    "_Allegati/Algoritmi-1778758976581.webp",
-    "_Allegati/Algoritmi-1778758960878.webp",
-    "_Allegati/Algoritmi-1778758949698.webp",
     "fondamenti_di_automatica/Appunti/numeri complessi (automatica).md",
     "sistemi_operativi/Appunti/0. Intro sistemi operativi.md",
     "sistemi_operativi/Sistemi operativi.canvas",
     "sistemi_operativi/Appunti/7. Interprete dei comandi.md",
-    "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
     "fondamenti_di_automatica/Appunti/Trasformate.md",
     "tldraw/Tldraw 11-05-2026 6.18PM.md",
     "sistemi_operativi/Appunti/2. Gestione della memoria centrale.md",
