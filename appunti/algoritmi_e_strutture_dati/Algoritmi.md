@@ -1296,57 +1296,52 @@ Definiamo quindi:
 >[!important] edit distance
 >numero minimo di modifiche elementari per trasformare una stringa in un altra
 
-formalmente non consideriamo solo il numero minimo di operazioni, ma una vera e propria sequenza di operazioni, ma considerando questo insieme di tre operazioni possibile.
+formalmente non consideriamo solo il numero minimo di operazioni, ma una vera e propria sequenza di operazioni, in quanto l'ordine di esecuzione delle operazioni potrebbe variare il risultato.
+In questo caso però, considerando solo queste 3 operazioni non importa l'ordine in cui le effettuiamo.
+Possiamo quindi riscrivere qualsiasi sequenza in modo tale che le operazioni siano applicate dalla prima all'ultima lettera.
 
-non consideriamo proprio il numero, ma in realtà una sequenza
-l'effetto di applicarle con un determinato ordine potrebbe essere diverso
+Una volta che abbiamo identificato le operazioni da eseguire per passare dalla prima riga alla seconda sommiamo i loro costi e troviamo la sequenza che ha il costo minore, che prenderà il nome di **edit distance**.
+Sotto l'ipotesi di costo unitario l'edit distance viene chiamata **distanza di Levinstein**.
 
-sequenze di operazioni elementari che ci permettono di trasformare la prima parola nella seconda
-ogni sequenza ha la sua sequenza inversa, che applicarla alla seconda parola ci sostituisce la prima
+>[!important] Formale
+>Siano $X$ e $Y$ due stringhe di lunghezza $m$ ed $n$:
+>$$X = x_{1},x_{2},\dots,x_m \hspace{8ex} Y = y_{1},y_{2},\dots,y_n$$
+>Vogliamo calcolare la "distanza" tra $X$ e $Y$, ovvero il minimo numero delle seguenti operazioni elementari che permetta di trasformare $X$ in $Y$
+>- `inserisci(a)`
+>  Inserisci il carattere $a$ nella posizione corrente della stringa
+>- `cancella(a)`
+>  Cancella il carattere $a$ dalla posizione corrente della stringa
+>- `sostituisci(a,b)`
+>  Sostituisci il carattere $a$ con il carattere $b$ nella posizione corrente della stringa
 
-vediamo quindi quali operazioni sono state effettuare, faccio la somma dei costi
+>[!question] Osservazione
+>Date due stringhe possiamo definire un bound **massimo** per il valore sulla distanza.
+>Cancellando completamente i caratteri della prima parola e inserendo tutti i caratteri della seconda abbiamo un costo di $m+n$.
+>Se invece considerassimo anche la sostituzione, considerando come $m>n$, dobbiamo effettuare almeno $n$ sostituzioni e il restante rimozioni per un costo di $n+(m-n) =m$
 
-l'edit distance tra le sequenze di operazioni è quella che ha il costo minimo
+cerchiamo un algoritmo che sia in grado di fare questo usando la [[#programmazione dinamica]].
 
-nel caso elementare possiamo considerare semplicemente il numero di elementi della sequenza
-questa distanza di edit si chiama distanza di Levinstein
+Definiamo con $\delta(X,Y)$ la distanza tra due parole $X$, $Y$ e $X_i$, $Y_i$ prefissi delle parole.
+I sottoproblemi per applicare la programmazione dinamica diventano: calcolare $\delta(X_i,Y_j)$ tale per cui $\delta(X,Y) = \delta(X_m,Y_n)$.
 
-![[Algoritmi-1779184490236.webp|center|300]]
-ci andrebbero in tutte anche la posizione
+Manterremo quindi le informazioni in una tabella $(m+1)\times (n+1)$ e la cella `D[i,j]` conterrà il valore $\delta(X_i,Y_j)$.
 
-date le due parole possiamo calcolare un boud, minimo e massimo valore sulla distanza
-vediamo il max
-se cancello la prima e aggiungo la seconda ha costo $m+n$
-se avessimo la sostituzione facciamo la cancellazione dei caratteri per avere la stessa lunghezza e poi sostituisco le lettere rimanenti con un costo di $(m-n)+n$ con $m$ la maggiore, abbiamo quindi un costo di $m$
-questo potrebbe essere utile per non considerare trasformazioni più lunghe di questo bound max nella ricerca del minimo
-
+**caso base**
 >[!multi-column]
 >
 >>[!blank]
->>distanza 4 tra due parole
+>>Il caso base è rappresentato da una delle due stringhe vuote: in questi casi il numero di operazioni elementari è rappresentato dal costo di aggiunta degli elementi fino all'indice $i$ della parola opposta.
+>>Possiamo quindi riempire in questo modo la prima riga e la prima colonna.
 >
 >>[!blank]
->>![[Algoritmi-1779184714999.webp|center|300]]
+>>![[Algoritmi-1779185373031.webp|center|300]]
 
-cerchiamo un algoritmo che sia in grado di fare questo usando la programmazione dinamica
+**caso induttivo**
+La seguente proprietà è applicabile solo nel caso di costi unitari.
 
-considerando esclusivamente inserimento, cancellazione e modifica qualunque trasformazione la posso riscrivere in un modo tale che le operazioni siano applicate in ordine dal primo all'ultimo carattere della stringa.
-se abbiamo solo queste tre operazioni non importa l'ordine dell'esecuzione.
-quindi se ho una sequenza che lavora in disordine la posso riformulare attraverso scambi e trasformarla in una sequenza che procede dall'inizio verso la fine.
-quindi se io sono arrivato ad un elemento $k$, il $k$esimo prefisso è già parte del risultato
-questa osservazione ci permette di definire i sottoproblemi:
-rendere uguali due prefissi
-con $\delta(X,Y)$ distanza tra $X$ e $Y$ (guarda definizione formale pptx)
-diventa sottoproblema calcolare $\delta(X_i,Y_i)$ prefissi $i$esimi
-usiamo la matrice dei sottoproblemi
-dobbiamo calcolare $\delta(X_i,Y_i)$ a partire dalla distanza dei prefissi con almeno uno più piccolo di 1
-`D[m,n]` conterrà la distanza tra $X$ e $Y$
+Distinguiamo due casi
+- $x_i = y_j$
 
-casi base
-se ho la prima stringa vuota e devo costruirmi la seconda stringa non ho altro modo se non aggiungere tutti i caratteri della seconda stringa: faccio tanti inserimenti quanto è il numero di caratteri della seconda stringa
-otteniamo una scala per la prima riga e la prima colonna
-abbiamo riempito prima riga e prima colonna
-![[Algoritmi-1779185373031.webp|center|300]]
 
 caso induttivo
 solo nel caso in cui abbiamo costi unitari (guarda good notes per esempio)

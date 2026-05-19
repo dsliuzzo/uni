@@ -337,3 +337,20 @@ Ogni cliente quando arriva controlla cosa sta facendo il barbiere:
 c'è differenza tra output deterministico ed esecuzione deterministica
 fairness = FIFO rispetto all'ordine di acquisizione dei thread
 per eseguire i thread in ordine possiamo usare un array di semafori
+
+
+---
+
+# Prova di esame
+1. problema di teoria (4pt)
+2. domanda di teoria argomentativo (4pt)
+3. domanda o problema sui thread (4pt)
+4. problema con semafori e monitori (18pt)
+
+durata 2 ore
+## Prova 1
+### Scheduling della CPU
+### Sostituzione delle pagine
+### Scheduling del disco
+### Deadlock
+### Allocazione dinamica della memoria

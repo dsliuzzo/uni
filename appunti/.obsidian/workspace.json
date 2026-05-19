@@ -13,15 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Algoritmi"
+              "title": "Programmazione concorrente"
+            }
+          },
+          {
+            "id": "bbb49b0e7d8cbc29",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -142,13 +153,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Algoritmi"
+              "title": "Outline"
             }
           }
         ],
@@ -170,8 +180,10 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "001cc3b184d47ef3",
+  "active": "bbb49b0e7d8cbc29",
   "lastOpenFiles": [
+    "sistemi_operativi/Appunti/Programmazione concorrente.md",
+    "algoritmi_e_strutture_dati/Algoritmi.md",
     "_Allegati/Algoritmi-1779186010000.webp",
     "_Allegati/Algoritmi-1779185957375.webp",
     "_Allegati/Algoritmi-1779185373031.webp",
