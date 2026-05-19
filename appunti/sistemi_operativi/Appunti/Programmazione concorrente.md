@@ -374,21 +374,52 @@ Una priorità (numero intero) è assegnata ad ogni processo. La CPU è assegnata
 #### Round-Robin
 Richiede come parametro il *quanto di tempo* Q: l'inserimento nella coda segue un ordine FIFO. Si tiene conto del quanto di tempo rimanente quando avviene il cut-off
 ### Sostituzione delle pagine
-• **Algoritmi**: FIFO, LRU, Ottimale 
+• **Algoritmi**: 
+- FIFO: sostituisco la pagina presente da più tempo in memoria
+- LRU: sostituisco la pagina che non è stata usata per il periodo di tempo più lungo
+- Ottimale: assumendo di conoscere tutta la successione di riferimenti in anticipo, sostituisco la pagina che non verrà usata per il periodo più lungo
+>[!question]  Osservazioni:
+> 1. Ottimale: al termine dalla sequenza nota riprende FIFO
+> 2. per FIFO e LRU notiamo che il numero di page fault è **uguale**
+
 • **Parametri**: Blocchi di memoria
-• **Output**: Page fault
+• **Output**: Page fault: si verifica quando si tenta di accedere a file non contenuto in memoria
 ### Scheduling del disco
-• **Algoritmi**: FCFS, SSTF, SCAN, LOOK, C-SCAN, C-LOOK
+• **Algoritmi**: 
+- FCFS
+- SSTF: Seleziona la richiesta che comporta il minimo tempo di seek dalla posizione corrente della testina.
+- SCAN: La testina parte da un estremo del disco e muovendosi fino all’altro estremo serve tutte le richieste di blocchi che si trovano lungo il percorso, quindi inverte la marcia e fa lo stesso nell’altra direzione
+	*NB: nell'esempio si vede che la direzione era dettata dal verso di percorrenza precedente alle nuove richieste* <- fai callout
+- LOOK: variante di SCAN -> testina viene spostata non fino alla fine del disco ma solo fino a che ci sono richieste in quella direzione.
+- C-SCAN: La testina parte da un estremo del disco e muovendosi fino all’altro estremo serve tutte le richieste di blocchi che si trovano lungo il percorso, quindi ritorna all’altro estremo del disco (senza servire le richieste nello spostamento) per ripartire da lì.
+	*Escluso il movimento per riportare la testina dall'inizio che ha un tempo di percorrenza ma lo trascuriamo*
+- C-LOOK: Variante di C-SCAN. La testina viene spostata non fino alla fine del disco ma solo fino a che ci sono richieste in quella direzione.
 • **Parametri**: posizione attuale (e/o precedente) della testina
 • **Output**: Movimento totale della testina
 ### Deadlock
-• **Algoritmi**: Grafo di assegnazione delle risorse
+• **Algoritmi**: Grafo di assegnazione delle risorse -> ci permette di capire se si verifica o no deadlock
 • **Parametri**: thread e risorse
-• **Output**: Deadlock si/no
+• **Output**: Deadlock si/no -> può verificarsi solo se valgono le seguenti condizioni simultaneamente: mutua esclusione, possesso ed attesa, impossibilità di prelazione, attesa circolare.
 ### Allocazione dinamica della memoria
-• **Algoritmi**: First-fit, best-fit, worst-fit
+In ogni momento è presente un insieme di buchi di diverse dimensioni sparsi per la memoria: a partire da una richiesta di allocazione di dimensione $n$ all'interno di un insieme di buchi utilizziamo
+• **Algoritmi**: 
+- First-fit: viene allocato il primo buco grande abbastanza
+- Best-fit: viene allocato il buco più piccolo in grado di contenere il processo; è necessario scandire tutta la lista dei buchi (se non è ordinata) --> si produce il più piccolo buco residuo
+- Worst-fit: viene allocato il buco più grande; è ancora necessario ricercare in tutta la lista --> si produce il più grande buco residuo
 • **Parametri**: Processi e partizioni libere di memoria
-• **Output**: Frammentazione
+• **Output**: 
+	Frammentazione:
+	- Esterna: spazio totale disponibile per soddisfare richieste non contiguo
+	- Interna: spazio interno a partizione non utilizzata
+Esempio: Si continua dalla partizione in cui ci si trova all'inizio
 ### Fork dei processi
-• **Parametri**: Codice con `fork` dei processi
+• **Parametri**: Codice con `fork` dei processi -> dopo l’esecuzione della `fork()` vi sono due processi diversi che eseguono copie dello stesso programma. Il valore di pid per il processo figlio è 0, mentre per il genitore è un intero maggiore di 0
 • **Output**: Albero dei processi
+(esempio): 
+1. chi tra padre e figlio esegue istruzione 1 nel codice: a meno di un errore entrambi nel proprio contesto di esecuzione eseguono x++;
+2. se scheduler fa eseguire prima figlio e poi padre output: figlio -> 10  padre -> 1
+## Prova 2
+Si descriva brevemente:
+- il funzionamento della seguente applicazione Java (non traduzione ma interpretazione)
+- l’output (ciò che è stampato a schermo) che può produrre (indicare se l’output è deterministico o meno) -> potrebbe anche non produrre
+- se l’applicazione termina
