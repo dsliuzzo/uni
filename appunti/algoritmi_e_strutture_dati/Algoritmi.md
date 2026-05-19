@@ -1296,7 +1296,7 @@ Definiamo quindi:
 >[!important] edit distance
 >numero minimo di modifiche elementari per trasformare una stringa in un altra
 
-formalmente non consideriamo solo il numero minimo di operazioni, ma una vera e propria sequenza di operazioni, ma considerando questo insieme di tre operazioni possibile
+formalmente non consideriamo solo il numero minimo di operazioni, ma una vera e propria sequenza di operazioni, ma considerando questo insieme di tre operazioni possibile.
 
 non consideriamo proprio il numero, ma in realtà una sequenza
 l'effetto di applicarle con un determinato ordine potrebbe essere diverso
