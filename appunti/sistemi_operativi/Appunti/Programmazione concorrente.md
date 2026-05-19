@@ -348,9 +348,47 @@ per eseguire i thread in ordine possiamo usare un array di semafori
 4. problema con semafori e monitori (18pt)
 
 durata 2 ore
+si può portare calcolatrice -> x fare calcoli dello scheduling
 ## Prova 1
 ### Scheduling della CPU
+• **Algoritmi**: FCFS, SJF (Pre., Non Pre.), Priorità (Pre., Non Pre.), RR
+• **Output**: si chiede di calcolare
+- tempo di attesa: tempo che processo passa in ready queue
+- tempo di completamento: differenza tra terminazione processo e tempo di entrata in ready queue
+- tempo di risposta: tempo da quando processo creato a quando gli è stata assegnata per I volta CPU
+#### FCFS
+Il primo arrivato è il primo servito (gestito con coda FIFO)
+#### SJF (Non-preemptive)
+Associa ad ogni processo la lunghezza del prossimo CPU burst. Usa questi tempi per schedulare il processo con la lunghezza minima. I processi sono ordinati nella ready queue in base al loro prossimo CPU burst in ordine crescente.
+**Non-preemptive** – il processo assegnato alla CPU (cioè in running) non può essere sospeso prima di completare il suo CPU burst.
+Ordino i processi e scelgo quello col CPU burst più breve.
+Ricordiamo che a livello di waiting time è ottimale
+#### SJF (Preemptive)
+preemptive – se arriva un nuovo processo nella ready queue con un CPUburst più breve del tempo rimanente per il processo corrente (cioè in running), viene servito. Questo schema è conosciuto come **Shortest-Remaining-Time-First** (SRTF).
+Oltre a ordinarli, all'arrivo di ogni processo confrontiamo il remaining time del processo in corso con quello del processo arrivato.
+*Problema*: penalizza processi di durata maggiore (starvation)
+#### Priorità (Non-preemptive)
+Una priorità (numero intero) è assegnata ad ogni processo. La CPU è assegnata al processo con più alta priorità.
+#### Priorità (Preemptive)
+>[!attention] se c'è ambiguità si va in ordine FIFO
+#### Round-Robin
+Richiede come parametro il *quanto di tempo* Q: l'inserimento nella coda segue un ordine FIFO. Si tiene conto del quanto di tempo rimanente quando avviene il cut-off
 ### Sostituzione delle pagine
+• **Algoritmi**: FIFO, LRU, Ottimale 
+• **Parametri**: Blocchi di memoria
+• **Output**: Page fault
 ### Scheduling del disco
+• **Algoritmi**: FCFS, SSTF, SCAN, LOOK, C-SCAN, C-LOOK
+• **Parametri**: posizione attuale (e/o precedente) della testina
+• **Output**: Movimento totale della testina
 ### Deadlock
+• **Algoritmi**: Grafo di assegnazione delle risorse
+• **Parametri**: thread e risorse
+• **Output**: Deadlock si/no
 ### Allocazione dinamica della memoria
+• **Algoritmi**: First-fit, best-fit, worst-fit
+• **Parametri**: Processi e partizioni libere di memoria
+• **Output**: Frammentazione
+### Fork dei processi
+• **Parametri**: Codice con `fork` dei processi
+• **Output**: Albero dei processi

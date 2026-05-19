@@ -45,10 +45,10 @@ public class SalaLC extends Sala{
             clienti.removeFirst();
             poltronaLibera = false;
             sedieLibere++;
-            return true;
         } finally {
             lock.unlock();
         }
+        return true;
     }
 
 
