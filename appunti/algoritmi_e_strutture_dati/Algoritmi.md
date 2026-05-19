@@ -1386,3 +1386,53 @@ dipende dall'operazione fatta
 posso calcolare il valore di una cella da tre direzioni diverse
 scelgo il minimo
 mantieni e sostituisci si calcolano entrambi in base alla cella in diagonale
+
+nota sulla complessità $m \times n$
+sia temporale che spaziale
+
+se il mio obbiettivo è solo calcolare il costo mi basta mantenere riga corrente e riga precedente, abbasseremmo la complessità spaziale a lineare
+a questo punto ci converrebbe mantenere come riga la parola più corta
+la temporale è per forza quello.
+
+come per LCS procedendo a retroso possiamo ricostruire la prima parola a partire dalla seconda
+
+---
+
+se mettiamo l'operazione di swap generale la cosa non funziona
+
+>[!quote] Esercizio
+>non permettiamo che dopo uno swap possa considerare delle sequenze che vengono prima dell'ultimo carattere che ha toccato lo swap
+>definiamo un altra distanza di edit, in cui le sequenze ammissibili non hanno una swap e un qualsiasi operazione subito dopo
+>inserire l'operazione di swap all'interno del codice di git
+
+## Problema di Knapsack
+problema di ottimizzazione
+io ho uno zaino devo andare a mettere all'interno dello zaino dei beni
+questi beni sono caratterizzati da un valore di utilità e da un peso che mi dice quanto mi costo portarmeli dietro
+uno zaino ha una capacità massima
+voglio trovare l'insieme di beni che massimizza il valore del mio trasporto
+
+knapsack frazionario è la versione più semplice
+questo si risolve con una tecnica greedy che utilizza valore del prodotto per unità di peso, si ordinano i prodotto e si vanno a mettere prima con i prodotti che hanno questo valore più grande, mettendoli tutti finché possiamo e poi mettiamo una frazione del prodotto fino a riempire lo zaino.
+
+knapsack 0-1 non posso dividere gli oggetti -> computazionalmente più complesso
+una possibile soluzione utilizza un algoritmo di programmazione dinamica
+
+la soluzione di ordine $k$ deve essere costruibile dalla soluzione $k-1$
+
+non posso considerarli "sbloccando" l'elemento di indice successivo
+guarda slide
+la soluzione non dipende da quella dei sottoproblemi
+definiamo quindi i sottoproblemi a partire da due dimensioni diverse:
+- ordine dei prodotti
+- calcolo del beneficio die prodotti fino all'indice $k$ avendo uno zaino di capacità $w$
+utilizzo lo zaino come capacità variabile
+mi serve quindi una matrice che ha da un lato tutti i prefissi e sulle righe tutte le capacità che vanno dalla capacità 0 alla capacità massima dello zaino
+aumento progressivamente la grandezza dello zaino fino alla massima e verifico cosa posso inserire
+
+nota sul costo
+nel secondo for facciamo un numero di iterazioni proporzionale al logaritmo in base 2 della grandezza dello zaino
+pseudo polinomiale
+
+domani backtracking
+codifica entropica dell'informazione o di haffman compressione dati senza perdita
