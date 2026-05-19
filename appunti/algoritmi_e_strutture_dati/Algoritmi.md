@@ -1279,20 +1279,7 @@ def lcs(X, Y):
     return L[m][n], "".join(lcs_str)
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
----
-
+>[!attention] Lavori in corso
 
 
 >[!quote] Esercizio
@@ -1303,3 +1290,99 @@ def lcs(X, Y):
 >applicazione militare: devo decidere cosa bombardare
 >applicazione civile: per le epidemie chiudo gli snodi di spostamento rallentando il propagarsi
 >modificando Floyd, mantenendo la cazzo della matrice✨ `D[i,j,k]` anche tutti i cammini minimi (sono un numero esponenziale), la complessità farà schifo comunque.
+
+## Calcolare la distanza tra due parole
+possibilità di misurare quanto sono diverse due parole dal punto di vista non semantico ma errori di digitazione
+*es.* correzione nella scrittura
+*es.* riconoscimento dei caratteri da testi stampati (ocr)
+definiamo la distanza
+dipende dal contesto in cui ci serve
+per esempio possiamo usare la distanza tra due lettere nella tastiera (errori derivati da scrittura su tastiera)
+non centra nulla invece per l'ocr, in cui potremmo considerare la forma dei caratteri
+quindi non è detto che la stessa operazione di scambiare una lettera con un altra non ha lo stesso costo
+invece per assenza di un carattere o aggiunta di un carattere in più anche qui potrebbe dipendere dalla posizione del tasto
+in generale abbiamo delle operazioni che potrebbero avere un costo variabile
+partiamo da una semplificazioni: tutte le operazioni di modifica hanno costo unitario
+i caratteri delle tastiere sono in questo ordine perché per le macchine da scrivere si rompevano i meccanismi perché erano troppo veloci a scrivere, quindi hanno cambiato l'ordine per far scrivere più lentamente
+
+fissiamo un insieme di possibile modifiche
+- inserimenti di caratteri
+- cancellazione di un carattere
+- sostituzione di un carattere con un altro
+si potrebbero considerare altre operazioni come lo swap
+
+>[!important] edit distance
+>numero minimo di modifiche elementari per trasformare una stringa in un altra
+
+non consideriamo proprio il numero, ma in realtà una sequenza
+l'effetto di applicarle con un determinato ordine potrebbe essere diverso
+
+sequenze di operazioni elementari che ci permettono di trasformare la prima parola nella seconda
+ogni sequenza ha la sua sequenza inversa, che applicarla alla seconda parola ci sostituisce la prima
+
+vediamo quindi quali operazioni sono state effettuare, faccio la somma dei costi
+
+l'edit distance tra le sequenze di operazioni è quella che ha il costo minimo
+
+nel caso elementare possiamo considerare semplicemente il numero di elementi della sequenza
+questa distanza di edit si chiama distanza di Levinstein
+
+![[Algoritmi-1779184490236.webp|center|300]]
+ci andrebbero in tutte anche la posizione
+
+date le due parole possiamo calcolare un boud, minimo e massimo valore sulla distanza
+vediamo il max
+se cancello la prima e aggiungo la seconda ha costo $m+n$
+se avessimo la sostituzione facciamo la cancellazione dei caratteri per avere la stessa lunghezza e poi sostituisco le lettere rimanenti con un costo di $(m-n)+n$ con $m$ la maggiore, abbiamo quindi un costo di $m$
+questo potrebbe essere utile per non considerare trasformazioni più lunghe di questo bound max nella ricerca del minimo
+
+>[!multi-column]
+>
+>>[!blank]
+>>distanza 4 tra due parole
+>
+>>[!blank]
+>>![[Algoritmi-1779184714999.webp|center|300]]
+
+cerchiamo un algoritmo che sia in grado di fare questo usando la programmazione dinamica
+
+considerando esclusivamente inserimento, cancellazione e modifica qualunque trasformazione la posso riscrivere in un modo tale che le operazioni siano applicate in ordine dal primo all'ultimo carattere della stringa.
+se abbiamo solo queste tre operazioni non importa l'ordine dell'esecuzione.
+quindi se ho una sequenza che lavora in disordine la posso riformulare attraverso scambi e trasformarla in una sequenza che procede dall'inizio verso la fine.
+quindi se io sono arrivato ad un elemento $k$, il $k$esimo prefisso è già parte del risultato
+questa osservazione ci permette di definire i sottoproblemi:
+rendere uguali due prefissi
+con $\delta(X,Y)$ distanza tra $X$ e $Y$ (guarda definizione formale pptx)
+diventa sottoproblema calcolare $\delta(X_i,Y_i)$ prefissi $i$esimi
+usiamo la matrice dei sottoproblemi
+dobbiamo calcolare $\delta(X_i,Y_i)$ a partire dalla distanza dei prefissi con almeno uno più piccolo di 1
+`D[m,n]` conterrà la distanza tra $X$ e $Y$
+
+casi base
+se ho la prima stringa vuota e devo costruirmi la seconda stringa non ho altro modo se non aggiungere tutti i caratteri della seconda stringa: faccio tanti inserimenti quanto è il numero di caratteri della seconda stringa
+otteniamo una scala per la prima riga e la prima colonna
+abbiamo riempito prima riga e prima colonna
+![[Algoritmi-1779185373031.webp|center|300]]
+
+caso induttivo
+solo nel caso in cui abbiamo costi unitari (guarda good notes per esempio)
+Calcolare `D[i,j]`
+se i due caratteri terminali sono uguali il modo migliore è rendere uguali i due prefissi e non fare nulla
+- $x_i = y_i$
+  `D[i,j] = D[i-1,j-1]`
+- $x_i \neq y_i$
+  rendo uguali i due prefissi xiesimo e yj-1esimo e poi inserisco l'ultimo carattere che è presente in yj
+dipende dall'operazione fatta
+>[!multi-column]
+>
+>>[!blank]
+>>![[Algoritmi-1779186010000.webp|center|300]]
+>
+>>[!blank]
+>>![[Algoritmi-1779185957375.webp|center|300]]
+
+%% mi sono un po' perso %%
+
+posso calcolare il valore di una cella da tre direzioni diverse
+scelgo il minimo
+mantieni e sostituisci si calcolano entrambi in base alla cella in diagonale

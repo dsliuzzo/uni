@@ -1,24 +1,24 @@
 {
   "main": {
-    "id": "39248079dc7e11b4",
+    "id": "814f4457b36a7d31",
     "type": "split",
     "children": [
       {
-        "id": "713e5f9bfa3d5e4e",
+        "id": "4ef99c39200901bd",
         "type": "tabs",
         "children": [
           {
-            "id": "5d14064ccb1cfed3",
+            "id": "001cc3b184d47ef3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Programmazione concorrente"
+              "title": "Algoritmi"
             }
           }
         ]
@@ -27,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "77acabb7987034e7",
+    "id": "fc693c9522109ce4",
     "type": "split",
     "children": [
       {
-        "id": "eec89b90befd78f7",
+        "id": "288a0fe78fa40224",
         "type": "tabs",
         "children": [
           {
-            "id": "661345bbdb7d779b",
+            "id": "5ea9e15ed7dc986d",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +48,7 @@
             }
           },
           {
-            "id": "cf1b9c017a5744de",
+            "id": "857858f170af20bd",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,37 +65,37 @@
             }
           },
           {
-            "id": "8e2ba46296ede669",
+            "id": "23bab2645dbf12e6",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
               "state": {},
               "icon": "lucide-bookmark",
-              "title": "Segnalibri"
+              "title": "Bookmarks"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 248.50446319580078
+    "width": 300
   },
   "right": {
-    "id": "7f1ed145b6191c95",
+    "id": "96676231cd7128e2",
     "type": "split",
     "children": [
       {
-        "id": "888e0ee2f9f5f075",
+        "id": "ab9b38d0fab433be",
         "type": "tabs",
         "children": [
           {
-            "id": "69a4fbc4e7761e34",
+            "id": "fa50124193f5312a",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
-                "collapseAll": true,
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
                 "showSearch": false,
@@ -104,25 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Elettrotecnica"
+              "title": "Backlinks for Algoritmi"
             }
           },
           {
-            "id": "a7ae4a8908f28f3c",
+            "id": "7e0ce9b2c6d2cfc1",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Collegamenti in uscita da 1. Sistemi dinamici"
+              "title": "Outgoing links from Algoritmi"
             }
           },
           {
-            "id": "5af95a37b9706ff0",
+            "id": "7a6f81b695e0e727",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -133,22 +133,22 @@
                 "searchQuery": ""
               },
               "icon": "lucide-tags",
-              "title": "Etichette"
+              "title": "Tags"
             }
           },
           {
-            "id": "48662ba89caee836",
+            "id": "31c95c65a6c879b8",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Programmazione concorrente"
+              "title": "Outline of Algoritmi"
             }
           }
         ],
@@ -156,7 +156,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 275.5
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -170,46 +170,12 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "5d14064ccb1cfed3",
+  "active": "001cc3b184d47ef3",
   "lastOpenFiles": [
-    "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
-    "_Allegati/2. Sistemi interconnessi-1779113807500.webp",
-    "_Allegati/2. Sistemi interconnessi-1779113721321.webp",
-    "_Allegati/2. Sistemi interconnessi-1779113350029.webp",
-    "_Allegati/2. Sistemi interconnessi-1779112984465.webp",
-    "_Allegati/2. Sistemi interconnessi-1779112653393.webp",
-    "_Allegati/2. Sistemi interconnessi-1779112083289.webp",
-    "_Allegati/2. Sistemi interconnessi-1779111709719.webp",
-    "_Allegati/2. Sistemi interconnessi-1779111410448.webp",
-    "_Allegati/2. Sistemi interconnessi-1779111208114.webp",
-    "_Allegati/2. Sistemi interconnessi-1779110627084.webp",
-    "sistemi_operativi/Appunti/6. Sistema di protezione e sicurezza.md",
-    "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
-    "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
-    "elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md",
-    "elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md",
-    "sistemi_operativi/Appunti/Programmazione concorrente.md",
-    "sistemi_operativi/Appunti/1. Gestione dei processi.md",
-    "algoritmi_e_strutture_dati/Algoritmi.md",
-    "algoritmi_e_strutture_dati/Strutture dati.md",
-    "sistemi_operativi/Appunti/5. Gestione dell'I-O.md",
-    "sistemi_operativi/Appunti/4. Gestione della memoria secondaria.md",
-    "sistemi_operativi/Appunti/3. Gestione dei file.md",
-    "algebra_lineare/appunti/4. Numeri complessi (algebra).md",
-    "fondamenti_di_automatica/Appunti/numeri complessi (automatica).md",
-    "sistemi_operativi/Appunti/0. Intro sistemi operativi.md",
-    "sistemi_operativi/Sistemi operativi.canvas",
-    "sistemi_operativi/Appunti/7. Interprete dei comandi.md",
-    "fondamenti_di_automatica/Appunti/Trasformate.md",
-    "tldraw/Tldraw 11-05-2026 6.18PM.md",
-    "sistemi_operativi/Appunti/2. Gestione della memoria centrale.md",
-    "algoritmi_e_strutture_dati/Complessità algoritmi.md",
-    "sistemi_operativi/Appunti/trees.html",
-    "sistemi_operativi/Appunti/1. Gestione dei processi.tree.html",
-    "tldraw/Tldraw 08-05-2026 3.47PM.md",
-    "reti_logiche_e_calcolatori/Appunti/1. Reti logiche.md",
-    "algebra_lineare/appunti/2. I vettori (algebra).md",
-    "algebra_lineare/algebra lineare.md",
-    "LaTeX-Math-Symbols.pdf"
+    "_Allegati/Algoritmi-1779186010000.webp",
+    "_Allegati/Algoritmi-1779185957375.webp",
+    "_Allegati/Algoritmi-1779185373031.webp",
+    "_Allegati/Algoritmi-1779184714999.webp",
+    "_Allegati/Algoritmi-1779184490236.webp"
   ]
 }
