@@ -35,7 +35,8 @@
               "title": "Algoritmi"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -186,11 +187,11 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "001cc3b184d47ef3",
+  "active": "5b6085fa9fb4e173",
   "lastOpenFiles": [
+    "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "_Allegati/Algoritmi-1779204812634.webp",
     "algoritmi_e_strutture_dati/Algoritmi.md",
-    "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "_Allegati/Algoritmi-1779186010000.webp",
     "_Allegati/Algoritmi-1779185957375.webp",
     "_Allegati/Algoritmi-1779185373031.webp",
