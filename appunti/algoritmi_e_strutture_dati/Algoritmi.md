@@ -1377,6 +1377,8 @@ $$
 \left\{\begin{array}{l}D[i,j] = D[i-1,j-1] & x_i = y_j \\ D[i,j] = 1+ \min (D[i,j-1],D[i-1,j],D[i-1,j-1]) \hspace{4ex} & x_i \neq y_j\end{array}\right.
 $$
 
+![[Algoritmi-1779205951193.webp|center|400]]
+
 ```
 def editdistance(str1, str2, m, n):
     # Create a table to store results of subproblems
@@ -1411,44 +1413,78 @@ def editdistance(str1, str2, m, n):
     return dp[m][n]
 ```
 
+**complessità**
 La complessità sarà data da  $m \times n$ sia temporale che spaziale, anche se potrebbe essere ottimizzato:
 se il mio obbiettivo è solo calcolare il costo mi basta mantenere riga corrente e riga precedente, abbassando la complessità spaziale a lineare. La temporale rimarrebbe comunque quella.
 
 >[!question] Come per LCS procedendo a retroso possiamo ricostruire la prima parola a partire dalla seconda.
 
-## Problema di Knapsack
-problema di ottimizzazione
-io ho uno zaino devo andare a mettere all'interno dello zaino dei beni
-questi beni sono caratterizzati da un valore di utilità e da un peso che mi dice quanto mi costo portarmeli dietro
-uno zaino ha una capacità massima
-voglio trovare l'insieme di beni che massimizza il valore del mio trasporto
+## Knapsack 0-1
+È un problema di ottimizzazione:
+L'obbiettivo è quello di massimizzare il valore di uno zaino che può contenere $W$ chili di peso di elementi scelti da una lista data $I_0,I_{1},\dots,I_{n-1}$
+Ogni elemento ha due attributi:
+- $v_i$ - valore (beneficio) che abbiamo nel portare l'oggetto $i$
+- $w_i$ - peso del singolo oggetto $i$
 
-knapsack frazionario è la versione più semplice
-questo si risolve con una tecnica greedy che utilizza valore del prodotto per unità di peso, si ordinano i prodotto e si vanno a mettere prima con i prodotti che hanno questo valore più grande, mettendoli tutti finché possiamo e poi mettiamo una frazione del prodotto fino a riempire lo zaino.
+Il problema di Knapsack esiste in varie versioni: noi analizzeremo **Knapsack 0-1** in cui gli oggetti non possono essere divisi e lo risolveremo con la [[#programmazione dinamica]], quindi la soluzione di ordine $k$ deve essere costruibile a partire dalla soluzione $k-1$.
 
-knapsack 0-1 non posso dividere gli oggetti -> computazionalmente più complesso
-una possibile soluzione utilizza un algoritmo di programmazione dinamica
+In questo caso non ha senso calcolare la soluzione al $k$esimo problema limitando gli item "visibili" a quello di indice $k$ come abbiamo fatto fino ad ora nell'applicazione della programmazione dinamica.
 
-la soluzione di ordine $k$ deve essere costruibile dalla soluzione $k-1$
-
-non posso considerarli "sbloccando" l'elemento di indice successivo
-guarda slide
-la soluzione non dipende da quella dei sottoproblemi
-definiamo quindi i sottoproblemi a partire da due dimensioni diverse:
+Definiamo i sottoproblemi quindi a partire da due dimensioni diverse:
 - ordine dei prodotti
-- calcolo del beneficio die prodotti fino all'indice $k$ avendo uno zaino di capacità $w$
-utilizzo lo zaino come capacità variabile
-mi serve quindi una matrice che ha da un lato tutti i prefissi e sulle righe tutte le capacità che vanno dalla capacità 0 alla capacità massima dello zaino
-aumento progressivamente la grandezza dello zaino fino alla massima e verifico cosa posso inserire
+- calcolo del beneficio dei prodotti fino all'indice $k$ avendo uno zaino di capacità $W$
 
-nota sul costo
-nel secondo for facciamo un numero di iterazioni proporzionale al logaritmo in base 2 della grandezza dello zaino
-pseudo polinomiale
+Definiamo quindi i sottoproblemi supponendo di avere uno zaino con grandezza variabile, tramite una matrice $n \times W$ in cui scorriamo le colonne aumentando progressivamente il volume dello zaino e scorrendo le righe abbiamo accesso a più item.
+Ogni singola cella `B[k,w]` rappresenta il massimo beneficio ottenibile con gli item fino all'indice $k$ ed uno zaino che può contenere $w$ chili.
+Ovviamente la soluzione si troverà nella cella `B[n,W]`.
 
-domani backtracking
-codifica entropica dell'informazione o di haffman compressione dati senza perdita
+**caso base**
+La prima riga (nessun item) e la prima colonna (0 chili di zaino) contengono solo 0.
+![[Algoritmi-1779207994741.webp|center|500]]
+
+**caso induttivo**
+Seguiremo la proprietà
+$$
+\left\{\begin{array}{l}B[k,w] = B[k-1,w] & w_k > w \\ B[k,w] = \max(B[k-1,w], B[k-1,w-w_k] + v_k) \hspace{4ex} & \text{altrimenti}\end{array}\right.
+$$
+Se il peso dell'item $k$ è maggiore dello spazio disponibile il miglior beneficio sarà uguale all'elemento precedente, in quanto semplicemente non possiamo aggiungerlo.
+Altrimenti dobbiamo verificare cosa conferisce il migliore beneficio:
+- non aggiungere l'elemento $B[k-1,w]$ lasciando quindi il miglior beneficio pari al precedente
+- aggiungere l'elemento $B[k-1,w-w_k] + v_k$ aggiungendo il beneficio corrente al miglior beneficio eliminando lo spazio occupato allo spazio corrente con un item in meno
+
+![[Algoritmi-1779208668641.webp|center|500]]
+
+```
+def knapsack(W, wt, val, n):
+	K = [[0 for x in range(W + 1)] for x in range(n + 1)]
+
+	# Build table K[][] in bottom up manner
+	for i in range(n + 1):
+		for w in range(W + 1):
+			if i == 0 or w == 0:
+				K[i][w] = 0
+			elif wt[i-1] <= w:
+				K[i][w] = max(val[i-1] + K[i-1][w-wt[i-1]], K[i-1][w])
+			else:
+				K[i][w] = K[i-1][w]
+	return K[n][W]
 
 
+# Driver code
+val = [60, 100, 120]
+wt = [10, 20, 30]
+W = 50
+n = len(val)
+print(knapsack(W, wt, val, n))
+```
+
+**complessità**
+L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot 2^{\log_2(W)})$.
+
+
+
+
+---
 
 
 >[!quote] Esercizio
