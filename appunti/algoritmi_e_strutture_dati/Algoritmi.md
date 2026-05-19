@@ -1278,41 +1278,25 @@ def lcs(X, Y):
 
     return L[m][n], "".join(lcs_str)
 ```
-
->[!attention] Lavori in corso
-
-
->[!quote] Esercizio
->Questo algoritmo non calcola i cammini
->Sui grafi tipicamente non orientati con costi di percorrenza un problema è l'analisi del grafo in particolare uno degli obbiettivi è quello di identificare nodi cruciali (nel mantenere la connettività del grafo)
->una di queste misure è la **centralità** del nodo (numero di cammini minimi tra coppie di valori del grafo che lo ha come nodo intermedio)
->se killo un nodo molto centrale rendo più difficile attraversare il grafo
->applicazione militare: devo decidere cosa bombardare
->applicazione civile: per le epidemie chiudo gli snodi di spostamento rallentando il propagarsi
->modificando Floyd, mantenendo la cazzo della matrice✨ `D[i,j,k]` anche tutti i cammini minimi (sono un numero esponenziale), la complessità farà schifo comunque.
-
 ## Calcolare la distanza tra due parole
-possibilità di misurare quanto sono diverse due parole dal punto di vista non semantico ma errori di digitazione
-*es.* correzione nella scrittura
-*es.* riconoscimento dei caratteri da testi stampati (ocr)
-definiamo la distanza
-dipende dal contesto in cui ci serve
-per esempio possiamo usare la distanza tra due lettere nella tastiera (errori derivati da scrittura su tastiera)
-non centra nulla invece per l'ocr, in cui potremmo considerare la forma dei caratteri
-quindi non è detto che la stessa operazione di scambiare una lettera con un altra non ha lo stesso costo
-invece per assenza di un carattere o aggiunta di un carattere in più anche qui potrebbe dipendere dalla posizione del tasto
-in generale abbiamo delle operazioni che potrebbero avere un costo variabile
-partiamo da una semplificazioni: tutte le operazioni di modifica hanno costo unitario
-i caratteri delle tastiere sono in questo ordine perché per le macchine da scrivere si rompevano i meccanismi perché erano troppo veloci a scrivere, quindi hanno cambiato l'ordine per far scrivere più lentamente
+Con questo algoritmo abbiamo l'obbiettivo di misurare quanto sono diverse due parole (ovviamente non semantico).
+Può essere utilizzato per:
+- *es.* correzione nella scrittura
+- *es.* riconoscimento dei caratteri da testi stampati (ocr)
 
-fissiamo un insieme di possibile modifiche
-- inserimenti di caratteri
-- cancellazione di un carattere
-- sostituzione di un carattere con un altro
-si potrebbero considerare altre operazioni come lo swap
+La definizione di distanza potrebbe dipendere dal contesto in cui viene applicata, per esempio per la correzione della scrittura potrebbe essere più rilevante un errore derivato dalla vicinanza
+definiamo la distanza fisica tra due tasti della tastiera oppure nel caso dell'ocr potrebbe essere più rilevante la forma del carattere.
 
+In generale abbiamo delle operazioni che potrebbero avere un costo variabile, ma per il momento manteniamo per ipotesi un costo unitario per ogni operazione effettuata per passare dalla prima parola alla seconda:
+- **inserimento**
+- **cancellazione**
+- **sostituzione**
+
+Definiamo quindi:
 >[!important] edit distance
 >numero minimo di modifiche elementari per trasformare una stringa in un altra
+
+formalmente non consideriamo solo il numero minimo di operazioni, ma una vera e propria sequenza di operazioni, ma considerando questo insieme di tre operazioni possibile
 
 non consideriamo proprio il numero, ma in realtà una sequenza
 l'effetto di applicarle con un determinato ordine potrebbe essere diverso
@@ -1436,3 +1420,14 @@ pseudo polinomiale
 
 domani backtracking
 codifica entropica dell'informazione o di haffman compressione dati senza perdita
+
+
+
+>[!quote] Esercizio
+>Questo algoritmo non calcola i cammini
+>Sui grafi tipicamente non orientati con costi di percorrenza un problema è l'analisi del grafo in particolare uno degli obbiettivi è quello di identificare nodi cruciali (nel mantenere la connettività del grafo)
+>una di queste misure è la **centralità** del nodo (numero di cammini minimi tra coppie di valori del grafo che lo ha come nodo intermedio)
+>se killo un nodo molto centrale rendo più difficile attraversare il grafo
+>applicazione militare: devo decidere cosa bombardare
+>applicazione civile: per le epidemie chiudo gli snodi di spostamento rallentando il propagarsi
+>modificando Floyd, mantenendo la cazzo della matrice✨ `D[i,j,k]` anche tutti i cammini minimi (sono un numero esponenziale), la complessità farà schifo comunque.
