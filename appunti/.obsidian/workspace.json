@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
+                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2. Sistemi interconnessi"
+              "title": "Programmazione concorrente"
             }
           }
         ]
@@ -142,13 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
+                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2. Sistemi interconnessi"
+              "title": "Outline of Programmazione concorrente"
             }
           }
         ],
@@ -172,6 +172,7 @@
   },
   "active": "5d14064ccb1cfed3",
   "lastOpenFiles": [
+    "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
     "_Allegati/2. Sistemi interconnessi-1779113807500.webp",
     "_Allegati/2. Sistemi interconnessi-1779113721321.webp",
     "_Allegati/2. Sistemi interconnessi-1779113350029.webp",
@@ -182,7 +183,6 @@
     "_Allegati/2. Sistemi interconnessi-1779111410448.webp",
     "_Allegati/2. Sistemi interconnessi-1779111208114.webp",
     "_Allegati/2. Sistemi interconnessi-1779110627084.webp",
-    "_Allegati/2. Sistemi interconnessi-1779110616050.webp",
     "sistemi_operativi/Appunti/6. Sistema di protezione e sicurezza.md",
     "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
     "fondamenti_di_automatica/Appunti/1. Sistemi dinamici.md",
@@ -195,7 +195,6 @@
     "sistemi_operativi/Appunti/5. Gestione dell'I-O.md",
     "sistemi_operativi/Appunti/4. Gestione della memoria secondaria.md",
     "sistemi_operativi/Appunti/3. Gestione dei file.md",
-    "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
     "algebra_lineare/appunti/4. Numeri complessi (algebra).md",
     "fondamenti_di_automatica/Appunti/numeri complessi (automatica).md",
     "sistemi_operativi/Appunti/0. Intro sistemi operativi.md",
