@@ -22,17 +22,20 @@
             }
           },
           {
-            "id": "bbb49b0e7d8cbc29",
+            "id": "5b6085fa9fb4e173",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Algoritmi"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -89,7 +92,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "96676231cd7128e2",
@@ -153,12 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Programmazione concorrente"
             }
           }
         ],
@@ -166,7 +171,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -180,10 +186,10 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "bbb49b0e7d8cbc29",
+  "active": "001cc3b184d47ef3",
   "lastOpenFiles": [
-    "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "algoritmi_e_strutture_dati/Algoritmi.md",
+    "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "_Allegati/Algoritmi-1779186010000.webp",
     "_Allegati/Algoritmi-1779185957375.webp",
     "_Allegati/Algoritmi-1779185373031.webp",
