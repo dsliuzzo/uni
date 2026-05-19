@@ -25,10 +25,14 @@
             "id": "bbb49b0e7d8cbc29",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Algoritmi"
             }
           }
         ],
@@ -89,7 +93,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "96676231cd7128e2",
@@ -153,12 +158,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of Algoritmi"
             }
           }
         ],
@@ -166,7 +172,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -182,6 +189,7 @@
   },
   "active": "bbb49b0e7d8cbc29",
   "lastOpenFiles": [
+    "_Allegati/Algoritmi-1779204812634.webp",
     "sistemi_operativi/Appunti/Programmazione concorrente.md",
     "algoritmi_e_strutture_dati/Algoritmi.md",
     "_Allegati/Algoritmi-1779186010000.webp",

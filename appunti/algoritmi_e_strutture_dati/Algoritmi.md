@@ -1341,48 +1341,80 @@ La seguente proprietà è applicabile solo nel caso di costi unitari.
 
 Distinguiamo due casi
 - $x_i = y_j$
+Se i due nuovi elementi da confrontare sono uguali non dobbiamo effettuare nessuna operazione: il valore della distanza sarà pari al minimo costo per trasformare $X_{i-1}$ in $Y_{j-1}$
+```
+D[i,j] = D[i-1,j-1]
+```
 
+- $x_i \neq y_j$
+In questo caso la trasformazione da $X_i$ a $Y_j$ può avvenire in vario modo, in base all'operazione che effettuiamo:
 
-caso induttivo
-solo nel caso in cui abbiamo costi unitari (guarda good notes per esempio)
-Calcolare `D[i,j]`
-se i due caratteri terminali sono uguali il modo migliore è rendere uguali i due prefissi e non fare nulla
-- $x_i = y_i$
-  `D[i,j] = D[i-1,j-1]`
-- $x_i \neq y_i$
-  rendo uguali i due prefissi xiesimo e yj-1esimo e poi inserisco l'ultimo carattere che è presente in yj
-dipende dall'operazione fatta
->[!multi-column]
->
->>[!blank]
->>![[Algoritmi-1779186010000.webp|center|300]]
->
->>[!blank]
->>![[Algoritmi-1779185957375.webp|center|300]]
+`inserisci(`$y_j$`)` 
+ipotizziamo di aver già reso uguali i due prefissi $X_i$ e $Y_{j-1}$
+se inseriamo l'elemento $y_j$ il costo è pari a `D[i,j-1]` a cui aggiungiamo il costo dell'inserimento
+```
+D[i,j] = D[i,j-1] + 1
+```
 
-%% mi sono un po' perso %%
+`cancella(`$x_i$`)`
+ipotizziamo di aver già reso uguali i due prefissi $X_{i-1}$ e $Y_j$
+se eliminiamo l'elemento $x_i$ il costo è pari a `D[i-1,j]` a cui aggiungiamo il costo dell'eliminazione
+```
+D[i,j] = D[i-1,j] + 1
+```
 
-posso calcolare il valore di una cella da tre direzioni diverse
-scelgo il minimo
-mantieni e sostituisci si calcolano entrambi in base alla cella in diagonale
+`sostituisci(`$x_i,y_j$`)`
+ipotizziamo di aver già reso uguali i due prefissi $X_{i-1}$ e $Y_{j-1}$
+se sostituiamo gli elementi, il costo è pari a `D[i-1,j-1]` a cui aggiungiamo il costo della sostituzione
+```
+D[i,j] = D[i-1,j-1] + 1
+```
 
-nota sulla complessità $m \times n$
-sia temporale che spaziale
+![[Algoritmi-1779204812634.webp|center|400]]
 
-se il mio obbiettivo è solo calcolare il costo mi basta mantenere riga corrente e riga precedente, abbasseremmo la complessità spaziale a lineare
-a questo punto ci converrebbe mantenere come riga la parola più corta
-la temporale è per forza quello.
+La scelta dell'operazione da effettuare dipende da quale di esse porta ad avere un costo minore, possiamo quindi formalizzare la proprietà induttiva come
+$$
+\left\{\begin{array}{l}D[i,j] = D[i-1,j-1] & x_i = y_j \\ D[i,j] = 1+ \min (D[i,j-1],D[i-1,j],D[i-1,j-1]) \hspace{4ex} & x_i \neq y_j\end{array}\right.
+$$
 
-come per LCS procedendo a retroso possiamo ricostruire la prima parola a partire dalla seconda
+```
+def editdistance(str1, str2, m, n):
+    # Create a table to store results of subproblems
+    dp = [[0 for x in range(n + 1)] for x in range(m + 1)]
 
----
+    # Fill d[][] in bottom up manner
+    for i in range(m + 1):
+        for j in range(n + 1):
 
-se mettiamo l'operazione di swap generale la cosa non funziona
+            # If first string is empty, only option is to
+            # insert all characters of second string
+            if i == 0:
+                dp[i][j] = j  # Min. operations = j
 
->[!quote] Esercizio
->non permettiamo che dopo uno swap possa considerare delle sequenze che vengono prima dell'ultimo carattere che ha toccato lo swap
->definiamo un altra distanza di edit, in cui le sequenze ammissibili non hanno una swap e un qualsiasi operazione subito dopo
->inserire l'operazione di swap all'interno del codice di git
+            # If second string is empty, only option is to
+            # remove all characters of second string
+            elif j == 0:
+                dp[i][j] = i  # Min. operations = i
+
+            # If last characters are same, ignore last char
+            # and recur for remaining string
+            elif str1[i - 1] == str2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+
+            # If last character are different, consider all
+            # possibilities and find minimum
+            else:
+                dp[i][j] = min(dp[i][j - 1] + 1,  # Insert (+1)
+                                   dp[i - 1][j] + 1,  # Remove (+1)
+                                   (1 if str1[i - 1] == str2[j - 1] else 0) + dp[i - 1][j - 1])  # Replace
+
+    return dp[m][n]
+```
+
+La complessità sarà data da  $m \times n$ sia temporale che spaziale, anche se potrebbe essere ottimizzato:
+se il mio obbiettivo è solo calcolare il costo mi basta mantenere riga corrente e riga precedente, abbassando la complessità spaziale a lineare. La temporale rimarrebbe comunque quella.
+
+>[!question] Come per LCS procedendo a retroso possiamo ricostruire la prima parola a partire dalla seconda.
 
 ## Problema di Knapsack
 problema di ottimizzazione
@@ -1418,6 +1450,7 @@ codifica entropica dell'informazione o di haffman compressione dati senza perdit
 
 
 
+
 >[!quote] Esercizio
 >Questo algoritmo non calcola i cammini
 >Sui grafi tipicamente non orientati con costi di percorrenza un problema è l'analisi del grafo in particolare uno degli obbiettivi è quello di identificare nodi cruciali (nel mantenere la connettività del grafo)
@@ -1426,3 +1459,10 @@ codifica entropica dell'informazione o di haffman compressione dati senza perdit
 >applicazione militare: devo decidere cosa bombardare
 >applicazione civile: per le epidemie chiudo gli snodi di spostamento rallentando il propagarsi
 >modificando Floyd, mantenendo la cazzo della matrice✨ `D[i,j,k]` anche tutti i cammini minimi (sono un numero esponenziale), la complessità farà schifo comunque.
+
+
+
+>[!quote] Esercizio
+>non permettiamo che dopo uno swap possa considerare delle sequenze che vengono prima dell'ultimo carattere che ha toccato lo swap
+>definiamo un altra distanza di edit, in cui le sequenze ammissibili non hanno una swap e un qualsiasi operazione subito dopo
+>inserire l'operazione di swap all'interno del codice di git
