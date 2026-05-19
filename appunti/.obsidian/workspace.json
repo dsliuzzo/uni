@@ -1,14 +1,28 @@
 {
   "main": {
-    "id": "c73d978d6a3aeeb5",
+    "id": "814f4457b36a7d31",
     "type": "split",
     "children": [
       {
-        "id": "1aa9d23b1c99ddab",
+        "id": "4ef99c39200901bd",
         "type": "tabs",
         "children": [
           {
-            "id": "34f00c35c790a30c",
+            "id": "001cc3b184d47ef3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Programmazione concorrente"
+            }
+          },
+          {
+            "id": "5b6085fa9fb4e173",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -27,15 +41,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "6719be61b4c3b0b8",
+    "id": "fc693c9522109ce4",
     "type": "split",
     "children": [
       {
-        "id": "0714a269e78b961d",
+        "id": "288a0fe78fa40224",
         "type": "tabs",
         "children": [
           {
-            "id": "7d92dfdf328f2637",
+            "id": "5ea9e15ed7dc986d",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +62,7 @@
             }
           },
           {
-            "id": "34bed8b33913e228",
+            "id": "857858f170af20bd",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +79,7 @@
             }
           },
           {
-            "id": "7ba2d34cee120970",
+            "id": "23bab2645dbf12e6",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -78,18 +92,19 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
-    "id": "bd9cf118e0f838bc",
+    "id": "96676231cd7128e2",
     "type": "split",
     "children": [
       {
-        "id": "0a245e31c2c5f053",
+        "id": "ab9b38d0fab433be",
         "type": "tabs",
         "children": [
           {
-            "id": "2b5168875dbabaf2",
+            "id": "fa50124193f5312a",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -108,7 +123,7 @@
             }
           },
           {
-            "id": "5b3e1f82832c560b",
+            "id": "7e0ce9b2c6d2cfc1",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -122,7 +137,7 @@
             }
           },
           {
-            "id": "c814fb1756793102",
+            "id": "7a6f81b695e0e727",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -137,21 +152,22 @@
             }
           },
           {
-            "id": "1bcf6acdf02a14f5",
+            "id": "31c95c65a6c879b8",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Algoritmi"
+              "title": "Outline of Programmazione concorrente"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
@@ -170,8 +186,15 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "34f00c35c790a30c",
+  "active": "001cc3b184d47ef3",
   "lastOpenFiles": [
-    "sistemi_operativi/Appunti/Programmazione concorrente.md"
+    "_Allegati/Algoritmi-1779204812634.webp",
+    "algoritmi_e_strutture_dati/Algoritmi.md",
+    "sistemi_operativi/Appunti/Programmazione concorrente.md",
+    "_Allegati/Algoritmi-1779186010000.webp",
+    "_Allegati/Algoritmi-1779185957375.webp",
+    "_Allegati/Algoritmi-1779185373031.webp",
+    "_Allegati/Algoritmi-1779184714999.webp",
+    "_Allegati/Algoritmi-1779184490236.webp"
   ]
 }
