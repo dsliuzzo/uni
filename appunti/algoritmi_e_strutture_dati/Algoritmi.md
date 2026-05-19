@@ -1279,7 +1279,7 @@ def lcs(X, Y):
     return L[m][n], "".join(lcs_str)
 ```
 ## Calcolare la distanza tra due parole
-Con questo algoritmo abbiamo l'obbiettivo di misurare quanto sono diverse due parole (ovviamente non semantico).
+Con questo algoritmo abbiamo l'obbiettivo di misurare quanto sono diverse due parole a livello sintattico, non semantico.
 Può essere utilizzato per:
 - *es.* correzione nella scrittura
 - *es.* riconoscimento dei caratteri da testi stampati (ocr)
