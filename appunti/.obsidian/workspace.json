@@ -158,13 +158,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "sistemi_operativi/Appunti/Programmazione concorrente.md",
+                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Programmazione concorrente"
+              "title": "Outline of Algoritmi"
             }
           }
         ],
@@ -172,8 +172,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {

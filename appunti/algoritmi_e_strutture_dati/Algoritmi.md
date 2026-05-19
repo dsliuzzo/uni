@@ -1479,7 +1479,7 @@ print(knapsack(W, wt, val, n))
 ```
 
 **complessità**
-L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot 2^{\log_2(W)})$.
+L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot \log_2(W))$.
 
 
 
