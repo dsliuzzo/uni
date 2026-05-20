@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "bd9cf118e0f838bc",
@@ -151,12 +152,12 @@
               "title": "Outline of Algoritmi"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -170,7 +171,7 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "34f00c35c790a30c",
+  "active": "1bcf6acdf02a14f5",
   "lastOpenFiles": [
     "_Allegati/Algoritmi-1779208668641.webp",
     "_Allegati/Algoritmi-1779207994741.webp",
