@@ -1482,6 +1482,132 @@ print(knapsack(W, wt, val, n))
 L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot 2^{\log_2(W)})$.
 
 
+>[!attention] Lavori in corso
+# Algoritmi di codifica
+## Algoritmo di Huffman
+algoritmo di compressione di qualunque cosa, lo vedremo sui 
+sfruttiamo le caratteristiche del linguaggio in modo implicito
+ogni codice ascii per essere rappresentato utilizza 8 bit indipendentemente da quanto quel carattere appaia
+mi permette di sapere esattamente dove si trova la stringa di bit che rappresenta il carattere che sta in una posizione ad accesso casuale, tramite l'aritmetica so di quando devo spostarmi (accesso diretto costante) - ottimo per utilizzare i file
+obbiettivo: rappresentare i caratteri usando meno bit
+non ci interessa usare meno bit per lo specifico carattere, ma complessivamente
+la frequenza di occorrenza di alcune lettere può essere altissima rispetto ad altre
+*es.*
+potremmo usare per la k 12 bit, ma invece per la "e" posso usare meno bit, es. 4 bit
+se la k ha una frequenza di occorrenza dell'1% e la e del 10%
+confronto tra rappresentazione costante 8 bit e rappresentazione diversa
+
+assegnamo diversi numeri di bit ai vari simboli
+- codifica a lunghezza fissa
+- codifica a lunghezza variabile
+
+se consideriamo le frequenze la lunghezza media della rappresentazione in bit migliora
+
+hanno un piccolo problema
+*es.* di good notes
+nel momento in cui assegno una lunghezza variabile a ogni singolo carattere (senza contare l'accesso diretto) come faccio a sapere quando termina un carattere e quando inizia il successivo
+nel codice metto una sequenza particolare che uso come terminatore di carattere (piccola e che non compare da nessun altra parte)
+il problema è che spreca spazio
+potrei farlo senza, dipende da che codice
+
+limitiamo: nessuna codifica di un simbolo contiene la codifica di un altro simbolo come prefisso
+facendo questa limitazione otteniamo un albero di decodifica
+**prefix free code**
+se il codice è un prefix code può essere rappresentato come un **albero dei prefissi**
+[...] albero di good notes
+ogni foglia è associata a un simbolo che vogliamo codificare
+è praticamente un automa a stati finiti
+la decodifica è una navigazione da una radice ad una foglia
+decodificare un testo di $m$ bit per ogni simbolo scendo nell'albero quindi ci richiede un tempo proporzionale a $m$
+quando decomprimiamo vogliamo aspettare di meno, per comprimere invece potremmo anche attendere di più
+*es.* visione in streaming -> il tempo di decodifica deve essere minore di quello di visualizzazione, per la codifica abbiamo tutto il tempo che voglio
+*es.* in alcune applicazioni no -> diretta, la qualità è bassa, non abbiamo tempo per la codifica
+
+dobbiamo ottenere un codice che usa prefix code, cerchiamo il migliore
+come distringuo il "migliore"
+sarà migliore rispetto al testo che voglio comprimere non in assoluto
+se il codice di decompressione è più lungo di ciò che sto comprimendo il gioco non vale la candela
+dobbiamo confrontare gli alberi dei prefissi
+posso misurare quanto occuperà il testo tramite numero medio di bit utilizzato per la rappresentazione di un simbolo del testo
+ogni simbolo conto con quanti bit lo posso rappresentare, li sommo e divido per il totale dei simboli, ma corrisponde esattamente a
+$$
+B(T) = \sum f(c) \cdot dT(c)
+$$
+con $f(c)$ frequenza di $c$ e $dT(c)$ profondità della foglia $c$ nell'albero $T$ (numero di simboli utilizzato)
+
+quindi ho bisogno della frequenza di ogni carattere e mantengo una tabella dei simboli, posso ottenerla con una scansione
+
+>[!question] Osservazione
+>[...] alberi di good notes
+>se ho un solo figlio non ha senso mantenere tutto il percorso
+>-> non cerchiamo alberi in cui qualche nodo intermedio non ha due figli
+>Se anche uno solo dei nodi intermedi non ha due figli posso eliminarlo
+
+Quando l'albero non è pieno il codice non è **ottimo**
+
+>[!info] Esiste sempre un codice ottimo il cui albero è pieno. Quindi cerchiamo solo tra gli alberi pieni
+
+Shennon un grande (il bro ci ha detto come rappresentare il continuo nel digitale) ha definito l'approccio top-down (divide et impera)
+io ho i miei simboli che appaiono nel testo, cerco di distribuirli in modo tale da raggrupparli in due sottoinsiemi di simboli tali che la somma delle frequenze che appaiono nel primo sottoinsieme sia il più possibile pari alla somma delle frequenze del secondo
+e cerco di comporre un albero dei codici in cui quando faccio la divisione all'inizio siano associati a nodo dx e sx frequenze di occorrenza più o meno uguali e ricorsivamente fino a quando non ottengo insiemi con un solo simbolo -> problemi enormi non è ottimo
+[...] pag. 15 delle slide è una soluzione sub ottima, basta l'esempio
+
+l'approccio migliore: dare meno bit a quelli più frequenti
+
+Strategia Greedy
+costruisce l'albero dal basso verso l'alto
+ad ogni passo della sua iterazione si mantiene una lista dei nodi (simboli) rispetto al quale deve costruire l'albero
+dopo le prime iterazioni i nodi intermedi sono rappresentati da or dei simboli
+fino a quando non ottiene la radice
+si prende i due simboli che hanno frequenza di occorrenza minore
+[...] good notes
+
+dobbiamo estrarre il nodo con frequenza minore -> usiamo un heap
+
+**complessità**
+calcolo delle frequenze iniziali -> scansione del testo
+rispetto al **numero di simboli** (non occorrenze) facciamo $n-1$ volte facciamo due estrazioni dall'heap ($\log_2 n$) e inserimento $\log_2 n$
+
+complessità totale $n \log n$
+
+
+**idea della dimostrazione**
+scelta greedy
+se io prendo un insieme di simboli ognuno caratterizzato dalla sua frequenza
+c'è un codice ottimo in cui due caratteri appaiono come foglie alla massima profondità dell'albero e sono fratelli
+le due foglie devono comparire alla massima profondità altrimenti non sarebbe ottimo, l'abbiamo detto prima
+in base al calcolo se non sono quelle in profondità maggiore non otteniamo il average migliore
+anche se non fossero sorelle scambiarle non cambierebbe il calcolo finale
+
+è una dimostrazione per induzione
+Huffman mi produce il codice ottimo per tutti gli insiemi di simboli di taglia $n-1$
+
+il caso base è un codice di simboli in cui dobbiamo codificare due simboli, quindi c'è un solo albero di codifica: una radice e due foglie
+
+fase induttiva
+prendiamo un qualsiasi codice con $n$ elementi
+per costruzione dell'albero abbiamo i due elementi a minore priorità che sono foglie fratelli di uno stesso nodo interno
+il secondo passo quindi sarà Huffman lanciato su $n-1$ simboli
+
+
+## Run length encoding (entropica RLE)
+Se abbiamo sequenze derivate dall'avere molti simboli uguali e conseguenti possiamo provare a codificare il numero di occorrenze
+[...] esempio good notes
+
+## Codifica differenziale
+Per i numeri
+per rappresentare valori in un intorno di un valore
+rappresento il primo e poi gli altri sono calcolati in base a una differenza rispetto al precedente
+molto utilizzato nelle immagini: intere aree di pixel con colori molto simili
+
+
+
+
+
+
+
+
+
 
 
 ---
