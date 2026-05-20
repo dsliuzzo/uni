@@ -1,14 +1,14 @@
 {
   "main": {
-    "id": "c73d978d6a3aeeb5",
+    "id": "435e9152017a15bf",
     "type": "split",
     "children": [
       {
-        "id": "1aa9d23b1c99ddab",
+        "id": "9234dac07b7ac4ca",
         "type": "tabs",
         "children": [
           {
-            "id": "34f00c35c790a30c",
+            "id": "ee12ccd7df75fe78",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -27,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "6719be61b4c3b0b8",
+    "id": "eb6bd3ded8bd9e71",
     "type": "split",
     "children": [
       {
-        "id": "0714a269e78b961d",
+        "id": "a1d34589b754c2d7",
         "type": "tabs",
         "children": [
           {
-            "id": "7d92dfdf328f2637",
+            "id": "67033d20444969ad",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +48,7 @@
             }
           },
           {
-            "id": "34bed8b33913e228",
+            "id": "1d2d66a5b6937a3b",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -65,7 +65,7 @@
             }
           },
           {
-            "id": "7ba2d34cee120970",
+            "id": "5be7e2d0b11cea54",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -78,24 +78,23 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
-    "id": "bd9cf118e0f838bc",
+    "id": "7ca829efa9ea0dec",
     "type": "split",
     "children": [
       {
-        "id": "0a245e31c2c5f053",
+        "id": "d034ac31fbe13c32",
         "type": "tabs",
         "children": [
           {
-            "id": "2b5168875dbabaf2",
+            "id": "f2c4fd952fc298ab",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "file": "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -105,25 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Algoritmi"
+              "title": "Backlinks for 2. Sistemi interconnessi"
             }
           },
           {
-            "id": "5b3e1f82832c560b",
+            "id": "e2c537f735c216e7",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "algoritmi_e_strutture_dati/Algoritmi.md",
+                "file": "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Algoritmi"
+              "title": "Outgoing links from 2. Sistemi interconnessi"
             }
           },
           {
-            "id": "c814fb1756793102",
+            "id": "5f2db59d9067a3cc",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -138,7 +137,7 @@
             }
           },
           {
-            "id": "1bcf6acdf02a14f5",
+            "id": "10a08dfae37598fc",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -171,11 +170,12 @@
       "obsidian-file-cleaner:Clean files": false
     }
   },
-  "active": "1bcf6acdf02a14f5",
+  "active": "ee12ccd7df75fe78",
   "lastOpenFiles": [
-    "_Allegati/Algoritmi-1779208668641.webp",
-    "_Allegati/Algoritmi-1779207994741.webp",
-    "_Allegati/Algoritmi-1779205951193.webp",
-    "sistemi_operativi/Appunti/Programmazione concorrente.md"
+    "_Allegati/Algoritmi-1779294627145.webp",
+    "_Allegati/Algoritmi-1779292935527.webp",
+    "elettromagnetismo_ed_elettrotecnica/appunti/Elettrotecnica.md",
+    "fondamenti_di_automatica/Appunti/2. Sistemi interconnessi.md",
+    "_Allegati/2. Sistemi interconnessi-1779281646951.webp"
   ]
 }
