@@ -1479,49 +1479,63 @@ print(knapsack(W, wt, val, n))
 ```
 
 **complessità**
-L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot 2^{\log_2(W)})$.
+L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot \log_2(W))$.
+# Algoritmi di codifica
+Per comprimere un dato sfruttiamo le caratteristiche del linguaggio, anche se in modo implicito.
+Normalmente ogni codice ascii per essere rappresentato utilizza 8 bit, indipendentemente da quanto quel carattere appare all'interno del testo.
+Questo approccio mi permette di effettuare accessi diretti in qualsiasi punto del file, quindi è ottimo per il suo utilizzo, ma implica avere moltissimo spazio sprecato.
 
+L'obbiettivo degli algoritmi di codifica è quindi quello di poter rappresentare dati con meno bit possibile senza perdere informazioni.
+
+Per implementarli non ci interessa la grandezza in bit dello specifico carattere, ma è importante che lo spazio complessivo occupato da tutto il testo sia minore dell'originale.
+Possiamo sfruttare questa proprietà per implementare una codifica che ci permetta di usare meno bit per i caratteri più frequenti, anche se più bit per i caratteri più frequenti.
+
+*es.*
+Potremmo usare per la "k" 12 bit, ma invece per la "e" posso usarne di meno, 4 bit.
+Se la "k" ha una frequenza di occorrenza dell'1% e la "e" del 20%
+
+|     | Lunghezza fissa | Lunghezza variabile |
+| --- | --------------- | ------------------- |
+| k   | $8 \cdot 0,01$  | $12 \cdot 0,01$     |
+| e   | $8 \cdot 0,2$   | $4 \cdot 0,2$       |
+| tot | $1,68$          | $0,92$              |
+
+>[!important] se consideriamo le frequenze la lunghezza media della rappresentazione in bit migliora
+
+>[!bug] Se hanno lunghezza variabile risulta essere più complesso capire quando si interrompe la codifica di un carattere e inizia quella del successivo.
+
+>[!multi-column]
+>
+>>[!blank]
+>>*es.*
+>>in questo modo abbiamo ambiguità: la stessa stringa di bit può rappresentare diversi caratteri
+>
+>>[!blank]
+>>![[Algoritmi-1779292935527.webp|center|300]]
+
+Una possibile soluzione sarebbe quella di inserire una stringa di bit "riservati" utilizzati per rappresentare la fine del carattere, ma questo porta ad occupare molto spazio inutile.
+
+>[!important] Prefix free code
+>Potremmo invece definire un set di bit per rappresentare i caratteri che rispettano la seguente proprietà:
+nessuna codifica di un simbolo contiene la codifica di un altro simbolo come prefisso.
+>Chiameremo questo tipo di codifica **prefix free code**
+
+>[!multi-column]
+>
+>>[!blank]
+>>Se la codifica è un prefix code può essere rappresentato come un **albero dei prefissi**
+>>Ad ogni foglia è associata a un simbolo che vogliamo codificare (come un automa a stati finiti).
+>>La decodifica è una navigazione da una radice ad una foglia, quindi decodificare un testo di $m$ bit avrà un costo lineare, ogni bit rappresenterà la `next()` e se troviamo una foglia ripartiamo dalla radice.
+>
+>>[!blank]
+>>![[Algoritmi-1779294627145.webp|center|400]]
+
+Anche se la codifica può avere una complessità maggiore, in molti casi ha più importanza che sia veloce la decodifica:
+- *es.* visione in streaming -> il tempo di decodifica deve essere minore di quello di visualizzazione, per la codifica abbiamo tutto il tempo che voglio
+- *es.* in alcune applicazioni no -> diretta, la qualità è bassa, non abbiamo tempo per la codifica
+## Algoritmo di Huffman
 
 >[!attention] Lavori in corso
-# Algoritmi di codifica
-## Algoritmo di Huffman
-algoritmo di compressione di qualunque cosa, lo vedremo sui 
-sfruttiamo le caratteristiche del linguaggio in modo implicito
-ogni codice ascii per essere rappresentato utilizza 8 bit indipendentemente da quanto quel carattere appaia
-mi permette di sapere esattamente dove si trova la stringa di bit che rappresenta il carattere che sta in una posizione ad accesso casuale, tramite l'aritmetica so di quando devo spostarmi (accesso diretto costante) - ottimo per utilizzare i file
-obbiettivo: rappresentare i caratteri usando meno bit
-non ci interessa usare meno bit per lo specifico carattere, ma complessivamente
-la frequenza di occorrenza di alcune lettere può essere altissima rispetto ad altre
-*es.*
-potremmo usare per la k 12 bit, ma invece per la "e" posso usare meno bit, es. 4 bit
-se la k ha una frequenza di occorrenza dell'1% e la e del 10%
-confronto tra rappresentazione costante 8 bit e rappresentazione diversa
-
-assegnamo diversi numeri di bit ai vari simboli
-- codifica a lunghezza fissa
-- codifica a lunghezza variabile
-
-se consideriamo le frequenze la lunghezza media della rappresentazione in bit migliora
-
-hanno un piccolo problema
-*es.* di good notes
-nel momento in cui assegno una lunghezza variabile a ogni singolo carattere (senza contare l'accesso diretto) come faccio a sapere quando termina un carattere e quando inizia il successivo
-nel codice metto una sequenza particolare che uso come terminatore di carattere (piccola e che non compare da nessun altra parte)
-il problema è che spreca spazio
-potrei farlo senza, dipende da che codice
-
-limitiamo: nessuna codifica di un simbolo contiene la codifica di un altro simbolo come prefisso
-facendo questa limitazione otteniamo un albero di decodifica
-**prefix free code**
-se il codice è un prefix code può essere rappresentato come un **albero dei prefissi**
-[...] albero di good notes
-ogni foglia è associata a un simbolo che vogliamo codificare
-è praticamente un automa a stati finiti
-la decodifica è una navigazione da una radice ad una foglia
-decodificare un testo di $m$ bit per ogni simbolo scendo nell'albero quindi ci richiede un tempo proporzionale a $m$
-quando decomprimiamo vogliamo aspettare di meno, per comprimere invece potremmo anche attendere di più
-*es.* visione in streaming -> il tempo di decodifica deve essere minore di quello di visualizzazione, per la codifica abbiamo tutto il tempo che voglio
-*es.* in alcune applicazioni no -> diretta, la qualità è bassa, non abbiamo tempo per la codifica
 
 dobbiamo ottenere un codice che usa prefix code, cerchiamo il migliore
 come distringuo il "migliore"
@@ -1578,7 +1592,7 @@ c'è un codice ottimo in cui due caratteri appaiono come foglie alla massima pro
 le due foglie devono comparire alla massima profondità altrimenti non sarebbe ottimo, l'abbiamo detto prima
 in base al calcolo se non sono quelle in profondità maggiore non otteniamo il average migliore
 anche se non fossero sorelle scambiarle non cambierebbe il calcolo finale
-
+codice
 è una dimostrazione per induzione
 Huffman mi produce il codice ottimo per tutti gli insiemi di simboli di taglia $n-1$
 
