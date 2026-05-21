@@ -1360,8 +1360,8 @@ $$
 \begin{array}{c|c|c}
  & P_{\text{att}} & P_{\text{reatt}} \\
 \hline -\backslash/\backslash/- & \text{Tutta} & 0 \\
--|\hspace{1ex}|- & 0 & <0 \\
--\ell\ell\ell- & 0 & >0
+-|\hspace{1ex}|- & 0 & <0 \quad -j Q\\
+-\ell\ell\ell- & 0 & >0 \quad +j Q
 \end{array}
 $$
 
@@ -1416,13 +1416,16 @@ Applicando [[numeri complessi (automatica)#Formule di Eulero dirette|Eulero]]
 >>[!blank]
 >>![[Elettrotecnica-1778735631403.webp]]
 
+
+>[!important] Esiste un legame tra potenza complessa, potenza attiva e potenza apparente
+
 Possiamo quindi ricavare anche le seguenti relazioni:
 $|\overline{S}| = \frac{V_mI_m}{2} = P_{app}$
 $|S| \cos(\Phi) = P_{att} = \mathrm{Re}\{\overline{S}\}$
-$\cos(\Phi) = \frac{\mathrm{Re}\{s\}}{|\overline{S}|} = \frac{P_{att}}{P{app}}$
+$\cos(\Phi) = \frac{\mathrm{Re}\{S\}}{|\overline{S}|} = \frac{P_{att}}{P_{app}}$
 
 >[!important] La potenza nel dominio del tempo è la parte reale della potenza complessa
->$$p(t) = P_{app} \cos(\Phi) + P_{app} (2 \omega t + \varphi_v + \varphi_i) = |S|\cdot \frac{\mathrm{Re}\{S\}}{|S|} = \mathrm{Re}\{s\}$$
+>$$p(t) = P_{app} \cos(\Phi) + P_{app} (2 \omega t + \varphi_v + \varphi_i) = |S|\cdot \frac{\mathrm{Re}\{S\}}{|S|} = \mathrm{Re}\{S\}$$
 
 #### Legame tra potenza complessa e impedenza
 Tramite la legge di Ohm generalizzata possiamo calcolare la potenza complessa senza dover calcolare necessariamente il fasore della corrente o il fasore della tensione.
@@ -1439,26 +1442,60 @@ Tramite la legge di Ohm generalizzata possiamo calcolare la potenza complessa se
 
 %% un numero complesso moltiplicato per il suo complesso coniugato è pari al quadrata del modulo %%
 
+>[!question] Osservazione
+>Dalla natura del componente possiamo sapere a priori la natura della potenza complessa calcolata.
+>Sapendo che:
+>- $Z_R = R \to \mathrm{Re}(Z_R) >0 \wedge \mathrm{Im}(Z_R) = 0$
+>- $Z_C = -j\frac{1}{\omega C} \to \mathrm{Re}(Z_C) = 0 \wedge \mathrm{Im}(Z_C) <0$
+>- $Z_L = j \omega L \to \mathrm{Re}(Z_L) = 0 \wedge \mathrm{Im}(Z_L) >0$
+>Dalla definizione della potenza complessa data con l'impedenza $\overline{S} = \frac{1}{2} Z |\overline{I}|^2$
+>- $\overline{S}_R = \frac{1}{2} R \cdot |\overline{I}|^2 \to \mathrm{Re}(S_R) >0 \wedge \mathrm{Im}(S_R) = 0$
+>- $\overline{S}_C = -\frac{j}{2} \frac{1}{\omega C} \cdot |\overline{I}|^2 \to \mathrm{Re}(S_C) =0 \wedge \mathrm{Im}(S_C) < 0$
+>- $\overline{S}_L = \frac{j}{2} \omega L \cdot |\overline{I}|^2 \to \mathrm{Re}(S_L) =0 \wedge \mathrm{Im}(S_L) > 0$
 
-[...] vedi se manca qualcosa
-
-calcoliamo la potenza complessa per tutti le $Z$
-la potenza complessa segue l'impedenza
-per le resistenze otteniamo una potenza complessa puramente reale infatti non ha potenza reattiva, ma ha tutta potenza attiva
-[...] <-- scrivile singolarmente sostituendo
-induttore puramente immaginario positivo
-condensatore puramente immaginario negativo
-
+## Leggi di Kirchoff in regime sinusoidale
+In DC sappiamo che
+$$
+\sum_{i=1}^R v_i(t) = 0
+$$
+in corrente alternata abbiamo
+$$
+v_i(t) = V_{m,i} \cos(\omega t + \varphi_i) = \mathrm{Re}(V_{m,i} e^{j \omega t} e ^{j \varphi_i}) = \mathrm{Re}(\overline{V}_i e^{j \omega t})
+$$
+applicando la sommatoria
+$$
+\therefore \sum_{i=1}^R \mathrm{Re}(\overline{V}_i e^{j \omega t}) = 0
+$$
+l'esponenziale non può mai andare a 0, quindi dobbiamo porre uguale a 0 il fasore
+$$
+\implies \sum_{i=1}^R \overline{V}_i = 0
+$$
 ## Conservazione della potenza complessa
-[...] Telleghen
-
 La somma di tutte le potenze complesse è pari a 0, di conseguenza anche potenza attiva e potenza reattiva.
 $$
 \sum_{n=1}^N \overline{S}_n = 0 \hspace{8ex} \sum_{n=1}^N P_n = 0 \hspace{8ex} \sum_{n=1}^N Q_n = 0 
 $$
-Non è detto che questo avvenga anche per la potenza apparente, in quanto è calcolata sul modulo
+Non vale anche per la potenza apparente, in quanto è calcolata sul modulo (fa il pene che vuole)
 $$
-\sum_{n=1}^N \overline{S}_n = \sum_{n=1}^N |\overline{S}_n| \neq 0
+\sum_{n=1}^N P_{app,n} = \sum_{n=1}^N |\overline{S}_n| \neq 0
+$$
+#dimostrazione 
+![[#Teorema di Tellegen]]
+
+In regime sinusoidale il teorema continua a valere:
+calcoliamo le variabili d'interfaccia nel dominio dei fasori e applichiamo il teorema rispetto al coniugato del sistema considerato.
+![[Elettrotecnica-1779303524789.webp|center|400]]
+A livello topologico i due sistemi sono equivalenti, possiamo quindi derivare le due condizioni
+$$
+<V^T, I > = 0 \hspace{8ex} <V^*,I^* > = 0
+$$
+quindi per il [[#teorema di Tellegen]] possiamo invertire i termini mantenendo la conservazione della potenza ottenendo quindi
+$$
+< V^T, I^* > = 0
+$$
+dalla definizione di prodotto scalare sappiamo che questa è la somma di tutte le potenze complesse (tensioni $\times$ correnti)
+$$
+\sum \frac{1}{2}V I^* = 0
 $$
 ## Teorema del massimo trasferimento di potenza attiva
 Dal [[#Generatori reali|teorema del massimo trasferimento]] sappiamo che in regime DC per ottenere il massimo trasferimento di potenza la resistenza del generatore $R_g$ deve essere uguale alla resistenza del carico $R_L$.
@@ -1471,8 +1508,14 @@ Dal [[#Generatori reali|teorema del massimo trasferimento]] sappiamo che in regi
 >>Per la potenza complessa
 >>$$\displaylines{P_{ZL} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} = \frac{1}{2} Z_L |\overline{I}|^2 \\ \overline{I} = \frac{\overline{V_g}}{Z_g + Z_L} = \frac{\overline{V_g}}{(R_g+R_L)+j(X_g+X_L)} \\ \implies P_{ZL} = \frac{1}{2}\cdot \frac{(R_L + j X_L) \cdot\overline{V_g^2}}{(R_g+R_L)^2+(X_g+X_L)^2}}$$
 
-[...] <-- fa la derivata
-Ne otteniamo che per ottenere il massimo trasferimento di potenza attiva
+Per trovare il massimo calcoliamo le derivate parziali e le poniamo pari a 0
+$$
+\left\{\begin{array}{l}
+\frac{\partial S_{Z_L}(R_L, X_L)}{\partial R_L} = 0 \\
+\frac{\partial S_{Z_L}(R_L,X_L)}{\partial X_L} = 0
+\end{array}\right.
+$$
+La parte immaginaria dell'impedenza del carico deve essere opposta a quella del generatore, quindi faccio in modo di avere solo la componente resistiva, che trasmette solo potenza attiva.
 $$
 Z_L = Z_g^* \hspace{8ex} \left\{\begin{array}{l}R_g = R_L \\ X_g = -X_L\end{array}\right.
 $$
@@ -1480,9 +1523,55 @@ I resistori in serie saranno
 $$
 Z_g + Z_L = 2R_g = 2R_L
 $$
-abbiamo quindi solo potenza attiva.
+abbiamo quindi solo potenza attiva (unica potenza che compia lavoro)
 ## Rifasamento
+Nel mondo molti carichi domestici e industriali sono di tipo induttivo, hanno quindi un **fattore di potenza**
+maggiore di $0$
+$$
+fp = \cos(\varphi_v - \varphi_i) = \cos (\Phi) = \frac{P_{att}}{P_{app}} > 0
+$$
+>[!multi-column]
+>
+>>[!blank]
+>>Se è maggiore di $0$ vuol dire che $P_{att} \neq 0$ e quindi ci sono dei resistori all'interno del sistema, ma parte della potenza totale viene utilizzata nella carica degli induttori.
+>Il nostro obbiettivo quindi è quello di massimizzare la potenza attiva, quella che effettivamente compie lavoro.
+>
+>>[!blank]
+>>![[Elettrotecnica-1779306348471.webp|center|150]]
+
+Se $\cos(\Phi)\ll 1$ la maggior parte della potenza complessa è trasformata in potenza reattiva per l'induttore (sprecando forze).
+Quindi, devo effettuare operazione di **rifasamento** per massimizzare la quantità di potenza attiva.
+Posso farlo mediante l'aggiunta di uno o più condensatori in parallelo al carico affinché la tensione vista dall'induttore e dal condensatore sia uguale:
+$$
+Z_L = aj \implies Z_C = -aj \to \text{controbilancio}
+$$
+>[!multi-column]
+>
+>>[!blank]
+>>![[Elettrotecnica-1779306699595.webp|center|300]]
+>
+>>[!blank]
+>>![[Elettrotecnica-1779306769001.webp|center|150]]
+
+Dobbiamo però evitare di alterare la potenza reale $\color{red}P$:
+se abbiamo un carico induttivo originale
+$$
+P = S_1 \cos(\theta_1) \hspace{8ex} Q_{1} = S_{1} \sin(\theta_1) =\frac{P}{\cos(\theta_1)} \sin(\theta_1)= P \cdot \tan(\theta_1)
+$$
+dobbiamo aumentare il fattore di potenza da $\cos(\theta_1)$ a $\cos(\theta_2)$ senza alterare la potenza reale $P = S_{2} \cos(\theta_2)$ per ottenere quindi $Q_2 = S_{2} \sin(\theta_2) = P \cdot \tan (\theta_2)$
+quindi la potenza apparente del condensatore deve essere pari alla differenza delle due
+$$
+Q_C = Q_{1}-Q_{2} = P(\tan(\theta_1)-\tan(\theta_2))
+$$
+sapendo che la potenza apparente di un condensatore è calcolabile come
+$$
+Q_C = V_{eff}^2 \cdot Z_C = \omega C V^2
+$$
+quindi posso calcolare la capacità come
+$$
+C = \frac{Q_C}{\omega V^2_{eff}} = \frac{P(\tan \theta_1 - \tan \theta_2)}{\omega V_{eff}^2}
+$$
 
 
 
-[...] potenza efficace
+[...] KVL e KCL nel regime sinusoidale

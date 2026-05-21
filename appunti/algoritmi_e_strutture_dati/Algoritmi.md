@@ -1533,86 +1533,74 @@ nessuna codifica di un simbolo contiene la codifica di un altro simbolo come pre
 Anche se la codifica può avere una complessità maggiore, in molti casi ha più importanza che sia veloce la decodifica:
 - *es.* visione in streaming -> il tempo di decodifica deve essere minore di quello di visualizzazione, per la codifica abbiamo tutto il tempo che voglio
 - *es.* in alcune applicazioni no -> diretta, la qualità è bassa, non abbiamo tempo per la codifica
-## Algoritmo di Huffman
 
->[!attention] Lavori in corso
+---
 
-dobbiamo ottenere un codice che usa prefix code, cerchiamo il migliore
-come distringuo il "migliore"
-sarà migliore rispetto al testo che voglio comprimere non in assoluto
-se il codice di decompressione è più lungo di ciò che sto comprimendo il gioco non vale la candela
-dobbiamo confrontare gli alberi dei prefissi
-posso misurare quanto occuperà il testo tramite numero medio di bit utilizzato per la rappresentazione di un simbolo del testo
-ogni simbolo conto con quanti bit lo posso rappresentare, li sommo e divido per il totale dei simboli, ma corrisponde esattamente a
+Per cercare un algoritmo di compressione che utilizzi prefix code dobbiamo prima stabilire cosa caratterizza un algoritmo migliore rispetto ad un altro:
+sarà migliore rispetto al testo che voglio comprimere, non in assoluto e ancora più importante il codice necessario per la compressione e la decompressione deve essere più piccolo del guadagno che ne deriva, altrimenti non avremo un miglioramento dello spazio occupato.
+Dobbiamo quindi confrontare i possibili alberi di bit della codifica e trovare il migliore.
+Possiamo misurare quanto occuperà il testo tramite il numero medio di bit utilizzato per rappresentare un simbolo nel testo.
+Dato un albero dei prefissi $T$ posso misurare il numero medio di bit come
 $$
 B(T) = \sum f(c) \cdot dT(c)
 $$
-con $f(c)$ frequenza di $c$ e $dT(c)$ profondità della foglia $c$ nell'albero $T$ (numero di simboli utilizzato)
-
-quindi ho bisogno della frequenza di ogni carattere e mantengo una tabella dei simboli, posso ottenerla con una scansione
+con $f(c)$ frequenza del carattere $c$ e $dT(c)$ profondità della foglia $c$ nell'albero $T$ (numero di simboli utilizzato).
+Per eseguire questo confronto ho quindi bisogno della frequenza di ogni singolo carattere utilizzato nel testo, questo è ottenibile tramite una normale scansione del testo e possiamo memorizzare questo dato all'interno di una **tabella dei simboli** che associa ad ogni simbolo la sua frequenza.
 
 >[!question] Osservazione
->[...] alberi di good notes
->se ho un solo figlio non ha senso mantenere tutto il percorso
->-> non cerchiamo alberi in cui qualche nodo intermedio non ha due figli
->Se anche uno solo dei nodi intermedi non ha due figli posso eliminarlo
-
-Quando l'albero non è pieno il codice non è **ottimo**
+>Se un nodo dell'albero ha un solo figlio possiamo già dire che non è ottimo, in quanto è possibile rimuovere il nodo intermedio per diminuire il numero di cifre necessarie a rappresentare il carattere senza creare ambiguità
+>![[Algoritmi-1779349441881.webp|center|400]]
+>Quindi se l'algoritmo restituisce un albero non è pieno il codice non è ottimo.
+>Questa proprietà può essere utilizzata per trovare un algoritmo che trovi l'albero ottimo in modo più semplice: non cerchiamo alberi che contengono nodi con un solo figlio.
 
 >[!info] Esiste sempre un codice ottimo il cui albero è pieno. Quindi cerchiamo solo tra gli alberi pieni
 
-Shennon un grande (il bro ci ha detto come rappresentare il continuo nel digitale) ha definito l'approccio top-down (divide et impera)
-io ho i miei simboli che appaiono nel testo, cerco di distribuirli in modo tale da raggrupparli in due sottoinsiemi di simboli tali che la somma delle frequenze che appaiono nel primo sottoinsieme sia il più possibile pari alla somma delle frequenze del secondo
-e cerco di comporre un albero dei codici in cui quando faccio la divisione all'inizio siano associati a nodo dx e sx frequenze di occorrenza più o meno uguali e ricorsivamente fino a quando non ottengo insiemi con un solo simbolo -> problemi enormi non è ottimo
-[...] pag. 15 delle slide è una soluzione sub ottima, basta l'esempio
+---
 
-l'approccio migliore: dare meno bit a quelli più frequenti
+Shannon ha proposto una possibile soluzione, che prevedeva un approccio top-down applicando il [[#divide et impera]]: partendo dall'insieme di simboli che compongono il testo e le loro relative frequenze cerco di distribuirli in modo più equo possibile (basato sul calcolo del numero medio di bit totale) in due sottoinsiemi, ripetendo lo stesso processo nei sottoinsiemi fino a raggiungere insiemi composti solo da un carattere.
+Questo algoritmo però potrebbe creare alberi non ottimi.
+![[Algoritmi-1779350042708.webp|center|500]]
+## Algoritmo di Huffman
+L'approccio migliore è quello di dare meno bit ai caratteri più frequenti, Huffman è l'algoritmo ottimo per fare questo.
+Costruisce l'albero dal basso verso l'alto e applichiamo una strategia [[#Tecnica golosa|greedy]].
+Ad ogni passo della sua iterazione mantiene una lista dei nodi (simboli) rispetto al quale costruire l'albero.
+Vengono scelti i due caratteri con una frequenza più passa e vengono uniti da un nodo padre.
+Dopo le prime iterazioni i nodi sono rappresentati dall'or dei simboli rispetto al quale deve costruire l'albero.
+![[Algoritmi-1779351472909.webp|center|800]]
+Per estrarre il nodo con frequenza minore quindi basta memorizzare la tabella dei caratteri all'interno di un [[Strutture dati#Heap|min-heap]].
 
-Strategia Greedy
-costruisce l'albero dal basso verso l'alto
-ad ogni passo della sua iterazione si mantiene una lista dei nodi (simboli) rispetto al quale deve costruire l'albero
-dopo le prime iterazioni i nodi intermedi sono rappresentati da or dei simboli
-fino a quando non ottiene la radice
-si prende i due simboli che hanno frequenza di occorrenza minore
-[...] good notes
+**Complessità**
+Abbiamo bisogno di una scansione iniziale del testo completa per creare la tabella dei caratteri ($m$).
+Poi durante l'iterazione abbiamo bisogno di due estrazioni dall'heap ($\log_2 n$) e un inserimento $\log_2 n$.
+con $m$ numero di caratteri nel testo e con $n$ **numero di simboli** utilizzati (non occorrenze).
+Il costo dell'esecuzione iterativa è di un ordine di grandezza diverso, quindi domina $m$.
 
-dobbiamo estrarre il nodo con frequenza minore -> usiamo un heap
+**Huffman è un algoritmo ottimo**
+#dimostrazione 
+Partiamo da un insieme di simboli ognuno caratterizzato dalla sua frequenza.
+Come detto in precedenza dato un albero di codifica ogni foglia rappresenta un carattere. Se ottimo è caratterizzato dall'assenza di nodi con un solo figlio e i caratteri con frequenza più bassa appaiono come foglie ad una profondità maggiore.
 
-**complessità**
-calcolo delle frequenze iniziali -> scansione del testo
-rispetto al **numero di simboli** (non occorrenze) facciamo $n-1$ volte facciamo due estrazioni dall'heap ($\log_2 n$) e inserimento $\log_2 n$
+Il fatto che l'algoritmo di Huffman è ottimo può essere dimostrato per induzione.
 
-complessità totale $n \log n$
+Il **caso base** è rappresentato da un codice di simboli in cui dobbiamo codificare due simboli, quindi c'è un solo albero di codifica: una radice e due foglie.
 
-
-**idea della dimostrazione**
-scelta greedy
-se io prendo un insieme di simboli ognuno caratterizzato dalla sua frequenza
-c'è un codice ottimo in cui due caratteri appaiono come foglie alla massima profondità dell'albero e sono fratelli
-le due foglie devono comparire alla massima profondità altrimenti non sarebbe ottimo, l'abbiamo detto prima
-in base al calcolo se non sono quelle in profondità maggiore non otteniamo il average migliore
-anche se non fossero sorelle scambiarle non cambierebbe il calcolo finale
-codice
-è una dimostrazione per induzione
-Huffman mi produce il codice ottimo per tutti gli insiemi di simboli di taglia $n-1$
-
-il caso base è un codice di simboli in cui dobbiamo codificare due simboli, quindi c'è un solo albero di codifica: una radice e due foglie
-
-fase induttiva
-prendiamo un qualsiasi codice con $n$ elementi
-per costruzione dell'albero abbiamo i due elementi a minore priorità che sono foglie fratelli di uno stesso nodo interno
-il secondo passo quindi sarà Huffman lanciato su $n-1$ simboli
-
-
-## Run length encoding (entropica RLE)
-Se abbiamo sequenze derivate dall'avere molti simboli uguali e conseguenti possiamo provare a codificare il numero di occorrenze
-[...] esempio good notes
-
+Per la **fase induttiva** prendiamo un qualsiasi codice con $n$ elementi. Per costruzione dell'albero abbiamo i due elementi a minore frequenza rappresentati da foglie e sono fratelli di uno stesso nodo interno.
+Vengono quindi unite in un nodo con frequenza pari alla somma dei due.
+Quindi Huffman viene applicato all'insieme di nodi di taglia $n-1$ in cui i due nodi scelti del passo precedente sono stati uniti in un singolo nodo.
+## Run length encoding
+Se abbiamo sequenze derivate dall'avere molti simboli uguali e conseguenti possiamo provare a codificare il numero di occorrenze come coppie di valori che rappresentano il carattere da rappresentare e il numero di ripetizioni:
+*es.*
+$$11000010000001000 \to  214011601130$$
 ## Codifica differenziale
-Per i numeri
-per rappresentare valori in un intorno di un valore
-rappresento il primo e poi gli altri sono calcolati in base a una differenza rispetto al precedente
-molto utilizzato nelle immagini: intere aree di pixel con colori molto simili
+Per conservare un gran quantitativo di dati numerici che non si discostano troppo dal punto iniziale potrebbe convenire conservare il primo valore e poi calcolare i successivi attraverso somme o sottrazioni rispetto al precedente.
+Questa tecnica viene molto utilizzata nella compressione di immagini per esempio in aree dell'immagina con colori molto simili
+*es.*
+$$
+\begin{array}{cc}
+& 100000, 99999,100002,99997 \\
+\to &  100000,-1,+3,-5
+\end{array}
+$$
 
 
 
