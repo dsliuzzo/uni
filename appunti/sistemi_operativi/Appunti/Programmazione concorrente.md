@@ -425,4 +425,8 @@ Si descriva brevemente:
 	- ovviamente se nella traccia dice un possibile output è sicuro non deterministico
 - se l’applicazione termina
 ## Prova 4
-c
+Diviso in due sotto-esercizi:
+a. implementazione della classe astratta di gestione dei Thread + classe concreta (Semaphore o LC)
+b. lieve modifica dell'implementazione precedente della logica senza riscrivere codice ma descrivendo a parole ciò che cambia nel codice 
+
+Sempre meglio farsi uno schema prima della logica della gestione e ricordati di aggiungere test() e main()
