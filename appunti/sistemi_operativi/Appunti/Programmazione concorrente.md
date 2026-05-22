@@ -424,3 +424,5 @@ Si descriva brevemente:
 - l’output (ciò che è stampato a schermo) che può produrre (indicare se l’output è deterministico o meno) -> potrebbe anche non produrre 
 	- ovviamente se nella traccia dice un possibile output è sicuro non deterministico
 - se l’applicazione termina
+## Prova 4
+c
