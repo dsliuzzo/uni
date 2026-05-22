@@ -1556,12 +1556,12 @@ $$
 Dobbiamo però evitare di alterare la potenza reale $\color{red}P$:
 se abbiamo un carico induttivo originale
 $$
-P = S_1 \cos(\theta_1) \hspace{8ex} Q_{1} = S_{1} \sin(\theta_1) =\frac{P}{\cos(\theta_1)} \sin(\theta_1)= P \cdot \tan(\theta_1)
+P = S_1 \cos(\varphi_1) \hspace{8ex} Q_{1} = S_{1} \sin(\varphi_1) =\frac{P}{\cos(\varphi_1)} \sin(\varphi_1)= P \cdot \tan(\varphi_1)
 $$
-dobbiamo aumentare il fattore di potenza da $\cos(\theta_1)$ a $\cos(\theta_2)$ senza alterare la potenza reale $P = S_{2} \cos(\theta_2)$ per ottenere quindi $Q_2 = S_{2} \sin(\theta_2) = P \cdot \tan (\theta_2)$
+dobbiamo aumentare il fattore di potenza da $\cos(\varphi_1)$ a $\cos(\varphi_2)$ senza alterare la potenza reale $P = S_{2} \cos(\varphi)$ per ottenere quindi $Q_2 = S_{2} \sin(\varphi_2) = P \cdot \tan (\varphi_2)$
 quindi la potenza apparente del condensatore deve essere pari alla differenza delle due
 $$
-Q_C = Q_{1}-Q_{2} = P(\tan(\theta_1)-\tan(\theta_2))
+Q_C = Q_{1}-Q_{2} = P(\tan(\varphi_1)-\tan(\varphi_2))
 $$
 sapendo che la potenza apparente di un condensatore è calcolabile come
 $$
@@ -1569,9 +1569,5 @@ Q_C = V_{eff}^2 \cdot Z_C = \omega C V^2
 $$
 quindi posso calcolare la capacità come
 $$
-C = \frac{Q_C}{\omega V^2_{eff}} = \frac{P(\tan \theta_1 - \tan \theta_2)}{\omega V_{eff}^2}
+C = \frac{Q_C}{\omega V^2_{eff}} = \frac{P(\tan \varphi_1 - \tan \varphi_2)}{\omega V_{eff}^2}
 $$
-
-
-
-[...] KVL e KCL nel regime sinusoidale
