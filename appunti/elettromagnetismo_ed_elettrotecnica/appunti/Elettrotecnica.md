@@ -1558,7 +1558,7 @@ se abbiamo un carico induttivo originale
 $$
 P = S_1 \cos(\varphi_1) \hspace{8ex} Q_{1} = S_{1} \sin(\varphi_1) =\frac{P}{\cos(\varphi_1)} \sin(\varphi_1)= P \cdot \tan(\varphi_1)
 $$
-dobbiamo aumentare il fattore di potenza da $\cos(\varphi_1)$ a $\cos(\varphi_2)$ senza alterare la potenza reale $P = S_{2} \cos(\varphi)$ per ottenere quindi $Q_2 = S_{2} \sin(\varphi_2) = P \cdot \tan (\theta_2)$
+dobbiamo aumentare il fattore di potenza da $\cos(\varphi_1)$ a $\cos(\varphi_2)$ senza alterare la potenza reale $P = S_{2} \cos(\varphi)$ per ottenere quindi $Q_2 = S_{2} \sin(\varphi_2) = P \cdot \tan (\varphi_2)$
 quindi la potenza apparente del condensatore deve essere pari alla differenza delle due
 $$
 Q_C = Q_{1}-Q_{2} = P(\tan(\varphi_1)-\tan(\varphi_2))
