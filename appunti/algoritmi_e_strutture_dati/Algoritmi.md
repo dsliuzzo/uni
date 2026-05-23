@@ -1771,6 +1771,22 @@ class ProblemaBack:
 
 
 Questa struttura di classe astratta può essere utilizzata per implementare vari algoritmi che utilizzano il backtracking.
+
+### Complessità
+La complessità assoluto non migliora rispetto a quella esaustiva: per ogni soluzione generata effettuiamo la verifica.
+Quindi per sapere quante soluzioni andiamo a generare non lo andiamo a calcolare rispetto alla dimensione dell'input, ma rispetto a:
+- **livello max** $=l$
+- **numero di scelte** fatte (in teoria tutte uguali per ogni livello) $=S_l$
+- **costo delle verifiche** (verifica vincoli + prima scelta + successiva scelta) è una quantità che dipende da come sto modellando il problema, lo supponiamo polinomiale $n^d$
+$$
+S^l \cdot n^d
+$$
+numero di scelte per ogni livello e per ognuno di esse facciamo una verifica.
+
+Non sappiamo che rapporto hanno $S$ ed $l$ con la dimensione dell'input, dipendono da come viene costruito l'algoritmo.
+
+Nel [[#SubsetSum]] per esempio
+$S=2$ e $l = n$
 ## SubsetSum
 Dato come parametro un insieme $S$ di interi non negativi e un intero $k$ vogliamo sapere se esiste un sottoinsieme dell'insieme $S$ t.c. la somma degli elementi del sottoinsieme sia pari all'intero passato come secondo parametro.
 
@@ -1785,8 +1801,10 @@ Ha un costo troppo elevato.
 Quindi applichiamo il [[#Backtracking]].
 
 ``` python
-class SubsetSum(ProblemaBack):
+from backtracking import ProblemaBack
+from grafi.grafino import GrafoNO, GrafoMANO
 
+class SubsetSum(ProblemaBack):
 	def __init__(self, s: list[int], v: int):
 		super().__init__()
 		self.s = s
@@ -1845,126 +1863,70 @@ Anche in questo caso possiamo applicare il [[#Backtracking]]
 
 ``` python
 from backtracking import ProblemaBack
-
 from grafi.grafino import GrafoNO, GrafoMANO
 
-  
-  
-
 class Cricca(ProblemaBack):
+	def __init__(self, g: GrafoNO, k: int):
+		self.g: GrafoNO = g
+		self.nodes: list[int] = [-1 for i in range(k)] # enumero per presenza e assenza -> rende + complicato metodi -> sono insiemi, liste in cui gli elementi dell'insieme mi appaiono in ordine crescente
+		self.sol: list[int] = [] #siccome tanto nell'insieme non vale ordine io per semplicità mantengo lista di nodi ordinati
 
-def __init__(self, g: GrafoNO, k: int):
+	def primaScelta(self, liv: int) -> bool:
+		if liv == 0:
+			self.nodes[liv] = 0 #ho ancora tutti i nodi a disposizione e scelgo di default il nodo 0
+			return True
+		if self.nodes[liv - 1] >= self.g.n - 1: # rappresentandoli in ordine, se il nodo aggiunto al passo precedente è già l'ultimo, non ha senso continuare
+			return False
+		self.nodes[liv] = self.nodes[liv - 1] + 1 # altrimenti prendo il nodo successivo
+		return True
 
-self.g: GrafoNO = g
+	def successivaScelta(self, liv: int) -> bool: # sceglie esattamente il successivo rispetto al precedente
+		if self.nodes[liv] >= self.g.n - 1: # se il nodo è l'ultimo vuol dire che ho esplorato tutte le possibilità
+			return False
+		self.nodes[liv] = self.nodes[liv] + 1
+		return True
 
-self.nodes: list[int] = [-1 for i in range(k)] #enumero per presenza e assenza -> rende + complicato metodi
+	def solCompleta(self, liv: int) -> bool: # la soluzione è completa se ho scelto k nodi
+		return liv == len(self.nodes) - 1
 
-self.sol: list[int] = [] #siccome tanto nell'insieme non vale ordine io per semplicità mantengo lista di nodi ordinati
-
+	def verificaVincoli(self, liv: int) -> bool:
+		for i in range(liv): # siccome tutti i nodi che sono già dentro l'insieme condizione è verificata -> verifico per l'ultimo che ho aggiunto se esiste arco che lo collega a tutti gli altri
+			if not self.g.arco(self.nodes[i], self.nodes[liv]):
+				return False
+		return True
   
-
-def primaScelta(self, liv: int) -> bool:
-
-if liv == 0:
-
-self.nodes[liv] = 0 #ho ancora tutti i nodi a disposizione e scelgo di default il nodo 0
-
-return True
-
-if self.nodes[liv - 1] >= self.g.n - 1: # non faccio successiva scelta se nodo generato al livello precedente è già ultimo
-
-return False
-
-self.nodes[liv] = self.nodes[liv - 1] + 1
-
-return True
-
-  
-
-def successivaScelta(self, liv: int) -> bool: # sceglie esattamente il successivo rispetto al precedente -> se il nodo è l'ultimo vuol dire che ho esplorato tutte le possibilità
-
-if self.nodes[liv] >= self.g.n - 1:
-
-return False
-
-self.nodes[liv] = self.nodes[liv] + 1
-
-return True
-
-  
-
-def solCompleta(self, liv: int) -> bool:
-
-return liv == len(self.nodes) - 1
-
-  
-
-def verificaVincoli(self, liv: int) -> bool:
-
-for i in range(liv): # siccome tutti i nodi che sono già dentro l'insieme condizione è verificata -> verifico per l'ultimo che ho aggiunto se esiste arco che lo collega a tutti gli altri
-
-if not self.g.arco(self.nodes[i], self.nodes[liv]):
-
-return False
-
-return True
-
-  
-
-def costruisciSoluzione(self, liv: int):
-
-for x in self.nodes:
-
-self.sol.append(x)
-
-  
-  
+	def costruisciSoluzione(self, liv: int):
+		for x in self.nodes:
+			self.sol.append(x)
 
 g: GrafoNO = GrafoMANO(6)
-
 g.aggiungiarco(0,1)
-
 g.aggiungiarco(1,4)
-
 g.aggiungiarco(0,4)
-
 g.aggiungiarco(2,1)
-
 g.aggiungiarco(1,5)
-
 g.aggiungiarco(3,4)
-
 g.stampa()
 
-  
-
 c:Cricca = Cricca(g,3)
-
 if c.risolvi():
-
-print("Cricca(g,3)")
-
-print(c.sol)
-
+	print("Cricca(g,3)")
+	print(c.sol)
 else:
-
-print("Cricca(g,3): no sol")
-
-  
+	print("Cricca(g,3): no sol")
 
 c:Cricca = Cricca(g,4)
-
 if c.risolvi():
-
-print("Cricca(g,4)")
-
-print(c.sol)
-
+	print("Cricca(g,4)")
+	print(c.sol)
 else:
-
-print("Cricca(g,4): no sol")
+	print("Cricca(g,4): no sol")
 ```
 
+
+>[!question] Possibili ottimizzazione
+>1. Se sto facendo una cricca di $k$ elementi, ma rimangono a disposizione un numero di nodi insufficiente per arrivare a $k$ non c'è bisogno di continuare.
+>2. Non è detto che io debba iniziare dai nodi con indice più basso, sarebbe meglio enumerarli dal nodo con numero di archi maggiore al nodo con numero di archi minore, in questo modo, se sto cercando una cricca di $k$ elementi vado a verificare solo dopo i nodi che hanno meno di $k$ archi.
 
 
 
@@ -1991,3 +1953,14 @@ print("Cricca(g,4): no sol")
 >non permettiamo che dopo uno swap possa considerare delle sequenze che vengono prima dell'ultimo carattere che ha toccato lo swap
 >definiamo un altra distanza di edit, in cui le sequenze ammissibili non hanno una swap e un qualsiasi operazione subito dopo
 >inserire l'operazione di swap all'interno del codice di git
+
+
+>[!quote] Esercizio con backtracking
+>Avendo un grafo e vogliamo verificare se c'è un sottoinsieme dei nodi del grafo t.c.
+>per ogni nodo del grafo o il nodo appartiene a S oppure esiste un nodo in S che è collegato con un arco a questo nodo.
+>Sistemi di scommesse ridotti.
+>I nodi del grafo sono le colonne di scommesse secche, gli archi quando c'è una sola differenza di combinazione tra una scommessa e un altra.
+>Ci siamo giocati la possibilità di vincere sia che vi indoviniamo tutti i risultati sia che ne indoviniamo tutti meno 1.
+>Vogliamo trovare un insieme di giocate secche che se gioco sono sicuro che se la mia giocata a sistema io vinco allora io vinco pure con queste.
+
+
