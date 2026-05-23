@@ -223,7 +223,7 @@ Per ottimizzare ulteriormente l'algoritmo possiamo:
   Invece di effettuare un controllo all'inizio del metodo se ci troviamo nel caso banale effettuiamo un ragionamento contrario, con un while, finché non siamo nel caso banale eseguiamo il corpo del codice. Questo ci permette di passare da un algoritmo ricorsivo ad un algoritmo iterativo, passando da una complessità spaziale $\Theta(n)$ ad una complessità spaziale $\Theta(1)$ .
 
 **Ricorsivo**
-```
+``` java
 private static tipo metodo (parametri) {
 	if(parametri di dimensione banale)
 		return casobase(parametri);
@@ -232,7 +232,7 @@ private static tipo metodo (parametri) {
 }  
 ```
 **Iterativo**
-```
+``` java
 private static tipo metodo (parametri) {
 	while (parametri di dimensione non banale){
 		corpo(parametri)
@@ -245,7 +245,7 @@ private static tipo metodo (parametri) {
 **Applicandola al quick sort**
 Nel quick sort abbiamo due diramazioni della ricorsione:
 Non ci limiteremo a passare da un `if` ad un `while`, ma aggiungiamo un controllo all'interno del while che ci permette di capire in quale partizione ci troviamo, in modo da eseguire la ricorsione nella partizione con meno elementi
-```
+``` java
 private static void quickSort(int[] v, int in, int fin) {
 	if(fin<=in)
 		return;
@@ -255,7 +255,7 @@ private static void quickSort(int[] v, int in, int fin) {
 }
 ```
 
-```
+``` java
 private static void quickSort(int[] v, int in, int fin) {
 	while(!(fin<=in)){
 		int p= partiziona(v,in,fin);
@@ -337,7 +337,7 @@ $$
 $$
 ### Complessità temporale del fattoriale ricorsivo
 Prendiamo per esempio il calcolo del fattoriale ricorsivamente
-```
+``` python
 def fatt(n):
     if n > 1:
         return fatt(n - 1) * n
@@ -358,7 +358,7 @@ $$
 Facendo così però sovrastimiamo di molto il risultato, in quanto il costo di chiamate dipende da $n$, ma ogni chiamata avrà un costo minore tipicamente (non nel fattoriale).
 ### Complessità temporale di Fibonacci ricorsivo
 Vediamo invece il calcolo di Fibonacci ricorsivamente
-```
+``` python
 def fib(n):
     if n <= 2:
         return 1
@@ -697,7 +697,7 @@ Per estendere la soluzione corrente tramite la `next` sceglierò l'arco che si t
 >
 >>[!blank]
 >>![[Strutture dati-1778185403260.webp]]
-```
+``` python
 def prim(g: GrafoNOP):
     padri: list[int] = [-1 for i in range(g.n)]
     pesi: list[int] = [sys.maxsize for i in range(g.n)]
@@ -830,7 +830,7 @@ Anche in questo caso applichiamo la tecnica golosa.
 >
 >>[!blank]
 >>![[Algoritmi-1778340158422.webp]]
-```
+``` python
 def Dijkstra(g: GrafoP, source: int):
     padri: list[int] = [-1 for i in range(g.n)]
     pesi: list[int] = [sys.maxsize for i in range(g.n)]
@@ -967,7 +967,7 @@ Quindi rappresentiamo la soluzione corrente con la union-find ed effettuiamo:
 - `find` nell'insieme a cui appartiene il secondo estremo
 La complessità di questa fase sarà quindi rappresentata da due find, che, supponendo di utilizzare una [[Strutture dati#Union by size - Bilanciamento QuickFind|union-find con quick find]], hanno complessità costante ed effettuiamo $n-1$ union, dal costo di $n \log n$.
 Il costo dell'aggiunta e verifica della presenza di cicli sarà quindi di $n \log n$, minore della complessità dell'ordinamento, che quindi, asintoticamente domina sul costo dell'intero algoritmo.
-```
+``` python
 def kruskal(g: GrafoNOP):
     archiordinati = sorted(g.archi(), key=_peso) # m log n
     forest: UnionFind = UnionFind(g.n) # rappresento la foresta usando la UnionFind
@@ -1086,7 +1086,7 @@ A questo punto la condizione di chiusura è proprio che abbiamo aggiunto tutti i
 
 >[!quote] È possibile eseguire l'algoritmo in place senza bisogno di una matrice tridimensionale.
 
-```
+``` python
 def floyd(g: GrafoP):
     M = [[sys.maxsize for i in range(g.n)] for j in range(g.n)]  # Calcola matrice di adiacenza
     for i in range(g.n):
@@ -1235,7 +1235,7 @@ Utilizziamo la regola precedentemente utilizzata per risalire alla soluzione:
 partendo dalla cella `c[m,n]` effettuiamo una visita sulla matrice, spostandoci in diagonale se $X[i] == Y[j]$ se l'elemento in diagonale è pari alla cella corrente $-1$ aggiungendolo alla soluzione, altrimenti ci spostiamo sul massimo tra la superiore e quella a sinistra, se sono uguali è indifferente, vuol dire che ci sono più sequenze con la stessa lunghezza.
 Quando $i=0$ o $j = 0$ abbiamo concluso la visita e dobbiamo invertire la soluzione e poi restituire il risultato.
 
-```
+``` python
 def lcs(X, Y):
     # find the length of the strings
     m = len(X)
@@ -1379,7 +1379,7 @@ $$
 
 ![[Algoritmi-1779205951193.webp|center|400]]
 
-```
+``` python
 def editdistance(str1, str2, m, n):
     # Create a table to store results of subproblems
     dp = [[0 for x in range(n + 1)] for x in range(m + 1)]
@@ -1454,7 +1454,7 @@ Altrimenti dobbiamo verificare cosa conferisce il migliore beneficio:
 
 ![[Algoritmi-1779208668641.webp|center|500]]
 
-```
+``` python
 def knapsack(W, wt, val, n):
 	K = [[0 for x in range(W + 1)] for x in range(n + 1)]
 
@@ -1603,6 +1603,367 @@ $$
 $$
 
 
+
+# Teoria delle classi di complessità
+Concentriamoci su problemi la cui risposta è booleana, tipicamente rappresentati dall'esistenza di una certa soluzione.
+
+Spesso non si riesce a stabilire una complessità intrinseca dei problemi scritta come una funzione, ma ci accontentiamo di raggrupparli in **classi** derivanti alla loro difficoltà.
+
+>[!important] P-time
+>Problemi booleani per la cui soluzione esiste un algoritmo la cui complessità è un polinomio della dimensione dell'input.
+>Generalmente questi problemi sono **trattabili** anche per dimensioni grandi.
+
+>[!important] NP-problem
+>Non deterministic polinomial time.
+>Problemi booleani, per il quale possiamo prendere una possibile soluzione e verificare se quella proposta è effettivamente soluzione del problema utilizzando un algoritmo la cui complessità temporale è polinomiale rispetto alla dimensione dell'input
+>Questo approccio prendere il nome di **guess** and **check** (indovinare una possibile soluzione e poi controllarla).
+>
+>*es.* [[#Cricca]]
+>
+>*es.*
+>[[#SubsetSum]] basta trovare un sottoinsieme per cui posso verificare che la somma dei suoi componenti è pari all'intero passato come parametro.
+>
+>*es. contrario*
+>non posso verificare se non c'è nessun sottoinsieme la cui somma è pari al parametro. Avrei bisogno di tutti i sottoinsiemi possibili ($2^n$) e dovremmo leggere tutto questo input per poter verificare la proprietà descritta.
+
+>[!important] Functional NP-problem
+>NP-problem che non restituiscono valori booleani, ma veri e propri output più complessi.
+
+>[!important] Co NP-problem
+>Complemento di NP.
+>Possiamo verificare in tempo polinomiale se la risposta è falsa.
+
+>[!question] Osservazioni
+>Non c'è una dimostrazione che esista un problema che appartiene a NP e non appartenga a Co NP.
+>Si suppone che questo non accada.
+>Così come non c'è nessuna dimostrazione che ci sia un problema sia in NP e non sia in P.
+>Però è dimostrato che $P \subset NP$: se un problema appartiene a $P$ allora appartiene anche a $NP$
+
+Non tutti i problemi che possiamo dimostrare appartengono ad una determinata classe di complessità sono uguali.
+
+È stato definito un modo per **trasformare** un problema in un altro, sono dei problemi booleani, quindi è abbastanza semplice.
+Io potrei avere una istanza del problema [[#SubsetSum]], prendere questa istanza, darla in pasto ad un determinato algoritmo $A$ restituisce una istanza di **Sat** (soddisfacibilità - esiste un assegnamento di valori di verità alle variabili che appaiono nella formula che rendono la formula vera).
+$$
+I_{ss} \to A \to I_{sat}
+$$
+>[!important] Trasformazione
+> Se prendo un qualunque problema della classe NP e ne prendo una sua istanza allora esiste sempre un algoritmo che prende questo istanza e la trasforma in una istanza di sat che ha una caratteristica:
+>se la risposta di Sat è vero allora la risposta all'istanza del problema originario è anch'essa vero e viceversa.
+>Questo algoritmo prende il nome di **trasformazione**.
+
+Non usiamo una qualsiasi trasformazione, usiamo la meno complessa possibile.
+Se potessimo utilizzare qualsiasi complessità per effettuare la trasformazione sarebbe ovvio, con complessità esponenziale posso fare qualsiasi tipo di trasformazione; è un po' meno banale riuscire a trovare algoritmi di trasformazione che siano di complessità addirittura logaritmici.
+L'algoritmo di conversione a Sat è uno di questi algoritmi.
+
+>[!important] Arduo
+>Un algoritmo è detto **arduo** rispetto ad una classe di complessità quando è almeno difficile quanto tutti i problemi di quella classe.
+>Un problema $X$ è NP-arduo se ogni problema in NP è riducibile a $X$ in un tempo polinomiale.
+>Questo significa che se trovassi un algoritmo efficiente per risolvere $X$, potrei risolvere in modo efficiente qualsiasi problema in NP.
+
+Sapendo che Sat è NP-arduo per dimostrare che un altro algoritmo $A$ è NP-arduo non serve verificare ogni singolo algoritmo di NP, ma basterebbe creare una **catena di trasformazioni** per il quale abbiamo $A$ che viene trasformato in Sat e sapendo che Sat può essere trasformato in qualsiasi altro algoritmo NP ho dimostrato che il mio algoritmo $A$ è NP-arduo.
+Se le due trasformazioni hanno un costo logaritmico posso passare da $A$ ad un qualsiasi algoritmo NP con complessità logaritmica, dimostrando quindi che hanno la stessa difficoltà di risoluzione.
+*es.* [[#SubsetSum]] ha questa caratteristica.
+*es.* Cricca ha questa caratteristica.
+
+Quindi se risolvessi Sat in un modo facile potrei risolvere qualsiasi problema della classe in modo facile.
+# Backtracking
+Il backtracking è una tecnica di programmazione molto utile nella risoluzione di problemi per cui non esiste una soluzione ottima polinomiale.
+
+[[#SubsetSum]]
+
+Il **backtracking** ci permette di evitare di generare tutte le possibili soluzioni.
+Nel caso in cui lo spazio delle soluzioni è veramente grande (esponenziale rispetto alla dimensione dell'input) se io riesco ad apportare dei miglioramenti ad esso evitando di esplorarne una parte, il guadagno in termini di prestazioni potrebbe essere anch'esso esponenziale rispetto alla dimensione dell'input e quindi potrebbe abbattere (in parecchi casi) il costo di risoluzione dell'intero problema.
+Quindi non enumeriamo tutte le possibili soluzioni, cerchiamo di vedere dei casi in cui posso smettere di enumerare secondo determinate strategie.
+
+Potremmo per esempio cambiare il modo in cui genero le possibili soluzioni in modo da lasciare aperta la possibilità di tagliare nella generazioni, raggruppare intere porzioni dello spazio di sottoinsiemi man mano che andiamo avanti.
+
+*es.*
+$\{a,b,c,d,e,f\}$ possiamo vederlo come un array `[a,b,c,d,e,f]`
+>[!multi-column]
+>
+>>[!blank]
+>>generiamo le possibili soluzioni come sottoinsiemi facendo una scelta, che inizialmente è se l'elemento `A` è presente o no.
+>>Posso fare la stessa cosa con `B` e così via.
+>
+>>[!blank]
+>>![[Algoritmi-1779544484413.webp|center|300]]
+
+>[!multi-column]
+>
+>>[!blank]
+>>![[Algoritmi-1779544649832.webp|center|300]]
+>
+>>[!blank]
+>>Se volessi per esempio assegnare un array composto da `[2,5,3,4,5,6]` e avessi un $k=4$
+>>Potrei già eliminare l'albero `AB` in quanto la somma dei nodi è già superiore a $k$, in questo modo non devo calcolare tutti i sotto alberi che sono una conseguenza del nodo `AB`.
+
+In realtà non devo rappresentarlo completamente, avrei un albero binario con $2^n$ nodi.
+
+Il principio è molto simile agli algoritmi [[#Tecnica golosa|golosi]], in questo caso dobbiamo esplorare tutte le possibili soluzioni.
+Nella pratica andremo ad effettuare una visita [[Strutture dati#Visita di un albero|pre-order]] dell'albero senza crearlo effettivamente scendendo quindi per prima cosa al nodo più a sinistra dell'albero e rivedendo le scelte a retroso, tagliando alcuni rami se so che è impossibile raggiungere la soluzione corretta tramite essi.
+
+Nel caso in cui non facciamo nessuna riduzione all'insieme delle soluzione (non effettuiamo nessun taglio) questo approccio è molto peggiore rispetto alla brute force.
+
+Prima di iniziare non sappiamo esattamente quanto taglieremo, però possiamo aspettarci un miglioramento o no, nell'esempio precedente ordinando gli elementi dal maggiore al minore o avendo un numero $k$ piccolo sono in grado di tagliare anche molto lo spazio dei risultati.
+
+Quindi dopo aver definito la tecnica generale per ottenere un risultato risulta incredibilmente utile trovare delle euristiche per migliorare ancora di più la riduzione dello spazio delle soluzioni.
+
+>[!bug] Una implementazione ricorsiva di questa tecnica lo renderebbe facile da implementare, ma difficile da controllare, potenzialmente creiamo una lunghissima catena di chiamate che riempiono lo stack.
+
+Inoltre in determinati algoritmi di ricerca del massimo per esempio posso addirittura utilizzare la soluzione corrente per decidere di tagliare determinati rami.
+Quindi è meglio definire una strategia **iterativa** che faccia uso di backtracking.
+
+**Come funziona**
+Se siamo al livello 0 per spostarci al livello 1 dobbiamo effettuare una scelta.
+Una volta fatta la prima scelta incremento il livello della soluzione che sto costruendo ed effettuo un'altra scelta per entrare al livello 2.
+Una volta arrivati ad una foglia torniamo indietro risalendo l'albero, spostandoci sui fratelli.
+Nel momento in cui ci spostiamo sul successivo fratello aumento il livello della soluzione corrente e ritento la generazione di una soluzione tra i figli del fratello, scendendo.
+Effettuiamo questa operazione finché ci sono fratelli disponibili, a quel punto continuo a risalire, fin quando non arriviamo alla radice.
+
+Lasciando il problema il più astratto possibile possiamo ideare una strategia che si basa su due scelte fondamentali:
+- `primaScelta()`
+- `successivaScelta()`
+
+Ad ogni scelta effettuata per prima cosa verifichiamo se effettuarla comporta il non poter più trovare la soluzione corretta.
+
+``` python
+class ProblemaBack:
+    def __init__(self):
+        pass
+
+    def risolvi(self)->bool: # risolvi consiste solo nell'esplorazione dell'albero a livello astratto
+        liv: int = 0 # indica il livello corrente che stiamo visitando
+        rivedi: bool = False # booleano per capire se devo rivedere le scelte
+        if not self.primaScelta(liv): # se non riesco ad effettuare la prima scelta restituisco False
+            return False
+        while liv >= 0:
+            if self.verificaVincoli(liv): # se la soluzione attuale non viola le regole del problema
+                if self.solCompleta(liv): # verifichiamo se abbiamo raggiunto la soluzione completa
+                    self.costruisciSoluzione(liv) # costruisce la soluzione
+                    return True # restituisce True
+                liv += 1 # se non abbiamo raggiunto la soluzione completa passiamo al livello successivo
+                if not self.primaScelta(liv): # verifichiamo se possiamo effettuare la prima scelta
+                    rivedi = True # settiamo rivedi a True, dobbiamo trovare un'altra soluzione
+            else: # se la soluzione attuale viola le regole del problema
+                if not self.successivaScelta(liv): # verifichiamo se possiamo passare alla scelta successiva (fratello)
+                    rivedi = True # se non è stato trovato nessun successivo dobbiamo risalire
+            while rivedi and liv >= 0: # risaliamo finchè non abbiamo verificato tutti i nodi
+                liv -= 1 # risaliamo un livello
+                if liv >= 0 and self.successivaScelta(liv): # verifichiamo se esiste il ivello e se c'è un successivo (fratello)
+                    rivedi = False # se c'è un fratello fermiamo la risalita
+        return False # se non siamo entrati nel soluzione completa restituiamo False, non esiste ciò che stiamo cercando
+
+    def primaScelta(self, liv: int)->bool: # assegna il primo valore tentativo al livello liv, restituisce False se non è possibile
+        pass
+
+    def successivaScelta(self, liv: int)->bool: # prova il valore successivo al livello liv (fratello), restituisce False se non ne esistono
+        pass
+
+    def solCompleta(self, liv: int)->bool: # controlla se abbiamo riempito tutti i livelli necessari
+        pass
+
+    def verificaVincoli(self, liv: int)->bool: # controlla se la soluzione attuale non viola le regole del problema
+        pass
+
+    def costruisciSoluzione(self, liv: int): # salva la soluzione trovata
+        pass
+```
+
+
+Questa struttura di classe astratta può essere utilizzata per implementare vari algoritmi che utilizzano il backtracking.
+## SubsetSum
+Dato come parametro un insieme $S$ di interi non negativi e un intero $k$ vogliamo sapere se esiste un sottoinsieme dell'insieme $S$ t.c. la somma degli elementi del sottoinsieme sia pari all'intero passato come secondo parametro.
+
+La caratteristica dei problemi in NP mi autorizza a pensare ad un approccio scemo, brute force (ricerca esaustiva).
+
+Dato $S$ e $k$ genero ad uno ad uno tutti i possibili testimoni e per ogni testimoni effettuo la verifica:
+$$\forall S' \subseteq S: \sum_{x \in S'} x = k \quad \text{verifico}\quad\begin{array}{c}& \text{true} \\ \nearrow &  \\ \searrow & \\ & \text{false}\end{array}$$
+Se per nessuno di questi testimoni sarà vero restituisco falso.
+
+Ha un costo troppo elevato.
+
+Quindi applichiamo il [[#Backtracking]].
+
+``` python
+class SubsetSum(ProblemaBack):
+
+	def __init__(self, s: list[int], v: int):
+		super().__init__()
+		self.s = s
+		self.v = v
+		self.sol = [True for i in range(len(s))] # bitset: ho bisogno di una struttura dati per mantenere le scelte fatte, il cammino fatto nell'albero teorico che ovviamente non memorizzo
+		self.soluzione = []
+
+	def primaScelta(self, liv: int)->bool: # prima scelta a livello liv
+		if liv == len(self.s):
+			return False
+		else:
+			self.sol[liv] = True # di default decido di metterlo
+			return True
+
+	def successivaScelta(self, liv: int)->bool: # scelte sullo stesso livello successive
+		if self.sol[liv]:
+			self.sol[liv] = False
+			return True
+		else:
+			return False #le ho provate entrambe -> torno sopra ole
+
+	def solCompleta(self, liv: int)->bool:
+		somma =0
+		for i in range(liv+1):
+			if self.sol[i]:
+				somma += self.s[i]
+		return somma == self.v #potrei controllare se il livello è l'ultimo ovvero non ho più scelte da fare (ma noi cerchiamo di migliorare la soluzione)
+
+	def verificaVincoli(self, liv: int)->bool:
+		somma = 0
+		for i in range(liv + 1):
+			if self.sol[i]:
+				somma += self.s[i]
+		return somma <= self.v
+
+	def costruisciSoluzione(self, liv: int):
+		for i in range(liv + 1):
+			if self.sol[i]:
+				self.soluzione.append(self.s[i])
+
+
+s = [1,21,3,40,13,15,7,8,9,10]
+v = 180
+p:SubsetSum = SubsetSum(s, v)
+
+if p.risolvi():
+	print(f"SubsetSum({s}, {v})")
+	print(f"{p.soluzione} - {sum(p.soluzione)}")
+else:
+	print("SubsetSum(s,v): no sol")
+```
+## Cricca
+Verificare se un insieme di nodi all'interno di un grafo non orientato t.c. tra ogni coppia di nodi sia presente un arco e che abbia taglia almeno $k$.
+
+Anche in questo caso possiamo applicare il [[#Backtracking]]
+
+``` python
+from backtracking import ProblemaBack
+
+from grafi.grafino import GrafoNO, GrafoMANO
+
+  
+  
+
+class Cricca(ProblemaBack):
+
+def __init__(self, g: GrafoNO, k: int):
+
+self.g: GrafoNO = g
+
+self.nodes: list[int] = [-1 for i in range(k)] #enumero per presenza e assenza -> rende + complicato metodi
+
+self.sol: list[int] = [] #siccome tanto nell'insieme non vale ordine io per semplicità mantengo lista di nodi ordinati
+
+  
+
+def primaScelta(self, liv: int) -> bool:
+
+if liv == 0:
+
+self.nodes[liv] = 0 #ho ancora tutti i nodi a disposizione e scelgo di default il nodo 0
+
+return True
+
+if self.nodes[liv - 1] >= self.g.n - 1: # non faccio successiva scelta se nodo generato al livello precedente è già ultimo
+
+return False
+
+self.nodes[liv] = self.nodes[liv - 1] + 1
+
+return True
+
+  
+
+def successivaScelta(self, liv: int) -> bool: # sceglie esattamente il successivo rispetto al precedente -> se il nodo è l'ultimo vuol dire che ho esplorato tutte le possibilità
+
+if self.nodes[liv] >= self.g.n - 1:
+
+return False
+
+self.nodes[liv] = self.nodes[liv] + 1
+
+return True
+
+  
+
+def solCompleta(self, liv: int) -> bool:
+
+return liv == len(self.nodes) - 1
+
+  
+
+def verificaVincoli(self, liv: int) -> bool:
+
+for i in range(liv): # siccome tutti i nodi che sono già dentro l'insieme condizione è verificata -> verifico per l'ultimo che ho aggiunto se esiste arco che lo collega a tutti gli altri
+
+if not self.g.arco(self.nodes[i], self.nodes[liv]):
+
+return False
+
+return True
+
+  
+
+def costruisciSoluzione(self, liv: int):
+
+for x in self.nodes:
+
+self.sol.append(x)
+
+  
+  
+
+g: GrafoNO = GrafoMANO(6)
+
+g.aggiungiarco(0,1)
+
+g.aggiungiarco(1,4)
+
+g.aggiungiarco(0,4)
+
+g.aggiungiarco(2,1)
+
+g.aggiungiarco(1,5)
+
+g.aggiungiarco(3,4)
+
+g.stampa()
+
+  
+
+c:Cricca = Cricca(g,3)
+
+if c.risolvi():
+
+print("Cricca(g,3)")
+
+print(c.sol)
+
+else:
+
+print("Cricca(g,3): no sol")
+
+  
+
+c:Cricca = Cricca(g,4)
+
+if c.risolvi():
+
+print("Cricca(g,4)")
+
+print(c.sol)
+
+else:
+
+print("Cricca(g,4): no sol")
+```
 
 
 

@@ -107,12 +107,12 @@ La difficoltà in questo caso sta nell'implementazione di `__avanza__()` in quan
 Per far questo all'interno dell'iteratore manteniamo un riferimento al nodo corrente `curr` e uno "stato" che ci permetta di capire in quale posizione ci troviamo.
 A questo punto possiamo visualizzare tutte le operazioni possibili tramite un automa a stati finiti, in quanto il movimento all'interno dell'albero ha una struttura molto variabile.
 
-| Dir          | Posizione |
-| ------------ | --------- |
-| $\perp$      | curr      |
+| Dir        | Posizione |
+| ---------- | --------- |
+| $\perp$    | curr      |
 | $\swarrow$ |           |
-| $\searrow$        |           |
-| $\uparrow$   |           |
+| $\searrow$ |           |
+| $\uparrow$ |           |
 ### Iteratore visita anticipata
 [...]
 ### Iteratore visita posticipata
