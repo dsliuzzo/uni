@@ -1616,7 +1616,7 @@ Spesso non si riesce a stabilire una complessità intrinseca dei problemi scritt
 >[!important] NP-problem
 >Non deterministic polynomial time.
 >Problemi booleani, per il quale possiamo prendere una possibile soluzione e verificare se quella proposta è effettivamente soluzione del problema utilizzando un algoritmo la cui complessità temporale è polinomiale rispetto alla dimensione dell'input
->Questo approccio prendere il nome di **guess** and **check** (indovinare una possibile soluzione e poi controllarla).
+>Questo approccio prende il nome di **guess** and **check** (indovinare una possibile soluzione e poi controllarla).
 >
 >*es.* [[#Cricca]]
 >
