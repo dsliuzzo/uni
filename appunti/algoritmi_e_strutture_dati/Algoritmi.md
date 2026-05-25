@@ -1667,7 +1667,7 @@ Se le due trasformazioni hanno un costo logaritmico posso passare da $A$ ad un q
 
 Quindi se risolvessi Sat in un modo facile potrei risolvere qualsiasi problema della classe in modo facile.
 # Backtracking
-Il backtracking è una tecnica di programmazione molto utile nella risoluzione di problemi per cui non esiste una soluzione ottima polinomiale.
+Il backtracking è una tecnica di programmazione molto utile per la risoluzione di problemi per cui non è nota una soluzione ottima polinomiale.
 
 [[#SubsetSum]]
 
@@ -1675,7 +1675,7 @@ Il **backtracking** ci permette di evitare di generare tutte le possibili soluzi
 Nel caso in cui lo spazio delle soluzioni è veramente grande (esponenziale rispetto alla dimensione dell'input) se io riesco ad apportare dei miglioramenti ad esso evitando di esplorarne una parte, il guadagno in termini di prestazioni potrebbe essere anch'esso esponenziale rispetto alla dimensione dell'input e quindi potrebbe abbattere (in parecchi casi) il costo di risoluzione dell'intero problema.
 Quindi non enumeriamo tutte le possibili soluzioni, cerchiamo di vedere dei casi in cui posso smettere di enumerare secondo determinate strategie.
 
-Potremmo per esempio cambiare il modo in cui genero le possibili soluzioni in modo da lasciare aperta la possibilità di tagliare nella generazioni, raggruppare intere porzioni dello spazio di sottoinsiemi man mano che andiamo avanti.
+Potremmo per esempio cambiare il modo in cui genero le possibili soluzioni in modo da lasciare aperta la possibilità di tagliare nella generazione, raggruppare intere porzioni dello spazio di sottoinsiemi man mano che andiamo avanti.
 
 *es.*
 $\{a,b,c,d,e,f\}$ possiamo vederlo come un array `[a,b,c,d,e,f]`
@@ -1694,7 +1694,7 @@ $\{a,b,c,d,e,f\}$ possiamo vederlo come un array `[a,b,c,d,e,f]`
 >>![[Algoritmi-1779544649832.webp|center|300]]
 >
 >>[!blank]
->>Se volessi per esempio assegnare un array composto da `[2,5,3,4,5,6]` e avessi un $k=4$
+>>Se volessi per esempio assegnare un array composto da `[2,5,3,0,5,6]` e avessi un $k=4$
 >>Potrei già eliminare l'albero `AB` in quanto la somma dei nodi è già superiore a $k$, in questo modo non devo calcolare tutti i sotto alberi che sono una conseguenza del nodo `AB`.
 
 In realtà non devo rappresentarlo completamente, avrei un albero binario con $2^n$ nodi.
@@ -1702,7 +1702,7 @@ In realtà non devo rappresentarlo completamente, avrei un albero binario con $2
 Il principio è molto simile agli algoritmi [[#Tecnica golosa|golosi]], in questo caso dobbiamo esplorare tutte le possibili soluzioni.
 Nella pratica andremo ad effettuare una visita [[Strutture dati#Visita di un albero|pre-order]] dell'albero senza crearlo effettivamente scendendo quindi per prima cosa al nodo più a sinistra dell'albero e rivedendo le scelte a retroso, tagliando alcuni rami se so che è impossibile raggiungere la soluzione corretta tramite essi.
 
-Nel caso in cui non facciamo nessuna riduzione all'insieme delle soluzione (non effettuiamo nessun taglio) questo approccio è molto peggiore rispetto alla brute force.
+Nel caso in cui non facciamo nessuna riduzione all'insieme delle soluzioni (non effettuiamo nessun taglio) questo approccio è molto peggiore rispetto alla brute force.
 
 Prima di iniziare non sappiamo esattamente quanto taglieremo, però possiamo aspettarci un miglioramento o no, nell'esempio precedente ordinando gli elementi dal maggiore al minore o avendo un numero $k$ piccolo sono in grado di tagliare anche molto lo spazio dei risultati.
 
