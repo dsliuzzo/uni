@@ -8,14 +8,14 @@
 		{"id":"1f4a2f060ce2b401","type":"text","text":"#materia \n#so ","x":-540,"y":-59,"width":140,"height":79},
 		{"id":"c50c6fe49732d638","type":"file","file":"sistemi_operativi/Appunti/6. Sistema di protezione e sicurezza.md","x":680,"y":300,"width":400,"height":400},
 		{"id":"0119508b23a7475f","type":"file","file":"sistemi_operativi/Appunti/3. Gestione dei file.md","x":-540,"y":1240,"width":400,"height":400},
-		{"id":"c11a4f9bde6e2fd3","type":"file","file":"sistemi_operativi/Appunti/5. Gestione dell'I-O.md","x":480,"y":800,"width":400,"height":400},
-		{"id":"cc5b61731c72b8c2","type":"file","file":"sistemi_operativi/Appunti/4. Gestione della memoria secondaria.md","x":80,"y":1240,"width":400,"height":400}
+		{"id":"cc5b61731c72b8c2","type":"file","file":"sistemi_operativi/Appunti/4. Gestione della memoria secondaria.md","x":80,"y":1240,"width":400,"height":400},
+		{"id":"3c8982b180b8a344","type":"file","file":"sistemi_operativi/Appunti/7. Sistemi real-time.md","x":-1140,"y":-219,"width":400,"height":400},
+		{"id":"f7a2bcc81cdd3115","x":560,"y":840,"width":400,"height":400,"type":"file","file":"sistemi_operativi/Appunti/5. Gestione dell'I-O.md"}
 	],
 	"edges":[
 		{"id":"fdec3410415b69ac","fromNode":"4b6b7aee6d304f94","fromSide":"bottom","toNode":"ee847f3444cc80d7","toSide":"top","color":"5"},
 		{"id":"20421776804a809e","fromNode":"4b6b7aee6d304f94","fromSide":"bottom","toNode":"bc53604648929744","toSide":"top","color":"5"},
 		{"id":"5dc4436a40a81fc5","fromNode":"4b6b7aee6d304f94","fromSide":"bottom","toNode":"0119508b23a7475f","toSide":"top","color":"5"},
-		{"id":"6adb26acf9ca894a","fromNode":"4b6b7aee6d304f94","fromSide":"bottom","toNode":"c11a4f9bde6e2fd3","toSide":"top","color":"5"},
 		{"id":"990bb13203125740","fromNode":"4b6b7aee6d304f94","fromSide":"bottom","toNode":"cc5b61731c72b8c2","toSide":"top","color":"5"},
 		{"id":"f8328adaaa50db79","fromNode":"4b6b7aee6d304f94","fromSide":"bottom","toNode":"c50c6fe49732d638","toSide":"top","color":"5"}
 	]
