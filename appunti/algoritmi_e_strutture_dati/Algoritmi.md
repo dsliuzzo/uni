@@ -1706,7 +1706,7 @@ Nel caso in cui non facciamo nessuna riduzione all'insieme delle soluzioni (non 
 
 Prima di iniziare non sappiamo esattamente quanto taglieremo, però possiamo aspettarci un miglioramento o no, nell'esempio precedente ordinando gli elementi dal maggiore al minore o avendo un numero $k$ piccolo sono in grado di tagliare anche molto lo spazio dei risultati.
 
-Quindi dopo aver definito la tecnica generale per ottenere un risultato risulta incredibilmente utile trovare delle euristiche per migliorare ancora di più la riduzione dello spazio delle soluzioni.
+Quindi dopo aver definito la tecnica generale per ottenere un risultato, risulta incredibilmente utile trovare delle euristiche per migliorare ancora di più la riduzione dello spazio delle soluzioni.
 
 >[!bug] Una implementazione ricorsiva di questa tecnica lo renderebbe facile da implementare, ma difficile da controllare, potenzialmente creiamo una lunghissima catena di chiamate che riempiono lo stack.
 
@@ -1773,7 +1773,7 @@ class ProblemaBack:
 Questa struttura di classe astratta può essere utilizzata per implementare vari algoritmi che utilizzano il backtracking.
 
 ### Complessità
-La complessità assoluto non migliora rispetto a quella esaustiva: per ogni soluzione generata effettuiamo la verifica.
+La complessità assoluta non migliora rispetto a quella esaustiva: per ogni soluzione generata effettuiamo la verifica.
 Quindi per sapere quante soluzioni andiamo a generare non lo andiamo a calcolare rispetto alla dimensione dell'input, ma rispetto a:
 - **livello max** $=l$
 - **numero di scelte** fatte (in teoria tutte uguali per ogni livello) $=S_l$
