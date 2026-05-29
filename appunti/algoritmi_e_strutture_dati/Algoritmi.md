@@ -1928,168 +1928,192 @@ else:
 >1. Se sto facendo una cricca di $k$ elementi, ma rimangono a disposizione un numero di nodi insufficiente per arrivare a $k$ non c'è bisogno di continuare.
 >2. Non è detto che io debba iniziare dai nodi con indice più basso, sarebbe meglio enumerarli dal nodo con numero di archi maggiore al nodo con numero di archi minore, in questo modo, se sto cercando una cricca di $k$ elementi vado a verificare solo dopo i nodi che hanno meno di $k$ archi.
 
+# Information Retrieval e Web Search
+%% non è argomento di esame %%
+**Algoritmi e Strutture Dati — 29 Maggio 2026**
+## 1. Introduzione alla Ricerca di Informazioni
+
+La ricerca di informazioni (Information Retrieval) ha subito una profonda evoluzione. Inizialmente i documenti contenevano un campo di meta-informazioni con parole chiave, tramite cui i servizi di indicizzazione trovavano i contenuti. Col tempo, le parole chiave vennero sfruttate anche a scopi commerciali, rendendo il meccanismo inaffidabile.
+
+Il passaggio successivo fu la scansione dell'intero testo del documento per estrarne le parole chiave. Tuttavia, questo approccio presentava due problemi fondamentali:
+
+- Non ci si poteva più fidare del contenuto (manipolato per scopi commerciali);
+- Il numero di documenti rilevanti era diventato troppo elevato.
+
+Nacque quindi l'esigenza di comprendere **quali documenti fossero più rilevanti**: l'idea di base era che più un documento parla di un argomento, più è rilevante rispetto alla parola chiave cercata. Tuttavia, la sola rilevanza testuale non era sufficiente: era necessario considerare anche l'**autorevolezza** dei documenti.
 
 ---
 
->[!attention] Lavori in corso
+## 2. L'Idea di Google: Analisi dei Collegamenti
 
-Questa roba non c'è all'esame
-venerdì roba importante - simulazione prova di esame
+Google nacque sfruttando i **collegamenti ipertestuali (HyperText Links)** tra documenti web. Il principio fondamentale è semplice:
 
-Introduction to information retrieval
-Information rertieval and web search
-Chris Manning, Pandu Nayak
+- Se un documento punta ad un altro documento, lo considera rilevante e autorevole;
+- Più hyperlink in ingresso ha una pagina, più quella pagina è considerata autorevole.
 
-ricerca di informazioni tramite parole chiave
-- i documenti avevano un campo di meta informazioni con parole chiave con cui i servizi di indicizzazione trovava l'elemento
-- poi parole chiavi per uso commerciale
-- si è passato a scansione del documento per ottenere le parole chiavi
-- non ci si poteva più fidare del contenuto e i documenti rilevanti erano troppi
-esigenza di comprendere quali documenti sono più rilevanti
-più un documento parla di una cosa più è rilevante rispetto alla parola chiave
-non funziona così bene
-non solo rilevanti per la ricerca, ma anche i più autorevoli
-google è nata utilizzando dei collegamenti tra un documento all'altro i link ipertestuali tra documenti
-nel momento in cui un documento punta ad un altro documento lo considera rilevante
-più hyper link in ingresso hai più sei autorevole
+Questo approccio era già utilizzato nelle pubblicazioni scientifiche: l'importanza di un lavoro veniva misurata in base al numero di citazioni ricevute, indipendentemente dalla query effettuata. Sul web, lo stesso principio si traduce nell'analisi dei link ipertestuali.
 
-**analisi dei collegamenti**
-algoritmi su grafi
+### 2.1 Analisi dei collegamenti e grafi
 
-esempio good/bad/unknown
-potrei arrivare ad una situazione di conflitto
+L'analisi dei collegamenti viene realizzata tramite **algoritmi su grafi**. Il Web viene modellato come un grafo orientato in cui:
 
-effettuando una analisi su un grafo logaritmico notiamo che i siti si distribuiscono con una determinata legge
-si può utilizzare per trovare per trovare dei punti anomali: che non rispettano questa legge e quindi sospetti di essere cattivi
+- I nodi rappresentano le pagine web;
+- Gli archi orientati rappresentano i link ipertestuali tra esse.
 
-Possiamo sfruttare delle tecniche di link analysis
-era un approccio già utilizzato nelle pubblicazioni scientifiche
+Analizzando la distribuzione dei link in ingresso (in-degree) su scala logaritmica, si osserva che i siti web seguono una **distribuzione power-law (legge di potenza)**: tutti i punti della parte "normale" del web giacciono su una retta in un grafico log-log. I punti che non rispettano questa legge sono anomali, e questa proprietà può essere sfruttata per identificare pagine sospette o spammer.
 
-dare una importanza al lavoro in base alle citazioni, a prescindere della query effettuata
+### 2.2 Classificazione delle pagine: Good, Bad, Unknown
 
-quindi per una ricerca effettuo una query e per l'ordinamento, basato su quanto sia autorevole, utilizzo questo metodo
+Un approccio semplice alla classificazione delle pagine prevede tre categorie:
 
-problemi enormi
-nel web gli attori non sono puri
-spam - interessi economici - merda da tutte le parti
-inizialmente quando veniva utilizzato il conteggio dei link è aumentato a dismisura lo spam, tramite anche delle link farm in cui pagavi per ricevere citazioni
+- **Good**: pagine affidabili e di qualità;
+- **Bad**: pagine spam o dannose;
+- **Unknown**: pagine di natura incerta.
 
-nasce quindi un nuovo algoritmo
-punteggio di importanza, supponiamo che uno faccia una navigazione random, che probabilità ha di atterrare su una certa pagina
+La logica iterativa semplice stabilisce che:
 
-spaziale google funziona
+- Un nodo Good non punta a nodi Bad;
+- Se punti a un nodo Bad, sei Bad;
+- Se un nodo Good punta a te, sei Good.
 
-per esempio se in una pagina ci sono 10 link l'apertura di uno avrà 1/10 di probabilità
+Tuttavia, questo approccio presenta problemi quando il grafo è dinamico: si possono generare conflitti, e le pagine Bad tendono a puntare a pagine Good per simulare autorevolezza.
 
-si applicano anche i processi stocastici (distribuzioni di probabilità di eventi consecutivi)
-**long term visit rate** - se tu esegui il processo molto a lungo abbiamo la certezza che questa possibilità esista
+---
 
-ancora problemi enormi
-ci sono dei dead-end, pagine che non hanno link in uscita
--> non esistono long term visit rate
+## 3. PageRank
 
-ma se un utente finisce in un dead-end l'utente tipicamente dalla barra di ricerca va in una pagina totalmente diversa senza che essa sia linkata - **teleporting**
-aggiungiamo quindi una piccola probabilità di fare un teleport, la restante probabilità è una scelta random dei link presenti nella pagina
+L'approccio iniziale basato sul semplice conteggio dei link in ingresso venne rapidamente manipolato tramite le cosiddette **link farm**: servizi a pagamento che vendevano citazioni per aumentare artificialmente l'in-degree di una pagina.
 
-a questo punto possiamo parlare di long-term visit, se sono in una dead end faccio teleport
+Per risolvere questo problema, fu introdotto il **PageRank**: un algoritmo che assegna a ogni pagina un punteggio di importanza basandosi su una navigazione casuale (random walk) sul Web.
 
-per dimostrarlo si utilizzano le catene di Markov
-a differenza dei processi stocastici, il prossimo passo non dipende da quello che abbiamo fatto in tutti i passi precedenti, ma solo dallo stato corrente (in questo caso la pagina in cui mi trovo)
-ho uno stato probabilistico, non ben definito
-sono in tutte le pagine con una certa probabilità di essere in una pagina
-a quel punto l'obbiettivo e calcolare di essere nella successiva sapendo lo stato in cui sono
-abbiamo quindi una singola catena che ci descrive tutto
+### 3.1 Concetto di base: navigazione casuale
 
-può essere rappresentato da una matrice di probabilità
-![[Algoritmi-1780049897423.webp|center|500]]
-ottengo un grafo pesato di cui ho la matrice di adiacenza in cui i pesi sono le probabilità
-La catena di Markov è una astrazione.
-Catene di Markov ergodiche - catene di Markov di cui esiste la long term
+L'idea fondamentale è la seguente: **supponiamo che un utente effettui una navigazione completamente casuale sul Web**. Qual è la probabilità che, nel lungo periodo, atterri su una determinata pagina? Questa probabilità di visita a lungo termine costituisce il punteggio PageRank della pagina.
 
-posso capire come evolve il vettore $x=(x_{1},x_{2},\dots,x_n)$ di probabilità di essere in una determinata pagina
+Il modello funziona così:
 
-stato iniziale:
-se ho $n$ pagine avrò $\frac{1}{n}$ in ogni cella
+- L'utente inizia da una pagina casuale;
+- Ad ogni passo, segue uno dei link presenti nella pagina corrente con probabilità uniforme (es. se una pagina ha 10 link, ogni link ha probabilità 1/10 di essere scelto);
+- Nel lungo periodo, la frequenza di visita di ogni pagina converge a un valore stabile: il suo PageRank.
 
-il successivo stato si può ottenere tramite una moltiplicazione vettore per $p$
+### 3.2 Il problema dei Dead-End e il Teleporting
 
-questa sequenza di matrici se convergesse ad un determinato valore ci dà la probabilità di finire in una determinata pagina nel long - term ad un numero infinito di passi
+Un problema critico è l'esistenza dei **dead-end**: pagine che non hanno link in uscita. In questi casi il cammino casuale si blocca e non esiste un long-term visit rate.
 
+La soluzione modella il comportamento reale degli utenti: quando si finisce in un dead-end, si torna alla barra di ricerca e si naviga verso una pagina completamente diversa, senza seguire alcun link. Questo comportamento viene chiamato **teleporting**.
 
-Hp coverge
-arriverà un punto della navigazione in cui se mi trovo ad uno stato $a$, faccio il teleport e ritorno nello stato $a$
-quindi $a\cdot p = a$
-sia $a = (a_{1},a_{2},\dots,a_n)$
+Formalmente, si aggiunge ad ogni pagina una piccola probabilità α di fare un teleport verso una pagina qualsiasi scelta uniformemente a caso, e una probabilità (1−α) di seguire uno dei link presenti nella pagina. Con il teleporting, anche le pagine dead-end possono avere un long-term visit rate.
 
+### 3.3 Catene di Markov e PageRank
 
-il calcolo completo sarebbe troppo complesso, dovrei calcolare matrice da trasporre sarebbe tipo un algoritmo cubico, ma su scala web è una roba assurda
+Il processo di navigazione casuale con teleporting viene formalizzato tramite le **Catene di Markov**. A differenza dei processi stocastici generali, in una catena di Markov il passo successivo dipende *solo dallo stato corrente* (la pagina in cui ci si trova), e non dalla storia precedente dei passi compiuti.
 
-sperimentalmente converge già dopo 4/5 passi quindi basta quello
+Il modello si rappresenta come segue:
 
-con questo algoritmo nel 95\% dei casi le pagine cercate erano tra le prime 3
-spacca google - **page rank**
+- Lo stato del sistema in un certo istante è un vettore di probabilità **x = (x₁, x₂, ..., xₙ)**, dove xᵢ rappresenta la probabilità di trovarsi nella pagina i;
+- Si costruisce una **matrice di transizione P** (n×n), dove Pᵢⱼ rappresenta la probabilità di passare dalla pagina i alla pagina j;
+- Il risultato è un grafo pesato completo orientato, la cui matrice di adiacenza contiene le probabilità di transizione;
+- Lo stato iniziale assegna probabilità uniforme **1/n** ad ogni pagina.
 
-hanno fottuto anche page rank, ad oggi google usa una combinazioni di algoritmi, ognuna con un suo peso.
+Il passaggio da uno stato al successivo si ottiene moltiplicando il vettore di stato corrente per la matrice P:
 
-altro algoritmo usato per dare suggerimenti (es. post di social network, prodotti da acquistare)
-si usano i link per fare filtraggio collaborativo delle informazioni
-filtro in base a cosa sono stati interessati utenti che hanno avuto in interesse simile ai miei
+```
+x·P → x·P² → x·P³ → ... → x·Pⁿ
+```
 
-permette di distinguere le pagine di importanza in base alla tipologia
-- hub pages - pagina che contiene collegamenti a pagine specifiche
-- authority pages - pagina specifica che probabilmente è indicizzata da altre pagine
-sei un buon hub se punti a tante pagine autorevoli e sei un buon autorevole se sei puntato da tanti hub
-è una definizione circolare come si fa a calcolare
-estrai dal web un set di base di pagine che potrebbero essere buoni hub o autorità
-da queste vai ad identificare un insieme di pagine che sono le top autorità e i top hub con un algoritmo iterativo
-questo è l'insieme radice
-a questo aggiungo (con un passo) le pagine che puntano all'insieme radice e quelle puntate da elementi dell'insieme radice
-questo sarà l'insieme base
-ho un problema, nelle pagine root non ho le pagine che puntano sugli elementi root, ma ho solo quelli in uscita
-a questo punto segue un passaggio iterativo 
-per ogni nodo calcolo hub score $h(x)$ e authority score $a(x)$
-lo inizializzo tutto a 1
-poi iterativamente aggiorno per ogni nodo sia h che a
-h quante hub lo puntano moltiplicato per l'autorità dell'hub che lo punta
-per a viceversa
-$$
-h(x) = \sum_{x \to y} a(y)
-$$
-$$
-a(x) = \sum_{y \to x} h(x)
-$$
-facendo più passi iterativi non arriveremo mai ad una convergenza, i numeri crescono sempre
-non abbiamo un limite superiore
-facciamo quindi una scalatura
-calcolo valori autorità
-calcolo valori di hub
-normalizzo entrambi i valori ad un certo valore (es. valore iniziale)
+### 3.4 Convergenza e Steady State
 
-te ne intendi di ippica? corto muso, non mi interessa il valore, voglio solo un ranking
+Una catena di Markov è detta **ergodica** se esiste un long-term visit rate. La sequenza x·Pⁿ converge a uno stato stazionario (steady state) **a** che soddisfa la condizione:
 
-quante iterazioni? 5 operazioni andiamo verso la stabilità
+```
+a · P = a
+```
 
-in forma matriciale
-$$
-\displaylines{
-h = A a \\
-a = A^T h
-}
-$$
-possiamo quindi combinarle per trovare per esempio trovare h a partire da h
-$$
-\displaylines{
-h = AA^Th \\
-a = A^T A a
-}
-$$
-power iteration
+Questo significa che quando si è arrivati allo steady state, moltiplicare il vettore per la matrice di transizione non cambia il vettore stesso: il sistema è in equilibrio.
 
+Il calcolo esatto richiederebbe l'inversione di una matrice (algoritmo O(n³)), impraticabile su scala web. Tuttavia, sperimentalmente si è osservato che la sequenza converge già dopo **4-5 iterazioni**, rendendo il calcolo del PageRank estremamente efficiente.
 
+### 3.5 Risultati e limitazioni del PageRank
 
+Il PageRank ha rappresentato una rivoluzione nella ricerca web: nel 95% dei casi, le pagine cercate dagli utenti si trovavano tra i primi 3 risultati restituiti. Tuttavia, anche questo algoritmo venne progressivamente aggirato da tecniche di spam evolute.
 
+Google oggi utilizza una **combinazione di decine di algoritmi**, ognuno con un proprio peso, in cui il PageRank rappresenta solo uno dei fattori (con peso relativamente ridotto).
 
+---
 
+## 4. Algoritmo HITS (Hyperlink-Induced Topic Search)
+
+L'algoritmo **HITS** (Hyperlink-Induced Topic Search) è un algoritmo alternativo al PageRank, ancora oggi utilizzato soprattutto per sistemi di raccomandazione (es. post di social network, prodotti da acquistare). Permette di distinguere le pagine di importanza in base al loro ruolo nella rete.
+
+### 4.1 Hub e Authority
+
+HITS distingue due tipi di pagine:
+
+- **Hub pages**: pagine che contengono molti collegamenti verso pagine specifiche e autorevoli. Una buona pagina hub è quella che punta a tante pagine autorevoli. Sono utili quando si effettuano ricerche su argomenti molto ampi e si vuole approfondire.
+- **Authority pages**: pagine specifiche che sono probabilmente indicizzate (puntate) da molte altre pagine. Una buona authority è puntata da molti buoni hub. Sono pagine di destinazione specifiche su un argomento.
+
+Si tratta di una definizione circolare (i buoni hub puntano alle buone authority, e le buone authority sono puntate dai buoni hub), che viene risolta attraverso un processo iterativo.
+
+### 4.2 Costruzione del Base Set
+
+L'algoritmo opera su un sottoinsieme del web costruito nel seguente modo:
+
+- **Passo 1 – Root set**: si estrae dal web un insieme di pagine che potrebbero essere buoni hub o authority (usando un motore di ricerca per trovare le pagine più rilevanti per la query);
+- **Passo 2 – Base set**: si espande il root set aggiungendo le pagine che puntano agli elementi del root set (in-links) e quelle puntate dagli elementi del root set (out-links), ottenendo così un insieme più ampio su cui operare.
+
+### 4.3 Calcolo iterativo degli score
+
+Per ogni pagina x nel base set si calcolano due score:
+
+- **h(x)**: hub score — quanto bene x funge da hub;
+- **a(x)**: authority score — quanto bene x funge da authority.
+
+Entrambi gli score vengono inizializzati a 1 per ogni pagina. Poi, iterativamente, vengono aggiornati secondo le formule:
+
+```
+h(x) = Σ a(y)    per ogni y puntato da x
+a(x) = Σ h(y)    per ogni y che punta a x
+```
+
+In pratica:
+
+- L'hub score di x si aggiorna sommando gli authority score di tutte le pagine puntate da x;
+- L'authority score di x si aggiorna sommando gli hub score di tutte le pagine che puntano a x.
+
+### 4.4 Normalizzazione e convergenza
+
+Senza normalizzazione, gli score crescerebbero senza limite ad ogni iterazione. Poiché ciò che interessa è solo il **ranking relativo** e non i valori assoluti, dopo ogni iterazione sia h(x) che a(x) vengono normalizzati.
+
+Anche in questo caso, sperimentalmente si raggiunge la stabilità dopo **circa 5 iterazioni**.
+
+### 4.5 Formulazione matriciale (Power Iteration)
+
+Usando la matrice di adiacenza A del grafo web, le equazioni di aggiornamento si scrivono in forma compatta:
+
+```
+h = A · a
+a = Aᵀ · h
+```
+
+Sostituendo, si ottiene:
+
+```
+h = A · Aᵀ · h
+a = Aᵀ · A · a
+```
+
+Questo metodo è detto **Power Iteration**, e dimostra algebricamente che gli score convergono a un valore stabile. Normalizzando ad ogni passo, la convergenza è garantita e avviene già dopo poche iterazioni.
+
+---
+
+## 5. Riepilogo e Confronto tra PageRank e HITS
+
+Entrambi gli algoritmi sfruttano la struttura dei link del Web per determinare l'importanza delle pagine, ma differiscono per approccio:
+
+- **PageRank** assegna un punteggio globale a ogni pagina, indipendente dalla query, basandosi sulla probabilità di visita a lungo termine in una navigazione casuale con teleporting. È un attributo della pagina, non della ricerca.
+- **HITS** distingue tra hub e authority, ed è più adatto a query tematiche specifiche. Viene ancora usato per sistemi di raccomandazione e filtraggio collaborativo: i link vengono sfruttati per capire cosa hanno trovato interessante utenti con interessi simili.
+
+Entrambi convergono in poche iterazioni (4-5) e utilizzano la normalizzazione per mantenere la stabilità numerica, poiché ciò che importa è il ranking relativo, non i valori assoluti degli score.
 
 
 
