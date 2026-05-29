@@ -1929,6 +1929,169 @@ else:
 >2. Non è detto che io debba iniziare dai nodi con indice più basso, sarebbe meglio enumerarli dal nodo con numero di archi maggiore al nodo con numero di archi minore, in questo modo, se sto cercando una cricca di $k$ elementi vado a verificare solo dopo i nodi che hanno meno di $k$ archi.
 
 
+---
+
+>[!attention] Lavori in corso
+
+Questa roba non c'è all'esame
+venerdì roba importante - simulazione prova di esame
+
+Introduction to information retrieval
+Information rertieval and web search
+Chris Manning, Pandu Nayak
+
+ricerca di informazioni tramite parole chiave
+- i documenti avevano un campo di meta informazioni con parole chiave con cui i servizi di indicizzazione trovava l'elemento
+- poi parole chiavi per uso commerciale
+- si è passato a scansione del documento per ottenere le parole chiavi
+- non ci si poteva più fidare del contenuto e i documenti rilevanti erano troppi
+esigenza di comprendere quali documenti sono più rilevanti
+più un documento parla di una cosa più è rilevante rispetto alla parola chiave
+non funziona così bene
+non solo rilevanti per la ricerca, ma anche i più autorevoli
+google è nata utilizzando dei collegamenti tra un documento all'altro i link ipertestuali tra documenti
+nel momento in cui un documento punta ad un altro documento lo considera rilevante
+più hyper link in ingresso hai più sei autorevole
+
+**analisi dei collegamenti**
+algoritmi su grafi
+
+esempio good/bad/unknown
+potrei arrivare ad una situazione di conflitto
+
+effettuando una analisi su un grafo logaritmico notiamo che i siti si distribuiscono con una determinata legge
+si può utilizzare per trovare per trovare dei punti anomali: che non rispettano questa legge e quindi sospetti di essere cattivi
+
+Possiamo sfruttare delle tecniche di link analysis
+era un approccio già utilizzato nelle pubblicazioni scientifiche
+
+dare una importanza al lavoro in base alle citazioni, a prescindere della query effettuata
+
+quindi per una ricerca effettuo una query e per l'ordinamento, basato su quanto sia autorevole, utilizzo questo metodo
+
+problemi enormi
+nel web gli attori non sono puri
+spam - interessi economici - merda da tutte le parti
+inizialmente quando veniva utilizzato il conteggio dei link è aumentato a dismisura lo spam, tramite anche delle link farm in cui pagavi per ricevere citazioni
+
+nasce quindi un nuovo algoritmo
+punteggio di importanza, supponiamo che uno faccia una navigazione random, che probabilità ha di atterrare su una certa pagina
+
+spaziale google funziona
+
+per esempio se in una pagina ci sono 10 link l'apertura di uno avrà 1/10 di probabilità
+
+si applicano anche i processi stocastici (distribuzioni di probabilità di eventi consecutivi)
+**long term visit rate** - se tu esegui il processo molto a lungo abbiamo la certezza che questa possibilità esista
+
+ancora problemi enormi
+ci sono dei dead-end, pagine che non hanno link in uscita
+-> non esistono long term visit rate
+
+ma se un utente finisce in un dead-end l'utente tipicamente dalla barra di ricerca va in una pagina totalmente diversa senza che essa sia linkata - **teleporting**
+aggiungiamo quindi una piccola probabilità di fare un teleport, la restante probabilità è una scelta random dei link presenti nella pagina
+
+a questo punto possiamo parlare di long-term visit, se sono in una dead end faccio teleport
+
+per dimostrarlo si utilizzano le catene di Markov
+a differenza dei processi stocastici, il prossimo passo non dipende da quello che abbiamo fatto in tutti i passi precedenti, ma solo dallo stato corrente (in questo caso la pagina in cui mi trovo)
+ho uno stato probabilistico, non ben definito
+sono in tutte le pagine con una certa probabilità di essere in una pagina
+a quel punto l'obbiettivo e calcolare di essere nella successiva sapendo lo stato in cui sono
+abbiamo quindi una singola catena che ci descrive tutto
+
+può essere rappresentato da una matrice di probabilità
+![[Algoritmi-1780049897423.webp|center|500]]
+ottengo un grafo pesato di cui ho la matrice di adiacenza in cui i pesi sono le probabilità
+La catena di Markov è una astrazione.
+Catene di Markov ergodiche - catene di Markov di cui esiste la long term
+
+posso capire come evolve il vettore $x=(x_{1},x_{2},\dots,x_n)$ di probabilità di essere in una determinata pagina
+
+stato iniziale:
+se ho $n$ pagine avrò $\frac{1}{n}$ in ogni cella
+
+il successivo stato si può ottenere tramite una moltiplicazione vettore per $p$
+
+questa sequenza di matrici se convergesse ad un determinato valore ci dà la probabilità di finire in una determinata pagina nel long - term ad un numero infinito di passi
+
+
+Hp coverge
+arriverà un punto della navigazione in cui se mi trovo ad uno stato $a$, faccio il teleport e ritorno nello stato $a$
+quindi $a\cdot p = a$
+sia $a = (a_{1},a_{2},\dots,a_n)$
+
+
+il calcolo completo sarebbe troppo complesso, dovrei calcolare matrice da trasporre sarebbe tipo un algoritmo cubico, ma su scala web è una roba assurda
+
+sperimentalmente converge già dopo 4/5 passi quindi basta quello
+
+con questo algoritmo nel 95\% dei casi le pagine cercate erano tra le prime 3
+spacca google - **page rank**
+
+hanno fottuto anche page rank, ad oggi google usa una combinazioni di algoritmi, ognuna con un suo peso.
+
+altro algoritmo usato per dare suggerimenti (es. post di social network, prodotti da acquistare)
+si usano i link per fare filtraggio collaborativo delle informazioni
+filtro in base a cosa sono stati interessati utenti che hanno avuto in interesse simile ai miei
+
+permette di distinguere le pagine di importanza in base alla tipologia
+- hub pages - pagina che contiene collegamenti a pagine specifiche
+- authority pages - pagina specifica che probabilmente è indicizzata da altre pagine
+sei un buon hub se punti a tante pagine autorevoli e sei un buon autorevole se sei puntato da tanti hub
+è una definizione circolare come si fa a calcolare
+estrai dal web un set di base di pagine che potrebbero essere buoni hub o autorità
+da queste vai ad identificare un insieme di pagine che sono le top autorità e i top hub con un algoritmo iterativo
+questo è l'insieme radice
+a questo aggiungo (con un passo) le pagine che puntano all'insieme radice e quelle puntate da elementi dell'insieme radice
+questo sarà l'insieme base
+ho un problema, nelle pagine root non ho le pagine che puntano sugli elementi root, ma ho solo quelli in uscita
+a questo punto segue un passaggio iterativo 
+per ogni nodo calcolo hub score $h(x)$ e authority score $a(x)$
+lo inizializzo tutto a 1
+poi iterativamente aggiorno per ogni nodo sia h che a
+h quante hub lo puntano moltiplicato per l'autorità dell'hub che lo punta
+per a viceversa
+$$
+h(x) = \sum_{x \to y} a(y)
+$$
+$$
+a(x) = \sum_{y \to x} h(x)
+$$
+facendo più passi iterativi non arriveremo mai ad una convergenza, i numeri crescono sempre
+non abbiamo un limite superiore
+facciamo quindi una scalatura
+calcolo valori autorità
+calcolo valori di hub
+normalizzo entrambi i valori ad un certo valore (es. valore iniziale)
+
+te ne intendi di ippica? corto muso, non mi interessa il valore, voglio solo un ranking
+
+quante iterazioni? 5 operazioni andiamo verso la stabilità
+
+in forma matriciale
+$$
+\displaylines{
+h = A a \\
+a = A^T h
+}
+$$
+possiamo quindi combinarle per trovare per esempio trovare h a partire da h
+$$
+\displaylines{
+h = AA^Th \\
+a = A^T A a
+}
+$$
+power iteration
+
+
+
+
+
+
+
+
 
 
 
