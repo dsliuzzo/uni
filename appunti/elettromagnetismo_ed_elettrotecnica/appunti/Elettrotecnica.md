@@ -1333,7 +1333,7 @@ Definiamo la **potenza reattiva** che nei vari componenti:
 >[!multi-column]
 >
 >>[!important] Resistore
->>$$\sin(\Phi) = 0 \implies P_{\text{reatt}} = 0$$
+>>$$\sin(0) = 0 \implies P_{\text{reatt}} = 0$$
 >
 >>[!important] Condensatore
 >>$$\sin\left( -\frac{\pi}{2} \right) \implies P_{\text{reatt}} < 0$$
