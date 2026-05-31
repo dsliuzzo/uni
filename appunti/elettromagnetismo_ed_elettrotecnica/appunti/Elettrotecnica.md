@@ -1411,7 +1411,7 @@ Applicando [[numeri complessi (automatica)#Formule di Eulero dirette|Eulero]]
 >[!multi-column]
 >
 >>[!blank]
->>$$ \begin{align*}\overline{S} &= \frac{V_mI_m}{2} \left[\cos(\varphi_v-\varphi_i) - \sin(\varphi_v - \varphi_i)\right] \\ & = \underbrace{\frac{V_mI_m}{2} \cos(\Phi)}_{P_{att}} -j \underbrace{\frac{V_mI_m}{2}\sin(\Phi)}_{P_{reatt}} \\ & = P+jQ \end{align*} $$
+>>$$ \begin{align*}\overline{S} &= \frac{V_mI_m}{2} \left[\cos(\varphi_v-\varphi_i) + \sin(\varphi_v - \varphi_i)\right] \\ & = \underbrace{\frac{V_mI_m}{2} \cos(\Phi)}_{P_{att}} +j \underbrace{\frac{V_mI_m}{2}\sin(\Phi)}_{P_{reatt}} \\ & = P+jQ \end{align*} $$
 >
 >>[!blank]
 >>![[Elettrotecnica-1778735631403.webp]]
@@ -1424,8 +1424,10 @@ $|\overline{S}| = \frac{V_mI_m}{2} = P_{app}$
 $|S| \cos(\Phi) = P_{att} = \mathrm{Re}\{\overline{S}\}$
 $\cos(\Phi) = \frac{\mathrm{Re}\{S\}}{|\overline{S}|} = \frac{P_{att}}{P_{app}}$
 
->[!important] La potenza nel dominio del tempo è la parte reale della potenza complessa
->$$p(t) = P_{app} \cos(\Phi) + P_{app} (2 \omega t + \varphi_v + \varphi_i) = |S|\cdot \frac{\mathrm{Re}\{S\}}{|S|} = \mathrm{Re}\{S\}$$
+%%secondo me quello che è scritto sotto è ridondante%%
+
+>[!important] La potenza attiva nel dominio del tempo è la parte reale della potenza complessa
+>$$p(t) = P_{app} \cos(\Phi) + P_{app} \cos (2 \omega t + \varphi_v + \varphi_i) = |S|\cdot \frac{\mathrm{Re}\{S\}}{|S|} = \mathrm{Re}\{S\}$$
 
 #### Legame tra potenza complessa e impedenza
 Tramite la legge di Ohm generalizzata possiamo calcolare la potenza complessa senza dover calcolare necessariamente il fasore della corrente o il fasore della tensione.
@@ -1453,7 +1455,7 @@ Tramite la legge di Ohm generalizzata possiamo calcolare la potenza complessa se
 >- $\overline{S}_C = -\frac{j}{2} \frac{1}{\omega C} \cdot |\overline{I}|^2 \to \mathrm{Re}(S_C) =0 \wedge \mathrm{Im}(S_C) < 0$
 >- $\overline{S}_L = \frac{j}{2} \omega L \cdot |\overline{I}|^2 \to \mathrm{Re}(S_L) =0 \wedge \mathrm{Im}(S_L) > 0$
 
-## Leggi di Kirchoff in regime sinusoidale
+## Leggi di Kirchhoff in regime sinusoidale
 In DC sappiamo che
 $$
 \sum_{i=1}^R v_i(t) = 0
