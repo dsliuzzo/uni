@@ -1424,10 +1424,7 @@ $|\overline{S}| = \frac{V_mI_m}{2} = P_{app}$
 $|S| \cos(\Phi) = P_{att} = \mathrm{Re}\{\overline{S}\}$
 $\cos(\Phi) = \frac{\mathrm{Re}\{S\}}{|\overline{S}|} = \frac{P_{att}}{P_{app}}$
 
-%%secondo me quello che è scritto sotto è ridondante%%
-
 >[!important] La potenza attiva nel dominio del tempo è la parte reale della potenza complessa
->$$p(t) = P_{app} \cos(\Phi) + P_{app} \cos (2 \omega t + \varphi_v + \varphi_i) = |S|\cdot \frac{\mathrm{Re}\{S\}}{|S|} = \mathrm{Re}\{S\}$$
 
 #### Legame tra potenza complessa e impedenza
 Tramite la legge di Ohm generalizzata possiamo calcolare la potenza complessa senza dover calcolare necessariamente il fasore della corrente o il fasore della tensione.
@@ -1504,11 +1501,13 @@ Dal [[#Generatori reali|teorema del massimo trasferimento]] sappiamo che in regi
 >[!multi-column]
 >
 >>[!blank]
->>![[Elettrotecnica-1778747212101.webp|center|350]]
+>>[...]
 >
 >>[!blank]
->>Per la potenza complessa
->>$$\displaylines{S_{ZL} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} Z_L \overline{I} \overline{I}^* = \frac{1}{2} Z_L |\overline{I}|^2 = \frac{1}{2} R_L |\overline{I}|^2 + \frac{j}{2} X_L |\overline{I}|^2 \\ \overline{I} = \frac{\overline{V_g}}{Z_g + Z_L} = \frac{\overline{V_g}}{(R_g+R_L)+j(X_g+X_L)} \\ \implies S_{ZL} = \frac{1}{2}\cdot \frac{(R_L + j X_L) \cdot\overline{V_g^2}}{(R_g+R_L)^2+(X_g+X_L)^2}}$$
+>>![[Elettrotecnica-1778747212101.webp|center|350]]
+
+Per la potenza complessa
+$$\displaylines{S_{ZL} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} Z_L \overline{I} \overline{I}^*= \frac{1}{2} Z_L |\overline{I}|^2 = \underbrace{\frac{1}{2} R_L |\overline{I}|^2}_{\text{Potenza attiva}}+ \frac{j}{2} X_L |\overline{I}|^2 \\ \overline{I} = \frac{\overline{V_g}}{Z_g + Z_L} = \frac{\overline{V_g}}{(R_g+R_L)+j(X_g+X_L)} \\ \implies S_{ZL} = \frac{1}{2}\cdot \frac{(R_L + j X_L) \cdot\overline{V_g^2}}{(R_g+R_L)^2+(X_g+X_L)^2}}$$
 
 Per trovare il massimo calcoliamo le derivate parziali e le poniamo pari a 0
 $$
