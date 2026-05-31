@@ -1504,11 +1504,11 @@ Dal [[#Generatori reali|teorema del massimo trasferimento]] sappiamo che in regi
 >[!multi-column]
 >
 >>[!blank]
->>![[Elettrotecnica-1778747212101.webp|center|400]]
+>>![[Elettrotecnica-1778747212101.webp|center|350]]
 >
 >>[!blank]
 >>Per la potenza complessa
->>$$\displaylines{P_{ZL} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} = \frac{1}{2} Z_L |\overline{I}|^2 \\ \overline{I} = \frac{\overline{V_g}}{Z_g + Z_L} = \frac{\overline{V_g}}{(R_g+R_L)+j(X_g+X_L)} \\ \implies P_{ZL} = \frac{1}{2}\cdot \frac{(R_L + j X_L) \cdot\overline{V_g^2}}{(R_g+R_L)^2+(X_g+X_L)^2}}$$
+>>$$\displaylines{S_{ZL} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} Z_L \overline{I} \overline{I}^* = \frac{1}{2} Z_L |\overline{I}|^2 = \frac{1}{2} R_L |\overline{I}|^2 + \frac{j}{2} X_L |\overline{I}|^2 \\ \overline{I} = \frac{\overline{V_g}}{Z_g + Z_L} = \frac{\overline{V_g}}{(R_g+R_L)+j(X_g+X_L)} \\ \implies S_{ZL} = \frac{1}{2}\cdot \frac{(R_L + j X_L) \cdot\overline{V_g^2}}{(R_g+R_L)^2+(X_g+X_L)^2}}$$
 
 Per trovare il massimo calcoliamo le derivate parziali e le poniamo pari a 0
 $$
@@ -1526,6 +1526,13 @@ $$
 Z_g + Z_L = 2R_g = 2R_L
 $$
 abbiamo quindi solo potenza attiva (unica potenza che compia lavoro)
+Quindi, avremo che la funzione di massima potenza attiva è:
+$$
+P_{att,max}=\frac{1}{2}R_g \frac{|\overline{V}|^2}{8R_g}
+$$
+dove:
+- $\overline{I}=\frac{\overline{V_g}}{2R_g}$
+- $R_L = R_g$
 ## Rifasamento
 Nel mondo molti carichi domestici e industriali sono di tipo induttivo, hanno quindi un **fattore di potenza**
 maggiore di $0$
