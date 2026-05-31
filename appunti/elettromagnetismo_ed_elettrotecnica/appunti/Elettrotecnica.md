@@ -1389,7 +1389,7 @@ $$
 >[!important] La fase dell'induttanza trasla lateralmente la sinusoide della potenza nel dominio del tempo
 
 >[!question] Osservazione
->Nel caso di reti resistive l'induttanza è puramente reale, la sua fase è nulla e la differenza di fase tra tensione e corrente è nulla, di conseguenza non abbiamo nessuna traslazione sulla potenza.
+>Nel caso di reti resistive l'impedenza è puramente reale, la sua fase è nulla e la differenza di fase tra tensione e corrente è nulla, di conseguenza non abbiamo nessuna traslazione sulla potenza.
 
 ![[potenza.gif]]
 ### Potenza complessa
@@ -1411,7 +1411,7 @@ Applicando [[numeri complessi (automatica)#Formule di Eulero dirette|Eulero]]
 >[!multi-column]
 >
 >>[!blank]
->>$$ \begin{align*}\overline{S} &= \frac{V_mI_m}{2} \left[\cos(\varphi_v-\varphi_i) - \cos(\varphi_v - \varphi_i)\right] \\ & = \underbrace{\frac{V_mI_m}{2} \cos(\Phi)}_{P_{att}} -j \underbrace{\frac{V_mI_m}{2}\cos(\Phi)}_{P_{reatt}} \\ & = P+jQ \end{align*} $$
+>>$$ \begin{align*}\overline{S} &= \frac{V_mI_m}{2} \left[\cos(\varphi_v-\varphi_i) - \sin(\varphi_v - \varphi_i)\right] \\ & = \underbrace{\frac{V_mI_m}{2} \cos(\Phi)}_{P_{att}} -j \underbrace{\frac{V_mI_m}{2}\sin(\Phi)}_{P_{reatt}} \\ & = P+jQ \end{align*} $$
 >
 >>[!blank]
 >>![[Elettrotecnica-1778735631403.webp]]
