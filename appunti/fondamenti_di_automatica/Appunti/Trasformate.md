@@ -304,7 +304,7 @@ Considerando $f(\cdot) = 1(t)$ come gradino unitario otteniamo una particolare l
 Questa funzione viene utilizzata per sistemi di controllo in cui una parte ha velocità costante per esempio negli intervalli di switch con variazione costante nel cambio di temperatura di una stanza.
 Per il [[#Teorema di moltiplicazione per $t$|teorema di moltiplicazione per t]] la sua trasformata di Laplace sarà
 $$
-t 1(t) \leftrightharpoons - \frac{d}{ds} \left( \frac{1}{2} \right) = \frac{1}{s^2}
+t 1(t) \leftrightharpoons - \frac{d}{ds} \left( \frac{1}{s} \right) = \frac{1}{s^2}
 $$
 #### Rampa non unitaria
 Se la rampa non è unitaria ho un coefficiente che moltiplica $t$, che per linearità sarà coefficiente anche della L-trasformata.
