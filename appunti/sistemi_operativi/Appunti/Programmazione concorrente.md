@@ -434,13 +434,12 @@ Sempre meglio farsi uno schema prima della logica della gestione e ricordati di 
 # Monitor Nativi
 All'interno della classe Object
 Ogni oggetto dell classe Object ha associato un lock intrinseco rientrante associato che si può utilizzare tramite i metodi:
-- wait():
-- notify():
-- notifyAll():
+- `wait()`: in attesa sulla condition intrinseca
+- `notify()`:  sveglia thread in attesa
+- `notifyAll()`: sveglia tutti i thread in attesa
 Quindi, quando thread invoca metodo sincronizzato acquisisce automaticamente il lock associato all'oggetto e lo rilascia al termine.
 
 Sintatticamente, basta aggiungere alla signature del metodo l'attributo synchronized.
-*aggiungi esempio conto corrente*
 ``` java
 public synchronized void deposita(int importo) throws InterruptedException{
 	deposito += importo
