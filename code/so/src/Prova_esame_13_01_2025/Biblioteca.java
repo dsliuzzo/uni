@@ -1,4 +1,4 @@
-package Prova_esame_13_01_2024;
+package Prova_esame_13_01_2025;
 
 public abstract class Biblioteca {
     protected final int numUtenti = 25;
