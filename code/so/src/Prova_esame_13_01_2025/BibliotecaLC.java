@@ -1,4 +1,4 @@
-package Prova_esame_13_01_2024;
+package Prova_esame_13_01_2025;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -24,6 +24,7 @@ public class BibliotecaLC extends Biblioteca{
     private Condition attesaRegistrazione = l.newCondition();
     private boolean attesaUtente = false;
     private Condition attesaUscita = l.newCondition();
+
 
     @Override
     public void richiediPrestito() throws InterruptedException {
