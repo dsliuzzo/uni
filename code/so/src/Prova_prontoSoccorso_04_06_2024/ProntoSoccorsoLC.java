@@ -28,17 +28,16 @@ public class ProntoSoccorsoLC extends ProntoSoccorso {
     private Condition verde = ps.newCondition();
     private LinkedList<Thread> codaV = new LinkedList<>();
 
-    private Condition psVuoto = ps.newCondition(); // il medico attende cha arrivi un paziente
-
     // Mappa che associa a ogni id il numero di turni attesi, serve solo per i gialli
     private Map<Integer, Integer> idTurno = new HashMap<>();
 
-    private Condition attesaMedico = ps.newCondition();
+    private Condition psVuoto = ps.newCondition(); // il medico attende cha arrivi un paziente
     private boolean pazienteDentro = false; // true se il paziente è dentro la sala
-    // private Condition attesaPaziente = ps.newCondition();
-    private boolean visitaMedico = false; // true se il medico sta visitando
-    private Condition attesaPaziente = ps.newCondition();
+
+    private Condition attesaMedico = ps.newCondition();
     private boolean visitaPaziente = false;
+    private Condition attesaPaziente = ps.newCondition();
+    private boolean visitaMedico = false; // true se il medico sta visitando
 
     private int codiceCurr; // contiene il codice del paziente attuale
 
@@ -47,29 +46,32 @@ public class ProntoSoccorsoLC extends ProntoSoccorso {
         ps.lock();
         try {
             int cod = 1 + r.nextInt(3);
+            int pazienteId = ((Paziente) Thread.currentThread()).id();
             if (cod == 1) { // ROSSO
                 codaR.addLast(Thread.currentThread());
                 while (!turnoR()) {
                     rosso.await();
                 }
                 codaR.removeFirst();
+                codiceCurr = cod;
             } else if (cod == 2) { // GIALLO
                 codaG.addLast(Thread.currentThread());
-                idTurno.put(((Paziente) Thread.currentThread()).id(), 0);
+                idTurno.put(pazienteId, 0);
                 while (!turnoG()) {
                     giallo.await();
                 }
                 codaG.removeFirst();
-                idTurno.remove(((Paziente) Thread.currentThread()).id());
+                idTurno.remove(pazienteId);
+                codiceCurr = cod;
             } else { // VERDE
                 codaV.addLast(Thread.currentThread());
                 while (!turnoV()) {
                     verde.await();
                 }
                 codaV.removeFirst();
+                codiceCurr = cod;
             }
             stampaCode();
-            codiceCurr = cod;
             System.out.println("Paziente " + codiceCurr + " entrato");
             pazienteDentro = true;
             psVuoto.signal();
@@ -83,34 +85,31 @@ public class ProntoSoccorsoLC extends ProntoSoccorso {
     }
 
     private boolean turnoR() {
-        if (pazienteDentro) { return false; }
         if (codaR.getFirst() != Thread.currentThread()) {
             return false;
         }
-        for (int i: idTurno.values()) {
-            if (i >= 5) {
+        for (int id : idTurno.values()) {
+            if (id >= 5) {
                 return false;
             }
         }
-        return true;
+        return !pazienteDentro;
     }
     private boolean turnoG() {
-        if (pazienteDentro) { return false; }
         if (codaG.getFirst() != Thread.currentThread()) {
             return false;
         }
-        return codaR.isEmpty() || idTurno.get(((Paziente) Thread.currentThread()).id()) >= 5;
+        return (codaR.isEmpty() || idTurno.get(((Paziente) Thread.currentThread()).id()) >= 5) && !pazienteDentro;
     }
     private boolean turnoV() {
-        if (pazienteDentro) { return false; }
-        return codaV.getFirst() == Thread.currentThread() && codaG.isEmpty() && codaR.isEmpty();
+        return codaR.isEmpty() && codaG.isEmpty() && codaV.getFirst() == Thread.currentThread() && !pazienteDentro;
     }
 
     @Override
     public void iniziaVisita() throws InterruptedException {
         ps.lock();
         try {
-            while (!pazienteDentro) {
+            while (!pazienteDentro || visitaPaziente) {
                 psVuoto.await();
             }
             visitaPaziente = true;
@@ -146,6 +145,7 @@ public class ProntoSoccorsoLC extends ProntoSoccorso {
     public void esciPaziente() throws InterruptedException {
         ps.lock();
         try {
+            int pazienteId = ((Paziente) Thread.currentThread()).id();
             while (!visitaMedico) {
                 attesaPaziente.await();
             }
@@ -158,6 +158,7 @@ public class ProntoSoccorsoLC extends ProntoSoccorso {
             pazienteDentro = false;
             visitaPaziente = false;
             visitaMedico = false;
+            psVuoto.signal();
             rosso.signalAll();
             giallo.signalAll();
             verde.signalAll();
