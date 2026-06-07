@@ -9,23 +9,9 @@ public abstract class BancoCheckIn {
     public abstract void riceviCartaImbarco() throws InterruptedException;
     public abstract void prossimoPasseggero() throws InterruptedException;
 
-    public void test(){
-        try {
-            Addetto a = new Addetto(this);
-            a.setDaemon(true);
-            a.start();
-            for (int i = 0; i < nP; i++) {
-                Thread.sleep(2000);
-                new Passeggero(this, i).start();
-            }
-        } catch (InterruptedException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void testB() {
+    public void test() {
         for (int i = 0; i < nBanchi; i++) {
-            Addetto a = new Addetto(this);
+            Addetto a = new Addetto(this, i);
             a.setDaemon(true);
             a.start();
         }
