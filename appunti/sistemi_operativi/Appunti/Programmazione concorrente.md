@@ -189,7 +189,6 @@ Empiricamente il `for()` che potrebbe sembrare infinito converge in un numero fi
 
 >[!important] Fairness
 >se `fair` è `True` segue la coda FIFO per gestire i processi in attesa.
->Se impostata a `False` [...]
 
 ### Metodi
 - `void acquire()`
@@ -275,8 +274,6 @@ Due tipi di thread, produttore e consumatore, che condividono un buffer a dimens
   è l'implementazione della classe `Buffer`, contiene il buffer in cui il produttore inserirà e il consumatore preleverà, gestisce tutto tramite i metodi `put(int i)` e `get()`
 - `public class Produttore/Consumatore implements Runnable`
   sono le classi dei thread, il loro funzionamento si limita a richiamare `put()` e `get()`
-
-[...] <-- aggiungi produttore - consumatore con priorità FIFO
 ## Lettori-scrittori
 Si tratta di un classico esempio di problema di concorrenza.
 Consiste in:
@@ -433,7 +430,7 @@ Sempre meglio farsi uno schema prima della logica della gestione e ricordati di 
 
 # Monitor Nativi
 All'interno della classe Object
-Ogni oggetto dell classe Object ha associato un lock intrinseco rientrante associato che si può utilizzare tramite i metodi:
+Ogni istanza di un oggetto dell classe Object ha associato un lock intrinseco rientrante associato che si può utilizzare tramite i metodi:
 - `wait()`: in attesa sulla condition intrinseca
 - `notify()`:  sveglia thread in attesa
 - `notifyAll()`: sveglia tutti i thread in attesa
@@ -518,7 +515,8 @@ In entrambi i casi **errati** viene lanciata l'eccezione `IllegalMonitorStateExc
 Nella Java Collection Framework esistono delle classi che garantiscono la **thread safety** (simile al funzionamento delle variabili atomiche), incapsulando stato e **sincronizzando metodi pubblici.** 
 Quindi, esistono collezioni in cui nel caso di una LinkedList il metodo è sincronizzato, per garantire mutua esclusione quando si modifiche.
 (es): operazione non thread-safe su lista
-Due thread cercano di rimuovere contemporaneamente nodi dalla lista: *incolla foto*
+Due thread cercano di rimuovere contemporaneamente nodi dalla lista:
+![[Programmazione concorrente-1780844746598.webp|center|400]]
 
 Poichè all'inizio le uniche collezioni sincronizzate erano Vector e HashTable, si è pensato di **wrappare**
 le classi non thread-safe con dei metodi sincronizzati. (lista metodi)
@@ -527,6 +525,7 @@ Questi metodi garantiscono che le operazioni **interne** (metodi pubblici) sia t
 
 Tuttavia, la sincronizzazione di TUTTI i metodi limita il parallelismo: per questo esistono **collezioni concorrenti** che modellano strutture dati in modo che 
 ### ArrayBlockingQueue e LinkedBlockingQueue
-
+Si tratta di strutture a capienza obbligatoria (Array) o non obbligatoria (Queue) che modellano code FIFO: thread sospeso quando tenta di inserire un elemento se la coda è piena, o quando tenta di prelevare un elemento se la coda è vuota (come avviene nel problema del produttore-consumatore).
 ### ConcurrentHashMap
-Il problema della mappa wrappata per garantire sincronizzazione è che ogni volta che si modifica blocca l'intera struttura dati. Utiizzando questa nuova struttura dati, invece, permette accesso a più thread contemporaneamente (a meno che non siano vicini)
+Per l’implementazione di una mappa torna utile l’accesso in aree diverse in maniera sincronizzaata. Infatti, il wrapping della struttura per la sincronizzazione garantisce, ad modifica si blocca l'intera struttura dati. 
+Utilizzando questa nuova struttura dati, si permette accesso a più thread insieme, a meno che non siano vicine le aree di accesso.
