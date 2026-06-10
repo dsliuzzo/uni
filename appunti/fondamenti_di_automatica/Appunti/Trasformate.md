@@ -81,7 +81,7 @@ Il risultato è un polinomio di grado $n$ con $s^nF(s)$ parte condizionata dall'
 $$
 \mathcal{L}\{f^{(n)}(t)\} = s^nF(s) - \sum_{i=0}^{n-1}s^i f^{(n-1-i)}(0^-) 
 $$
-### Teorema dello shifting
+### Teorema dello shifting in 's'
 Sia $f(\cdot)$ una funzione di classe L tale per cui $f(\cdot)\leftrightharpoons F(s)$
 Consideriamo ora la funzione $e^{\gamma t}\cdot f(t)\quad \gamma \in \mathbb{R}$
 **Ipotesi**
