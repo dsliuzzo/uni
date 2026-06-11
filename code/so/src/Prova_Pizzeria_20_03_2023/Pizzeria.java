@@ -1,8 +1,8 @@
 package Prova_Pizzeria_20_03_2023;
 
 public abstract class Pizzeria {
-    protected static final int dimT = 5;
-    protected static final int numClienti = 15;
+    protected static final int dimT = 3;
+    protected static final int numClienti = 30;
 
     public abstract void entra() throws InterruptedException;
     public abstract void mangiaPizza() throws InterruptedException;

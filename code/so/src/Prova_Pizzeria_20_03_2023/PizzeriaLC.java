@@ -6,12 +6,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.*;
 
 public class PizzeriaLC extends Pizzeria {
-    private Lock l = new ReentrantLock();
+    protected Lock l = new ReentrantLock();
 
     private Condition attesaEntrata = l.newCondition();
     private LinkedList<Thread> coda = new LinkedList<>();
     private int dentro = 0;
-    private Random r = new Random();
+    protected Random r = new Random();
 
     private Condition attesaPizza = l.newCondition();
     private boolean pizzaPronta = false;
