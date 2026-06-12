@@ -63,4 +63,8 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
             attesa0.release();
         }
     }
+
+    static void main(String[] args) {
+        new CantiereFerroviarioSem().test();
+    }
 }
