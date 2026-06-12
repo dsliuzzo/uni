@@ -44,7 +44,7 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
     }
     private int ricercaBin(int t) {
         for (int i = 0; i < M; i++) {
-            if (stato[i] == ((t % 2) + 1) && !dentro[i]) {
+            if (stato[i] == ((t + 1) % 2) && !dentro[i]) {
                 return i;
             }
         }
