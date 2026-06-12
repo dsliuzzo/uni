@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 public class CantiereFerroviarioSem extends CantiereFerroviarioA {
-    private Semaphore mutex = new Semaphore(1);
-    private Semaphore attesa0 = new Semaphore(M);
-    private Semaphore attesa1 = new Semaphore(0);
-    private boolean[] dentro = new boolean[M];
-    private int[] stato = new int[M];
-    private Map<Integer, Integer> idBin = new HashMap<>();
+    protected Semaphore mutex = new Semaphore(1);
+    protected Semaphore attesa0 = new Semaphore(M);
+    protected Semaphore attesa1 = new Semaphore(0);
+    protected boolean[] dentro = new boolean[M];
+    protected int[] stato = new int[M];
+    protected Map<Integer, Integer> idBin = new HashMap<>();
 
     public CantiereFerroviarioSem() {
         for (int i = 0; i < M; i++) {
@@ -42,7 +42,8 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
         }
         System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin);
     }
-    private int ricercaBin(int t) {
+
+    protected int ricercaBin(int t) {
         for (int i = 0; i < M; i++) {
             if (stato[i] == ((t + 1) % 2) && !dentro[i]) {
                 return i;
