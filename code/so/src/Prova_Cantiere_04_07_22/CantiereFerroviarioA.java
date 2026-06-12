@@ -14,7 +14,7 @@ public abstract class CantiereFerroviarioA {
         for(int i = 0; i < nT; i++){
             new Operaio(this, i,0).start();
         }
-        for(int i = 0; i < nR; i++){
+        for(int i = nT; i < nT + nR; i++){
             new Operaio(this,i,1).start();
         }
     }
