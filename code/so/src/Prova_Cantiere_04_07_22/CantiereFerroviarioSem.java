@@ -43,7 +43,7 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
         System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin);
     }
 
-    protected int ricercaBin(int t) {
+    private int ricercaBin(int t) {
         for (int i = 0; i < M; i++) {
             if (stato[i] == ((t + 1) % 2) && !dentro[i]) {
                 return i;

@@ -21,7 +21,6 @@ public class CantiereFerroviarioB extends CantiereFerroviarioSem {
             dentro[bin] = true;
             idBin.put(id, bin);
             stato[bin] = 0;
-            mutex.release();
         } else {
             attesa1.acquire();
             mutex.acquire();
@@ -35,9 +34,9 @@ public class CantiereFerroviarioB extends CantiereFerroviarioSem {
             dentro[bin] = true;
             idBin.put(id, bin);
             stato[bin] = 1;
-            mutex.release();
         }
-        System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin);
+        System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin + " | Siamo a: " + traversa[bin]);
+        mutex.release();
     }
     private int ricercaBin(int t) {
         for (int i = 0; i < M; i++) {
