@@ -6,7 +6,7 @@ import java.util.concurrent.Semaphore;
 
 public class CantiereFerroviarioSem extends CantiereFerroviarioA {
     private Semaphore mutex = new Semaphore(1);
-    private Semaphore attesa0 = new Semaphore(1);
+    private Semaphore attesa0 = new Semaphore(M);
     private Semaphore attesa1 = new Semaphore(0);
     private boolean[] dentro = new boolean[M];
     private int[] stato = new int[M];
@@ -15,6 +15,7 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
     public CantiereFerroviarioSem() {
         for (int i = 0; i < M; i++) {
             stato[i] = 1;
+            dentro[i] = false;
         }
     }
 
