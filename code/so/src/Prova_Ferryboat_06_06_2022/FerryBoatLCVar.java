@@ -25,4 +25,8 @@ public class FerryBoatLCVar extends FerryboatLC{
            l.unlock();
        }
     }
+
+    static void main(String[] args) {
+        new FerryBoatLCVar().test();
+    }
 }
