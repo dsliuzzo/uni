@@ -9,11 +9,10 @@ public class FerryboatLC extends Ferryboat {
     protected Condition attesaUscita = l.newCondition();
     private LinkedList<Thread> fifo = new LinkedList<>();
     protected LinkedList<Thread> lifo = new LinkedList<>();
-    private boolean possoEntrare = false;
+    private boolean possoEntrare = true;
     private boolean possoUscire = false;
     protected Condition attesaAddetto = l.newCondition();
-    protected boolean finePark = true;
-    private boolean presente = false;
+    protected boolean finePark = false;
     protected int count = 0;
 
     @Override
@@ -21,7 +20,6 @@ public class FerryboatLC extends Ferryboat {
         l.lock();
         try {
             fifo.addLast(Thread.currentThread());
-            presente = true;
             attesaAddetto.signal();
             while(!ingresso()) {
                 attesaEntrata.await();
@@ -44,7 +42,7 @@ public class FerryboatLC extends Ferryboat {
         l.lock();
         try {
             while (count < numPosti) {
-                while(!entraAuto()) {
+                while(!finePark || count == 0) {
                     attesaAddetto.await();
                 }
                 System.out.println("Entra");
@@ -54,9 +52,6 @@ public class FerryboatLC extends Ferryboat {
         } finally {
             l.unlock();
         }
-    }
-    protected boolean entraAuto() {
-        return presente && finePark;
     }
 
     @Override
