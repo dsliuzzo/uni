@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="361c7a29-e8f9-4246-8650-69b1d93a3f11" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/code/so/src/Prova_Ferryboat_06_06_2022/Addetto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/so/src/Prova_Ferryboat_06_06_2022/Autovettura.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/so/src/Prova_Ferryboat_06_06_2022/Ferryboat.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/code/so/src/Prova_Ferryboat_06_06_2022/FerryboatLC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/so/src/Prova_Ferryboat_06_06_2022/FerryboatLC.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/so/src/Prova_Ferryboat_06_06_2022/FerryboatLC.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +65,7 @@
   }
 }</component>
   <component name="RecapUselessUpdatesCounter">
-    <option name="suspendCountdown" value="9" />
+    <option name="suspendCountdown" value="7" />
   </component>
   <component name="RunManager" selected="Application.CantiereFerroviarioB">
     <configuration name="CantiereFerroviarioB" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -121,7 +119,7 @@
       <workItem from="1781181473707" duration="712000" />
       <workItem from="1781260815463" duration="660000" />
       <workItem from="1781266140732" duration="923000" />
-      <workItem from="1781353787765" duration="442000" />
+      <workItem from="1781353787765" duration="1839000" />
     </task>
     <servers />
   </component>
