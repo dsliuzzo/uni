@@ -11,16 +11,17 @@ public class FerryBoatLCVar extends FerryboatLC{
            attesaAddetto.signal();
 
            while(!uscita()){
-               attesaUscita.signal();
+               attesaUscita.await();
            }
            finePark = false;
            lifo.removeFirst();
            count--;
-           System.out.println("Autovettura" + ((Autovettura) Thread.currentThread()).id() + " uscito");
+           System.out.println("Auto " + ((Autovettura) Thread.currentThread()).id() + " uscito");
            if (count == 0){
                finePark = true;
                attesaAddetto.signal();
            }
+           attesaUscita.signalAll();
        } finally{
            l.unlock();
        }

@@ -11,12 +11,14 @@ public class Addetto extends Thread{
 
     @Override
     public void run(){
-        try{
-            ferry.imbarca();
-            TimeUnit.MILLISECONDS.sleep(20);
-            ferry.terminaTraghettata();
-        } catch(InterruptedException e){
-            e.printStackTrace();
+        while(true){
+            try {
+                ferry.imbarca();
+                TimeUnit.MILLISECONDS.sleep(20);
+                ferry.terminaTraghettata();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
