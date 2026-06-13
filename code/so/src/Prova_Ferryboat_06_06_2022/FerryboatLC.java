@@ -86,4 +86,8 @@ public class FerryboatLC extends Ferryboat {
             l.unlock();
         }
     }
+
+    static void main(String[] args) {
+        new FerryboatLC().test();
+    }
 }
