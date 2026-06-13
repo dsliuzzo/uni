@@ -12,7 +12,7 @@ public class FerryboatLC extends Ferryboat {
     private boolean possoEntrare = false;
     private boolean possoUscire = false;
     protected Condition attesaAddetto = l.newCondition();
-    protected boolean finePark = false;
+    protected boolean finePark = true;
     private boolean presente = false;
     protected int count = 0;
 
@@ -44,15 +44,19 @@ public class FerryboatLC extends Ferryboat {
         l.lock();
         try {
             while (count < numPosti) {
-                while(!finePark || !presente) {
+                while(!entraAuto()) {
                     attesaAddetto.await();
                 }
+                System.out.println("Entra");
                 possoEntrare = true;
                 attesaEntrata.signalAll();
             }
         } finally {
             l.unlock();
         }
+    }
+    protected boolean entraAuto() {
+        return presente && finePark;
     }
 
     @Override
