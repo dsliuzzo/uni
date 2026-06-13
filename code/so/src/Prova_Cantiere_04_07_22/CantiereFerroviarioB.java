@@ -38,7 +38,7 @@ public class CantiereFerroviarioB extends CantiereFerroviarioSem {
         System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin + " | Siamo a: " + traversa[bin]);
         mutex.release();
     }
-    private int ricercaBin(int t) {
+    protected int ricercaBin(int t) {
         for (int i = 0; i < M; i++) {
             if (stato[i] == ((t + 1) % 2) && !dentro[i] && traversa[i] < N) {
                 return i;
