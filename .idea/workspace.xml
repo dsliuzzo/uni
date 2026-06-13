@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="361c7a29-e8f9-4246-8650-69b1d93a3f11" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/code/so/src/Prova_Pizzeria_20_03_2023/PizzeriaLCb.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/so/src/Prova_Pizzeria_20_03_2023/Pizzeria.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/so/src/Prova_Pizzeria_20_03_2023/Pizzeria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/so/src/Prova_Pizzeria_20_03_2023/PizzeriaLC.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/so/src/Prova_Pizzeria_20_03_2023/PizzeriaLC.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/so/src/Prova_Cantiere_04_07_22/CantiereFerroviarioB.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/so/src/Prova_Cantiere_04_07_22/CantiereFerroviarioB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/so/src/Prova_Cantiere_04_07_22/CantiereFerroviarioSem.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/so/src/Prova_Cantiere_04_07_22/CantiereFerroviarioSem.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +15,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="2538" />
+    <option name="cachedIndexableFilesCount" value="2545" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -45,6 +43,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.CantiereFerroviarioB.executor": "Run",
     "Application.PizzeriaLCb.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.MCP Project settings loaded": "true",
@@ -56,12 +55,30 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.lookFeel",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.CantiereFerroviarioB">
+    <configuration name="CantiereFerroviarioB" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Prova_Cantiere_04_07_22.CantiereFerroviarioB" />
+      <module name="so" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Prova_Cantiere_04_07_22.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PizzeriaLCb" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Prova_Pizzeria_20_03_2023.PizzeriaLCb" />
       <module name="so" />
@@ -77,6 +94,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.CantiereFerroviarioB" />
         <item itemvalue="Application.PizzeriaLCb" />
       </list>
     </recent_temporary>
@@ -85,6 +103,7 @@
     <attachedChunks>
       <set>
         <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.29346.138" />
       </set>
     </attachedChunks>
   </component>
@@ -96,6 +115,8 @@
       <option name="presentableId" value="Default" />
       <updated>1778823634057</updated>
       <workItem from="1781181473707" duration="712000" />
+      <workItem from="1781260815463" duration="660000" />
+      <workItem from="1781266140732" duration="923000" />
     </task>
     <servers />
   </component>
