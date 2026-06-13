@@ -26,7 +26,6 @@ public class FerryboatLC extends Ferryboat {
             }
             fifo.removeFirst();
             lifo.addFirst(Thread.currentThread());
-            finePark = false;
             possoEntrare = false;
             System.out.println("Auto " + ((Autovettura) Thread.currentThread()).id() + " entra");
         } finally {
@@ -42,10 +41,11 @@ public class FerryboatLC extends Ferryboat {
         l.lock();
         try {
             while (count < numPosti) {
-                while(!finePark || count == 0) {
+                while(!finePark) {
                     attesaAddetto.await();
                 }
                 System.out.println("Entra");
+                finePark = false;
                 possoEntrare = true;
                 attesaEntrata.signalAll();
             }
