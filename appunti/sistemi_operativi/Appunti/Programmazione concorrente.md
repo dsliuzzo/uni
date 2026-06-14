@@ -253,8 +253,107 @@ Java implementa la soluzione di Hansen, ma il thread risvegliato ￼￼Q￼￼ d
 ```
 
 Per quanto riguarda invece le coda delle condition devo definire una lista per gestire il Thread, ma comunque al risveglio del thread deve riacquisire il lock, aggiungendosi alla coda del lock, rispettando la sua politica.
-## Monitor nativi
-I monitor nativi consentono una più semplice implementazione dei monitor, ma conferiscono anche meno flessibilità di utilizzo.
+## Monitor Nativi
+All'interno della classe Object
+Ogni istanza di un oggetto dell classe Object ha associato un lock intrinseco rientrante associato che si può utilizzare tramite i metodi:
+- `wait()`: in attesa sulla condition intrinseca
+- `notify()`:  sveglia thread in attesa
+- `notifyAll()`: sveglia tutti i thread in attesa
+Quindi, quando thread invoca metodo sincronizzato acquisisce automaticamente il lock associato all'oggetto e lo rilascia al termine.
+
+Sintatticamente, basta aggiungere alla signature del metodo l'attributo synchronized.
+``` java
+public synchronized void deposita(int importo) throws InterruptedException{
+	deposito += importo
+}
+
+public synchronized void preleva(int importo) throws InterruptedException{
+	deposito -= importo
+}
+```
+Se il metodo presenta una sezione critica interna la sintassi è diversa:
+``` java
+public void metodo(){
+	// SEZIONE NON CRITICA
+	synchronized(this){ // specifico oggetto che fornisce lock
+		// SEZIONE CRITICA
+	}
+	// SEZIONE NON CRITICA
+}
+```
+Le due sintassi sono equivalenti se il blocco sincronizzato prende tutta la sezione del metodo (non sono presenti sezioni non critiche) e se l'oggetto su cui si richiama il lock è l'oggetto della classe stessa.
+
+``` java
+class Prova{
+	public synchronized void m1() throws InterruptedException{
+	istrA; //sezione critica
+	}
+	
+	public void m2() throws InterruptedException{
+		synchronized(this){ // specifico oggetto che fornisce lock
+			istrA; // SEZIONE CRITICA
+		}
+	}
+}
+
+Prova p = new Prova();
+T1 -> p.m1();
+T2 -> p.m1(); //attende termine di T1 nella sezione critica
+
+```
+In maniera equivalente, se facessi chiamata sullo stesso oggetto ma su metodi che modificano variabili diverse:
+``` java
+public class Prova{
+	private Object o1 = new Object();
+	private Object o2 = new Object();
+	
+	public void incrX(){
+		synchronized(o1){
+		x++;
+		}
+	}
+	public void incrY(){
+		synchronized(o2){
+		y++;
+		}
+	}
+}
+```
+Aggiungendo questi due oggetti interni alla classe gestisco esternamente l'attesa sullo stesso metodo.
+
+Ad ogni oggetto è associata una sola condition e si usa:
+``` java
+// Caso 1: chiamata intrinseca all'oggetto della classe
+public synchronized void incrX() throws InterruptedException{
+	this.wait(); // ERRATO: o2.wait(); -> non posso fare la wait se non ho preso lock
+}
+//Caso 2: chiamata all'oggetto interno alla classe
+public void incrY() throws InterruptedException{
+	synchronized(o2){
+		o2.wait(); // ERRATO: wait(); -> non posso fare la wait se non ho preso lock
+	}
+}
+```
+In entrambi i casi **errati** viene lanciata l'eccezione `IllegalMonitorStateException`
+
+### Collezioni Sincronizzate
+Nella Java Collection Framework esistono delle classi che garantiscono la **thread safety** (simile al funzionamento delle variabili atomiche), incapsulando stato e **sincronizzando metodi pubblici.** 
+Quindi, esistono collezioni in cui nel caso di una LinkedList il metodo è sincronizzato, per garantire mutua esclusione quando si modifiche.
+(es): operazione non thread-safe su lista
+Due thread cercano di rimuovere contemporaneamente nodi dalla lista:
+![[Programmazione concorrente-1780844746598.webp|center|400]]
+
+Poichè all'inizio le uniche collezioni sincronizzate erano Vector e HashTable, si è pensato di **wrappare**
+le classi non thread-safe con dei metodi sincronizzati. (lista metodi)
+
+Questi metodi garantiscono che le operazioni **interne** (metodi pubblici) sia thread-safe: nel caso in cui programmatore volesse iterare sulla collezione deve sincronizzare accesso: (foto codice)
+
+Tuttavia, la sincronizzazione di TUTTI i metodi limita il parallelismo: per questo esistono **collezioni concorrenti** che modellano strutture dati in modo che 
+#### ArrayBlockingQueue e LinkedBlockingQueue
+Si tratta di strutture a capienza obbligatoria (Array) o non obbligatoria (Queue) che modellano code FIFO: thread sospeso quando tenta di inserire un elemento se la coda è piena, o quando tenta di prelevare un elemento se la coda è vuota (come avviene nel problema del produttore-consumatore).
+#### ConcurrentHashMap
+Per l’implementazione di una mappa torna utile l’accesso in aree diverse in maniera sincronizzaata. Infatti, il wrapping della struttura per la sincronizzazione garantisce, ad modifica si blocca l'intera struttura dati. 
+Utilizzando questa nuova struttura dati, si permette accesso a più thread insieme, a meno che non siano vicine le aree di accesso.
 # Problemi classici
 >[!attention] In tutti i problemi è necessario evitare busy waiting
 ## Produttore-consumatore
@@ -427,105 +526,3 @@ a. implementazione della classe astratta di gestione dei Thread + classe concret
 b. lieve modifica dell'implementazione precedente della logica senza riscrivere codice ma descrivendo a parole ciò che cambia nel codice 
 
 Sempre meglio farsi uno schema prima della logica della gestione e ricordati di aggiungere test() e main()
-
-# Monitor Nativi
-All'interno della classe Object
-Ogni istanza di un oggetto dell classe Object ha associato un lock intrinseco rientrante associato che si può utilizzare tramite i metodi:
-- `wait()`: in attesa sulla condition intrinseca
-- `notify()`:  sveglia thread in attesa
-- `notifyAll()`: sveglia tutti i thread in attesa
-Quindi, quando thread invoca metodo sincronizzato acquisisce automaticamente il lock associato all'oggetto e lo rilascia al termine.
-
-Sintatticamente, basta aggiungere alla signature del metodo l'attributo synchronized.
-``` java
-public synchronized void deposita(int importo) throws InterruptedException{
-	deposito += importo
-}
-
-public synchronized void preleva(int importo) throws InterruptedException{
-	deposito -= importo
-}
-```
-Se il metodo presenta una sezione critica interna la sintassi è diversa:
-``` java
-public void metodo(){
-	// SEZIONE NON CRITICA
-	synchronized(this){ // specifico oggetto che fornisce lock
-		// SEZIONE CRITICA
-	}
-	// SEZIONE NON CRITICA
-}
-```
-Le due sintassi sono equivalenti se il blocco sincronizzato prende tutta la sezione del metodo (non sono presenti sezioni non critiche) e se l'oggetto su cui si richiama il lock è l'oggetto della classe stessa.
-
-``` java
-class Prova{
-	public synchronized void m1() throws InterruptedException{
-	istrA; //sezione critica
-	}
-	
-	public void m2() throws InterruptedException{
-		synchronized(this){ // specifico oggetto che fornisce lock
-			istrA; // SEZIONE CRITICA
-		}
-	}
-}
-
-Prova p = new Prova();
-T1 -> p.m1();
-T2 -> p.m1(); //attende termine di T1 nella sezione critica
-
-```
-In maniera equivalente, se facessi chiamata sullo stesso oggetto ma su metodi che modificano variabili diverse:
-``` java
-public class Prova{
-	private Object o1 = new Object();
-	private Object o2 = new Object();
-	
-	public void incrX(){
-		synchronized(o1){
-		x++;
-		}
-	}
-	public void incrY(){
-		synchronized(o2){
-		y++;
-		}
-	}
-}
-```
-Aggiungendo questi due oggetti interni alla classe gestisco esternamente l'attesa sullo stesso metodo.
-
-Ad ogni oggetto è associata una sola condition e si usa:
-``` java
-// Caso 1: chiamata intrinseca all'oggetto della classe
-public synchronized void incrX() throws InterruptedException{
-	this.wait(); // ERRATO: o2.wait(); -> non posso fare la wait se non ho preso lock
-}
-//Caso 2: chiamata all'oggetto interno alla classe
-public void incrY() throws InterruptedException{
-	synchronized(o2){
-		o2.wait(); // ERRATO: wait(); -> non posso fare la wait se non ho preso lock
-	}
-}
-```
-In entrambi i casi **errati** viene lanciata l'eccezione `IllegalMonitorStateException`
-
-## Collezioni Sincronizzate
-Nella Java Collection Framework esistono delle classi che garantiscono la **thread safety** (simile al funzionamento delle variabili atomiche), incapsulando stato e **sincronizzando metodi pubblici.** 
-Quindi, esistono collezioni in cui nel caso di una LinkedList il metodo è sincronizzato, per garantire mutua esclusione quando si modifiche.
-(es): operazione non thread-safe su lista
-Due thread cercano di rimuovere contemporaneamente nodi dalla lista:
-![[Programmazione concorrente-1780844746598.webp|center|400]]
-
-Poichè all'inizio le uniche collezioni sincronizzate erano Vector e HashTable, si è pensato di **wrappare**
-le classi non thread-safe con dei metodi sincronizzati. (lista metodi)
-
-Questi metodi garantiscono che le operazioni **interne** (metodi pubblici) sia thread-safe: nel caso in cui programmatore volesse iterare sulla collezione deve sincronizzare accesso: (foto codice)
-
-Tuttavia, la sincronizzazione di TUTTI i metodi limita il parallelismo: per questo esistono **collezioni concorrenti** che modellano strutture dati in modo che 
-### ArrayBlockingQueue e LinkedBlockingQueue
-Si tratta di strutture a capienza obbligatoria (Array) o non obbligatoria (Queue) che modellano code FIFO: thread sospeso quando tenta di inserire un elemento se la coda è piena, o quando tenta di prelevare un elemento se la coda è vuota (come avviene nel problema del produttore-consumatore).
-### ConcurrentHashMap
-Per l’implementazione di una mappa torna utile l’accesso in aree diverse in maniera sincronizzaata. Infatti, il wrapping della struttura per la sincronizzazione garantisce, ad modifica si blocca l'intera struttura dati. 
-Utilizzando questa nuova struttura dati, si permette accesso a più thread insieme, a meno che non siano vicine le aree di accesso.
