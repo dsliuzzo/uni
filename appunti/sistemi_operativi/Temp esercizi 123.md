@@ -93,7 +93,7 @@ public class Prova3_20230918 {
 ```
 
 # Foto 3 (Prova del 12 Luglio 2023)
-**Esercizio 1 (fino a 4 punti)
+## Esercizio 1 (fino a 4 punti)
 Si supponga di avere quattro processi che arrivano nel sistema negli istanti di arrivo specificati nella seguente tabella, dove sono indicate anche le durate dei CPU burst:
 
 |**Processo**|**Tempo di Arrivo**|**CPU Burst**|
@@ -105,10 +105,10 @@ Si supponga di avere quattro processi che arrivano nel sistema negli istanti di 
 
 Si mostri la sequenza di esecuzione e si calcolino il tempo di attesa e il tempo di completamento di ciascun processo, considerando l'algoritmo di scheduling **SJF senza prelazione**.
 
-**Esercizio 2 (fino a 4 punti)
+## Esercizio 2 (fino a 4 punti)
 Illustrare in dettaglio, anche attraverso schemi, il funzionamento dell'allocazione indicizzata dei file realizzata dal file system sul disco anche nel caso di file di grandi dimensioni.
 
-**Esercizio 3 (fino a 4 punti)
+## Esercizio 3 (fino a 4 punti)
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20230712 {
@@ -143,15 +143,15 @@ public class Prova3_20230712 {
 ```
 
 # Foto 4 (Prova del 21 Giugno 2023)
-**Esercizio 1 (fino a 4 punti)
+## Esercizio 1 (fino a 4 punti)
 Si consideri la seguente sequenza di riferimenti a pagine in memoria centrale:
 
 Indicare quali e quante assenze di pagine (page fault) si verificano se si usano 4 frame di memoria con gli algoritmi di sostituzione delle pagine **FIFO** e **LRU**.
 
-**Esercizio 2 (fino a 4 punti)
+## Esercizio 2 (fino a 4 punti)
 Descrivere brevemente, anche tramite un semplice esempio, l'algoritmo di scheduling del disco a scansione circolare (C-SCAN).
 
-**Esercizio 3 (fino a 4 punti)
+## Esercizio 3 (fino a 4 punti)
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20230621 {
@@ -191,7 +191,7 @@ public class Prova3_20230621 {
 ```
 
 # Foto 5 (Prova del 20 Gennaio 2023)
-**Esercizio 1 (fino a 4 punti)
+## Esercizio 1 (fino a 4 punti)
 Si supponga di avere tre processi che arrivano nel sistema al tempo di arrivo specificato nella seguente tabella, dove sono indicati anche i tempi totali di CPU burst:
 
 |**Processo**|**Tempo di Arrivo**|**CPU Burst (msec)|
@@ -202,10 +202,10 @@ Si supponga di avere tre processi che arrivano nel sistema al tempo di arrivo sp
 
 Si mostri la sequenza di esecuzione e si calcoli il tempo di completamento di ognuno dei processi considerando uno scheduling **SJF con prelazione**.
 
-**Esercizio 2 (fino a 4 punti)
+## Esercizio 2 (fino a 4 punti)
 Si descriva, anche mediante una figura opportunamente commentata, le caratteristiche e il funzionamento dell'allocazione indicizzata dei file da parte del file system.
 
-**Esercizio 3 (fino a 4 punti)
+## Esercizio 3 (fino a 4 punti)
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20230120 {
@@ -292,15 +292,15 @@ public class Prova3_20220909 {
 ```
 
 # Foto 7 (Prova dell'8 Luglio 2022)
-**Esercizio 1 (fino a 4 punti)
+## Esercizio 1 (fino a 4 punti)
 Si consideri la seguente serie di riferimenti alle pagine di memoria di un processo in un sistema con memoria virtuale:
 
 e si descriva la sequenza di allocazione delle pagine dell'algoritmo di sostituzione delle pagine **LRU** con una memoria fisica di 3 blocchi. Si calcoli il numero di page fault che si verificano, includendo anche quelli iniziali.
 
-**Esercizio 2 (fino a 4 punti)
+## Esercizio 2 (fino a 4 punti)
 Si spieghi il compito che svolge il DMA (Direct Memory Access) nella gestione delle operazioni di I/O e i vantaggi prestazionali che le sue azioni possono portare nel funzionamento di un computer.
 
-**Esercizio 3 (fino a 4 punti)
+## Esercizio 3 (fino a 4 punti)
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20220708_ {
