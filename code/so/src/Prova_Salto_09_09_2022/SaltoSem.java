@@ -6,9 +6,7 @@ import java.util.concurrent.Semaphore;
 
 public class SaltoSem extends Salto {
     private Random r = new Random();
-
     private TreeSet<Saltatore> classifica = new TreeSet<>();
-
     private int count = 0; // numero di salti effettuati
 
     private Semaphore mutex = new Semaphore(1);
@@ -17,16 +15,14 @@ public class SaltoSem extends Salto {
 
     @Override
     public void inizio(Saltatore s) throws InterruptedException {
-        while(true){
-            mutex.acquire();
-            if (count == s.numero()){
-                mutex.release();
-                break;
-            }
+        mutex.acquire();
+        if (count == s.numero()){
             mutex.release();
-            attesaMaglia.acquire();
+            return;
         }
-    }
+        mutex.release();
+        attesaMaglia.acquire();
+        }
 
     @Override
     public int arrivo(Saltatore s) throws InterruptedException {
@@ -37,17 +33,6 @@ public class SaltoSem extends Salto {
         int pos = ricercaPos(s);
         mutex.release();
         attesaSalto.release();
-        return pos;
-    }
-
-    private int ricercaPos (Saltatore s) {
-        int pos = 0;
-        for (Saltatore s1 : classifica) {
-            if (s1.equals(s)) {
-                break;
-            }
-            pos++;
-        }
         return pos;
     }
 
@@ -65,6 +50,18 @@ public class SaltoSem extends Salto {
         mutex.release();
         return true;
     }
+}
+    private int ricercaPos (Saltatore s) {
+        int pos = 0;
+        for (Saltatore s1 : classifica) {
+            if (s1.equals(s)) {
+                break;
+            }
+            pos++;
+        }
+        return pos;
+    }
+
     private void stampaClassifica() {
         StringBuilder sb = new StringBuilder().append("Classifica: ");
         int pos = 0;
