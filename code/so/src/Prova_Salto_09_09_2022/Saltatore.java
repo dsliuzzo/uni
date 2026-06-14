@@ -6,12 +6,15 @@ public class Saltatore extends Thread implements Comparable<Saltatore> {
     private Salto s;
     private int numero;
     private float altezza;
+    private boolean entrato = false;
     private Random r = new Random();
 
     public Saltatore(Salto s, int numero) {
         this.s = s;
         this.numero = numero;
     }
+
+    public void entra() {entrato = true;}
 
     public float altezza() {return altezza;}
 
@@ -27,6 +30,7 @@ public class Saltatore extends Thread implements Comparable<Saltatore> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -34,3 +38,4 @@ public class Saltatore extends Thread implements Comparable<Saltatore> {
         return Float.compare(this.altezza(), o.altezza());
     }
 }
+
