@@ -10,19 +10,20 @@ public class SaltoSem extends Salto {
     private int count = 0; // numero di salti effettuati
 
     private Semaphore mutex = new Semaphore(1);
-    private Semaphore attesaMaglia = new Semaphore(0);
-    private Semaphore attesaSalto = new Semaphore(1);
+    private Semaphore[] attesaMaglia = new Semaphore[N];
+    private Semaphore attesaSalto = new Semaphore(0);
+
+    public SaltoSem(){
+        attesaMaglia[0] = new Semaphore(1);
+        for(int i = 1; i < N; i++){
+            attesaMaglia[i] = new Semaphore(0);
+        }
+    }
 
     @Override
     public void inizio(Saltatore s) throws InterruptedException {
-        mutex.acquire();
-        if (count == s.numero()){
-            mutex.release();
-            return;
-        }
-        mutex.release();
-        attesaMaglia.acquire();
-        }
+        attesaMaglia[s.numero()].acquire();
+    }
 
     @Override
     public int arrivo(Saltatore s) throws InterruptedException {
@@ -41,16 +42,18 @@ public class SaltoSem extends Salto {
         attesaSalto.acquire();
         mutex.acquire();
         count++;
+        System.out.println("Numero di salti effettuati: " + count);
         if (count == N) {
-            stampaClassifica();
+            System.out.println(stampaClassifica());
             mutex.release();
             return false;
         }
-        attesaMaglia.release(N - count);
         mutex.release();
+        System.out.println("Saltatore " + count + " in attesa della maglia");
+        attesaMaglia[count].release();
         return true;
     }
-}
+
     private int ricercaPos (Saltatore s) {
         int pos = 0;
         for (Saltatore s1 : classifica) {
@@ -59,19 +62,21 @@ public class SaltoSem extends Salto {
             }
             pos++;
         }
-        return pos;
+        return count - pos + 1;
     }
 
-    private void stampaClassifica() {
-        StringBuilder sb = new StringBuilder().append("Classifica: ");
-        int pos = 0;
+    private StringBuilder stampaClassifica() {
+        StringBuilder sb = new StringBuilder().append("=== Classifica === \n");
+        int pos = 1;
         while (!classifica.isEmpty()) {
             sb.append("Posizione ").append(pos++).append(" :");
             sb.append("Saltatore avente maglia numero ").append(classifica.pollLast().numero()).append(" \n");
         }
+        return sb;
     }
 
-    static void main(String[] args) {
+    public static void main(String[] args) {
         new SaltoSem().test();
     }
 }
+
