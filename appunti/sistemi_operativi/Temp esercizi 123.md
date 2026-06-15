@@ -1,8 +1,8 @@
-# Foto 1 (Senza intestazione / Novembre 2023)
-## Prova 1 (fino a 4 punti)
+# Foto 1 (Prova del 10 Novembre 2023)
+## Prova 1
 Si supponga di avere tre processi che vengono accodati per l'esecuzione al tempo di arrivo specificato nella seguente tabella, dove sono indicati anche i tempi totali di CPU burst:
 
-| **Processo** | **Tempo di Arrivo** | **CPU Burst (msec) |
+| **Processo** | **Tempo di Arrivo** | **CPU Burst (msec)** |
 | ------------ | ------------------- | -------------------- |
 | P0           | 1                   | 8                    |
 | P1           | 4                   | 7                    |
@@ -10,10 +10,10 @@ Si supponga di avere tre processi che vengono accodati per l'esecuzione al tempo
 
 Si mostri la sequenza di esecuzione e si calcoli il tempo di attesa di ognuno dei processi considerando uno scheduling circolare (Round-robin) che usa un quanto di tempo pari a 3 msec.
 
-## Prova 2 (fino a 4 punti)
+## Prova 2
 Si descriva sinteticamente cosa è la matrice di accesso, a cosa serve e quali sono le principali modalità usate per la sua implementazione.
 
-## Prova 3 (fino a 4 punti)
+## Prova 3
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20231110 {
@@ -52,23 +52,24 @@ public class Prova3_20231110 {
 ```
 
 # Foto 2 (Prova del 18 settembre 2023)
-## Prova 1 (fino a 4 punti)
-
+## Prova 1
 Si supponga di disporre di un disco composto da 1000 cilindri numerati da 0 a 999. Il disco sta attualmente servendo una richiesta relativa al cilindro 360 e la richiesta precedente era relativa al cilindro 620, la coda di richieste inevase in ordine FIFO è composta delle seguenti richieste:
-
+```
+155, 670, 860, 110, 726, 508, 945, 770, 430
+```
 Assumendo come punto di partenza la posizione attuale della testina, indicare la sequenza, e calcolare la relativa distanza totale (in cilindri), che il braccio del disco percorre per soddisfare tutte le richieste inevase usando l'algoritmo di scheduling **SSTF**.
 
-## Prova 2 (fino a 4 punti)
+## Prova 2
 Si spieghi la differenza tra lo scheduling della CPU con preemption e quello senza preemption. In particolare, nel caso dell'algoritmo SJF chiarire in quale dei due casi si ha un numero maggiore di context switch e perché.
 
-## Prova 3 (fino a 4 punti)
+## Prova 3
 ``` java
 public class Prova3_20230918 {
     public static void main(String[] args) throws InterruptedException {
         Thread t0 = new Thread(new MyThread(true));
-        Thread t1 = new Thread(new MyThread(false)); // NIENTE
-        t1.start();
-        t1.join();
+        Thread t1 = new Thread(new MyThread(false));
+        t1.start(); // NIENTE
+        t1.join(); // si ferma il main finchè non finisce t1
         System.out.printf("%s, %s\n", t0.getState(), t1.getState());
         Thread t2 = new Thread(new MyThread(true));
         t2.start();
@@ -93,22 +94,22 @@ public class Prova3_20230918 {
 ```
 
 # Foto 3 (Prova del 12 Luglio 2023)
-## Esercizio 1 (fino a 4 punti)
+## Prova 1
 Si supponga di avere quattro processi che arrivano nel sistema negli istanti di arrivo specificati nella seguente tabella, dove sono indicate anche le durate dei CPU burst:
 
-|**Processo**|**Tempo di Arrivo**|**CPU Burst**|
-|---|---|---|
-|P1|1|11|
-|P2|4|6|
-|P3|7|5|
-|P4|13|14|
+| **Processo** | **Tempo di Arrivo** | **CPU Burst** |
+| ------------ | ------------------- | ------------- |
+| P1           | 1                   | 11            |
+| P2           | 4                   | 6             |
+| P3           | 7                   | 5             |
+| P4           | 13                  | 14            |
 
 Si mostri la sequenza di esecuzione e si calcolino il tempo di attesa e il tempo di completamento di ciascun processo, considerando l'algoritmo di scheduling **SJF senza prelazione**.
 
-## Esercizio 2 (fino a 4 punti)
+## Prova 2
 Illustrare in dettaglio, anche attraverso schemi, il funzionamento dell'allocazione indicizzata dei file realizzata dal file system sul disco anche nel caso di file di grandi dimensioni.
 
-## Esercizio 3 (fino a 4 punti)
+## Prova 3
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20230712 {
@@ -143,15 +144,17 @@ public class Prova3_20230712 {
 ```
 
 # Foto 4 (Prova del 21 Giugno 2023)
-## Esercizio 1 (fino a 4 punti)
+## Prova 1
 Si consideri la seguente sequenza di riferimenti a pagine in memoria centrale:
-
+```
+1,4,3,2,6,5,4,2,6,3,5,1,4,6
+```
 Indicare quali e quante assenze di pagine (page fault) si verificano se si usano 4 frame di memoria con gli algoritmi di sostituzione delle pagine **FIFO** e **LRU**.
 
-## Esercizio 2 (fino a 4 punti)
+## Prova 2
 Descrivere brevemente, anche tramite un semplice esempio, l'algoritmo di scheduling del disco a scansione circolare (C-SCAN).
 
-## Esercizio 3 (fino a 4 punti)
+## Prova 3
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20230621 {
@@ -191,21 +194,21 @@ public class Prova3_20230621 {
 ```
 
 # Foto 5 (Prova del 20 Gennaio 2023)
-## Esercizio 1 (fino a 4 punti)
+## Prova 1
 Si supponga di avere tre processi che arrivano nel sistema al tempo di arrivo specificato nella seguente tabella, dove sono indicati anche i tempi totali di CPU burst:
 
-|**Processo**|**Tempo di Arrivo**|**CPU Burst (msec)|
-|---|---|---|
-|P1|1|20|
-|P2|3|11|
-|P3|5|7|
+| **Processo** | **Tempo di Arrivo** | **CPU Burst (msec)** |
+| ------------ | ------------------- | -------------------- |
+| P1           | 1                   | 20                   |
+| P2           | 3                   | 11                   |
+| P3           | 5                   | 7                    |
 
 Si mostri la sequenza di esecuzione e si calcoli il tempo di completamento di ognuno dei processi considerando uno scheduling **SJF con prelazione**.
 
-## Esercizio 2 (fino a 4 punti)
+## Prova 2
 Si descriva, anche mediante una figura opportunamente commentata, le caratteristiche e il funzionamento dell'allocazione indicizzata dei file da parte del file system.
 
-## Esercizio 3 (fino a 4 punti)
+## Prova 3
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20230120 {
@@ -248,15 +251,17 @@ public class Prova3_20230120 {
 ```
 
 # Foto 6 (Prova del 09 Settembre 2022)
-## Prova 1 (fino a 4 punti)
+## Prova 1
 Si supponga di disporre di un disco composto da 1500 cilindri numerati da 0 a 1499. Il disco sta attualmente servendo una richiesta relativa al cilindro 840 e la richiesta precedente era relativa al cilindro 1020, la coda di richieste inevase in ordine FIFO è composta delle seguenti richieste:
-
+```
+375, 970, 1260, 210, 1026, 708, 1345, 1070, 630
+```
 Assumendo come punto di partenza la posizione attuale della testina, indicare la sequenza, e calcolare la relativa distanza totale (in cilindri), che il braccio del disco percorre per soddisfare tutte le richieste inevase usando l'algoritmo di scheduling **SSTF**.
 
-## Prova 2 (fino a 4 punti)
+## Prova 2
 Si spieghi la differenza tra lo scheduling della CPU con prelazione e quello senza prelazione. In particolare, nel caso dell'algoritmo SJF chiarire in quale dei due casi si ha un numero maggiore di context switch e perché.
 
-## Prova 3 (fino a 4 punti)
+## Prova 3
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno e la politica di risveglio dei thread che viene seguita), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20220909 {
@@ -292,15 +297,17 @@ public class Prova3_20220909 {
 ```
 
 # Foto 7 (Prova dell'8 Luglio 2022)
-## Esercizio 1 (fino a 4 punti)
+## Prova 1
 Si consideri la seguente serie di riferimenti alle pagine di memoria di un processo in un sistema con memoria virtuale:
-
+```
+1 3 4 7 3 8 7 9 3 1 9 4 2 9 3 5 2
+```
 e si descriva la sequenza di allocazione delle pagine dell'algoritmo di sostituzione delle pagine **LRU** con una memoria fisica di 3 blocchi. Si calcoli il numero di page fault che si verificano, includendo anche quelli iniziali.
 
-## Esercizio 2 (fino a 4 punti)
+## Prova 2
 Si spieghi il compito che svolge il DMA (Direct Memory Access) nella gestione delle operazioni di I/O e i vantaggi prestazionali che le sue azioni possono portare nel funzionamento di un computer.
 
-## Esercizio 3 (fino a 4 punti)
+## Prova 3
 Si descriva brevemente (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se l'output è deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20220708_ {
@@ -325,15 +332,15 @@ public class Prova3_20220708_ {
 ```
 
 # Foto 8 (Prova del 14 Gennaio 2022)
-## Prova 1 (fino a 4 punti)
+## Prova 1
 Si supponga di disporre di un disco composto da 1000 cilindri numerati da 0 a 999. Il disco sta attualmente servendo una richiesta relativa al cilindro 630 e la richiesta precedente era relativa al cilindro 770, la coda di richieste inevase in ordine FIFO è composta delle seguenti richieste:
 
 Assumendo come punto di partenza la posizione attuale della testina, indicare la sequenza, e calcolare la relativa distanza totale (in cilindri), che il braccio del disco percorre per soddisfare tutte le richieste inevase usando l'algoritmo di scheduling **LOOK**.
 
-## Prova 2 (fino a 4 punti)
+## Prova 2
 Si spieghi sinteticamente il problema del **trashing** e le tecniche adottate dai sistemi operativi (ad es., Solaris, Windows) per risolverlo.
 
-## Prova 3 (fino a 4 punti)
+## Prova 3
 Si descriva l'output che può produrre la seguente applicazione Java (output + breve commento) e dire se l'applicazione termina oppure no.
 ``` java
 public class Prova3_202201 {
@@ -374,15 +381,15 @@ public class Prova3_202201 {
 ```
 
 # Foto 9 (Prova del 08 Settembre 2025)
-## Prova 1 (fino a 4 punti)
+## Prova 1
 Si consideri la seguente sequenza di riferimenti a pagine in memoria centrale:
 
 Indicare quali e quante assenze di pagine (page fault) si verificano se si usano 3 frame di memoria con gli algoritmi di sostituzione delle pagine FIFO e LRU.
 
-## Prova 2 (fino a 4 punti)
+## Prova 2
 Descrivere brevemente, anche tramite un semplice esempio, l'algoritmo di scheduling del disco Shortest Seek Time First (**SSTF**), indicando anche se può causare starvation.
 
-## Prova 3 (fino a 4 punti)
+## Prova 3
 Si descriva (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se deterministico o meno), e (iii) se l'applicazione termina.
 ``` java
 public class Prova3_20250908 {
@@ -424,16 +431,16 @@ public class Prova3_20250908 {
 }
 ```
 
-# Foto 10 (Senza intestazione visibile / Novembre 2024)
-## Prova 1 (fino a 4 punti)
+# Foto 10 (Prova del 08 Novembre 2024)
+## Prova 1
 Si consideri la seguente sequenza di riferimenti a pagine in memoria centrale:
 
 Indicare quali e quante assenze di pagine (page fault) si verificano se si usano 3 frame di memoria con gli algoritmi di sostituzione delle pagine **Ottimale** e **LRU**.
 
-## Prova 2 (fino a 4 punti)
+## Prova 2
 Si descriva brevemente cosa sono i **domini di protezione**, cosa stabilisce il **principio del privilegio minimo** e se questo è implementato nei sistemi Linux.
 
-## Prova 3 (fino a 4 punti)
+## Prova 3
 Si descriva (i) il funzionamento della seguente applicazione Java, (ii) l'output che può produrre (indicare se deterministico o meno), e (iii) se l'applicazione termina.
 
 ``` java
