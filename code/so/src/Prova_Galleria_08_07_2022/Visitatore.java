@@ -11,10 +11,13 @@ public class Visitatore extends Thread{
         this.lingua = lingua;
     }
 
+    public int id() { return id; }
+
     @Override
     public void run(){
         try{
-            Thread.sleep(5);
+            galleria.iniziaVisita(lingua);
+            galleria.esci(lingua);
         } catch(InterruptedException e){
             e.printStackTrace();
         }
