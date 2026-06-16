@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class Galleria {
     private final int numVisitatori = 300;
     protected final int numGuida = 5;
-    protected final int maxVisita = 30;
+    protected final int maxVisita = 60;
     protected final int maxGalleria = 200;
     protected Random r = new Random();
 
