@@ -4,13 +4,13 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 public class GalleriaSem extends Galleria{
-    private Semaphore mutex = new Semaphore(1);
-    private Semaphore possoEntrare = new Semaphore(maxGalleria, true);
+    protected Semaphore mutex = new Semaphore(1);
+    protected Semaphore possoEntrare = new Semaphore(maxGalleria, true);
     private Semaphore[] lingue = new Semaphore[numGuida];
     private Semaphore[] fineVisita = new Semaphore[numGuida];
-    private Semaphore[] attesaGuida = new Semaphore[numGuida];
+    protected Semaphore[] attesaGuida = new Semaphore[numGuida];
     private int[] codaLingua = new int[numGuida];
-    private int[] visitatoriDentro = new int[numGuida];
+    protected int[] visitatoriDentro = new int[numGuida];
 
 
     public GalleriaSem(){
@@ -32,7 +32,6 @@ public class GalleriaSem extends Galleria{
         mutex.acquire();
         visitatoriDentro[lingua]++;
         codaLingua[lingua]--;
-        System.out.println("Visitatore " + ((Visitatore) Thread.currentThread()).id() + " è pronto ad iniziare la visita " + lingua);
         mutex.release();
     }
 
