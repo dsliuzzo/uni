@@ -25,9 +25,9 @@ public class Bambino extends Thread {
         for (int i = 0; i < nGiri; i++) {
             giostra = r.nextInt(parco.Op());
             try {
-                parco.avviaGiostra();
-                TimeUnit.SECONDS.sleep(1 + r.nextInt(3 - 1 + 1));
-                parco.prossimoBseT();
+                parco.accodaBEta();
+                TimeUnit.MILLISECONDS.sleep(10 + r.nextInt(30 - 10 + 10));
+                parco.terminaGiroB();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
