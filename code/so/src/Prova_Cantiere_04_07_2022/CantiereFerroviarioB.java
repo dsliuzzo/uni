@@ -1,23 +1,8 @@
-package Prova_Cantiere_04_07_22;
+package Prova_Cantiere_04_07_2022;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Semaphore;
-
-public class CantiereFerroviarioSem extends CantiereFerroviarioA {
-    protected Semaphore mutex = new Semaphore(1);
-    protected Semaphore attesa0 = new Semaphore(M);
-    protected Semaphore attesa1 = new Semaphore(0);
-    protected boolean[] dentro = new boolean[M];
-    protected int[] stato = new int[M];
-    protected Map<Integer, Integer> idBin = new HashMap<>();
-
-    public CantiereFerroviarioSem() {
-        for (int i = 0; i < M; i++) {
-            stato[i] = 1;
-            dentro[i] = false;
-        }
-    }
+public class CantiereFerroviarioB extends CantiereFerroviarioSem {
+    private static final int N = 3;
+    private int[] traversa = new int[N];
 
     @Override
     public void lavora(int t) throws InterruptedException {
@@ -27,25 +12,35 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
             attesa0.acquire();
             mutex.acquire();
             bin = ricercaBin(0);
+            if (bin == -1) {
+                mutex.release();
+                System.out.println("Opeario " + id + " ha completato");
+                ((Operaio) Thread.currentThread()).finito();
+                return;
+            }
             dentro[bin] = true;
             idBin.put(id, bin);
             stato[bin] = 0;
-            mutex.release();
         } else {
             attesa1.acquire();
             mutex.acquire();
             bin = ricercaBin(1);
+            if (bin == -1) {
+                mutex.release();
+                System.out.println("Opeario " + id + " ha completato");
+                ((Operaio) Thread.currentThread()).finito();
+                return;
+            }
             dentro[bin] = true;
             idBin.put(id, bin);
             stato[bin] = 1;
-            mutex.release();
         }
-        System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin);
+        System.out.println("Operaio " + id + " di tipo " + t + " inizia a lavorare su " + bin + " | Siamo a: " + traversa[bin]);
+        mutex.release();
     }
-
-    private int ricercaBin(int t) {
+    protected int ricercaBin(int t) {
         for (int i = 0; i < M; i++) {
-            if (stato[i] == ((t + 1) % 2) && !dentro[i]) {
+            if (stato[i] == ((t + 1) % 2) && !dentro[i] && traversa[i] < N) {
                 return i;
             }
         }
@@ -57,16 +52,17 @@ public class CantiereFerroviarioSem extends CantiereFerroviarioA {
         mutex.acquire();
         int bin = idBin.get(((Operaio) Thread.currentThread()).id());
         dentro[bin] = false;
-        mutex.release();
         System.out.println("Operaio " + ((Operaio) Thread.currentThread()).id() + " di tipo " + t + " finisce di lavorare su " + bin);
         if (t == 0) {
             attesa1.release();
+            traversa[bin]++;
         } else {
             attesa0.release();
         }
+        mutex.release();
     }
 
     static void main(String[] args) {
-        new CantiereFerroviarioSem().test();
+        new CantiereFerroviarioB().test();
     }
 }
