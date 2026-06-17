@@ -1,6 +1,4 @@
-package Prova_Cantiere_04_07_22;
-
-import Prova_callcenter_20_01_2023.Operatore;
+package Prova_Cantiere_04_07_2022;
 
 public abstract class CantiereFerroviarioA {
     public static final int M = 3;
