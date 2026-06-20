@@ -16,16 +16,20 @@ public abstract class Sala {
     public abstract boolean attendiTaglio() throws InterruptedException; // usato dai clienit
 
     // metodi di test
-    public void test(int numClienti) throws InterruptedException {
-        // creiamo il barbiere e i clienti a cui passiamo come parametro la sala
-        Barbiere b = new Barbiere(this);
-        b.setDaemon(true); // se tutti i clienti hanno tagliato i capelli il barbiere può terminare la sua esecuzione
-        b.start();
-        Cliente[] c = new Cliente[numClienti];
-        for (int i = 0; i < numClienti; i++) {
-            c[i] = new Cliente(this, i);
-            c[i].start();
-            TimeUnit.SECONDS.sleep(2);
+    public void test(int numClienti) {
+        try {
+            // creiamo il barbiere e i clienti a cui passiamo come parametro la sala
+            Barbiere b = new Barbiere(this);
+            b.setDaemon(true); // se tutti i clienti hanno tagliato i capelli il barbiere può terminare la sua esecuzione
+            b.start();
+            Cliente[] c = new Cliente[numClienti];
+            for (int i = 0; i < numClienti; i++) {
+                c[i] = new Cliente(this, i);
+                c[i].start();
+                TimeUnit.SECONDS.sleep(2);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
