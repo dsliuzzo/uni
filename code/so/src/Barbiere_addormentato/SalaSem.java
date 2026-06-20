@@ -40,11 +40,7 @@ public class SalaSem extends Sala {
     }
 
     public static void main(String[] args) {
-        try {
-            Sala s = new SalaSem(NUM_POSTI);
-            s.test(30);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Sala s = new SalaSem(NUM_POSTI);
+        s.test(30);
     }
 }
