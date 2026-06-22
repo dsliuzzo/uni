@@ -50,11 +50,7 @@ public class SalaLC extends Sala{
         }
         return true;
     }
-
-
-
     private boolean mioTurno(int id) {
         return clienti.getFirst().getID() == id && poltronaLibera;
     }
-
 }
