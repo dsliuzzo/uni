@@ -26,7 +26,7 @@ $\implies$ **condizioni sufficienti per la convergenza**
 1. continuità a destra di $0$ di $F(\cdot)$$$\exists \lim_{ t \to 0^+ } f(t) \hspace{3ex} \begin{array}{c}<+\infty \\ >-\infty\end{array}$$
 2. continua a tratti su $(0,+\infty)$
 3. di ordine esponenziale $\alpha$
-   riesco sempre a trovare una coppia $k,\alpha$ con $k>0$ e $\alpha \in \mathbb{R}$ tale per cui$$|F(t)| \leq ke^{\alpha t},\hspace{2ex} t\geq t_{0} \hspace{2ex} t_{0} \in(0,+\infty)$$
+   riesco sempre a trovare una coppia $k,\alpha$ con $k>0$ e $\alpha \in \mathbb{R}$ tale per cui$$|f(t)| \leq ke^{\alpha t},\hspace{2ex} t\geq t_{0} \hspace{2ex} t_{0} \in(0,+\infty)$$
 Se tutte queste condizioni sono soddisfatte la L-trasformata di $f(\cdot)$ converge per tutti i quei valori $s:\mathrm{Re}(s)=\sigma>\alpha$
 con $\alpha$ **ascissa di convergenza**
 ![[Pasted image 20260310192654.png|center|300]]
