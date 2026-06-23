@@ -63,6 +63,8 @@ $$
 $$
 E quindi i suoi poli hanno parte reale strettamente negativa.
 In questo caso la FdT si dice di classe $L^1$.
+
+[...] <- aggiungerei le altre definizioni di BIBO stabilità
 # 10. Teorema della risposta armonica a partire dall'analisi della risposta ad un segnale periodico elementare
 Sotto ipotesi di BIBO stabilità la risposta a regime di un sistema LTI dato in ingresso un segnale periodico elementare è calcolabile usando il teorema della risposta armonica, il cui enunciato dice:
 Sia un segnale periodico elementare in ingresso
@@ -100,8 +102,13 @@ Il tempo di assestamento è l'istante di tempo a decorrere dal quale la risposta
 È definibile sistema interconnesso un insieme di sistemi dinamici che comunicano tra di loro.
 - Sistemi in serie
   due sistemi $G_{1}(s), G_{2}(s)$ sono detti in serie se l'uscita del primo corrisponde con l'ingresso del secondo $Y_{1}(s) = U_{2}(s)$ e la cui funzione di trasferimento è identificata da $G(s) = G_{2}(s) G_{1}(s)$
+  Si potrebbero aggiungere i passaggi matematico che portano alla scrittura della funzione di trasferimento del sistema retroazionato
 - Sistemi in parallelo
   due sistemi $G_{1}(s), G_{2}(s)$ sono detti in parallelo se condividono l'ingresso e l'uscita del sistema interconnesso è pari alla somma delle singole uscite $U_{1}(s) = U_{2}(s) \wedge Y(s) = Y_{1}(s) + Y_{2}(s)$
 - Sistemi in retroazione
   un sistema è detto retroazionato se l'uscita $Y_{1}(s)$ del primo sistema $G_{1}(s)$ detto processo, viene processata dal sensore $G_{2}(s)$ e alimenta l'ingresso del processo e quindi $U_{1}(s) = U(s) - Y_{2}(s)$ e $Y_{1}(s) = U_{2}(s)$.
+  Parlare anche delle 4 funzioni di trasferimento che descrivono il comportamento del sistema retroazionato
 # 14. Analisi della BIBO stabilità per un sistema interconnesso in retroazione negativa con l'ausilio del criterio di Routh (esercizio con parametro K)
+
+# 15. Assegnata una FdT valutare le pulsazioni di Taglio del diagramma di Bode Asintotico (modulo e fasi), le pendenze iniziali e ﬁnali sul diagramma dei moduli, la fase iniziale e ﬁnale sul diagramma delle fasi
+BELLA QUESTA DOMANDA
