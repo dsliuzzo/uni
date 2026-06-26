@@ -208,7 +208,18 @@ $$
   Parlare anche delle 4 funzioni di trasferimento che descrivono il comportamento del sistema retroazionato
 # 14. Analisi della BIBO stabilità per un sistema interconnesso in retroazione negativa con l'ausilio del criterio di Routh (esercizio con parametro K)
 #esercizio
-[...]
+Questo algoritmo ci permette di verificare se sono presenti o meno poli nel RHP, per verificare una eventuale BIBO stabilità di un sistema, ma necessita di chiudere la retroazione.
+Per prima cosa assembliamo $n_L(s) + d_L(s)$
+$$
+p(s) = s^n + a_{1}s^{n-1} +\dots+a_{n-1}s + a_n
+$$
+**C.N.** $a_{1},a_{2},\dots,a_n>0$
+se non si verifica questa condizione sappiamo già, senza necessariamente dover applicare il criterio, che ci sono poli nel semipiano destro.
+Per un trinomio di $2°$ grado questa condizione necessaria è anche sufficiente.
+
+Creiamo la tabella di Routh (esempi sul quaderno) e verifichiamo se ci sono variazioni in segno tra i termini della prima colonna. Il numero di variazioni in segno rappresenta il numero di poli nel RHP.
+
+Il criterio di Routh risulta molto utile nello studio della BIBO stabilità di sistemi in retroazione parametrici.
 
 # 15. Assegnata una FdT valutare le pulsazioni di Taglio del diagramma di Bode Asintotico (modulo e fasi), le pendenze iniziali e ﬁnali sul diagramma dei moduli, la fase iniziale e ﬁnale sul diagramma delle fasi
 #esercizio
@@ -326,8 +337,6 @@ Il margine di fase misura in termini di radianti la distanza goniometrica della 
 >>In corrispondenza della pulsazione di attraversamento la funzione di anello attraversa la circonferenza critica.
 >>Possiamo quindi calcolare il margine di fase come
 >>$$\Phi_M = \pi - |\angle L(j \omega_c)|$$
->>Il sistema è stabile se $\Phi_M > 0$
->>
 >
 >>[!blank]
 >>![[2. Sistemi interconnessi-1779112083289.webp|center|600]]
@@ -497,7 +506,43 @@ $$
 \omega_{BW} \uparrow \hspace{8ex} t_r \downarrow
 $$
 # 28. Legame margine di fase - smorzamento
-[...]
+Al fine di ridurre gli effetti di eventuali ingressi esogeni all'interno del sistema in retroazione si è osservato come si necessita di:
+- BF: massimizzare il valore del modulo per ridurre l'errore di inseguimento
+- AF: minimizzo il valore del modulo per ridurre l'effetto dell'errore di misura
+Di conseguenza all'interno della media frequenza è necessario garantire una pendenza che mantenga comunque stabile il sistema retroazionato. Di conseguenza, si è notato in alcuni casi analizzati che il sistema è approssimabile ad un sistema del secondo ordine con poli complessi e coniugati e, quindi, è logico stabilire una relazione tra lo smorzamento e il margine di fase.
+Nel caso in cui la media frequenza della FdT della retroazione può essere approssimata con un sistema del secondo ordine otteniamo
+$$
+T(s) = \frac{L(s)}{1+L(s)} = \frac{\omega_n^2}{s^2+2\delta \omega_n s + \omega_n^2}
+$$
+risolvendo questa equazione per trovare $L(s)$ otteniamo
+$$
+L(s) = \frac{\omega_n^2}{s(2 \delta \omega_n +s)}
+$$
+Siamo interessati al valore di $L$ in corrispondenza della pulsazione di attraversamento
+$$
+L(j \omega_c) = \frac{\omega_n^2}{j \omega_c (2 \delta \omega_n + j \omega_c)} = \frac{\omega_n^2}{-\omega_c^2 + j 2 \delta \omega_c \omega_n} = \frac{1}{-\frac{\omega_c^2}{\omega_n^2} + j 2 \delta \frac{\omega_c}{\omega_n}}
+$$
+Sapendo che $L(j \omega_c) = - \cos(\Phi_M) - j \sin(\Phi_M)$ %% (volendo si capisce con il disegno) %%
+poniamo l'uguaglianza
+$$
+\frac{1}{-\frac{\omega_c^2}{\omega_n^2} + j 2 \delta \frac{\omega_c}{\omega_n}} = - \cos( \Phi_M) - j \sin(\Phi_M)
+$$
+moltiplichiamo e dividiamo il secondo membro per portare tutto a denominatore
+$$
+\frac{1}{-\frac{\omega_c^2}{\omega_n^2} + j 2 \delta \frac{\omega_c}{\omega_n}} = - \cos( \Phi_M) - j \sin(\Phi_M) \cdot \frac{- \cos(\Phi_M) - j \sin (\Phi_M)}{-\cos(\Phi_M) - j \sin(\Phi_M)} = \frac{1}{- \cos(\Phi_M) +j \sin(\Phi_M)}
+$$
+Risolvendo l'uguaglianza dividendo parte reale e parte immaginaria otteniamo
+$$
+\begin{cases}
+\left( \frac{\omega_c}{\omega_n} \right)^2 = \cos (\Phi_M) \\
+2 \delta \frac{ \omega_c}{\omega_n} = \sin (\Phi_M)
+\end{cases}
+$$
+Per angoli piccoli possiamo approssimare $\cos(\Phi_M) \approx 1 \implies \frac{\omega_c}{\omega_n} \approx 1$ e $\sin(\Phi_M) \approx \sin(\Phi_M)$
+$$
+\delta \approx \frac{\Phi_M}{2} = \frac{\Phi_M^\circ}{100}
+$$
+Ne concludiamo che lo smorzamento $\delta$ e il margine di fase $\Phi_M$ sono direttamente proporzionali.
 # 29. Rete anticipatrice, quando si utilizza
 Nella progettazione di un sistema di controllo spesso è necessario rispettare dei vincoli di prestazione. Per farlo abbiamo la possibilità di modificare il comportamento della retroazione nella media frequenza, tramite l'applicazione di una rete correttrice, lasciando invariata la bassa frequenza (già modificata per la correzione di errori).
 
