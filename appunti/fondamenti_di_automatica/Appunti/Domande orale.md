@@ -509,14 +509,17 @@ le cui pulsazioni di taglio sono
 $$
 \omega_p = \frac{1}{\tau_p} \hspace{8ex} \omega_z = \frac{1}{\tau_z} \hspace{8ex} \omega_z < \omega_p
 $$
-La rete anticipatrice aggiunge un guadagno nelle alte frequenze di:
+La rete anticipatrice aggiunge un guadagno nelle alte frequenze dei moduli di $\frac{1}{\alpha}$:
 $$
 \lim_{ s \to \infty } \frac{1+s \tau_z}{1+s\tau_p} = \frac{\tau_z}{\tau_p} = \frac{1}{\alpha} \implies 0 < \alpha = \frac{\tau_p}{\tau_z} < 1
 $$
+e aggiunge un anticipo nella fase in corrispondenza della pulsazione di attraversamento $\omega_c$
 ![[3. Sistemi interconnessi-1780494728522.webp|center|600]]
+In generale possiamo dire che una rete anticipatrice permette di aumentare la pulsazione di attraversamento e un aumento del margine di fase, al costo di un guadagno nelle alte frequenze che aumenta il rumore.
+
 Nel caso di un riferimento a gradino il sistema ha una risposta transitoria più pronta:
 - $\Phi_M \uparrow \ \delta \uparrow \ S \downarrow$
-- $\omega_c \uparrow \approx \omega_{BW} \uparrow \ t_{s,5} \uparrow$
+- $\omega_c \uparrow \approx \omega_{BW} \uparrow \ t_{s,5} \downarrow$
 
 Nel caso di risposta in frequenza otteniamo una risposta più piatta nella banda passante e un miglioramento delle caratteristiche di fedeltà del sistema visto come filtro
 - $\Phi_M \uparrow \ M_r \downarrow$
@@ -526,4 +529,31 @@ Nel caso di risposta in frequenza otteniamo una risposta più piatta nella banda
 %% (come si possono calcolare i valori di tau, non so se aggiungerlo) %%
 # 30. Rete attenuatrice, quando si utilizza
 Nella progettazione di un sistema di controllo spesso è necessario rispettare dei vincoli di prestazione. Per farlo abbiamo la possibilità di modificare il comportamento della retroazione nella media frequenza, tramite l'applicazione di una rete correttrice, lasciando invariata la bassa frequenza (già modificata per la correzione di errori) e la alta frequenza (per evitare rumore).
-[...]
+
+Una rete attenuatrice è una coppia polo/zero a zero dominante che rispetta le caratteristiche di BIBO stabilità e fase minima
+$$
+C_{\text{lag}}(s) = \frac{1+s \tau_p}{1+ s\tau_z} = \frac{1+ Ts}{1+\alpha Ts}  \hspace{8ex} \tau_p, \tau_z > 0 \hspace{8ex} \tau_p > \tau_z
+$$
+le cui pulsazioni di taglio sono
+$$
+\omega_p = \frac{1}{\tau_p} \hspace{8ex} \omega_z = \frac{1}{\tau_z} \hspace{8ex} \omega_p < \omega_z
+$$
+
+La rete attenuatrice aggiunge una attenuazione nei moduli in alta frequenza di $\alpha$:
+$$
+\lim_{ t \to \infty } \frac{1+ s \tau_z}{1+ s\tau_p} = \frac{\tau_z}{\tau_p} = \frac{1}{\alpha} \implies 0 < \alpha = \frac{\tau_p}{\tau_z} < 1 
+$$
+e aggiunge un ritardo in fase in corrispondenza della pulsazione di attraversamento $\omega_c$
+
+![[3. Sistemi interconnessi-1780843680118.webp|center|500]]
+
+In generale possiamo dire che la rete attenuatrice permette di diminuire la pulsazione di attraversamento, diminuisce il rumore in AF, ma abbiamo un sistema meno pronto e meno fedele ed una riduzione del margine di fase
+
+Nel caso di riferimento a gradino il sistema ha una risposta transitoria meno pronta:
+- $\Phi_M \downarrow \ \delta \downarrow \ S \uparrow$
+- $\omega_c \downarrow \approx \omega_{BW} \downarrow \ t_{s,5} \uparrow$
+
+Nel caso di risposta in frequenza aumenta il picco di risonanza e peggiorano le caratteristiche di fedeltà del sistema visto come filtro:
+- $\Phi_M \downarrow \ M_r \uparrow$
+- $\omega_c \downarrow \approx \omega_{BW} \downarrow$
+
