@@ -3,13 +3,6 @@ package Barbiere_addormentato;
 import java.util.concurrent.TimeUnit;
 
 public abstract class Sala {
-    protected final int numSedie;
-    protected int sedieLibere;
-
-    public Sala(int sedie) {
-        numSedie = sedie;
-        sedieLibere = sedie;
-    }
 
     // metodi utilizzati dai thread
     public abstract void tagliaCapelli() throws InterruptedException; // usato dal barbiere
