@@ -3,50 +3,39 @@ package Cinque_filosofi;
 import java.util.concurrent.locks.*;
 
 public class TavoloLC extends Tavolo {
-    protected boolean[] bacchette = new boolean[NUM_FILOSOFI];
-    private Lock lock = new ReentrantLock();
-    private Condition[] possoMangiare = new Condition[NUM_FILOSOFI];
+    private Lock l = new ReentrantLock();
+    private Condition attesa = l.newCondition(); // si potrebbe fare anche con l'array di condition, ma in realtà basta fare anche così tanto riverificano la condizione
+    private boolean[] disponibile = new boolean[NUM_FILOSOFI];
 
     public TavoloLC() {
         for (int i = 0; i < NUM_FILOSOFI; i++) {
-            possoMangiare[i] = lock.newCondition();
+            disponibile[i] = true;
         }
     }
 
+    @Override
     public void prendiBacchette(int i) throws InterruptedException {
-        lock.lock();
+        l.lock();
         try {
-            // se c'è almeno una bacchetta già in uso da qualcun altro si mette in attesa in una delle condition
-            while (bacchette[i] || bacchette[(i+1) % NUM_FILOSOFI]) {
-                if (bacchette[i]) {
-                    possoMangiare[i].await();
-                } else {
-                    possoMangiare[(i+1) % NUM_FILOSOFI].await();
-                }
+            while (!disponibile[i] || !disponibile[(i+1) % 5]) {
+                attesa.await();
             }
-            bacchette[i] = true;
-            bacchette[(i+1) % NUM_FILOSOFI] = true;
+            disponibile[(i+1) % 5] = false;
+            disponibile[i] = false;
         } finally {
-            lock.unlock();
+            l.unlock();
         }
     }
 
+    @Override
     public void rilasciaBacchette(int i) {
-        lock.lock();
+        l.lock();
         try {
-            // imposta a false l'uso delle bacchette e segnala ai filosofi che stanno aspettando che le bacchette sono state rilasciate
-            bacchette[i] = false;
-            bacchette[(i+1) % NUM_FILOSOFI] = false;
-            possoMangiare[i].signal();
-            possoMangiare[(i+1) % NUM_FILOSOFI].signal();
+            disponibile[i] = true;
+            disponibile[(i+1) % 5] = true;
+            attesa.signalAll();
         } finally {
-            lock.unlock();
+            l.unlock();
         }
     }
-
-    public static void main(String[] args) {
-        TavoloLC tavolo = new TavoloLC();
-        tavolo.test();
-    }
-
 }

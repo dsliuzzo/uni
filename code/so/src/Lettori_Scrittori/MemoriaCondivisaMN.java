@@ -1,12 +1,12 @@
 package Lettori_Scrittori;
 
 public class MemoriaCondivisaMN extends MemoriaCondivisa {
-    private int numLettori = 0;
-    private boolean scrittoreDentro = false;
+    private boolean scrittoreDentro;
+    private int lettoriDentro;
 
     @Override
     public synchronized void inizioScrittura() throws InterruptedException {
-        while(scrittoreDentro || numLettori > 0) {
+        while (scrittoreDentro || lettoriDentro > 0) {
             wait();
         }
         scrittoreDentro = true;
@@ -20,15 +20,15 @@ public class MemoriaCondivisaMN extends MemoriaCondivisa {
 
     @Override
     public synchronized void inizioLettura() throws InterruptedException {
-        while ( scrittoreDentro ) {
+        while (scrittoreDentro) {
             wait();
         }
-        numLettori ++;
+        lettoriDentro++;
     }
 
     @Override
     public synchronized void fineLettura() throws InterruptedException {
-        numLettori --;
+        lettoriDentro--;
         notifyAll();
     }
 }

@@ -4,53 +4,45 @@ import java.util.concurrent.locks.*;
 import java.util.LinkedList;
 
 public class SalaLC extends Sala{
-    Lock lock = new ReentrantLock();
-    Condition clienteDisponibile = lock.newCondition();
-    Condition poltrona = lock.newCondition();
-    LinkedList<Cliente> clienti = new LinkedList<Cliente>();
-    protected boolean poltronaLibera = false;
+    private Lock l = new ReentrantLock();
+    private Condition poltrona = l.newCondition();
+    private Condition clienteDisponibile = l.newCondition();
+    private LinkedList<Thread> coda = new LinkedList<>();
+    private boolean poltronaLibera;
+    private int occupati;
+    private static final int NUM_SEDIE = 10;
 
-    public SalaLC (int numSedie) {
-        super(numSedie);
-    }
-
-    @Override
     public void tagliaCapelli() throws InterruptedException {
-        lock.lock();
+        l.lock();
         try {
-            while (numSedie == sedieLibere) {
+            while (occupati == 0) {
                 clienteDisponibile.await();
             }
             poltronaLibera = true;
-            poltrona.signalAll();
+            poltrona.signal();
         } finally {
-            lock.unlock();
+            l.unlock();
         }
     }
 
-    @Override
     public boolean attendiTaglio() throws InterruptedException {
-        lock.lock();
-        Cliente c = (Cliente) Thread.currentThread();
+        l.lock();
         try {
-            if (sedieLibere == 0) {
+            if (occupati == NUM_SEDIE) {
                 return false;
             }
-            clienti.addLast(c);
-            sedieLibere--;
+            occupati++;
+            coda.addLast(Thread.currentThread());
             clienteDisponibile.signal();
-            while (!mioTurno(c.getID())) {
+            while (!poltronaLibera || coda.getFirst() != Thread.currentThread()) {
                 poltrona.await();
             }
-            clienti.removeFirst();
             poltronaLibera = false;
-            sedieLibere++;
+            coda.removeFirst();
+            occupati--;
+            return true;
         } finally {
-            lock.unlock();
+            l.unlock();
         }
-        return true;
-    }
-    private boolean mioTurno(int id) {
-        return clienti.getFirst().getID() == id && poltronaLibera;
     }
 }
