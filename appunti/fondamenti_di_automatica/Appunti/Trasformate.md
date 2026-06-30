@@ -71,7 +71,7 @@ $f(\cdot) \leftrightharpoons F(s)$
 Verifichiamo se $\dot{f}(\cdot)$ è di classe L
 Essendo $f(\cdot)$ continua, derivandola, nel caso peggiore è continua a tratti, quindi è ancora una funzione di classe L:
 $$
-\mathcal{L}\{\dot{f}(t)\} = s F(s) - f(o^-)
+\mathcal{L}\{\dot{f}(t)\} = s F(s) - f(0^-)
 $$
 Per derivate di ordine $n$ possiamo generalizzare questa formula per induzione se $f(\cdot)$ è di classe L e continua con le sue derivate fino all'ordine $n-1$ : $f(\cdot) \in C(n-1)$
 $$
