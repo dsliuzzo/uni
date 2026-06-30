@@ -302,7 +302,7 @@ $$
 $$
 E(t) = \int_{-\infty}^t \rho(\tau) d \tau = \int_{-\infty}^t i(\tau) v(\tau) d \tau = L \int_{-\infty}^t i(\tau) \frac{di(\tau)}{d \tau} d \tau = \frac{1}{2} Li^2(t)
 $$
-Se $L>0$ l'elemento è passivo (accumula energia sottoforma di campo magnetico)
+Se $L>0$ l'elemento è passivo (accumula energia sotto forma di campo magnetico)
 ## Generatori indipendenti
 >[!important] Un generatore ideale indipendente è un elemento attivo che mantiene una tensione o corrente specificata che è completamente indipendente dalle altre variabili del circuito.
 
