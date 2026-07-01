@@ -128,15 +128,18 @@ num_{\text{Istr}}(n) \in \Theta(T_A(n))
 $$
 $\therefore$ l'istruzione elementare, a cui associo una funzione, è asintoticamente equivalente al costo di $A$.
 >[!important] Istruzione dominante
->istruzione che viene ripetuta più colte
+>istruzione che viene ripetuta più volte
 ### Modello a costi logaritmici
-Nel caso in cui non possiamo **non** tener conto della grandezza dell'input nel calcolo della complessità utilizziamo il **modello a costi logaritmici**.
-Si assume quindi che il costo temporale di ogni istruzione sia **proporzionale alla dimensione** (numero di bit) degli operandi (ovvero al logaritmo del loro valore di input).
-Quindi supponiamo di non conoscere il numero di bit dell'output e di volerlo calcolare.
-Dati due interi e volendo eseguire il loro prodotto:
-- $m=2^i$ bit
-- $n=2^j$ bit
-avremo che l'output, $m*n = 2^{i+j}$ occuperà uno spazio di $m*n = 2^{i+j}$ e quindi l'operazione avrà non più un costo unitario, ma pari a $\log_2(m*n)=\log_2(m)+\log_2(n)$
+Nel caso in cui non possiamo ignorare la grandezza dell'input nel calcolo della complessità, utilizziamo il **modello a costi logaritmici**.
+Si assume che il costo temporale di ogni istruzione elementare sia proporzionale alla **dimensione fisica** (numero di bit) degli operandi, ovvero all'incirca al logaritmo in base 2 del loro valore.
+Supponiamo di non conoscere il numero di bit dell'output e di volerlo calcolare. Dati due interi e volendo eseguire il loro prodotto:
+- Valore $m \approx 2^i \implies$ occupa uno spazio proporzionale a $i$ bit, calcolabile come $\log_2(m)$
+- Valore $n \approx 2^j \implies$ occupa uno spazio proporzionale a $j$ bit, calcolabile come $\log_2(n)$
+
+Avremo che il valore finale dell'output sarà $m \cdot n \approx 2^{i+j}$.
+
+Di conseguenza, lo spazio occupato in memoria da questo nuovo valore sarà proporzionale a $i + j$ bit. L'operazione di moltiplicazione, quindi, non avrà più un costo unitario $O(1)$, ma un costo temporale dipendente dalla lunghezza dei dati, pari a:
+$$\log_2(m \cdot n) = \log_2(m) + \log_2(n)$$
 ## Complessità intrinseca
 Per analizzare la complessità intrinseca di un problema abbiamo bisogno di due riferimenti
 ### Limite superiore
@@ -144,7 +147,7 @@ Per analizzare la complessità intrinseca di un problema abbiamo bisogno di due 
 
 Il limite superiore descrive, nel caso peggiore, la quantità di tempo (o di memoria) sufficiente per la risoluzione del problema dato.
 Per trovare un limite superiore è sufficiente conoscere qualche algoritmo (non necessariamente il migliore) per la risoluzione del problema dato e valutarne la complessità.
-La conoscenza di un upper bound, tuttavia, non ci dà un'informazione completa sulla complessità del problema, infatti potrebbero esistere metodi di risoluzione del problema dato diversi da quelli noti che ne consentono la soluzione in modo più rapido.
+La conoscenza di un upper bound, tuttavia, non ci dà un'informazione completa sulla complessità del problema, infatti potrebbero esistere metodi di risoluzione del problema dato, diversi da quelli noti che ne consentono la soluzione in modo più rapido.
 ### Limite inferiore
 >[!important] Un problema $P$ ha un lower bound di complessità $\Omega(g(n))$ se e solo se tutti gli algoritmi di $A$, risolutori di $P$, hanno complessità $\Omega(g(n))$ nel caso peggiore.
 

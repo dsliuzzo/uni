@@ -141,7 +141,7 @@ La tensione VAB tra due punti A e B è il lavoro per unità di carica che deve c
 $$
 V_{AB} = \oint_A^B \vec{E} \cdot d \vec{l} = \oint_A^B E \cdot dl
 $$
-ale lavoro viene fornito da una sorgente esterna di forza elettromotrice (fem) che può essere una batteria, una dinamo, una turbina idroelettrica, etc.
+se il lavoro viene fornito da una sorgente esterna di forza elettromotrice (fem) che può essere una batteria, una dinamo, una turbina idroelettrica, etc.
 $$
 V_{AB} = \frac{d\epsilon}{dq} 
 $$
@@ -195,7 +195,7 @@ In un dato circuito un elemento attivo può anche assorbire potenza oltre che ce
 >La legge di Ohm afferma che la tensione v su un resistore è direttamente proporzionale alla corrente i che scorre nel resistore.
 >$$R = \rho \frac{l}{A} [\Omega]$$
 
-In un mezzo conduttore, la tensione ai capi e la corrente che lo attraversa, sono linearmente proporzionali <-- [...] (vedi appunti claudia)
+In un mezzo conduttore, la tensione ai capi e la corrente che lo attraversa, sono linearmente proporzionali
 $$
 V_{AB} = \frac{l}{\sigma S}I = \frac{\rho l}{S}I = RI
 $$
@@ -208,9 +208,6 @@ $R$ è la resistenza che si misura in Ohm $[\Omega]$, mentre $G$ è l'**induttan
 
 >[!important] La conduttanza G è la capacità di un elemento di condurre la corrente elettrica e si misura in siemens (S) o in mho (Ω-1).
 >$$G = \frac{1}{R} = \frac{i}{v}$$
-
-### Tipi di resistori
-[...]
 ### Relazione costitutiva (resistore)
 
 $$
@@ -332,11 +329,11 @@ Se $L>0$ l'elemento è passivo (accumula energia sotto forma di campo magnetico)
 
 # Topologia dei circuiti
 Per semplificare lo studio dei circuiti definiamo delle ipotesi semplificative:
-- Le tensioni variano solo ai capi dei componenti, le correnti solo dove si incontrano più “rami” del circuito;
-- Ogni componente ha una caratteristica tensione-corrente univoca;
-- i componenti sono considerati privi di dimensioni
-- i collegamenti sono considerati conduttori perfetti (conducibilità infinita)→ niente caduta di potenziale lungo i conduttori né dissipazione di energia;
-- nello spazio che circonda i componenti non ci sono cariche, il campo elettrico è conservativo, il campo magnetico è nullo
+1. Le tensioni variano solo ai capi dei componenti, le correnti solo dove si incontrano più “rami” del circuito;
+2. Ogni componente ha una caratteristica tensione-corrente univoca;
+3. i componenti sono considerati privi di dimensioni
+4. i collegamenti sono considerati conduttori perfetti (conducibilità infinita)→ niente caduta di potenziale lungo i conduttori né dissipazione di energia;
+5. nello spazio che circonda i componenti non ci sono cariche, il campo elettrico è conservativo, il campo magnetico è nullo
 Lo schema di un circuito è la rappresentazione astratta di un circuito fisico.
 La disposizione degli elementi di un circuito nello schema può non avere relazione con la loro disposizione fisica (le dimensioni non contano).
 Possiamo modificare e deformare lo schema di un circuito a piacere purché la disposizione delle connessioni tra i vari elementi rimanga la stessa.
@@ -349,9 +346,9 @@ Possiamo modificare e deformare lo schema di un circuito a piacere purché la di
 
 >[!important] Una **maglia** è un qualsiasi percorso chiuso in un circuito
 >Una maglia è un qualsiasi percorso chiuso all’interno di un circuito in cui nessun nodo è percorso più di una volta.
->Un anello è un particolare tipo di maglia tale che non contiene al suo interno altre maglie (si dice anche “maglia di area minima”)
+>Un **anello** è un particolare tipo di maglia tale che non contiene al suo interno altre maglie (si dice anche “maglia di area minima”)
 
-Dato che la topologia di un circuito non dipende dal tipo di elementi ma solo dale loro connessioni reciproche, è utile introdurre il concetto di grafo, ovvero lo schema dei rami del circuito senza riportare gli elementi.
+Dato che la topologia di un circuito non dipende dal tipo di elementi ma solo dale loro connessioni reciproche, è utile introdurre il concetto di **grafo**, ovvero lo schema dei rami del circuito senza riportare gli elementi.
 ![[Pasted image 20260316185922.png|center|500]]
 Un grafo orientato è un grafo su cui si assegnano i versi delle percorrenze (e delle tensioni in accordo con la convenzione degli utilizzatori).
 
@@ -367,9 +364,9 @@ Se si conoscono tutti i potenziali dei nodi rispetto al potenziale del nodo pres
 Lo stesso vale se conosciamo tutte le correnti degli anelli.
 Potenziale dei nodi e correnti di anello sono due insieme di variabili indipendenti. Dai loro valori, tutti gli altri possono essere determinati.
 Come trovare i valori delle variabili indipendenti (e come stabilire l’effettiva indipendenza) è lo scopo dei **metodi di analisi dei circuiti**.
-## Leggi di Kirchoff
+## Leggi di Kirchhoff
 Le leggi di Kirchhoff delle correnti (Kirchhoff’s Current Law - KCL) e delle tensioni (Kirchhoff’s Voltage Law - KVL) sono le leggi fondamentali per l’analisi dei circuiti a partire dalla topologia degli stessi.
-### Legge di Kirchoff delle correnti (KCL)
+### Legge di Kirchhoff delle correnti (KCL)
 La KCL è alla base del Metodo dei nodi, in cui le incognite da trovare sono le tensioni dei nodi del circuito.
 Dalla legge di conservazione della carica deriva la prima legge di Kirchhoff.
 >[!info] La legge di Kirchhoff delle correnti (KCL) stabilisce che la somma algebrica delle correnti che entrano in un nodo (o in una superficie chiusa) è zero.
@@ -383,7 +380,7 @@ Possiamo quindi concludere che la somma delle correnti entranti al nodo è ugual
 >![[Pasted image 20260316191127.png|center|400]]
 >Applicando la KCL è immediato verificare che $i_1=i_2$
 
-### Legge di Kirchoff delle tensioni (KVL)
+### Legge di Kirchhoff delle tensioni (KVL)
 La KVL è alla base del Metodo degli anelli, in cui le incognite da trovare sono le correnti di anello.
 Dalla legge di conservazione dell'energia deriva la seconda legge di Kirchhoff.
 >[!important] La legge di Kirchhoff delle tensioni (KVL) stabilisce che la somma algebrica delle tensioni lungo un percorso chiuso (o maglia) è zero.
@@ -648,7 +645,7 @@ La potenza massima si ha per $i= \frac{i_{cc}}{2}$ e quindi la potenza sul caric
 $$P_{R_L} = \left( \frac{i_{cc}}{2} \right)^2 R_L = \left( \frac{V_g}{2 \cdot R_g} \right)^2 R_L$$
 >[!important] Rendimento
 >[[6. Termodinamica#Trasformazioni cicliche|rendimento]]
->$$\eta = \frac{\text{potenza assorbita dal carico}}{\text{potenza erogata dal generatore ideale}}$$
+>$$\eta = \frac{\text{potenza assorbita dal carico}}{\text{potenza erogata dal generatore ideale}} = \frac{P_{R_L}}{P_{V_G}}$$
 
 >[!info] Teorema del massimo rendimento
 >Possiamo quindi massimizzare il rendimento
@@ -662,6 +659,7 @@ equivalente a quella del generatore di tensione se:
 $$V_0 = R_i I_S \quad \text{e} \quad R_v = R_i$$
 ![[Pasted image 20260327152652.png]]
 Vediamo in quale caso le potenze sono uguali:
+#dimostrazione
 $$
 \begin{align*}
 P_{R_L}^1 & = \frac{V_{R_L}^2}{R_L}= V_g^2\frac{ R_L^2}{(R_g + R_L)^2 R_L}& \hspace{10ex} P_{R_L}^2 &=  i^2_{R_L} \cdot R_L = I_g^2 \frac{R_{I_g}^2 \cdot R_L}{(R_L + R_g)^2}
@@ -678,8 +676,6 @@ $$
 Questo risultato conferma l'ipotesi iniziale:
 - $R_g = R_L \to$  scambiando le resistenze il generatore eroga uguale potenza
 - $V_g = R_g \cdot I_g$
-
----
 # Teoremi delle reti lineari
 >[!important] Linearità
 >[[1. Sistemi dinamici#Linearità]]
@@ -774,7 +770,7 @@ $$
 - Spegnendo invece i generatori interni rimane solo$$v_{AB} = Ci = R_{Th} i$$ con $C$ calcolato come la resistenza vista tra i due terminali
 Tornando quindi alla formulazione completa
 $$
-v_{AB} = v_{AB}^{int} + v_{AB}^{ext} = V_{Th} + T_{Th} i
+v_{AB} = v_{AB}^{int} + v_{AB}^{ext} = V_{Th} + R_{Th} i
 $$
 ## Teorema di Norton
 >[!info] Teorema di Norton
@@ -845,7 +841,7 @@ Sfruttando l'equivalenza tra generatore reale di tensione e generatore reale di 
 2. eliminiamo le resistenze $R_{Bj}$ in serie ai generatori di corrente $I_{bj}$ (teorema della sostituzione)
 # Metodi di analisi
 Dato un circuito di $R$ rami e $N$ nodi, il suo comportamento è completamente determinato una volta note tutte le $2R$ grandezze elettriche $2R$: $R$ tensioni e $R$ correnti di ramo.
-Garantendo la linearità tra le equazioni possono essere semplificate:
+Garantendo la linearità tra le equazioni possono essere semplificate :
 - Utilizzando le relazioni costitutive che legano tensioni e correnti su ogni ramo sono sufficienti $R$ equazioni per descrivere un sistema.
 - Essendo alcune di esse comuni possiamo semplificare ulteriormente il numero di equazioni utilizzando [[#Legge di Kirchoff delle tensioni (KVL)|KVL]] e [[#Legge di Kirchoff delle correnti (KCL)|KCL]]
 >[!important] Metodi di analisi
@@ -1117,9 +1113,7 @@ Quindi ogni segnale può essere studiato:
 - segnali periodici $\to$ serie di Fourier
 - segnali non periodici $\to$ trasformata di Fourier
 
-Nel passaggio dal dominio del tempo al dominio della frequenza l'operatore di Fourier ci permette di capire come si comporta il segnale:
-
-[...] <-- disegni
+Nel passaggio dal dominio del tempo al dominio della frequenza l'operatore di Fourier ci permette di capire come si comporta il segnale.
 
 Nella serie di Fourier ogni linea è un'onda elementare: sommandole riotteniamo il segnale originale.
 
@@ -1137,8 +1131,6 @@ $$
 - $V_m$ **ampiezza**
 - $\omega$ **pulsazione**
 - $\varphi$ **sfasamento**
-
-[...] <-- disegno - uomo pigro
 
 >[!quote] In elettrotecnica tendiamo a mantenere i segnali sottoforma di $\cos()$
 >nei complessi il coseno è associato alla parte reale del segnale ondoso (usiamo segnali reali nella vita reale)
@@ -1185,7 +1177,15 @@ $$
 v(t) = a_{1} \cdot v_{1}(t) + a_{2} \cdot v_2(t) \to \overline{V} = a_{1} \cdot \overline{V}_1 + a_{2} \cdot \overline{V}_2
 $$
 #dimostrazione 
-[...]
+$$
+\begin{align*}
+v(t) & = a_{1} \cdot v_{1}(t) + a_{2} \cdot v_{2}(t) = \\
+& = a_{1} \cdot V_{m_{1}} \cos (\omega t + \varphi_{1}) + a_{2} \cdot V_{m_{2}} \cos(\omega t + \varphi_{2}) \\
+& = \mathrm{Re}\{a_{1} V_{m_{1}} e^{j \varphi_{1}} \cdot e^{j \omega t}\} + \mathrm{Re} \{a_{2} V_{m_{2}} e^{j \varphi_2} \cdot e^{j \omega t}\} = \\
+& = \mathrm{Re}\{(a_{1} V_{m_{1}}e^{j \varphi_1}+ a_{2} V_{m_{2}}e^{j \varphi_2})e^{j \omega t}\} = \\
+&= \mathrm{Re}\{(\underbrace{ a_{1}\overline{V}_1 + a_{2} \overline{V}_2}_{\overline{V}})e^{j \omega t}\}
+\end{align*}
+$$
 #### Derivazione
 data
 $$
@@ -1498,13 +1498,7 @@ $$
 $$
 ## Teorema del massimo trasferimento di potenza attiva
 Dal [[#Generatori reali|teorema del massimo trasferimento]] sappiamo che in regime DC per ottenere il massimo trasferimento di potenza la resistenza del generatore $R_g$ deve essere uguale alla resistenza del carico $R_L$.
->[!multi-column]
->
->>[!blank]
->>[...]
->
->>[!blank]
->>![[Elettrotecnica-1778747212101.webp|center|350]]
+![[Elettrotecnica-1778747212101.webp|center|350]]
 
 Per la potenza complessa
 $$\displaylines{S_{ZL} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} Z_L \overline{I} \overline{I}^*= \frac{1}{2} Z_L |\overline{I}|^2 = \underbrace{\frac{1}{2} R_L |\overline{I}|^2}_{\text{Potenza attiva}}+ \frac{j}{2} X_L |\overline{I}|^2 \\ \overline{I} = \frac{\overline{V_g}}{Z_g + Z_L} = \frac{\overline{V_g}}{(R_g+R_L)+j(X_g+X_L)} \\ \implies S_{ZL} = \frac{1}{2}\cdot \frac{(R_L + j X_L) \cdot\overline{V_g^2}}{(R_g+R_L)^2+(X_g+X_L)^2}}$$
