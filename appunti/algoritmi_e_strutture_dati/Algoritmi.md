@@ -1480,7 +1480,7 @@ L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un n
 # Algoritmi di codifica
 Per comprimere un dato sfruttiamo le caratteristiche del linguaggio, anche se in modo implicito.
 Normalmente ogni codice ascii per essere rappresentato utilizza 8 bit, indipendentemente da quanto quel carattere appare all'interno del testo.
-Questo approccio mi permette di effettuare accessi diretti in qualsiasi punto del file, quindi è ottimo per il suo utilizzo, ma implica avere moltissimo spazio sprecato.
+Questo approccio permette di effettuare accessi diretti in qualsiasi punto del file, quindi è ottimo per il suo utilizzo, ma implica avere moltissimo spazio sprecato.
 
 L'obbiettivo degli algoritmi di codifica è quindi quello di poter rappresentare dati con meno bit possibile senza perdere informazioni.
 
@@ -1547,7 +1547,7 @@ Per eseguire questo confronto ho quindi bisogno della frequenza di ogni singolo 
 >[!question] Osservazione
 >Se un nodo dell'albero ha un solo figlio possiamo già dire che non è ottimo, in quanto è possibile rimuovere il nodo intermedio per diminuire il numero di cifre necessarie a rappresentare il carattere senza creare ambiguità
 >![[Algoritmi-1779349441881.webp|center|400]]
->Quindi se l'algoritmo restituisce un albero non è pieno il codice non è ottimo.
+>Quindi se l'algoritmo restituisce un albero non pieno il codice non è ottimo.
 >Questa proprietà può essere utilizzata per trovare un algoritmo che trovi l'albero ottimo in modo più semplice: non cerchiamo alberi che contengono nodi con un solo figlio.
 
 >[!info] Esiste sempre un codice ottimo il cui albero è pieno. Quindi cerchiamo solo tra gli alberi pieni
