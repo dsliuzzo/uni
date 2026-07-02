@@ -644,6 +644,7 @@ entrambe le rappresentazioni vengono utilizzate con scopi diversi.
 sia $S$ un insieme e $S_p = \{S_{1},\dots,S_k\}$ l'insieme delle partizioni:
 1. ogni elemento delle partizioni fa parte dell'insieme originale$$\bigcup_{i=1}^{k}S_i = S$$
 2. mutua esclusione pairwise$$\displaylines{\forall i,j \hspace{4ex} 1\leq i\leq u \wedge 1\leq j \leq k \\ S_i \cap S_j = \emptyset}$$
+
 ![[Strutture dati-1776777431095.webp|center|300]]
 
 ## Implementazione
@@ -655,6 +656,7 @@ In generale partiamo da tanti singleton (un insieme che contiene un solo element
 In un Union Find di $n$ elementi posso effettuare al massimo $n-1$ unioni, una volta effettuate otteniamo un insieme che contiene solo l'insieme originale.
 ### Quick find
 Rappresentiamo ogni partizione come se fosse un albero ennario di altezza 1 con radice il nome dell'insieme.
+(Nella pratica viene implementato come un array di elementi il cui contenuto è il riferimento al padre)
 ![[Strutture dati-1777060679728.webp|center|300]]
 Ogni foglia contiene il riferimento al padre, il che ci permette di implementare la `find(elem)` con complessità $O(1)$
 La `union(A,B)` nel caso peggiore (A con un elemento e B con n-1 elementi) ha complessità $n-1$, dato che dobbiamo scorrere tutti gli elementi figli per aggiornare il loro riferimento al padre.
@@ -703,8 +705,9 @@ Avrà le **stesse prestazioni** dell’Union by Rank:
 >>- `aggiungiArco(x,y)`
 >>- `rimuoviVertice(v)`
 >>- `rimuoviArco(e)`
-
-![[Strutture dati-1777110878916.webp|center|100]]
+>
+>>[!blank]
+>>![[Strutture dati-1777110878916.webp|center|200]]
 
 >[!quote] Tip
 >Gli **ipergrafi** permettono relazioni su insiemi di oggetti e risultano molto utili per esempio nei database.
@@ -745,21 +748,17 @@ Altre definizioni utili:
 
 >[!important] Grafo non orientato connesso
 >$G$ è connesso se $\forall x,y \in N : x\neq y \wedge \exists x\circ y$
->[...] <-- disegnino
 
 >[!multi-column]
 >
 >>[!important] Grafo orientato fortemente connesso
 >>ogni arco è sia in uscita che in entrata
->>[...] <-- disegnino
 >
 >>[!important] Grafo orientato semi connesso
 >>c'è un cammino orientato che connette tutti i nodi
->>[...] <-- disegnino
 >
 >>[!important] Grafo orientato debolmente connesso
 >>creando un grafo $G^*$ definito come il grafo $G$ ma non orientato, se $G^*$ è connesso allora $G$ è debolmente connesso
->>[...] <-- disegnino
 
 $$
 \text{fortemente connesso} \supset \text{semi connesso} \supset \text{debolmente connesso}
@@ -830,7 +829,7 @@ Utilizziamo come esempio il seguente grafo (orientato e non):
 >>[!blank]
 >>![[Strutture dati-1777120497416.webp|center|75]]
 #### Liste di adiacenza
-Manteniamo in un array contenente una cella per ogni nodo contenente una linked list con tutti i nodi adiacenti. Risulta molto conveniente nel caso in cui abbiamo molti nodi e pochi archi. Con molti archi risulta sconveniente dover scorrere tutta la linked list delle relazioni.
+Manteniamo in un array una cella per ogni nodo contenente una linked list con tutti i nodi adiacenti. Risulta molto conveniente nel caso in cui abbiamo molti nodi e pochi archi. Con molti archi risulta sconveniente dover scorrere tutta la linked list delle relazioni.
 
 >[!multi-column]
 >
@@ -940,7 +939,7 @@ Possiamo per esempio utilizzare un bit set per tenere traccia di tutti i nodi gi
 Non c'è una vera e propria differenza di implementazione tra grafi orientati e non, con l'unica differenza però che con grafi orientati c'è il rischio che vengano lasciati fuori dalla visita dei nodi connessi (ma per cui non è presente un percorso orientato) al nodo passato come parametro per l'inizio della visita.
 ### Visita a scandaglio / in profondità
 Riadattando la [[#Visita di un albero|visita anticipata sugli alberi]] 
-```
+``` python
 def __visitaprofonditaRic__(g: Grafo, nodo: int, visitati: list[bool], risultato: list[int]):
     if not visitati[nodo]:
         visitati[nodo] = True
@@ -957,7 +956,7 @@ def visitaprofonditaRic(g: Grafo, nodo: int) -> list[int]:
 qualsiasi sia la rappresentazione interna del grafico viene definito un dunder method per la ricorsione: se il nodo passato come parametro non è stato visitato il suo bit corrispondente viene impostato a `True` e il suo valore viene inserito all'interno della lista del risultato, poi si procede alla visita ricorsiva di tutti i nodi adiacenti.
 
 oppure iterativamente
-```
+``` python
 def visitaprofondita(g: Grafo, nodo: int) -> list[int]:
     risultato: list[int] = []
     pila: list[int] = []

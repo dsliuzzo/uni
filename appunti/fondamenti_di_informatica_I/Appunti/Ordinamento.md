@@ -183,7 +183,7 @@ Questo passaggio ha un costo di $\Theta(n)$.
 
 A questo punto scorriamo il vettore $w$ con indice $i$ e il vettore $v$ con indice $j$:
 se $w[i]>0$ scriviamo in $v[j]$ il valore $i+\min(v)$, decrementiamo $w[i]$ e incrementiamo $j$; se invece $w[i] = 0$ passiamo al successivo.
-```
+``` python
 j = 0
 for i in w:
 	while (w[i] > 0):
@@ -214,7 +214,7 @@ Questo sarà un algoritmo della famiglia degli **algoritmi di ordinamento con co
 Partiamo quindi dal presupposto di voler utilizzare una struttura dati che ci consenta di ottenere un inserimento costante, altrimenti otterremo un algoritmo logaritmico come già avviene per altri ordinamenti.
 Usiamo [[Strutture dati#Code di priorità fissa|code con livelli di priorità fissati]], con 10 livelli di priorità fissi, che non dipendono dal valore di input, in modo da mantenere la complessità costante: uno per ogni cifra, da 0 a 9.
 Dopo aver creato la struttura di supporto quindi scorriamo gli elementi dell'array di input una volta per ogni cifra a partire dalla cifra meno significativa: effettuiamo l'inserimento degli elementi nella struttura di supporto, utilizzando la singola cifra come livello di significatività.
-![[Ordinamento-1776286435963.webp|center|700]]
+![[Ordinamento-1776286435963.webp|center|900]]
 
 >[!attention] È importante partire dalla cifra meno significativa
 >altrimenti otterrei uno spostamento indesiderato contraddicendo l'ordinamento
