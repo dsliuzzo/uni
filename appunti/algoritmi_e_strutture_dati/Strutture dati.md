@@ -44,7 +44,7 @@ La rappresentazione interna di un nodo può avvenire in vario modo, spesso è ne
 >Sarebbe necessario anche nell'abr, ma essendo solo due figli è sufficiente un if/else.
 
 >[!quote] Rappresentazione primo figlio - successivo fratello
->Un modo molto utile di rappresentare un albero per il suo utilizzo all'interno dei compilatori (peni di segugio) è la PFSF, sviluppato come segue:
+>Un modo molto utile di rappresentare un albero per il suo utilizzo all'interno dei compilatori è la PFSF, sviluppato come segue:
 >Il padre contiene un riferimento al primo figlio e il figlio contiene un riferimento al suo fratello più prossimo.
 >![[Pasted image 20260326165353.png|center|300]]
 >Risulta particolarmente utile per effettuare controlli in modo sequenziale.
@@ -64,20 +64,18 @@ La rappresentazione interna di un nodo può avvenire in vario modo, spesso è ne
   3. figlio dx
 
 Per definire un algoritmo ricorsivo che lavora su strutture intrinsecamente ricorsive come gli alberi seguiamo la seguente struttura ben definita (in questo caso per la visita infissa):
-```
+``` python
 def visita(a:AlberoBinario):
-	// caso base
-	if a is None:
+	if a is None: # caso base
 		return
-	// caso iniettivo
-	visita(a.sin)
+	visita(a.sin) # caso iniettivo
 	print(a.val)
 	visita(a.des)
 ```
 
 Un altro tipo di visita è la **visita per livelli**.
 Consiste nell'accedere ad ogni nodo sullo stesso livello per poi passare al successivo.
-```
+``` python
 def visitalivelli(self, l):
 	coda = [self]
 	while len(coda) != 0:
@@ -95,13 +93,13 @@ Alla fine di questo algoritmo `l` conterrà il risultato della visita per livell
 
 ## Iteratore
 La struttura del `next()` è comune a molti altri iteratori:
-```
+``` python
 def __next__(self):
 	if not self.hasnext:
 		raise StopIteration
-	tmp = self.cur.val // salvo il nodo da restituire
-	self.__avanza__() // avanzo l'iteratore
-	return tmp // restituisco il valore
+	tmp = self.cur.val # salvo il nodo da restituire
+	self.__avanza__() # avanzo l'iteratore
+	return tmp # restituisco il valore
 ```
 La difficoltà in questo caso sta nell'implementazione di `__avanza__()` in quanto contrariamente alla linked list non abbiamo un semplice puntatore al successivo che ci permetta di avanzare, ma dobbiamo eseguire un sistema a stati più complesso che ci permetta di spostarci all'interno dell'albero rispettando una delle 3 visite viste in precedenza.
 Per far questo all'interno dell'iteratore manteniamo un riferimento al nodo corrente `curr` e uno "stato" che ci permetta di capire in quale posizione ci troviamo.
@@ -114,22 +112,42 @@ A questo punto possiamo visualizzare tutte le operazioni possibili tramite un au
 | $\searrow$ |           |
 | $\uparrow$ |           |
 ### Iteratore visita anticipata
-[...]
+
+| Stato        | Condizione        | Azione                               |
+| ------------ | ----------------- | ------------------------------------ |
+| $\searrow$   | `des is None`     | `dir =` $\uparrow$                   |
+| $\searrow$   | `des is not None` | `curr = des`<br>`dir =` $\perp$      |
+| $\swarrow$   | `sin is None`     | `dir =` $\searrow$                   |
+| $\swarrow$   | `sin is not None` | `curr = sin`<br>`dir =` $\perp$      |
+| $\uparrow$   | `par is None`     | `hasNext = False`<br>`dir =` $\perp$ |
+| $\uparrow_s$ | `par is not None` | `curr = par`<br>`dir =` $\searrow$   |
+| $\uparrow_d$ | `par is not None` | `curr = par`                         |
+
 ### Iteratore visita posticipata
-[...]
+
+| Stato        | Condizione        | Azione                               |
+| ------------ | ----------------- | ------------------------------------ |
+| $\searrow$   | `des is None`     | `dir =` $\perp$                      |
+| $\searrow$   | `des is not None` | `curr = des`<br>`dir =` $\swarrow$   |
+| $\swarrow$   | `sin is None`     | `dir =` $\searrow$                   |
+| $\swarrow$   | `sin is not None` | `curr = sin`<br>`dir =` $\swarrow$   |
+| $\uparrow$   | `par is None`     | `hasNext = False`<br>`dir =` $\perp$ |
+| $\uparrow_s$ | `par is not None` | `curr = par`<br>`dir =` $\searrow$   |
+| $\uparrow_d$ | `par is not None` | `curr = par`<br>`dir =` $\perp$      |
+
 ### Iteratore visita infissa
 devo inizializzare il tutto per avere `curr` al nodo più a sinistra possibile
 `hasNext` è inizializzato a True, lo cambio solo se c'è da metterlo a false
 
-| Stato        | Condizione            | Azione                               |
-| ------------ | --------------------- | ------------------------------------ |
-| $\searrow$        | `des is None`         | `dir =` $\uparrow$                   |
-| $\searrow$        | `des is not None`     | `curr = des`<br>`dir =` $\swarrow$ |
-| $\swarrow$ | `sin is None`         | `dir = ` $\perp$                     |
-| $\swarrow$ | `sin is not None`     | `curr = sin`<br>`dir = `$\swarrow$ |
-| $\uparrow$   | `par is None`         | `hasNext = False`<br>`dir =`$\perp$  |
-| $\uparrow_s$ | `par is not None`     | `curr = par`<br>`dir = `$\perp$      |
-| $\uparrow_d$ | `par is not None`<br> | `curr = par`                         |
+| Stato        | Condizione            | Azione                              |
+| ------------ | --------------------- | ----------------------------------- |
+| $\searrow$   | `des is None`         | `dir =` $\uparrow$                  |
+| $\searrow$   | `des is not None`     | `curr = des`<br>`dir =` $\swarrow$  |
+| $\swarrow$   | `sin is None`         | `dir = ` $\perp$                    |
+| $\swarrow$   | `sin is not None`     | `curr = sin`<br>`dir = `$\swarrow$  |
+| $\uparrow$   | `par is None`         | `hasNext = False`<br>`dir =`$\perp$ |
+| $\uparrow_s$ | `par is not None`     | `curr = par`<br>`dir = `$\perp$     |
+| $\uparrow_d$ | `par is not None`<br> | `curr = par`                        |
 
 ## Binary search tree - BST
 [[Albero binario di ricerca#Albero binario di ricerca]] 
@@ -178,7 +196,7 @@ Creando la libreria dobbiamo assicurarci che chi deve inserire o rimuovere deve 
 - caso iniettivo:
   inserisco i nuovi nodi nel punto in cui la procedura di ricerca lo trova
   $\to$ utilizzo praticamente la ricerca del nodo, nella posizione in cui dovrebbe esserci, se già esiste non faccio nulla, altrimenti lo inserisco
-```
+``` python
 def insert(self, val):
 	n = self.__search__(self.valori, val)
 	if n is None:  # Inserimento sulla radice
@@ -199,7 +217,7 @@ $\to \log_2 n$
 #### Rimozione
 molto simile
 utilizzo una ricerca che restituisce il nodo che contiene il valore e non semplicemente il valore, in modo da poter effettuare modifiche su di esso:
-```
+``` python
 def __search__(self, curr, val) -> AlberoBin:
 	if curr is None:
 		return curr
@@ -223,7 +241,7 @@ Anche se devo rimuovere un nodo con un solo figlio il problema rimane banale, in
 il caso più complesso è se il nodo da eliminare ha due figli, in quel caso non eliminiamo il nodo in sé, ma lo sostituiamo con il massimo del sottoalbero sinistro o il minimo del sottoalbero destro, per poter rispettare l'ordinamento; una volta sostituito il nodo da eliminare sarà riconducibile ad uno dei due casi precedenti:
 ![[Pasted image 20260403163332.png|center|600]]
 
-```
+``` python
 def delete(self, val):
 	if self.valori is None:
 		return
@@ -264,7 +282,7 @@ nella ricerca scendiamo, nel massimo scendiamo da dove ci siamo fermati con la r
 L'AVL è una implementazione dell'albero binario di ricerca autobilanciante.
 
 >[!important] bilanciamento
->Se il **fattore di bilanciamento** in valore assoluto è minore di 1 per ogni nodo, allora l'albero è bilanciato.
+>Se il **fattore di bilanciamento** in valore assoluto è $\leq 1$ per ogni nodo, allora l'albero è bilanciato.
 >Il **fattore di bilanciamento** è la differenza tra l'altezza del sottoalbero sinistro e del sottoalbero destro.
 
 Utilizzare il bilanciamento ci permette di riadattare l'albero in presenza di modiche senza stravolgerne la struttura.
@@ -356,7 +374,7 @@ figliosx*(i) = ((i*+1) * 2) -1 +1
 Il vantaggio dell'uso dell'heap in questo caso è l'indipendenza tra i sottoalberi: abbiamo definito relazioni d'ordine solo padre/figlio, quindi non c'è bisogno di verificare altro.
 
 Di base aggiungiamo l'elemento in coda al vettore e solo successivamente verifichiamo le relazioni d'ordine.
-![[Strutture dati-1776194209417.webp|center|600]]
+![[Strutture dati-1776194209417.webp|center|700]]
 - Nella prima iterazione non ci sono figli, quindi può essere contraddetta solo la relazione d'ordine con il padre: se il padre è maggiore effettuo uno swap
 - Il padre precedente è minore dei suoi due figli, ma il nuovo elemento dopo lo swap è minore del padre e quindi sicuramente minore dell'altro figlio.
   Rimane da controllare quindi il nuovo padre.
