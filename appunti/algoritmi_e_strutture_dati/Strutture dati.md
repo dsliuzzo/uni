@@ -974,7 +974,7 @@ def visitaprofondita(g: Grafo, nodo: int) -> list[int]:
  viene simulato il funzionamento dello stack con una pila.
 ### Visita a ventaglio / in ampiezza
 Riadattando la [[#Visita di un albero|visita per livelli sugli alberi]]
-```
+``` python
 def visitaampiezza(g: Grafo, nodo: int) -> list[int]:
     risultato: list[int] = []
     coda: list[int] = []
@@ -995,28 +995,7 @@ L’algoritmo scopre tutti i vertici che si trovano a distanza $k$ da `s`, prima
 A differenza della visita a scandaglio uso una coda e non una pila.
 
 ## Verifica aciclicità grafi orientati
-```
-def eaciclico(g: GrafoNO) -> bool:
-    return g.n == g.m + numcompconnesse(g)
-
-def numcompconnesse(g: GrafoNO) -> int:
-    visitati: list[bool] = [False for i in range(g.n)]
-    comp: int = 0
-    for i in range(g.n):
-        if not visitati[i]:
-            comp += 1
-            __visitaprofonditaRic__(g, i, visitati, [])
-    return comp    
-
-def __visitaprofonditaRic__(g: Grafo, nodo: int, visitati: list[bool], risultato: list[int]):
-    if not visitati[nodo]:
-        visitati[nodo] = True
-        risultato.append(nodo)
-        for ad in g.adiacenti(nodo):
-            __visitaprofonditaRic__(g, ad, visitati, risultato)
-```
-
-Invece nei grafi orientati come possiamo verificare se è presente un ciclo?
+Nei grafi **orientati** come possiamo verificare se è presente un ciclo?
 Ricordando la [[#Ciclo|definizione]] di ciclo nei grafi orientati.
 ### Verifica per ogni arco
 Una prima soluzione potrebbe essere quella di considerare tutti gli archi del grafo e per ogni arco effettuare una visita ($O(n+m)$) a partire dal nodo terminale: se viene raggiunto il nodo di partenza dell'arco allora abbiamo un ciclo.
@@ -1034,7 +1013,7 @@ che per grafi sparsi è approssimabile a $O(n)$, ma per grafi densi tenderà a $
 
 >[!important] La chiusura transitiva può essere ulteriormente ottimizzata sfruttando la rappresentazione di grafi con matrici di adiacenza e il calcolo matriciale, riducendo la complessità
 ### Algoritmo dell'ordinamento topologico
-```
+``` python
 def trovazero(gradi: list[int], rimossi) -> int:
     for i in range(len(gradi)):
         if gradi[i] == 0 and not rimossi[i]:
@@ -1118,7 +1097,7 @@ Con queste premesse possiamo quindi creare un algoritmo di aciclicità in due fa
 
 Per verificare se un grafo è connesso faccio una visita: se la lunghezza del risultato è pari a $n$ allora il grafo è connesso.
 Il grafo è un albero se a partire da un nodo qualunque posso raggiungere tutti gli altri.
-```
+``` python
 def econnesso(g: GrafoNO) -> bool:
     result = visitaampiezza(g, 0)
     if len(result) == g.n:
@@ -1174,7 +1153,7 @@ $$
 #### Come calcoliamo $k$
 L'idea alla base è quella di inizializzare un array di $n$ elementi a `false`, effettuare visite e settare a `true` i nodi corrispondenti visitati, fin quando tutto l'array sarà `true`. Il numero di visite fatte sarà esattamente $k$.
 
-```
+``` python
 def numcompconnesse(g: GrafoNO) -> int:
     visitati: list[bool] = [False for i in range(g.n)]
     comp: int = 0
@@ -1201,6 +1180,29 @@ n \cdot n & n+m
 \end{array}
 $$
 Nella matrice di adiacenza per ogni nodo scorriamo la riga, mentre nella lista di adiacenza il numero di nodi adiacenti è limitato dal numero di archi.
+
+---
+Ne deriva quindi il seguente codice completo
+``` python
+def eaciclico(g: GrafoNO) -> bool:
+    return g.n == g.m + numcompconnesse(g)
+
+def numcompconnesse(g: GrafoNO) -> int:
+    visitati: list[bool] = [False for i in range(g.n)]
+    comp: int = 0
+    for i in range(g.n):
+        if not visitati[i]:
+            comp += 1
+            __visitaprofonditaRic__(g, i, visitati, [])
+    return comp    
+
+def __visitaprofonditaRic__(g: Grafo, nodo: int, visitati: list[bool], risultato: list[int]):
+    if not visitati[nodo]:
+        visitati[nodo] = True
+        risultato.append(nodo)
+        for ad in g.adiacenti(nodo):
+            __visitaprofonditaRic__(g, ad, visitati, risultato)
+```
 ## Grafi pesati sugli archi
 Aggiungere informazioni relative ai nodi risulta molto semplice, basta che ogni nodo sia composto da un array, invece aggiungere informazioni relativi agli archi potrebbe risultare più complesso, ma anche molto più utile.
 *es.* casi d'uso:
@@ -1261,12 +1263,3 @@ Potrebbe verificarsi l'ingresso in un ciclo il cui bilancio tra ingresso e uscit
 >[!important] La presenza di un ciclo la cui somma dei pesi sugli archi del ciclo è negativa fa si che non tutti i cammini minimi esistano (l'insieme dei costi dei cammini non è più limitato inferiormente)
 
 Non tutti gli algoritmi per calcolare il cammino di costo minimo gestiscono questa situazione.
-
----
-
-
->[!quote] Esercizio - scheduling delle attività (come domanda all'esame)
->caso pratico di utilizzo eaciclicoOR
->ogni nodo del grafo è una attività da svolgere e gli archi del grafo rappresentano le propedeuticità delle operazioni.
->ogni attività è caratterizzata dal suo tempo di esecuzione
->avendo a disposizione un numero illimitato di esecutori (possono partire tutti in parallelo) e partendo dal tempo 0, qual è il tempo più piccolo con cui possono completare le attività rispettando le propedeuticità
