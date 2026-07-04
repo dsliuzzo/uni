@@ -41,7 +41,7 @@ $$
 T_A^{avg} = \sum_{x \in I \wedge |x| =n} T_A(x) \cdot Pr(x) 
 $$
 non è altro che il [[2. Variabili aleatorie#Valore atteso|valore atteso]] del tempo di esecuzione dell'algoritmo.
-Tuttavia, quest’analisi è molto difficile da eseguire in quanto è altamente improbabile che si conosca a priori la distribuzione del tempo di esecuzione di algoritmo tantomeno è immediato comparare tutti i diversi tempo.
+Tuttavia, quest’analisi è molto difficile da eseguire in quanto è altamente improbabile che si conosca a priori la distribuzione del tempo di esecuzione di algoritmo tanto meno è immediato comparare tutti i diversi tempo.
 ## Calcolo del costo di un algoritmo
 Il costo di un algoritmo è una misura oggettiva che mi permette di confrontare 2 diversi algoritmi per scegliere quello più efficiente. Tuttavia, ci sono dei parametri che noi non consideriamo perché troppo complessi come ad esempio:
 - lo stato della macchina → se è già in corso un processo (CPU impegnata)
