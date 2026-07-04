@@ -116,7 +116,7 @@ Ne conseguono due corollari:
 # 10. Teorema della risposta armonica a partire dall'analisi della risposta ad un segnale periodico elementare
 Sia $u(t) = A \sin(\omega t + \varphi)$ un generico ingresso periodico, applicando la formula di Eulero
 $$
-u(t) = A \frac{e^{j (\omega t + \varphi)} - e^{-j (\omega t + \varphi)}}{2 j} = A e^{j\varphi} \frac{e^{j \omega t} - e^{-j \omega t}}{2 j}
+u(t) = A \frac{e^{j (\omega t + \varphi)} - e^{-j (\omega t + \varphi)}}{2 j}
 $$
 sapendo che
 $$
@@ -126,7 +126,7 @@ la trasformata di Laplace di una ipotetica uscita sarà composta come segue
 $$
 Y'(s) = G(s) \cdot \frac{1}{s-j \omega}
 $$
-che possiamo suddividere in fratti semplici e notare come il regime dipenda dal solo ingresso
+che possiamo suddividere in fratti semplici e notare come il regime dipenda dal solo ingresso in quanto il polo aggiunto (che si trova sull'asse immaginario) è quello dominante
 $$
 Y'(s) = \underbrace{\dots}_{\text{transitorio}} + \underbrace{\frac{C_{n}}{s-j \omega}}_{\text{regime}}
 $$
@@ -140,7 +140,7 @@ y'_{ss}(t) = G(j \omega) e^{j \omega t}
 $$
 ne deduciamo che la risposta a regime a fronte dell'ingresso periodico generalizzato è la seguente
 $$
-y_{ss}(t) = A e^{j \varphi} \frac{G(j \omega) e^{j \omega t} - \overline{G(j \omega)} e^{-j \omega t}}{2j}
+y_{ss}(t) = A \frac{G(j \omega) e^{j \omega t+\varphi} - \overline{G(j \omega)} e^{-j (\omega t+\varphi)}}{2j}
 $$
 scomponiamo $G(j \omega)$ in modulo e fase $G(j \omega) = |G(j \omega)| \cdot e^{j \angle G(j \omega)}$ e il suo coniugato come $|G(j \omega)| \cdot e^{-j \angle G(j \omega)}$
 $$
@@ -178,8 +178,10 @@ Per calcolare un grafico qualitativo dobbiamo seguire i seguenti passi (sotto ip
 4. teorema del valore finale per calcolare il valore di regime
 5. approssimazione del tempo di assestamento ($t_{s,5} = 3 T)$, tempo di salita e massima sovraelongazione
 eventuali altre cose da ricordare:
-- se presente uno zero dominante a fase minima avremo un overshoot
-- se presente uno zero a fase non minima avremo un undershoot (controfase)
+- se presente uno zero dominante a fase minima avremo sovraelongazione
+- se presente uno zero a fase non minima avremo controfase:
+	- I ordine: si abbassa l'istante iniziale di partenza
+	- II ordine: derivata negativa
 - se sono presenti poli complessi e coniugati ci aspettiamo un grafico oscillatorio smorzato
 # 12. Definizione di massima sovraelongazione, tempo di salita e tempo di assestamento
 La massima sovraelongazione $S_{\%}$ rappresenta il più grande errore relativo valutato sui punti stazionari della risposta al gradino rispetto al valore di regime($t=0$ escluso).
@@ -227,7 +229,7 @@ Per calcolare le pulsazioni di taglio calcoliamo come il valore assoluto di zeri
 $$\begin{array}{c}\Omega_i = |z_i| \\ \omega_i = |p_i|\end{array}$$
 
 ---
-La pendenza/fase iniziale è data dalla molteplicità dei poli nell'origine ($-20\ dB/dec$ per polo nelle fasi e $-\frac{\pi}{2}$ rad nelle fasi)
+La pendenza/fase iniziale è data dalla molteplicità dei poli nell'origine ($-20\ dB/dec$ per polo nelle fasi e $-\frac{\pi}{2}$ rad nelle fasi) e nelle fasi se $k_b < 0$ si sottrae $180^\circ$
 
 ---
 La pendenza finale è data da
@@ -286,6 +288,7 @@ $$
 N = \frac{\left.\Delta arg(L(s))\right|_{s \in \Gamma \to \text{rispetto a -1 +j0}}}{2 \pi} = Z-P \implies Z=N+P
 $$
 Il numero di zeri nel RHP di $1+L(s)$ è pari al numero di giri $N$ attorno al punto critico $-1+j0$ sommati al numero dei poli nel RHP.
+Il numero di poli $P$ è un valore calcolabile a ciclo aperto in quanto coincidono con i poli di $L(s)$.
 
 Di conseguenza per garantire stabilità $Z = 0$ dobbiamo  $N = -P$.
 
