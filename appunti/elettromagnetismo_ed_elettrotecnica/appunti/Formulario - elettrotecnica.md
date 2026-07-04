@@ -35,8 +35,8 @@ Permette di sostituire porzioni di circuito con un generatore reale di tensione
 - $V_{Th}$ calcolo la tensione a vuoto sui morsetti
 ## Norton
 Permette di sostituire porzioni di circuito con un generatore reale di corrente
-- $R_{Th}$ spengo tutti i generatori e calcolo la resistenza rimanente
-- $I_{Th}$ calcolo la corrente di cortocircuito ai morsetti
+- $R_{N}$ spengo tutti i generatori e calcolo la resistenza rimanente
+- $I_{N}$ calcolo la corrente di cortocircuito ai morsetti
 ## Millman
 >[!multi-column]
 >
@@ -46,3 +46,12 @@ Permette di sostituire porzioni di circuito con un generatore reale di corrente
 >>[!blank]
 >>$$v_{0} = \frac{\sum_{i} \frac{V_{Ai}}{R_{Ai}} + \sum_{j} I_{Bj}}{\sum_{i} \frac{1}{R_{Ai}} + \sum_{k} \frac{1}{R_{Ck}}}$$
 >
+
+
+
+
+# Fasori
+$$
+Z_R = R [\Omega] \hspace{8ex} Z_L = j \omega L \hspace{8ex} Z_C = \frac{1}{j \omega C}
+$$
+

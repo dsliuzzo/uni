@@ -383,7 +383,7 @@ Possiamo quindi concludere che la somma delle correnti entranti al nodo è ugual
 ### Legge di Kirchhoff delle tensioni (KVL)
 La KVL è alla base del Metodo degli anelli, in cui le incognite da trovare sono le correnti di anello.
 Dalla legge di conservazione dell'energia deriva la seconda legge di Kirchhoff.
->[!important] La legge di Kirchhoff delle tensioni (KVL) stabilisce che la somma algebrica delle tensioni lungo un percorso chiuso (o maglia) è zero.
+>[!info] La legge di Kirchhoff delle tensioni (KVL) stabilisce che la somma algebrica delle tensioni lungo un percorso chiuso (o maglia) è zero.
 >$$\sum_{m=1}^M \pm v_m = 0 $$
 >con $M$ numero di tensioni (o rami) della maglia e $v_m$ m-esima tensione
 
