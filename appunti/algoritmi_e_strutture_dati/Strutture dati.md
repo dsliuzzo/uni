@@ -44,7 +44,7 @@ La rappresentazione interna di un nodo può avvenire in vario modo, spesso è ne
 >Sarebbe necessario anche nell'abr, ma essendo solo due figli è sufficiente un if/else.
 
 >[!quote] Rappresentazione primo figlio - successivo fratello
->Un modo molto utile di rappresentare un albero per il suo utilizzo all'interno dei compilatori (peni di segugio) è la PFSF, sviluppato come segue:
+>Un modo molto utile di rappresentare un albero per il suo utilizzo all'interno dei compilatori è la PFSF, sviluppato come segue:
 >Il padre contiene un riferimento al primo figlio e il figlio contiene un riferimento al suo fratello più prossimo.
 >![[Pasted image 20260326165353.png|center|300]]
 >Risulta particolarmente utile per effettuare controlli in modo sequenziale.
@@ -64,20 +64,18 @@ La rappresentazione interna di un nodo può avvenire in vario modo, spesso è ne
   3. figlio dx
 
 Per definire un algoritmo ricorsivo che lavora su strutture intrinsecamente ricorsive come gli alberi seguiamo la seguente struttura ben definita (in questo caso per la visita infissa):
-```
+``` python
 def visita(a:AlberoBinario):
-	// caso base
-	if a is None:
+	if a is None: # caso base
 		return
-	// caso iniettivo
-	visita(a.sin)
+	visita(a.sin) # caso iniettivo
 	print(a.val)
 	visita(a.des)
 ```
 
 Un altro tipo di visita è la **visita per livelli**.
 Consiste nell'accedere ad ogni nodo sullo stesso livello per poi passare al successivo.
-```
+``` python
 def visitalivelli(self, l):
 	coda = [self]
 	while len(coda) != 0:
@@ -95,13 +93,13 @@ Alla fine di questo algoritmo `l` conterrà il risultato della visita per livell
 
 ## Iteratore
 La struttura del `next()` è comune a molti altri iteratori:
-```
+``` python
 def __next__(self):
 	if not self.hasnext:
 		raise StopIteration
-	tmp = self.cur.val // salvo il nodo da restituire
-	self.__avanza__() // avanzo l'iteratore
-	return tmp // restituisco il valore
+	tmp = self.cur.val # salvo il nodo da restituire
+	self.__avanza__() # avanzo l'iteratore
+	return tmp # restituisco il valore
 ```
 La difficoltà in questo caso sta nell'implementazione di `__avanza__()` in quanto contrariamente alla linked list non abbiamo un semplice puntatore al successivo che ci permetta di avanzare, ma dobbiamo eseguire un sistema a stati più complesso che ci permetta di spostarci all'interno dell'albero rispettando una delle 3 visite viste in precedenza.
 Per far questo all'interno dell'iteratore manteniamo un riferimento al nodo corrente `curr` e uno "stato" che ci permetta di capire in quale posizione ci troviamo.
@@ -114,22 +112,42 @@ A questo punto possiamo visualizzare tutte le operazioni possibili tramite un au
 | $\searrow$ |           |
 | $\uparrow$ |           |
 ### Iteratore visita anticipata
-[...]
+
+| Stato        | Condizione        | Azione                               |
+| ------------ | ----------------- | ------------------------------------ |
+| $\searrow$   | `des is None`     | `dir =` $\uparrow$                   |
+| $\searrow$   | `des is not None` | `curr = des`<br>`dir =` $\perp$      |
+| $\swarrow$   | `sin is None`     | `dir =` $\searrow$                   |
+| $\swarrow$   | `sin is not None` | `curr = sin`<br>`dir =` $\perp$      |
+| $\uparrow$   | `par is None`     | `hasNext = False`<br>`dir =` $\perp$ |
+| $\uparrow_s$ | `par is not None` | `curr = par`<br>`dir =` $\searrow$   |
+| $\uparrow_d$ | `par is not None` | `curr = par`                         |
+
 ### Iteratore visita posticipata
-[...]
+
+| Stato        | Condizione        | Azione                               |
+| ------------ | ----------------- | ------------------------------------ |
+| $\searrow$   | `des is None`     | `dir =` $\perp$                      |
+| $\searrow$   | `des is not None` | `curr = des`<br>`dir =` $\swarrow$   |
+| $\swarrow$   | `sin is None`     | `dir =` $\searrow$                   |
+| $\swarrow$   | `sin is not None` | `curr = sin`<br>`dir =` $\swarrow$   |
+| $\uparrow$   | `par is None`     | `hasNext = False`<br>`dir =` $\perp$ |
+| $\uparrow_s$ | `par is not None` | `curr = par`<br>`dir =` $\searrow$   |
+| $\uparrow_d$ | `par is not None` | `curr = par`<br>`dir =` $\perp$      |
+
 ### Iteratore visita infissa
 devo inizializzare il tutto per avere `curr` al nodo più a sinistra possibile
 `hasNext` è inizializzato a True, lo cambio solo se c'è da metterlo a false
 
-| Stato        | Condizione            | Azione                               |
-| ------------ | --------------------- | ------------------------------------ |
-| $\searrow$        | `des is None`         | `dir =` $\uparrow$                   |
-| $\searrow$        | `des is not None`     | `curr = des`<br>`dir =` $\swarrow$ |
-| $\swarrow$ | `sin is None`         | `dir = ` $\perp$                     |
-| $\swarrow$ | `sin is not None`     | `curr = sin`<br>`dir = `$\swarrow$ |
-| $\uparrow$   | `par is None`         | `hasNext = False`<br>`dir =`$\perp$  |
-| $\uparrow_s$ | `par is not None`     | `curr = par`<br>`dir = `$\perp$      |
-| $\uparrow_d$ | `par is not None`<br> | `curr = par`                         |
+| Stato        | Condizione            | Azione                              |
+| ------------ | --------------------- | ----------------------------------- |
+| $\searrow$   | `des is None`         | `dir =` $\uparrow$                  |
+| $\searrow$   | `des is not None`     | `curr = des`<br>`dir =` $\swarrow$  |
+| $\swarrow$   | `sin is None`         | `dir = ` $\perp$                    |
+| $\swarrow$   | `sin is not None`     | `curr = sin`<br>`dir = `$\swarrow$  |
+| $\uparrow$   | `par is None`         | `hasNext = False`<br>`dir =`$\perp$ |
+| $\uparrow_s$ | `par is not None`     | `curr = par`<br>`dir = `$\perp$     |
+| $\uparrow_d$ | `par is not None`<br> | `curr = par`                        |
 
 ## Binary search tree - BST
 [[Albero binario di ricerca#Albero binario di ricerca]] 
@@ -178,7 +196,7 @@ Creando la libreria dobbiamo assicurarci che chi deve inserire o rimuovere deve 
 - caso iniettivo:
   inserisco i nuovi nodi nel punto in cui la procedura di ricerca lo trova
   $\to$ utilizzo praticamente la ricerca del nodo, nella posizione in cui dovrebbe esserci, se già esiste non faccio nulla, altrimenti lo inserisco
-```
+``` python
 def insert(self, val):
 	n = self.__search__(self.valori, val)
 	if n is None:  # Inserimento sulla radice
@@ -199,7 +217,7 @@ $\to \log_2 n$
 #### Rimozione
 molto simile
 utilizzo una ricerca che restituisce il nodo che contiene il valore e non semplicemente il valore, in modo da poter effettuare modifiche su di esso:
-```
+``` python
 def __search__(self, curr, val) -> AlberoBin:
 	if curr is None:
 		return curr
@@ -223,7 +241,7 @@ Anche se devo rimuovere un nodo con un solo figlio il problema rimane banale, in
 il caso più complesso è se il nodo da eliminare ha due figli, in quel caso non eliminiamo il nodo in sé, ma lo sostituiamo con il massimo del sottoalbero sinistro o il minimo del sottoalbero destro, per poter rispettare l'ordinamento; una volta sostituito il nodo da eliminare sarà riconducibile ad uno dei due casi precedenti:
 ![[Pasted image 20260403163332.png|center|600]]
 
-```
+``` python
 def delete(self, val):
 	if self.valori is None:
 		return
@@ -264,7 +282,7 @@ nella ricerca scendiamo, nel massimo scendiamo da dove ci siamo fermati con la r
 L'AVL è una implementazione dell'albero binario di ricerca autobilanciante.
 
 >[!important] bilanciamento
->Se il **fattore di bilanciamento** in valore assoluto è minore di 1 per ogni nodo, allora l'albero è bilanciato.
+>Se il **fattore di bilanciamento** in valore assoluto è $\leq 1$ per ogni nodo, allora l'albero è bilanciato.
 >Il **fattore di bilanciamento** è la differenza tra l'altezza del sottoalbero sinistro e del sottoalbero destro.
 
 Utilizzare il bilanciamento ci permette di riadattare l'albero in presenza di modiche senza stravolgerne la struttura.
@@ -356,7 +374,7 @@ figliosx*(i) = ((i*+1) * 2) -1 +1
 Il vantaggio dell'uso dell'heap in questo caso è l'indipendenza tra i sottoalberi: abbiamo definito relazioni d'ordine solo padre/figlio, quindi non c'è bisogno di verificare altro.
 
 Di base aggiungiamo l'elemento in coda al vettore e solo successivamente verifichiamo le relazioni d'ordine.
-![[Strutture dati-1776194209417.webp|center|600]]
+![[Strutture dati-1776194209417.webp|center|700]]
 - Nella prima iterazione non ci sono figli, quindi può essere contraddetta solo la relazione d'ordine con il padre: se il padre è maggiore effettuo uno swap
 - Il padre precedente è minore dei suoi due figli, ma il nuovo elemento dopo lo swap è minore del padre e quindi sicuramente minore dell'altro figlio.
   Rimane da controllare quindi il nuovo padre.
@@ -626,6 +644,7 @@ entrambe le rappresentazioni vengono utilizzate con scopi diversi.
 sia $S$ un insieme e $S_p = \{S_{1},\dots,S_k\}$ l'insieme delle partizioni:
 1. ogni elemento delle partizioni fa parte dell'insieme originale$$\bigcup_{i=1}^{k}S_i = S$$
 2. mutua esclusione pairwise$$\displaylines{\forall i,j \hspace{4ex} 1\leq i\leq u \wedge 1\leq j \leq k \\ S_i \cap S_j = \emptyset}$$
+
 ![[Strutture dati-1776777431095.webp|center|300]]
 
 ## Implementazione
@@ -637,6 +656,7 @@ In generale partiamo da tanti singleton (un insieme che contiene un solo element
 In un Union Find di $n$ elementi posso effettuare al massimo $n-1$ unioni, una volta effettuate otteniamo un insieme che contiene solo l'insieme originale.
 ### Quick find
 Rappresentiamo ogni partizione come se fosse un albero ennario di altezza 1 con radice il nome dell'insieme.
+(Nella pratica viene implementato come un array di elementi il cui contenuto è il riferimento al padre)
 ![[Strutture dati-1777060679728.webp|center|300]]
 Ogni foglia contiene il riferimento al padre, il che ci permette di implementare la `find(elem)` con complessità $O(1)$
 La `union(A,B)` nel caso peggiore (A con un elemento e B con n-1 elementi) ha complessità $n-1$, dato che dobbiamo scorrere tutti gli elementi figli per aggiornare il loro riferimento al padre.
@@ -685,8 +705,9 @@ Avrà le **stesse prestazioni** dell’Union by Rank:
 >>- `aggiungiArco(x,y)`
 >>- `rimuoviVertice(v)`
 >>- `rimuoviArco(e)`
-
-![[Strutture dati-1777110878916.webp|center|100]]
+>
+>>[!blank]
+>>![[Strutture dati-1777110878916.webp|center|200]]
 
 >[!quote] Tip
 >Gli **ipergrafi** permettono relazioni su insiemi di oggetti e risultano molto utili per esempio nei database.
@@ -727,21 +748,17 @@ Altre definizioni utili:
 
 >[!important] Grafo non orientato connesso
 >$G$ è connesso se $\forall x,y \in N : x\neq y \wedge \exists x\circ y$
->[...] <-- disegnino
 
 >[!multi-column]
 >
 >>[!important] Grafo orientato fortemente connesso
 >>ogni arco è sia in uscita che in entrata
->>[...] <-- disegnino
 >
 >>[!important] Grafo orientato semi connesso
 >>c'è un cammino orientato che connette tutti i nodi
->>[...] <-- disegnino
 >
 >>[!important] Grafo orientato debolmente connesso
 >>creando un grafo $G^*$ definito come il grafo $G$ ma non orientato, se $G^*$ è connesso allora $G$ è debolmente connesso
->>[...] <-- disegnino
 
 $$
 \text{fortemente connesso} \supset \text{semi connesso} \supset \text{debolmente connesso}
@@ -812,7 +829,7 @@ Utilizziamo come esempio il seguente grafo (orientato e non):
 >>[!blank]
 >>![[Strutture dati-1777120497416.webp|center|75]]
 #### Liste di adiacenza
-Manteniamo in un array contenente una cella per ogni nodo contenente una linked list con tutti i nodi adiacenti. Risulta molto conveniente nel caso in cui abbiamo molti nodi e pochi archi. Con molti archi risulta sconveniente dover scorrere tutta la linked list delle relazioni.
+Manteniamo in un array una cella per ogni nodo contenente una linked list con tutti i nodi adiacenti. Risulta molto conveniente nel caso in cui abbiamo molti nodi e pochi archi. Con molti archi risulta sconveniente dover scorrere tutta la linked list delle relazioni.
 
 >[!multi-column]
 >
@@ -922,7 +939,7 @@ Possiamo per esempio utilizzare un bit set per tenere traccia di tutti i nodi gi
 Non c'è una vera e propria differenza di implementazione tra grafi orientati e non, con l'unica differenza però che con grafi orientati c'è il rischio che vengano lasciati fuori dalla visita dei nodi connessi (ma per cui non è presente un percorso orientato) al nodo passato come parametro per l'inizio della visita.
 ### Visita a scandaglio / in profondità
 Riadattando la [[#Visita di un albero|visita anticipata sugli alberi]] 
-```
+``` python
 def __visitaprofonditaRic__(g: Grafo, nodo: int, visitati: list[bool], risultato: list[int]):
     if not visitati[nodo]:
         visitati[nodo] = True
@@ -939,7 +956,7 @@ def visitaprofonditaRic(g: Grafo, nodo: int) -> list[int]:
 qualsiasi sia la rappresentazione interna del grafico viene definito un dunder method per la ricorsione: se il nodo passato come parametro non è stato visitato il suo bit corrispondente viene impostato a `True` e il suo valore viene inserito all'interno della lista del risultato, poi si procede alla visita ricorsiva di tutti i nodi adiacenti.
 
 oppure iterativamente
-```
+``` python
 def visitaprofondita(g: Grafo, nodo: int) -> list[int]:
     risultato: list[int] = []
     pila: list[int] = []
@@ -957,7 +974,7 @@ def visitaprofondita(g: Grafo, nodo: int) -> list[int]:
  viene simulato il funzionamento dello stack con una pila.
 ### Visita a ventaglio / in ampiezza
 Riadattando la [[#Visita di un albero|visita per livelli sugli alberi]]
-```
+``` python
 def visitaampiezza(g: Grafo, nodo: int) -> list[int]:
     risultato: list[int] = []
     coda: list[int] = []
@@ -978,28 +995,7 @@ L’algoritmo scopre tutti i vertici che si trovano a distanza $k$ da `s`, prima
 A differenza della visita a scandaglio uso una coda e non una pila.
 
 ## Verifica aciclicità grafi orientati
-```
-def eaciclico(g: GrafoNO) -> bool:
-    return g.n == g.m + numcompconnesse(g)
-
-def numcompconnesse(g: GrafoNO) -> int:
-    visitati: list[bool] = [False for i in range(g.n)]
-    comp: int = 0
-    for i in range(g.n):
-        if not visitati[i]:
-            comp += 1
-            __visitaprofonditaRic__(g, i, visitati, [])
-    return comp    
-
-def __visitaprofonditaRic__(g: Grafo, nodo: int, visitati: list[bool], risultato: list[int]):
-    if not visitati[nodo]:
-        visitati[nodo] = True
-        risultato.append(nodo)
-        for ad in g.adiacenti(nodo):
-            __visitaprofonditaRic__(g, ad, visitati, risultato)
-```
-
-Invece nei grafi orientati come possiamo verificare se è presente un ciclo?
+Nei grafi **orientati** come possiamo verificare se è presente un ciclo?
 Ricordando la [[#Ciclo|definizione]] di ciclo nei grafi orientati.
 ### Verifica per ogni arco
 Una prima soluzione potrebbe essere quella di considerare tutti gli archi del grafo e per ogni arco effettuare una visita ($O(n+m)$) a partire dal nodo terminale: se viene raggiunto il nodo di partenza dell'arco allora abbiamo un ciclo.
@@ -1017,7 +1013,7 @@ che per grafi sparsi è approssimabile a $O(n)$, ma per grafi densi tenderà a $
 
 >[!important] La chiusura transitiva può essere ulteriormente ottimizzata sfruttando la rappresentazione di grafi con matrici di adiacenza e il calcolo matriciale, riducendo la complessità
 ### Algoritmo dell'ordinamento topologico
-```
+``` python
 def trovazero(gradi: list[int], rimossi) -> int:
     for i in range(len(gradi)):
         if gradi[i] == 0 and not rimossi[i]:
@@ -1101,7 +1097,7 @@ Con queste premesse possiamo quindi creare un algoritmo di aciclicità in due fa
 
 Per verificare se un grafo è connesso faccio una visita: se la lunghezza del risultato è pari a $n$ allora il grafo è connesso.
 Il grafo è un albero se a partire da un nodo qualunque posso raggiungere tutti gli altri.
-```
+``` python
 def econnesso(g: GrafoNO) -> bool:
     result = visitaampiezza(g, 0)
     if len(result) == g.n:
@@ -1157,7 +1153,7 @@ $$
 #### Come calcoliamo $k$
 L'idea alla base è quella di inizializzare un array di $n$ elementi a `false`, effettuare visite e settare a `true` i nodi corrispondenti visitati, fin quando tutto l'array sarà `true`. Il numero di visite fatte sarà esattamente $k$.
 
-```
+``` python
 def numcompconnesse(g: GrafoNO) -> int:
     visitati: list[bool] = [False for i in range(g.n)]
     comp: int = 0
@@ -1184,6 +1180,29 @@ n \cdot n & n+m
 \end{array}
 $$
 Nella matrice di adiacenza per ogni nodo scorriamo la riga, mentre nella lista di adiacenza il numero di nodi adiacenti è limitato dal numero di archi.
+
+---
+Ne deriva quindi il seguente codice completo
+``` python
+def eaciclico(g: GrafoNO) -> bool:
+    return g.n == g.m + numcompconnesse(g)
+
+def numcompconnesse(g: GrafoNO) -> int:
+    visitati: list[bool] = [False for i in range(g.n)]
+    comp: int = 0
+    for i in range(g.n):
+        if not visitati[i]:
+            comp += 1
+            __visitaprofonditaRic__(g, i, visitati, [])
+    return comp    
+
+def __visitaprofonditaRic__(g: Grafo, nodo: int, visitati: list[bool], risultato: list[int]):
+    if not visitati[nodo]:
+        visitati[nodo] = True
+        risultato.append(nodo)
+        for ad in g.adiacenti(nodo):
+            __visitaprofonditaRic__(g, ad, visitati, risultato)
+```
 ## Grafi pesati sugli archi
 Aggiungere informazioni relative ai nodi risulta molto semplice, basta che ogni nodo sia composto da un array, invece aggiungere informazioni relativi agli archi potrebbe risultare più complesso, ma anche molto più utile.
 *es.* casi d'uso:
@@ -1244,12 +1263,3 @@ Potrebbe verificarsi l'ingresso in un ciclo il cui bilancio tra ingresso e uscit
 >[!important] La presenza di un ciclo la cui somma dei pesi sugli archi del ciclo è negativa fa si che non tutti i cammini minimi esistano (l'insieme dei costi dei cammini non è più limitato inferiormente)
 
 Non tutti gli algoritmi per calcolare il cammino di costo minimo gestiscono questa situazione.
-
----
-
-
->[!quote] Esercizio - scheduling delle attività (come domanda all'esame)
->caso pratico di utilizzo eaciclicoOR
->ogni nodo del grafo è una attività da svolgere e gli archi del grafo rappresentano le propedeuticità delle operazioni.
->ogni attività è caratterizzata dal suo tempo di esecuzione
->avendo a disposizione un numero illimitato di esecutori (possono partire tutti in parallelo) e partendo dal tempo 0, qual è il tempo più piccolo con cui possono completare le attività rispettando le propedeuticità

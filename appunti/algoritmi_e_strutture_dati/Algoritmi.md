@@ -20,14 +20,14 @@ Per la risoluzione di `RisolviDI(P)`
 5. `return combino(SOL)`
    unisco le soluzioni delle chiamate ricorsive
 
-Distinguiamo due tipi di problemi 
+Distinguiamo due tipi di problemi
 - **Tipo 1**
   la dimensione delle sottoistanze è $\frac{n}{c}$
   *es.* nel merge sort $c=2$
 - **Tipo 2**
   la dimensione delle sottoistanze è $n-c$
   *es.* fattoriale con $c=1$
-con $c$ parametro dell'algoritmo, che può essere costante in tutto il problema come negli esempi sovrastanti o variabile
+dove $c$ parametro dell'algoritmo, che può essere costante in tutto il problema o variabile
 *es.* quick sort, nel caso peggiore la prima sottoistanza è vuota e la seconda ha $n-c$ celle
 
 >[!important] Possiamo capire la complessità di un algoritmo ricorsivo senza necessariamente conoscere la sua implementazione
@@ -38,9 +38,9 @@ Otteniamo quindi delle **equazioni di ricorrenza** così formulate
 $$
 \left\{\begin{array}{l}T(n) =bn^d+ aT\left( \frac{n}{c} \right) \\ T(1) = b\end{array}\right.
 $$
-Con $a$ numero di volte che viene richiamata la ricorsione, $b$ complessità del caso banale.
+dove $a$ numero di volte che viene richiamata la ricorsione, $b$ complessità del caso banale.
 La complessità di $T(n)$ è dato da un costo per le operazioni interne $bn^d$ + un costo dato dalle chiamate ricorsive $aT\left( \frac{n}{c} \right)$.
-### Teorema delle ricorrenze
+### Teorema delle ricorrenze (teorema master)
 Per misurare la complessità di un algoritmo di questo tipo dobbiamo conoscere $c$ e $d$, ma tramite il **teorema delle ricorrenze** e determinate ipotesi possiamo determinare la complessità a partire dalle equazioni di ricorrenza precedentemente trovate senza necessariamente conoscere l'implementazione dell'algoritmo.
 Sotto ipotesi di complessità di `dividi` e `combina` polinomiale e conoscendo la complessità di `risolvi` come $O(1)$ in quanto soluzione banale, possiamo ugualmente calcolare la complessità come segue.
 
@@ -484,7 +484,7 @@ x = x_{1} \cdot B^{\frac{n}{2}} + x_0  \\
 y = y_{1} \cdot B^{\frac{n}{2}} + y_{0}
 }
 $$
-con $B$ base del sistema di numerazione che stiamo usando e $x_{1}$ porzione di cifre più significativa e $x_{0}$ porzione di cifre meno significative.
+dove $B$ base del sistema di numerazione che stiamo usando e $x_{1}$ porzione di cifre più significativa e $x_{0}$ porzione di cifre meno significative.
 $$
 \begin{align*}
 x \cdot y & = (x_{1} B^{n/2} + x_{0}) \cdot (y_{1} B^{n/2} + y_{0}) = \\
@@ -734,7 +734,7 @@ def prim(g: GrafoNOP):
 ```
 
 ### Prim è un ottimo globale
-Nonostante applichi la tecnica Greedy l'algoritmo di Trim è comunque l'ottimo globale.
+Nonostante applichi la tecnica Greedy l'algoritmo di Prim è comunque l'ottimo globale.
 
 Per dimostrare questa proprietà possiamo riadattare il [[Dimostrazioni varie#Principio di induzione|principio di induzione]] agli algoritmi: **dimostrazione per invarianza**.
 Il nostro obbiettivo quindi è trovare una proprietà che, se valida per ogni passo del nostro algoritmo implica che, arrivati alla condizione finale, abbiamo ottenuto un minimo albero ricoprente.
@@ -776,7 +776,7 @@ Dobbiamo quindi verificare se l'aggiunta dell'arco $y-x$ porta ad avere un alber
    $\therefore\text{costo}(\hat{A}_i) \leq\text{costo}(A^*_i)$
 
 Abbiamo quindi dimostrato che la soluzione che applica la tecnica golosa è anche la soluzione ottima
-## Dijkastra - cammino minimo a partire da un nodo
+## Dijkstra - cammino minimo a partire da un nodo
 L'algoritmo di Dijkstra ci permette di calcolare l'albero dei cammini minimi radicato in un nodo dato in input.
 
 >[!multi-column]
@@ -982,10 +982,8 @@ def kruskal(g: GrafoNOP):
             return result
     return []
 ```
-
->[!attention] Lavori in corso
 # Programmazione dinamica
-Mentre nel [[#Divide et impera]] suddividevamo il problema per risolvere singolarmente i sottoproblemi in modo indipendente per poi ricomporre la soluzione finale, nella **programmazione dinamica** la risoluzione dei sottoproblemi non è indipendenti, al contrario, le porzioni di soluzione comune vengono riutilizzati e non ricalcolati da zero. La differenza sta proprio nell'indipendenza della risoluzione dei sottoproblemi.
+Mentre nel [[#Divide et impera]] suddividevamo il problema per risolvere singolarmente i sottoproblemi in modo indipendente per poi ricomporre la soluzione finale, nella **programmazione dinamica** la risoluzione dei sottoproblemi non è indipendente, al contrario, le porzioni di soluzione comune vengono riutilizzati e non ricalcolati da zero. La differenza sta proprio nell'indipendenza della risoluzione dei sottoproblemi.
 
 *es.* Fibonacci
 >[!multi-column]
@@ -996,19 +994,18 @@ Mentre nel [[#Divide et impera]] suddividevamo il problema per risolvere singola
 >>[!important] Programmazione dinamica
 >>inizia risolvendo il problema di Fibonacci sugli elementi di taglia più piccola, che vengono poi sfruttati per calcolare i successivi.
 
-```
+``` python
 Fib = [0|i in range(n)]
 
-# supponiamo n = 10
 Fib = [0,0,0,0,0,0,0,0,0,0]
 Fib = [1,1,0,0,0,0,0,0,0,0]
 ```
 devo trovare una equazione che mi permetta di calcolare il valore dei successivi a partire dai precedenti per ogni passo
-```
+``` python
 Fib[i] = Fib[i-1] + Fib[i-2]
 ```
 i primi due li ho già calcolati
-```
+``` python
 Fib = [1,1,2,0,0,0,0,0,0,0]
 Fib = [1,1,2,3,0,0,0,0,0,0]
 Fib = [1,1,2,3,5,0,0,0,0,0]
@@ -1026,7 +1023,7 @@ Dobbiamo quindi trovare una formula che mi permetta di riempire la matrice.
 Una prima soluzione limitata potrebbe essere quella di applicare [[#Dijkastra - cammino minimo a partire da un nodo|Dijkstra]] per ogni nodo per calcolare le distanze, ma quest'ultimo non tratta pesi negativi per sua costruzione e in alcuni casi è poco efficiente.
 
 La divisione in sottoproblemi della programmazione dinamica potrebbe, per esempio, consistere nel considerare cammini di dimensione minore.
-La nostra matrice sarebbe quindi tridimensionale tridimensionale:
+La nostra matrice sarebbe quindi tridimensionale:
 `D[i,j,l]` di taglia $N^3$ con `l` numero di archi nei cammini.
 
 Il caso base sarebbe la matrice di livello 1: la cella `[i,j,l]` conterrà il costo dell'arco di costo minimo, che connette i nodi `i` e `j` con `l=1`.
@@ -1342,7 +1339,7 @@ La seguente proprietà è applicabile solo nel caso di costi unitari.
 Distinguiamo due casi
 - $x_i = y_j$
 Se i due nuovi elementi da confrontare sono uguali non dobbiamo effettuare nessuna operazione: il valore della distanza sarà pari al minimo costo per trasformare $X_{i-1}$ in $Y_{j-1}$
-```
+``` python
 D[i,j] = D[i-1,j-1]
 ```
 
@@ -1352,21 +1349,21 @@ In questo caso la trasformazione da $X_i$ a $Y_j$ può avvenire in vario modo, i
 `inserisci(`$y_j$`)` 
 ipotizziamo di aver già reso uguali i due prefissi $X_i$ e $Y_{j-1}$
 se inseriamo l'elemento $y_j$ il costo è pari a `D[i,j-1]` a cui aggiungiamo il costo dell'inserimento
-```
+``` python
 D[i,j] = D[i,j-1] + 1
 ```
 
 `cancella(`$x_i$`)`
 ipotizziamo di aver già reso uguali i due prefissi $X_{i-1}$ e $Y_j$
 se eliminiamo l'elemento $x_i$ il costo è pari a `D[i-1,j]` a cui aggiungiamo il costo dell'eliminazione
-```
+``` python
 D[i,j] = D[i-1,j] + 1
 ```
 
 `sostituisci(`$x_i,y_j$`)`
 ipotizziamo di aver già reso uguali i due prefissi $X_{i-1}$ e $Y_{j-1}$
 se sostituiamo gli elementi, il costo è pari a `D[i-1,j-1]` a cui aggiungiamo il costo della sostituzione
-```
+``` python
 D[i,j] = D[i-1,j-1] + 1
 ```
 
@@ -1483,7 +1480,7 @@ L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un n
 # Algoritmi di codifica
 Per comprimere un dato sfruttiamo le caratteristiche del linguaggio, anche se in modo implicito.
 Normalmente ogni codice ascii per essere rappresentato utilizza 8 bit, indipendentemente da quanto quel carattere appare all'interno del testo.
-Questo approccio mi permette di effettuare accessi diretti in qualsiasi punto del file, quindi è ottimo per il suo utilizzo, ma implica avere moltissimo spazio sprecato.
+Questo approccio permette di effettuare accessi diretti in qualsiasi punto del file, quindi è ottimo per il suo utilizzo, ma implica avere moltissimo spazio sprecato.
 
 L'obbiettivo degli algoritmi di codifica è quindi quello di poter rappresentare dati con meno bit possibile senza perdere informazioni.
 
@@ -1550,7 +1547,7 @@ Per eseguire questo confronto ho quindi bisogno della frequenza di ogni singolo 
 >[!question] Osservazione
 >Se un nodo dell'albero ha un solo figlio possiamo già dire che non è ottimo, in quanto è possibile rimuovere il nodo intermedio per diminuire il numero di cifre necessarie a rappresentare il carattere senza creare ambiguità
 >![[Algoritmi-1779349441881.webp|center|400]]
->Quindi se l'algoritmo restituisce un albero non è pieno il codice non è ottimo.
+>Quindi se l'algoritmo restituisce un albero non pieno il codice non è ottimo.
 >Questa proprietà può essere utilizzata per trovare un algoritmo che trovi l'albero ottimo in modo più semplice: non cerchiamo alberi che contengono nodi con un solo figlio.
 
 >[!info] Esiste sempre un codice ottimo il cui albero è pieno. Quindi cerchiamo solo tra gli alberi pieni
