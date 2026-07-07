@@ -167,9 +167,9 @@ $$
 - caso base:
   la radice punta a None
 - caso iniettivo:
-```
-if (v = x):
-	return v // se abbiamo definito l'operatore di uguaglianza
+``` python
+if (v == x):
+	return v # se abbiamo definito l'operatore di uguaglianza
 if (v > x):
 	return ricerca(s)
 else:
@@ -185,6 +185,18 @@ else:
 >$\to$ il confronto a coppie andrebbe fatto con il massimo/minimo del sottoalbero, per ogni nodo
 
 Se l'albero è bilanciato correttamente gli algoritmi spesso hanno complessità $\log_2 n$, questo viene preso come caso migliore, contrariamente al caso peggiore, quando l'albero non è bilanciato correttamente, in cui abbiamo una complessità spesso di $n$.
+``` python
+class abr(AlberoBin):
+    def diRicerca(self):
+        return abr._diRicercaRic(self, float('-inf'), float('inf'))
+    @staticmethod
+    def _diRicercaRic(nodo, min:int, max:int):
+        if nodo is None:
+            return True
+        if nodo.val <= min or nodo.val >= max:
+            return False
+        return abr._diRicercaRic(nodo.sin, min, nodo.val) and abr._diRicercaRic(nodo.des.val, max)
+```
 ### Massimo / minimo
 In un BST è semplice trovare il massimo/minimo, è sufficiente scendere nell'albero rispettivamente a destra per il massimo e a sinistra per il minimo finché possibile.
 Questo non vuol dire che raggiungeremo necessariamente una foglia, in quanto il nodo contenente il valore massimo/minimo può ancora avere figli a sinistra/destra.
@@ -342,6 +354,24 @@ Dobbiamo effettuare due rotazioni di base, una sul figlio del nodo critico $z$ (
 
 
 >[!quote] dato un albero binario verificare che sia bilanciato con un algoritmo ricorsivo di complessità lineare
+
+``` python
+def is_bilanciato(self):
+	try:
+		abb._is_bilanciato2(self)
+		return True
+	except ValueError:
+		return False
+@staticmethod
+def _is_bilanciato(nodo:AlberoBin) -> int:
+	if nodo is None:
+		return 0
+	hSin = abb._is_bilanciato(nodo.sin)
+	hDes = abb._is_bilanciato(nodo.des)
+	if abs(hSin-hDes) > 1:
+		raise ValueError("non bilanciato")
+	return max(hSin, hDes) + 1
+```
 ## Heap
 %% metto qui l'heap perché concettualmente è come un albero, anche se poi nell'effettivo viene implementato come un vettore %%
 La differenza con un normale albero è la politica con i quali sono ordinati:
