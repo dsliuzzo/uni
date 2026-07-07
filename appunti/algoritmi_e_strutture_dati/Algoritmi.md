@@ -17,7 +17,7 @@ Per la risoluzione di `RisolviDI(P)`
    creo un vettore delle sottoistanze
 4. `for i in range(SP.length): SOL[i] = RisolviDI(SP[i])`
    per ognuna delle sottoistanze richiamo l'algoritmo iniziale ricorsivamente
-5. `return combino(SOL)`
+5. `return combina(SOL)`
    unisco le soluzioni delle chiamate ricorsive
 
 Distinguiamo due tipi di problemi
@@ -141,7 +141,7 @@ $$
 
 
 
-$\therefore$ Per riassumere
+$\therefore$ Per riassumere: negli algoritmi di tipo 1
 $$
 \begin{array}{|c|c|}
 \hline
@@ -153,6 +153,7 @@ $$
 \hline
 \end{array}
 $$
+dove $a$ numero di volte che viene richiamata la ricorsione, $d$ esponente della complessità del caso banale e $c$ fattore di divisione.
 ### Complessità ricerca binaria
 La ricerca binaria è classificabile come un algoritmo di tipo 1 con parametri
 $a = 1$, $c=2$ e $d= 0$
@@ -712,15 +713,15 @@ def prim(g: GrafoNOP):
         mioheap.ins(Pair(a.y, a.peso))
         padri[a.y] = curr
         pesi[a.y] = a.peso
-    while not mioheap.evuoto():
+    while not mioheap.evuoto(): # ci entro una volta per nodo: n
         count += 1
         cp: Pair = mioheap.out()
         preso[cp.x] = True
         result.append((padri[cp.x], cp.x, cp.p))
-        for a in g.adiacenti(cp.x):
+        for a in g.adiacenti(cp.x): # ci entro al max una volta per ogni arco: m
             if not preso[a.y]:
                 if padri[a.y] == -1:
-                    mioheap.ins(Pair(a.y, a.peso))
+                    mioheap.ins(Pair(a.y, a.peso)) # l'aggiunta ha costo log(n)
                     padri[a.y] = cp.x
                     pesi[a.y] = a.peso
                 elif pesi[a.y] > a.peso:
@@ -869,7 +870,7 @@ def Dijkstra(g: GrafoP, source: int):
 ### Dijkstra è un ottimo globale
 Nonostante applichi la tecnica Greedy l'algoritmo di Dijkstra è comunque l'ottimo globale.
 
-Anche se il minimo albero coprente e l'albero di cammino minimo potrebbero non coincidere possiamo comunque lo stesso [[#Prim è un ottimo globale|schema]] di dimostrazione, in quanto esiste almeno un minimo albero coprente che contiene la soluzione finale dell'algoritmo di Dijkstra.
+Anche se il minimo albero ricoprente e l'albero di cammino minimo potrebbero non coincidere possiamo comunque lo stesso [[#Prim è un ottimo globale|schema]] di dimostrazione, in quanto esiste almeno un minimo albero coprente che contiene la soluzione finale dell'algoritmo di Dijkstra.
 
 Sarà quindi sufficiente dimostrare che esista questo minimo albero ricoprente associato per induzione (invarianza).
 
@@ -1019,7 +1020,7 @@ L'obbiettivo di questo algoritmo è quello di calcolare le **distanze** (non cam
 Per applicare la programmazione dinamica abbiamo bisogno di definire la matrice della soluzione:
 matrice riempita con le distanze $\to$ la cella `D[i,j]` contiene la distanza tra il nodo `i` e il nodo `j`.
 Dobbiamo quindi trovare una formula che mi permetta di riempire la matrice.
-### Applicazione incorretta della programmazione dinamica per Floyd
+### Applicazione **incorretta** della programmazione dinamica per Floyd
 Una prima soluzione limitata potrebbe essere quella di applicare [[#Dijkastra - cammino minimo a partire da un nodo|Dijkstra]] per ogni nodo per calcolare le distanze, ma quest'ultimo non tratta pesi negativi per sua costruzione e in alcuni casi è poco efficiente.
 
 La divisione in sottoproblemi della programmazione dinamica potrebbe, per esempio, consistere nel considerare cammini di dimensione minore.
@@ -1696,7 +1697,7 @@ $\{a,b,c,d,e,f\}$ possiamo vederlo come un array `[a,b,c,d,e,f]`
 
 In realtà non devo rappresentarlo completamente, avrei un albero binario con $2^n$ nodi.
 
-Il principio è molto simile agli algoritmi [[#Tecnica golosa|golosi]], in questo caso dobbiamo esplorare tutte le possibili soluzioni.
+Il principio è molto simile agli algoritmi [[#Tecnica golosa|golosi]], ma rivediamo le scelte passate, in questo caso dobbiamo esplorare tutte le possibili soluzioni.
 Nella pratica andremo ad effettuare una visita [[Strutture dati#Visita di un albero|pre-order]] dell'albero senza crearlo effettivamente scendendo quindi per prima cosa al nodo più a sinistra dell'albero e rivedendo le scelte a retroso, tagliando alcuni rami se so che è impossibile raggiungere la soluzione corretta tramite essi.
 
 Nel caso in cui non facciamo nessuna riduzione all'insieme delle soluzioni (non effettuiamo nessun taglio) questo approccio è molto peggiore rispetto alla brute force.
@@ -1748,7 +1749,7 @@ class ProblemaBack:
                 liv -= 1 # risaliamo un livello
                 if liv >= 0 and self.successivaScelta(liv): # verifichiamo se esiste il ivello e se c'è un successivo (fratello)
                     rivedi = False # se c'è un fratello fermiamo la risalita
-        return False # se non siamo entrati nel soluzione completa restituiamo False, non esiste ciò che stiamo cercando
+        return False # se non siamo entrati nel solCompleta restituiamo False, non esiste ciò che stiamo cercando
 
     def primaScelta(self, liv: int)->bool: # assegna il primo valore tentativo al livello liv, restituisce False se non è possibile
         pass
