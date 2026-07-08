@@ -2124,7 +2124,6 @@ Entrambi convergono in poche iterazioni (4-5) e utilizzano la normalizzazione pe
 
 
 >[!quote] Esercizio
->Questo algoritmo non calcola i cammini
 >Sui grafi tipicamente non orientati con costi di percorrenza un problema è l'analisi del grafo in particolare uno degli obbiettivi è quello di identificare nodi cruciali (nel mantenere la connettività del grafo)
 >una di queste misure è la **centralità** del nodo (numero di cammini minimi tra coppie di valori del grafo che lo ha come nodo intermedio)
 >se killo un nodo molto centrale rendo più difficile attraversare il grafo

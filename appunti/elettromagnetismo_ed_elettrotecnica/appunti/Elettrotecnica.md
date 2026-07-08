@@ -1423,6 +1423,7 @@ Possiamo quindi ricavare anche le seguenti relazioni:
 $|\overline{S}| = \frac{V_mI_m}{2} = P_{app}$
 $|S| \cos(\Phi) = P_{att} = \mathrm{Re}\{\overline{S}\}$
 $\cos(\Phi) = \frac{\mathrm{Re}\{S\}}{|\overline{S}|} = \frac{P_{att}}{P_{app}}$
+$P_{\text{reatt}} = \mathrm{Im}\{\overline{S}\}$
 
 >[!important] La potenza attiva nel dominio del tempo è la parte reale della potenza complessa
 
