@@ -1088,7 +1088,7 @@ A questo punto la condizione di chiusura è proprio che abbiamo aggiunto tutti i
 def floyd(g: GrafoP):
     M = [[sys.maxsize for i in range(g.n)] for j in range(g.n)]  # Calcola matrice di adiacenza
     for i in range(g.n):
-        M[i][i] = 0 // aggiungo il primo passo: diagonale pari a 0
+        M[i][i] = 0 # aggiungo il primo passo: diagonale pari a 0
     for x, y, p in g.archi():
         M[x][y] = p
     for x in range(len(M)):
@@ -2121,15 +2121,6 @@ Entrambi convergono in poche iterazioni (4-5) e utilizzano la normalizzazione pe
 
 
 ---
-
-
->[!quote] Esercizio
->Sui grafi tipicamente non orientati con costi di percorrenza un problema è l'analisi del grafo in particolare uno degli obbiettivi è quello di identificare nodi cruciali (nel mantenere la connettività del grafo)
->una di queste misure è la **centralità** del nodo (numero di cammini minimi tra coppie di valori del grafo che lo ha come nodo intermedio)
->se killo un nodo molto centrale rendo più difficile attraversare il grafo
->applicazione militare: devo decidere cosa bombardare
->applicazione civile: per le epidemie chiudo gli snodi di spostamento rallentando il propagarsi
->modificando Floyd, mantenendo la cazzo della matrice✨ `D[i,j,k]` anche tutti i cammini minimi (sono un numero esponenziale), la complessità farà schifo comunque.
 
 
 
