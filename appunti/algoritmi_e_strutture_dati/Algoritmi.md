@@ -2115,21 +2115,6 @@ Entrambi convergono in poche iterazioni (4-5) e utilizzano la normalizzazione pe
 
 
 
-
-
-
-
-
----
-
-
-
->[!quote] Esercizio
->non permettiamo che dopo uno swap possa considerare delle sequenze che vengono prima dell'ultimo carattere che ha toccato lo swap
->definiamo un altra distanza di edit, in cui le sequenze ammissibili non hanno una swap e un qualsiasi operazione subito dopo
->inserire l'operazione di swap all'interno del codice di git
-
-
 >[!quote] Esercizio con backtracking
 >Avendo un grafo e vogliamo verificare se c'è un sottoinsieme dei nodi del grafo t.c.
 >per ogni nodo del grafo o il nodo appartiene a S oppure esiste un nodo in S che è collegato con un arco a questo nodo.
