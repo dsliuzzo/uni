@@ -2112,15 +2112,3 @@ Entrambi gli algoritmi sfruttano la struttura dei link del Web per determinare l
 - **HITS** distingue tra hub e authority, ed è più adatto a query tematiche specifiche. Viene ancora usato per sistemi di raccomandazione e filtraggio collaborativo: i link vengono sfruttati per capire cosa hanno trovato interessante utenti con interessi simili.
 
 Entrambi convergono in poche iterazioni (4-5) e utilizzano la normalizzazione per mantenere la stabilità numerica, poiché ciò che importa è il ranking relativo, non i valori assoluti degli score.
-
-
-
->[!quote] Esercizio con backtracking
->Avendo un grafo e vogliamo verificare se c'è un sottoinsieme dei nodi del grafo t.c.
->per ogni nodo del grafo o il nodo appartiene a S oppure esiste un nodo in S che è collegato con un arco a questo nodo.
->Sistemi di scommesse ridotti.
->I nodi del grafo sono le colonne di scommesse secche, gli archi quando c'è una sola differenza di combinazione tra una scommessa e un altra.
->Ci siamo giocati la possibilità di vincere sia che vi indoviniamo tutti i risultati sia che ne indoviniamo tutti meno 1.
->Vogliamo trovare un insieme di giocate secche che se gioco sono sicuro che se la mia giocata a sistema io vinco allora io vinco pure con queste.
-
-
