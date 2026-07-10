@@ -191,7 +191,7 @@ per un albero binario con $k$ risultati possibili
 >asintoticamente $n!$ si comporta come $n^n$
 >$$\displaylines{n^n\leq 2^T \\ \log_2(n^n) \leq T \\ n \log_2(n) \leq T}$$
 >possiamo quindi affermare che la complessità intrinseca dell'ordinamento (che utilizza i confronti) è $$\Omega(n \log_2(n))$$
-# Divide et impera
+	# Divide et impera
 [[Algoritmi#Divide et impera]]
 ## Fattoriale
 ![[Algoritmi#Complessità temporale del fattoriale ricorsivo]]
