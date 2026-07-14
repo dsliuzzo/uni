@@ -160,7 +160,9 @@ Il lower bound alla complessità di un problema è anche detto **complessità in
 
 Per dimostrare il lower bound è possibile utilizzare una delle seguenti tecniche di dimostrazione a seconda del problema.
 #### Produzione dell'output
-Per la produzione dell'output sono necessari un numero $x$ minimo di passi. Dimostrando che ogni singolo input ha bisogno di $x$ passi per produrre un output abbiamo trovato il lower bound.
+Un algoritmo, per essere considerato risolutore del problema $P$, deve scrivere un output che soddisfi le specifiche del problema, per ogni istanza dell'input. Sapendo che, per un dato input di dimensione $n$, l'output ha necessariamente una dimensione $x(n)$ (indipendentemente da come lo calcoli), allora ogni algoritmo dovrà eseguire almeno $x(n)$ operazioni di scrittura, perché scrivere un elemento in output richiede almeno un passo, e non puoi scrivere due elementi in un solo passo.
+
+*es.* moltiplicazione tra matrici
 #### Ogni algoritmo deve leggere tutto l'input (tecnica dell'avversario)
 Dato un problema $P$ e una funzione $f(n)$, vogliamo dimostrare che la complessità intrinseca di $P$ è $\Omega(f(n))$ formulando così una ipotesi.
 Ragioniamo per assurdo e supponiamo di avere un algoritmo $A$ risolutore di $P$ che risolve $P$ in meno di $\Theta(f(n))$ passi.
@@ -191,18 +193,454 @@ per un albero binario con $k$ risultati possibili
 >asintoticamente $n!$ si comporta come $n^n$
 >$$\displaylines{n^n\leq 2^T \\ \log_2(n^n) \leq T \\ n \log_2(n) \leq T}$$
 >possiamo quindi affermare che la complessità intrinseca dell'ordinamento (che utilizza i confronti) è $$\Omega(n \log_2(n))$$
-	# Divide et impera
-[[Algoritmi#Divide et impera]]
-## Fattoriale
-![[Algoritmi#Complessità temporale del fattoriale ricorsivo]]
 
-## Ricerca
-![[Algoritmi#Complessità ricerca binaria]]
-## Ordinamento
+# Divide et impera
+[[Algoritmi#Divide et impera]]
+
+## Complessità temporale algoritmi di tipo 1
+Per calcolare la complessità di un algoritmo ricorsivo possiamo separare le parti di costo dovute alla ricorsione e quelle relative alle operazioni interne.
+Otteniamo quindi delle **equazioni di ricorrenza** così formulate
+$$
+\left\{\begin{array}{l}T(n) =bn^d+ aT\left( \frac{n}{c} \right) \\ T(1) = b\end{array}\right.
+$$
+dove $a$ numero di volte che viene richiamata la ricorsione, $b$ complessità del caso banale.
+La complessità di $T(n)$ è dato da un costo per le operazioni interne $bn^d$ + un costo dato dalle chiamate ricorsive $aT\left( \frac{n}{c} \right)$.
+### Teorema delle ricorrenze (teorema master)
+Per misurare la complessità di un algoritmo di questo tipo dobbiamo conoscere $c$ e $d$, ma tramite il **teorema delle ricorrenze** e determinate ipotesi possiamo determinare la complessità a partire dalle equazioni di ricorrenza precedentemente trovate senza necessariamente conoscere l'implementazione dell'algoritmo.
+Sotto ipotesi di complessità di `dividi` e `combina` polinomiale e conoscendo la complessità di `risolvi` come $O(1)$ in quanto soluzione banale, possiamo ugualmente calcolare la complessità come segue.
+
+Supponendo di avere $\frac{n}{c}>1$, condizione citata in precedenza secondo il quale le nuove istanze saranno di dimensione minore rispetto alla istanza originale.
+Partendo dalla equazione di ricorrenza principale ed espandendo le ricorrenze possiamo riconoscere un pattern:
+$$
+\begin{align*}
+T(n) &= aT\left(\frac{n}{c}\right) + bn^d \\
+&= bn^d + a\left(aT\left(\frac{n}{c^2}\right) + b\left(\frac{n}{c}\right)^d\right) \\
+&= bn^d + a^2T\left(\frac{n}{c^2}\right) + ab\left(\frac{n}{c}\right)^d \\
+&= a^2T\left(\frac{n}{c^2}\right) + ab\left(\frac{n}{c}\right)^d + bn^d \\
+&= a^2T\left(\frac{n}{c^2}\right) + \sum_{i=0}^{1} a^i b \left(\frac{n}{c^i}\right)^d \\
+&= a^2\left(aT\left(\frac{n}{c^3}\right) + b\left(\frac{n}{c^2}\right)^d\right) + \sum_{i=0}^{1} a^i b \left(\frac{n}{c^i}\right)^d \\
+&= a^3T\left(\frac{n}{c^3}\right) + a^2b\left(\frac{n}{c^2}\right)^d + \sum_{i=0}^{1} a^i b \left(\frac{n}{c^i}\right)^d \\
+&= a^3T\left(\frac{n}{c^3}\right) + \sum_{i=0}^{2} a^i b \left(\frac{n}{c^i}\right)^d
+\end{align*}
+$$
+Possiamo quindi generalizzare la formula ottenuta per $i$ passi di sostituzione come:
+$$\implies T(n) = a^i T\left(\frac{n}{c^i}\right) + \sum_{j=0}^{i-1} a^j b \left(\frac{n}{c^j}\right)^d
+$$
+che avrà validità fino a quando $\frac{n}{c^i}>1$, ma all'aumentare di $i$ ad un certo punto $\frac{n}{c^i}$ sarà $= 1$ per cui utilizzeremo la seconda equazione di ricorrenza $T(1)=b$ ottenendo quindi
+$$
+\begin{align*}
+T(n) &= a^i b + \sum_{j=0}^{i-1} a^j b\left( \frac{n}{c^j} \right)^d \\
+& = a^i b \left( \frac{n}{c^j} \right)^d + \sum_{j=0}^{i-1} a^j b\left( \frac{n}{c^j} \right)^d \\
+& = \sum_{j=0}^{i} a^j b \left( \frac{n}{c^j} \right)^d
+\end{align*}
+$$
+troviamo quindi quel valore di $i$ per cui cambia questa condizione $\frac{n}{c^i}>1\implies n< c^i \implies \log_c n <i$, l'ultimo valore di $i$ per cui avrà validità questa formula sarà quindi $\lceil \log_c n \rceil$, che possiamo banalmente approssimare asintoticamente a $\log_c n$. Lo sostituiamo ad $i$ ed otteniamo
+$$
+\begin{align*}
+T(n) &= \sum_{j=0}^{\log_c n} a^j b \left( \frac{n}{c^j} \right)^d\\
+& = b n^d \sum_{j=0}^{\log_c n} a^j \left( \frac{1}{c^j} \right)^d \\
+& = b n^d \sum_{j=0}^{\log_c n} \left( \frac{a}{c^d} \right)^j
+\end{align*}
+$$
+A questo punto possiamo andare avanti solo ponendo ulteriori ipotesi, distinguiamo quindi tra 3 casi possibili:
+$$\begin{array}{|c|}
+\hline
+\frac{a}{c^d}=1 \\
+\hline
+\end{array}$$
+$$
+\begin{align*}
+T(n) &= bn^d \sum_{j=0}^{\log_c n} 1 \\
+&= bn^d(\log_c n + 1) \\
+&= bn^d \log_c n + bn^d \\
+\end{align*}
+$$
+$$
+\implies T(n) \in \Theta(n^d \log_c n) = \Theta(n^d \log n)
+$$
+$$\begin{array}{|c|}
+\hline
+\frac{a}{c^d}<1 \\
+\hline
+\end{array}$$
+$$
+T(n) = bn^d + \sum_{j=0}^{\log_c n} \alpha ^j \quad \text{con } \alpha <1 \implies \text{convergente}
+$$
+$\exists c \in \mathbb{R}: \sum \alpha^j < c \quad \forall n$
+$\therefore$ asintoticamente $T(n) = bn^d \cdot c$
+$$
+\implies T(n) \in \Theta (n^d)
+$$
+$$\begin{array}{|c|}
+\hline
+\frac{a}{c^d}>1\\ \hline
+\end{array}$$
+$$
+T(n) = bn^d \cdot \sum_{j=0}^{\log_c n} \beta ^j \quad \text{con } \beta >1
+$$
+Riscriviamo la sommatoria in forma chiusa
+$$
+\sum_{j=0}^k \beta^j = \frac{\beta^{k+1}-1}{\beta-1}
+$$
+con $\beta = \frac{a}{c^d}$ e $k= \log_c n$
+$$
+T(n) = bn^d \frac{\left( \frac{a}{c^d} \right)^{\log_c n +1}-1}{\left( \frac{a}{c^d} \right)-1}
+$$
+$\therefore$ asintoticamente
+$$
+\begin{align*}
+T(n) &= bn^d \left( \frac{a}{c^d} \right)^{\log_c n}\\
+&= bn^d \frac{a^{\log_c n}}{c^{d \log_c n}}\\
+& = bn^d \frac{a^{\log_c n}}{n^d}\\
+& = ba^{\log_c n}
+\end{align*}
+$$
+cambiamo la base del logaritmo
+$\log_c n = k \log_a n = c^{\log_c n}=(c^k)^{\log_c n} \implies k=\log_c a$
+$$
+T(n) = b a^{\log_a n \log_c n} = b n ^{\log_c a}
+$$
+$$
+\implies T(n) \in \Theta(bn^{\log_c a})
+$$
+
+
+
+$\therefore$ Per riassumere: negli algoritmi di tipo 1
+$$
+\begin{array}{|c|c|}
+\hline
+\frac{a}{c^d} = 1 & T(n) \in \Theta(n^d \log n) \\
+\hline
+\frac{a}{c^d} < 1 & T(n) \in \Theta(n^d) \\
+\hline
+\frac{a}{c^d}>1 & T(n) \in \Theta (n^{\log_c a}) \\
+\hline
+\end{array}
+$$
+dove $a$ numero di volte che viene richiamata la ricorsione, $d$ esponente della complessità del caso banale e $c$ fattore di divisione.
+### Complessità ricerca binaria
+La ricerca binaria è classificabile come un algoritmo di tipo 1 con parametri
+$a = 1$, $c=2$ e $d= 0$
+$$
+\frac{a}{c^d} = \frac{1}{2^0} = 1 \implies T_R(n) \in \Theta(n^d \log_c n) = \Theta(\log_2 n)
+$$
 ### Merge sort
-![[Algoritmi#Merge sort]]
+[[Ordinamento#Merge sort]]
+Nel merge sort abbiamo parametri
+$a = 2$, $c= 2$ e $d=0$
+$$
+\frac{a}{c^d} = \frac{2}{2^1} = 1 \implies T_M(n) \in \Theta(n^d \log_c n) = \Theta (n \log_2 n)
+$$
+Osservando però la complessità spaziale:
+lo spazio occupato da ogni chiamata è costante $b$
+$$
+M(n) = b + M\left( \frac{n}{2} \right)
+$$
+Allochiamo anche un vettore, dovremmo aggiungere anche lo spazio allocato da esso ($n$), ma in quanto viene allocato all'interno della chiamata a `merge()` che avviene dopo le sottoistanze può anche non essere considerato.
+$$
+M(n) = \max\left( b+M\left( \frac{n}{2} \right) ,n\right)
+$$
+Inoltre abbiamo due chiamate alle sottoistanze, ma al termine di una la sua memoria viene deallocata, liberando il relativo spazio, quindi possiamo tenerne in considerazione solo una nel calcolo della complessità.
+Studiamo separatamente i due casi
+Definiamo quindi delle equazioni di ricorrenza
+$$
+\left\{\begin{array}{l}
+M(n) = b+M\left( \frac{n}{2} \right) \\
+M(1) = b
+\end{array}\right.
+$$
+Possiamo utilizzare il [[#Teorema delle ricorrenze]] anche per la complessità spaziale
+con $a=1$, $c=2$ e $d=0$ otteniamo
+$$
+M_{1}(n) \in \Theta (\log_2 n)
+$$
+e per il vettore
+$$
+M_2(n) \in \Theta (n)
+$$
 ### Quick sort
-![[Algoritmi#Quick sort]]
+[[Ordinamento#Quick sort]]
+Per ottimizzare la complessità spaziale del merge sort dovremmo quindi occuparci di $M_{2}$ e quindi dell'allocazione del vettore accessorio.
+Per eliminare l'allocazione extra, senza cambiare la complessità temporale, dobbiamo eliminare la necessità del `merge()`
+Per far questo passiamo dalla divisione a metà del merge alla `partition()`, separiamo preventivamente gli elementi piccoli da quelli grandi rispetto a un elemento di riferimento (il **pivot**).
+Questa operazione si può fare in place, senza necessità di generare nuovi vettori di elementi e con complessità $n$, in quanto è sufficiente avere due indici che scorrono dai lati opposti fino a quando non trovano un elemento rispettivamente maggiore e minore del pivot, a quel punto effettuiamo uno swap tra di essi, ovviamente questo avviene fino a quando i due indici non si sovrappongono.
+La scelta del pivot diventa quindi molto importante, idealmente per avere una complessità minore possibile sarebbe necessario conoscere il mediano, che renderebbe la renderebbe $\Theta(n)$, ma conoscere il mediano con certezza necessità di un algoritmo che costerebbe tanto quanto fare l'ordinamento stesso, quindi non può aiutarci.
+Non avendo con certezza il mediano andrebbe stimato, ma in mancanza di altre informazioni viene scelto a caso (nel caso in cui gli elementi sono molto simili la media sarebbe una buona stima del mediano).
+Otteniamo quindi una complessità temporale per il partition di:
+- **caso migliore**:
+  pivot = mediano
+  $$T_{qp}\Theta\left( \frac{n}{2} \right) = \Theta(n)$$
+- **caso peggiore**:
+  pivot = min/max
+  $$T_{qp}(n) \in \Theta (n)$$
+Abbiamo così perso la sicurezza del $c=2$, per ottenere una maggiore ottimizzazione degli spazi.
+
+---
+**COMPLESSITÀ SPAZIALE (WORST)**
+Per quanto riguarda la **complessità spaziale** nel caso peggiore (pivot = max/min) la complessità sarà
+$$
+M(n) = b+M(n-1) \implies M(n) \in \Theta (n)
+$$
+che è la stessa della creazione del vettore nel [[#Merge sort]], ma le chiamate risiedono nello stack e non nell'heap (lo stack è considerato di più alto valore), quindi risulta essere anche peggiore del merge.
+Per ottimizzare ulteriormente l'algoritmo possiamo:
+- [[Python#Conversione universale da metodi ricorsivi ad iterativi|Conversione universale da metodi ricorsivi ad iterativi]]
+- **Eliminazione della ricorsione di coda**
+  Invece di effettuare un controllo all'inizio del metodo se ci troviamo nel caso banale effettuiamo un ragionamento contrario, con un while, finché non siamo nel caso banale eseguiamo il corpo del codice. Questo ci permette di passare da un algoritmo ricorsivo ad un algoritmo iterativo, passando da una complessità spaziale $\Theta(n)$ ad una complessità spaziale $\Theta(1)$ .
+
+**Ricorsivo**
+``` java
+private static tipo metodo (parametri) {
+	if(parametri di dimensione banale)
+		return casobase(parametri);
+	corpo(parametri)
+	return metodo(parametrimodificati);
+}  
+```
+**Iterativo**
+``` java
+private static tipo metodo (parametri) {
+	while (parametri di dimensione non banale){
+		corpo(parametri)
+		parametri = parametrimodificati
+	}
+	return casobase(parametri);
+}
+```
+
+**Applicandola al quick sort**
+Nel quick sort abbiamo due diramazioni della ricorsione:
+Non ci limiteremo a passare da un `if` ad un `while`, ma aggiungiamo un controllo all'interno del while che ci permette di capire in quale partizione ci troviamo, in modo da eseguire la ricorsione nella partizione con meno elementi
+``` java
+private static void quickSort(int[] v, int in, int fin) {
+	if(fin<=in)
+		return;
+	int p= partiziona(v,in,fin);
+	quickSort(v,in,p-1);
+	quickSort(v,p+1,fin);
+}
+```
+
+``` java
+private static void quickSort(int[] v, int in, int fin) {
+	while(!(fin<=in)){
+		int p= partiziona(v,in,fin);
+		if(p<((in+fin)/2)){
+			quickSort(v,in,p-1);
+			in=p+1; fin=fin;
+		} else {
+			quickSort(v,p+1,fin);
+			fin=p-1; in=in;
+		}
+	}
+	return;
+}
+```
+
+In questo modo la chiamata ricorsiva non sarà mai su un numero di elementi maggiori di $\frac{n}{2}$
+Otteniamo così una complessità spaziale di
+$$
+M_q(n) \in \Theta(\log n)
+$$
+
+---
+**COMPLESSITÀ TEMPOTALE (WORST)**
+Analizziamo quindi le equazioni di ricorrenza per la complessità temporale nel caso peggiore
+$$
+T_q(n) = bn + T(n-1)
+$$
+Possiamo vedere come nel caso peggiore è un [[#Complessità temporale algoritmi di tipo 2|algoritmo di tipo 2]] e non possiamo quindi applicare il [[#Teorema delle ricorrenze|teorema delle ricorrenze]]
+$$
+\begin{align*}
+T(n) & = bn + b(n+1) + T(n-2)\\
+& = \sum_{i=0}^1(n-i) + T(n-(i+1)) \\
+& = b \sum_{i=0}^1 (n-i) + b(n-2) + T(n-3) \\
+& = b \sum_{i=0}^{k-1} (n-i)+T(n-k) 
+\end{align*}
+$$
+per $k=n-1$
+$$
+\begin{align*}
+T(n) & = b \sum_{i=0}^{n-2}(n-i)+b \\
+& = b \sum_{i=0}^{n-2} (n-i) + b(n-(n-1)) \\
+& = b \sum_{i=0}^{n-1} (n-i) = b \sum_{i=1}^n i  
+\end{align*}
+$$
+che scritta in forma chiusa
+$$
+=b \left( \frac{n(n+1)}{2} \right) = \frac{b}{2} n^2 + \frac{b}{2} n
+$$
+Di conseguenza nel caso peggiore
+$$
+T_q^{worst}(n) \in \Theta(n^2)
+$$
+---
+**COMPLESSITÀ TEMPORALE (AVERAGE)**
+Sapendo che la scelta del pivot è equiprobabile possiamo anche fare un analisi di caso medio.
+Otteniamo una equazione così formata:
+$$
+T(n) = \sum_{p=0}^{n-1} \frac{1}{n} (n + T(p) + T(n-p-1)) 
+$$
+con $T(p)$ e $T(n-p-1)$ costi di risoluzione delle due partizioni, che sono complementari, quindi se uno avrà complessità maggiore l'altro avrà complessità minore e viceversa, possiamo quindi approssimarli a $2 T(p)$
+$$
+\begin{align*}
+T(n) & = \sum_{p=0}^{n-1} \frac{1}{n}n + \frac{2}{n}T(p) \\
+& = n + \sum_{p=0}^{n-1}  \frac{2}{n}T(p)
+\end{align*}
+$$
+Per sostituzione otteniamo che ([[divideEtImpera.pdf|slide divide et impera pag. 27]])
+$$
+T(n) \leq 2 n \log n
+$$
+Otteniamo quindi
+$$
+T_q^{avg}(n) \in \Theta(n \log_2 n)
+$$
+## Complessità temporale algoritmi di tipo 2
+Per gli algoritmi di tipo 2 abbiamo delle equazioni di ricorrenza così formulate
+$$
+\left\{\begin{array}{l}T(n) = b + aT(n-k) \\ T(1) = b\end{array}\right.
+$$
+### Complessità temporale del fattoriale ricorsivo
+Prendiamo per esempio il calcolo del fattoriale ricorsivamente
+``` python
+def fatt(n):
+    if n > 1:
+        return fatt(n - 1) * n
+    else:
+        return 1
+```
+
+prendendo $n$ come valore di input con dimensione di input $|n|= \log_2(n) \implies n=2^{|n|}$ 
+assumiamo che la chiamata ha costo unitario $O(1)$
+La sua complessità può essere calcolata come
+$$
+T_A(n) = \text{numero chiamate } \cdot \text{ costo chiamata}
+$$
+che restituisce
+$$
+n \cdot O(1) = \Theta(n) = \Theta(2^{|n|})
+$$
+Facendo così però sovrastimiamo di molto il risultato, in quanto il costo di chiamate dipende da $n$, ma ogni chiamata avrà un costo minore tipicamente (non nel fattoriale).
+### Complessità temporale di Fibonacci ricorsivo
+Vediamo invece il calcolo di Fibonacci ricorsivamente
+``` python
+def fib(n):
+    if n <= 2:
+        return 1
+    else:
+        return fib(n-1) + fib(n-2)
+```
+
+la sua complessità sarà definita come
+$$
+\left\{\begin{array}{l} T_f (n) = b + T_f(n-1) + T_f(n-2) \\ T_f(1) = b\end{array}\right.
+$$
+questa formulazione prende il nome di **equazioni di ricorrenza**.
+Dobbiamo quindi risolvere la ricorsione e può essere fatto in diversi modi:
+#### Metodo di risoluzione dell'iterazione
+Conoscendo la forma base per $T_f(n-1)$
+$$
+T_f(n-1) = b + T_f(n-2) + T_f(n-3)
+$$
+Essendo $T_f(n-1)\geq T_f(n-2)$ per fare una **maggiorazione** in $T_f(n)=b+T_f(n-1)+T_f(n-2)$ sostituiamo $T_f(n-1)$ al posto di $T_f(n-2)$ ottenendo
+$$
+\left\{\begin{array}{l}T_f(n) = b + 2 T_f(n-1) \\ T_f(1) = b\end{array}\right.
+$$
+Supponiamo che $n-1>1$
+per $T_f(n-1)$ otteniamo quindi
+$$
+T_f(n-1) = b + 2T_f(n-3)
+$$
+lo sostituiamo quindi in $T_f(n)$
+$$
+\displaylines{
+T_f(n) = b+ 2(b+T_f(n-2)) \\
+=b+2b+2^2(b+2T_f(n-3)) \\
+=b+2b+2^2b + 2^3T_f(n-3)
+}
+$$
+continuando ad espandere la formula possiamo notare come possiamo riscrivere il tutto come una sommatoria:
+$$
+b+2b = b\sum_{j=0}^1 2^j 
+$$
+$$
+T_f(n) = b \sum_{j=0}^{2} 2^j + 2^3T_f(n-3) 
+$$
+possiamo quindi generalizzare $\forall i : n-i\geq 1$ come
+$$
+\therefore T_f(n) = b \sum_{j=0}^{i-1} 2^j + 2^i T_f(n-i) 
+$$
+per induzione quindi
+$$
+\displaylines{
+T_f(n-i) = b+2T_f(n-(i+1)) \\
+T_f(n) = b \sum_{j=0}^{i-1} 2^j + 2^i \cdot (b + 2T_f(n-(i+1)))\\
+=b \sum_{j=0}^{i-1} 2^j + b_{2}^i + 2^{i+1}T_f(n-(i+1))= \\
+=b \sum_{j=0}^i 2^j + 2^{i+1}T_f(n-(i+1)) 
+}
+$$
+continuando in questo modo ad un certo punto $n-i=1$ quando $i=n-1$, sostituiamo quindi questo valore
+$$
+T_f(n) = b \sum_{j=0}^{n-2} 2^j + 2^{n-1} \cdot b 
+$$
+semplifichiamo
+$$
+T_f(n) = b \sum_{j=0}^{n-1} 2^j = 2^n-1
+$$
+$$
+\implies T_f(n) \in O(2^n)
+$$
+abbiamo quindi dimostrato che Fibonacci ricorsivo ha complessità $O(2^n)$; per completare la dimostrazione dobbiamo minorare la funzione per studiare $\Omega$
+$$
+\left\{\begin{array}{l}T_f(n) = b + 2T_f(n-2) \\ T_f(1) = b\end{array}\right.
+$$
+espandiamo quindi la ricorsione
+$$
+\displaylines{
+T_f(n-2) = b + 2T_f(n-4) \\
+T_f(n-4) = b+2T_f(n-6) \\
+\therefore T_f(n) = b+2(b+2T_f(n-4)) = \\
+=b+2b + 2^2 T_f(n-4) =\\
+= b+2b+2^2b +2^3T_f(n-6)=\\
+=b \sum_{j=0}^2 2^j + 2^3T_f(n-6)
+}
+$$
+generalizzabile come
+$$
+T_f(n) = b \sum_{j=0}^{i-1} 2^j + 2^i T_f(n-2i) 
+$$
+fino a $n-2i=1$ che sarà per valori di $i=\frac{n-1}{2}$, sostituiamo questo valore e otteniamo
+$$
+\displaylines{
+T_f(n) = b \sum_{j=0}^{\frac{n-1}{2}-1} 2^j + 2^{\frac{n-1}{2}} \underbrace{T_f\left( n-2\left( \frac{n-1}{2} \right) \right)}_{T_f(1)=b}\\
+=b \sum_{j=0}^{\frac{n-1}{2}} 2^j = 2^{\frac{n-1}{2}+1}-1 
+}
+$$
+$$
+\implies T_f(n) \in \Omega (2^{n/2})
+$$
+$\therefore$ Fibonacci ha complessità $\sqrt{ 2 }\leq b \leq 2$
+$b$ è esattamente la costante armonica
+## Complessità spaziale dei ricorsivi
+Per la complessità spaziale potremmo considerare tutte le chiamate a funzione, ma avremmo una grande maggiorazione, in quanto trascuriamo il fatto che lo stack funziona come una pila e le istanze non più utili vengono deallocate.
+Definiamo quindi la complessità spaziale dei ricorsivi come il numero massimo di chiamate attive contemporaneamente.
+Cambiano anche le equazioni di ricorrenza:
+$$
+\displaylines{
+M_f(n) = b + \max(M_f(n-1), M_f(n-2)) \\
+=b+M_f(n-1)
+}
+$$
+è uguale alla complessità del fattoriale
+$$
+\implies M_f(n) \in \Theta(n)
+$$
+notiamo come la complessità spaziale sia sempre minore della complessità temporale
+$$
+M_f(n) < T_f(n)
+$$
+
 
 ### Heap sort
 ![[Strutture dati#Heap sort]]
@@ -223,7 +661,7 @@ per un albero binario con $k$ risultati possibili
 # Alberi
 [[Strutture dati#Alberi]]
 ## Visita infissa
-```
+``` python
 def visitainfissa(self, l):
 	if self.sin is not None:
 		self.sin.visitainfissa(l)
@@ -252,7 +690,7 @@ $$
 M(n) = 1 + M\left( \frac{n}{2} \right) \in \Theta(\log_2 n)
 $$
 ## Cerca
-```
+``` python
 def cerca(a:AlberoBin, x:int) -> bool:
 	// caso base
 	if a is None:
@@ -278,7 +716,7 @@ ogni chiamata occupa uno spazio costante
 non può essere più alta di quella temporale $\implies M(n) \in \Theta(1)$
 
 ## Visita per livelli
-```
+``` python
 def visitalivelli(self, l):
 	coda = [self]
 	while len(coda) != 0:

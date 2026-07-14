@@ -8,7 +8,33 @@
 ## 4. Introduci i concetti topologici di ramo, nodo, maglia, anello e grafo e descrivi le due leggi di Kirchhoff e le loro proprietà
 [...]
 ## 5. Elenca i metodi di analisi che conosci e descrivi brevemente come si arriva a questi metodi partendo dalle leggi di Kirchhoff e dalla topologia dei circuiti
-[...]
+Dato un circuito di $R$ rami e $N$ nodi, il suo comportamento è determinato una volta note tutte le $2R$ grandezze elettriche (tensioni/correnti). Per calcolarle possiamo sfruttare:
+- relazioni costitutive
+- relazioni topologiche (KCL, KVL)
+Per risolvere un circuito possiamo determinare una KVL per ogni maglia e una KCL per ogni nodo.
+
+I metodi di analisi sono degli algoritmi che permettono di ridurre la complessità dei sistemi risolutivi.
+
+**Metodo dei nodi**
+Sapendo che per ogni nodo possiamo scrivere una KCL
+$$
+\sum_{n=1}^N \pm i_{n} = 0
+$$
+possiamo ottenere un sistema di $N$ equazioni, esprimibile sotto forma di matrice $\hat{A} \cdot \vec{i} = \vec{0}$, dove la matrice di incidenza $\hat{A}$ ha dimensioni $(N \times R)$. Di conseguenza, il numero di equazioni necessarie per risolvere il circuito non diminuisce. Esprimendo invece le correnti di ramo in funzione della loro tensione nodale, applicando la legge di Ohm si ottiene:
+$$
+\sum_{n=1}^N G_j (e_{An} - e_{Bn}) = 0
+$$
+Portando a secondo membro le correnti note dei generatori e fissando un nodo di riferimento a potenziale nullo si ottiene un sistema lineare a $N-1$ incognite, i potenziali nodali:
+$$
+\hat{G} \cdot \vec{e} = \vec{I}
+$$
+Pertanto, il metodo dei nodi consiste esattamente nella risoluzione di questo sistema matriciale.
+
+**Metodo degli anelli**
+Sapendo che per ogni maglia può essere definita una KVL
+$$
+\sum_{i=1}^{R-N+1} 
+$$
 ## 6. Descrivi il concetto di elementi in serie e parallelo e dimostra le formule dei valori equivalenti di più elementi in serie e parallelo
 Va dimostrata utilizzando le leggi di Kirchoff e ne derivi le formule
 [...]

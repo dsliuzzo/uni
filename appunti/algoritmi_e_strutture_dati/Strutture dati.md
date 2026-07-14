@@ -29,7 +29,7 @@ Definiamo gli alberi come una struttura dati con le seguenti proprietà:
 >- **foglia**, nodo che non ha figli
 >- **nodo interno**, nodo che ha sia padre che figli
 >- **grado**, numero di figli
->- **altezza**, cammino più lungo numero di archi dalla radice alla foglia (parte da 1)
+>- **altezza**, numero di archi dal nodo alla foglia più profonda (parte da 1)
 >- **livello**, numero di archi dal nodo che stiamo considerando alla radice (parte da 0)
 >- **livello di nesting**, livello massimo che un albero può avere
 
@@ -383,7 +383,7 @@ Facciamo una ulteriore ipotesi: i nodi dell'ultimo livello devono essere addensa
 Conoscendo il numero di elementi totali quindi sappiamo esattamente qual è la forma finale dell'albero, quindi non è necessario utilizzare la struttura dell'albero, ma possiamo memorizzarli utilizzando un array di elementi, che rappresenta la [[#Visita di un albero|visita per livelli]].
 ![[Strutture dati-1776195741267.webp|center|500]]
 Notiamo come l'indice del padre è la metà dell'indice del figlio (arrotondato) e viceversa l'indice dei figlio è il doppio dell'indice del padre (al massimo sommando 1).
-```
+``` python
 figliosx(i) = i * 2
 figliodx(i) = i * 2 +1
 padre(i) = i div 2
@@ -394,7 +394,7 @@ Con le ipotesi fatte in precedenza però gli indici partono da `1`, abbiamo due 
 1. lasciamo vuota la prima cella con indice `0` o al massimo la utilizziamo per memorizzare il numero di elementi per risparmiare spazio
 2. partiamo da `0`, ma implementiamo diversamente le funzioni che restituiscono il padre e le funzioni che restituiscono i figli:
    spostiamo lo spazio degli indici sommando `1` all'input e sottraendo `1` all'output
-```
+``` python
 padre*(i) = ((i*+1) div 2) - 1
 figliodx*(i) = ((i*+1) * 2) -1
 figliosx*(i) = ((i*+1) * 2) -1 +1
@@ -685,7 +685,7 @@ In generale partiamo da tanti singleton (un insieme che contiene un solo element
 ![[Strutture dati-1776778246237.webp|center|400]]
 In un Union Find di $n$ elementi posso effettuare al massimo $n-1$ unioni, una volta effettuate otteniamo un insieme che contiene solo l'insieme originale.
 ### Quick find
-Rappresentiamo ogni partizione come se fosse un albero ennario di altezza 1 con radice il nome dell'insieme.
+Rappresentiamo ogni partizione come se fosse un albero $n$-ario di altezza 1 con radice il nome dell'insieme.
 (Nella pratica viene implementato come un array di elementi il cui contenuto è il riferimento al padre)
 ![[Strutture dati-1777060679728.webp|center|300]]
 Ogni foglia contiene il riferimento al padre, il che ci permette di implementare la `find(elem)` con complessità $O(1)$
