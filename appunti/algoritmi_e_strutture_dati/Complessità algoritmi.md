@@ -1016,7 +1016,7 @@ $$
 ![[Strutture dati#Chiusura transitiva]]
 
 ### Algoritmo dell'ordinamento topologico
-```
+``` python
 def trovazero(gradi: list[int], rimossi) -> int:
     for i in range(len(gradi)):
         if gradi[i] == 0 and not rimossi[i]:
