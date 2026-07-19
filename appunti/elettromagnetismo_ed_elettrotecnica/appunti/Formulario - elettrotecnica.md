@@ -48,10 +48,19 @@ Permette di sostituire porzioni di circuito con un generatore reale di corrente
 >
 
 
-
-
 # Fasori
 $$
 Z_R = R [\Omega] \hspace{8ex} Z_L = j \omega L \hspace{8ex} Z_C = \frac{1}{j \omega C}
 $$
+# Potenza complessa
+$$
+\displaylines{
+\overline{S} = \frac{1}{2} \overline{V} \overline{I}^* = \frac{1}{2} Y^* |\overline{V}|^2 = \frac{1}{2} Z |\overline{I}|^2 \ [VA] \\
+P_{app} = |\overline{S}| \ [VA] \\
+P_{att} = \mathrm{Re}\{\overline{S}\} \ [W] \\
+P_{reatt} = \mathrm{Im}\{\overline{S}\} \ [VAR]\\
+f_p = \frac{P_{att}}{P_{app}}
+}
+$$
+
 

@@ -311,7 +311,7 @@ $$
 N(1) = 1\end{array}\right.
 $$
 sono sempre quelle di [[Algoritmi#Complessità temporale di Fibonacci ricorsivo|Fibonacci]]
-una costante elevata ad $h$
+L'AVL cresce asintoticamente come una costante elevata ad $h$
 $$
 N = c^h
 $$
@@ -1030,6 +1030,7 @@ Ricordando la [[#Ciclo|definizione]] di ciclo nei grafi orientati.
 ### Verifica per ogni arco
 Una prima soluzione potrebbe essere quella di considerare tutti gli archi del grafo e per ogni arco effettuare una visita ($O(n+m)$) a partire dal nodo terminale: se viene raggiunto il nodo di partenza dell'arco allora abbiamo un ciclo.
 È facile capire come questa doppia iterazione abbiamo un costo di $O(m\cdot (m+n))$, che, se il grafo è molto sparso, può essere approssimato come quadratico, ma se il grafo non è sparso $m \approx n^2$, portando ad un costo asintotico $O(n^4)$, troppo alto.
+Allo stesso modo effettuando una visita a partire da ogni nodo per grafi densi manteniamo una complessità di $O(n^3)$.
 ### Chiusura transitiva
 Una possibile alternativa è mappare la raggiungibilità di ogni nodo: creiamo un secondo grafo $G^*$ che crea un arco tra un nodo $A$ e un nodo $B$ se esiste un percorso tale per cui possiamo andare da $A$ a $B$.
 A questo punto è sufficiente scorrere i nodi: se sono presenti nodi connessi a se stessi allora è presente un ciclo.

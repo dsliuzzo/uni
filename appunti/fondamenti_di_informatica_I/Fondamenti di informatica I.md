@@ -2,3 +2,5 @@
 #fondamenti1
 [[Concetti di base]]
 [[C]]
+[[Ordinamento]]
+[[Ricerca]]

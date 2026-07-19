@@ -615,8 +615,8 @@ Questo modello più accurato consente di evitare le incongruenze e le limitazion
 >![[Pasted image 20260327145114.png|center|400]]
 >La corrente è calcolabile come $i = \frac{V_g}{R_L + R_g}$, volendo quindi calcolare la potenza sul carico come $$P_{R_L} =R_L \cdot i^2 =  V_g^2 \frac{R_L}{(R_L + R_g)^2}$$
 >Per trovare il [[4. Calcolo differenziale#Massimi e minimi relativi|massimo]] deriviamo la potenza rispetto alla resistenza:
->$$\begin{align*}\frac{dP_{R_L}}{dR_L} & = \frac{(R_L + R_g)^2 - 2R_L(R_L + R_g) }{(R_L + R_g)^4}\\ & = \frac{R_L^2 + R_g^2 + 2R_LR_g - 2R_L^2-2 R_LR_g}{(R_L+R_g)^4} \\ & = \frac{R_g^2 - R_L^2}{(R_L + R_g)^4}\end{align*}$$
->Lo poniamo uguale a 0 per trovare un punto stazionario$$\frac{R_g^2-R_L^2}{(R_L+R_g)^4} \implies R_g^2 = R_L^2 \implies R_g = R_L$$
+>$$\begin{align*}\frac{dP_{R_L}}{dR_L} & = V_g^2 \cdot \frac{(R_L + R_g)^2 - 2R_L(R_L + R_g) }{(R_L + R_g)^4}\\ & =V_g^2 \cdot \frac{R_L^2 + R_g^2 + 2R_LR_g - 2R_L^2-2 R_LR_g}{(R_L+R_g)^4} \\ & =V_g^2 \cdot \frac{R_g^2 - R_L^2}{(R_L + R_g)^4}\end{align*}$$
+>Lo poniamo uguale a 0 per trovare un punto stazionario$$V_g^2 \cdot \frac{R_g^2-R_L^2}{(R_L+R_g)^4} = 0 \implies R_g^2 = R_L^2 \implies R_g = R_L$$
 ### Confronto tra modelli e generatori reali
 Confrontiamo il generatore ideale di tensione con il modello del generatore reale di tensione tramite la potenza erogata sul carico esterno
 ![[Pasted image 20260326185055.png]]
@@ -635,11 +635,11 @@ $$
 $$
 $\therefore$ La massima corrente che il generatore reale può far circolare si ha per la chiusura in corto circuito e la corrente $i_{cc}$ (corrente di corto circuito) dipende solo dal generatore e dalla resistenza (del generatore reale).
 $$
-i_{max} = i_{cc} = \frac{V_g}{R_g} [A]
+i_{max} = i_{cc} = \frac{V_g}{R_g} \ [A]
 $$
 A cui corrisponde una potenza erogata al carico $R_L=0$
 $$
-P_{R_L} (R_L = 0) = i^2 R_L = \left( \frac{V_g}{R_g} \right)^2 R_L = 0 [W]
+P_{R_L} (R_L = 0) = i^2 R_L = \left( \frac{V_g}{R_g} \right)^2 R_L = 0 \ [W]
 $$
 La potenza massima si ha per $i= \frac{i_{cc}}{2}$ e quindi la potenza sul carico sarà
 $$P_{R_L} = \left( \frac{i_{cc}}{2} \right)^2 R_L = \left( \frac{V_g}{2 \cdot R_g} \right)^2 R_L$$
@@ -657,7 +657,7 @@ I due generatori possono essere sostituiti tra loro in maniera equivalente. Dall
 $$i + \frac{v}{R_i}-I_S = 0 \implies I_S - i = \frac{v}{R_i}$$
 equivalente a quella del generatore di tensione se:
 $$V_0 = R_i I_S \quad \text{e} \quad R_v = R_i$$
-![[Pasted image 20260327152652.png]]
+![[Pasted image 20260327152652.png|center]]
 Vediamo in quale caso le potenze sono uguali:
 #dimostrazione
 $$
@@ -810,7 +810,7 @@ Il circuito lineare può essere rappresentato come
 ![[Pasted image 20260402173541.png|center|300]]
 Applichiamo quindi il PSE:
 $$
-i_{AB} = \sum_{i} a_i V_i + \sum_{j} b_j I_j + C_v = i_{AB}^{int} + i_{AB}^{ext}
+i_{AB} = \sum_{i} a_i V_i + \sum_{j} b_j I_j + C v = i_{AB}^{int} + i_{AB}^{ext}
 $$
 con $V_i$ e $I_j$ i generatori indipendenti di tensione e corrente interni al circuito.
 - L’effetto dei generatori indipendenti interni alla rete coincide con la corrente di corto circuito a meno del verso (v=0 → porta ab in c.c.)$$i_{AB}^{int} = \sum_{i} a_i V_i + \sum_{j} b_j I_j = \left. i_{AB} \right|_{v=0} = -i_{cc} = -I_N$$pertanto coincide con la corrente di Norton.
@@ -827,7 +827,7 @@ $$
 >- generatori di corrente $I_{Bj}$ con eventualmente in serie resistenze $R_{Bj}$,
 >- resistenze $R_{Ck}$,
 >
->è data dal prodotto di una corrente Io per una resistenza $R_{0}$, $V_{0}=R_{0}I_{0}$, dove $I_{0}$ è la somma delle correnti $V_{Ai}/R_{Ai}$ e $I_{Bj}$ e $R_{0}$ è il parallelo delle resistenze $R_{Ai}$ e $R_{Ck}$.
+>è data dal prodotto di una corrente $I_0$ per una resistenza $R_{0}$, $V_{0}=R_{0}I_{0}$, dove $I_{0}$ è la somma delle correnti $V_{Ai}/R_{Ai}$ e $I_{Bj}$ e $R_{0}$ è il parallelo delle resistenze $R_{Ai}$ e $R_{Ck}$.
 >$$V_0 = R_{0}I_{0} = \frac{\sum_{i} \frac{V_{Ai}}{R_{Ai}} + \sum_{j} I_{Bj}}{\sum_{i} \frac{1}{R_{Ai}} + \sum_{k} \frac{1}{R_{Ck}}}$$
 
 ![[Pasted image 20260402202324.png]]
@@ -1275,7 +1275,7 @@ $$
 }
 $$
 analizziamo il primo termine
->[!question] Potenza media
+>[!question] Potenza Attiva (media)
 >per il teorema della media teorema della media integrale
 >$$\hat{p}(t) =\lim_{ t_0 \to 0 }  \frac{1}{T-t_{0}} \int_{t_{0}}^{T} p(\tau) \cdot d\tau$$
 >lo applichiamo a tutta la funzione

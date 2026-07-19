@@ -98,7 +98,7 @@ Gli elementi verranno inseriti nell’ordine corretto all’interno di array pro
   Data la creazione di un "albero" sempre bilanciato di $\log_2 n$ livelli. Nello stack verranno allocate $\log_2 n$ locazioni per le chiamate a `merge_sort()`. A questo valore dobbiamo moltiplicare il numero di chiamate a `merge()` che effettuerà un numero di confronti uguale ad $n$, il numero di celle da confrontare per ogni livello. Di conseguenza la complessità del merge sort è $n \log_2 n$. Definiamo questa complessità per gli algoritmi di ordinamento come ottima, in quanto non è possibile migliorare ancora di più questa complessità. Il problema del merge sort sta nello spazio occupato sulla ram per le numerose allocazioni necessarie.
 $$O(n\log_2 n)$$
 - **CODE**
-```
+``` python
 	def merge_sort(lista):
     n = len(lista)
     # tappo della ricorsione, la lista è composta da un solo elemento => è già ordinata quindi il return sarà composto da quel solo elemento che verrà restituito al metodo chiamante che lo unirà ad un altro elemento e ordinerà il risultato. Continuerà a succedere questo finchè non si ritorna alla lista originale ordinata
@@ -148,8 +148,7 @@ A questo punto verrà stabilito un nuovo pivot tra gli elementi rimanenti e il p
 
 - **COMPLESSITÀ**
   [[Complessità algoritmi#Quick sort]]
-$$O(n\log_2 n)$$
-
+$O(n\log_2 n)$ nel caso medio, $O(n^2)$ nel caso peggiore
 
 [![](https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif)](https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif)
 

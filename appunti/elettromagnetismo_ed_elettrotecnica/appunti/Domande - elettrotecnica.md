@@ -211,13 +211,66 @@ $$
 
 # Blocco B: Teoremi e applicazioni
 ## 1. Descrivi cosa è l'equazione di porta, come si può ricavare e in particolare descrivi l'equazione di porta per circuiti lineari, ovvero la retta di carico, e le sue proprietà
-[...]
+Prendendo in considerazione una coppia di terminali A-B, la tensione e la corrente sono descritti univocamente da una relazione che prende il nome di equazione di porta: $f(v(t), i(t)) =$ effetto generatori.
+- Assenza di generatori
+  $\alpha v(t) + \beta i(t) = 0$
+- Presenza di generatori
+  $\alpha v(t) + \beta i(t) =\text{const}$
+Queste formule sono ottenibili sfruttando il principio di sovrapposizione degli effetti, spegnendo tutti i generatori prima di tensione e poi di corrente (o viceversa).
+
+L'equazione di porta ci permette di definire un insieme di valori che possono assumere tensioni e correnti, che prende il nome di **retta di carico**
+$$
+\alpha c(t) + \beta i(t) = \text{const} \hspace{4ex} \implies \hspace{4ex} v(t) = - \frac{\beta}{\alpha} i(t) + \frac{\text{const}}{\alpha}
+$$
+![[Pasted image 20260402144125.png|center|300]]
 ## 2. Enunciato e dimostrazione del teorema di Thevenin e sua relazione con il partitore di tensione
-[...]
+Il teorema di Thevenin afferma che un circuito lineare accessibile da due terminali può essere sostituito con un circuito equivalente formato da un generatore di tensione $V_{Th}$ in serie con un resistore $R_{Th}$, dove $V_{Th}$ è la tensione a vuoto ai terminali e $R_{Th}$ è la resistenza equivalente quando i generatori indipendenti sono spenti.
+![[Pasted image 20260402154223.png|center|300]]
+
+#dimostrazione 
+Il circuito può essere generalizzato e il carico sostituito con un generatore di corrente che imprime la corrente di porta
+![[Gemini_Generated_Image_b4k3s1b4k3s1b4k3 1.png|center|300]]
+Per il pse la tensione ai morsetti è data da:
+$$
+V_{AB} = \underbrace{\sum A_i V_i + \sum B_j I_j}_{V_{int}} + \underbrace{C \cdot i}_{V_{ext}}
+$$
+Calcoliamo separatamente i contributi:
+- $V_{int} = \left.V_{AB}\right|_{i = 0} = \sum A_i V_i + \sum B_j I_j = V_{Th}$
+- $V_{ext} = C \cdot i \implies C = \frac{V_{AB}}{i} = R_{Th}$
+
+Questo risultato può essere verificato con la KVL
+$$
+\displaylines{
+V_{R_{Th}} + V_{AB} - V_{Th} = 0 \\
+V_{AB} = V_{Th} + i R_{Th}
+}
+$$
+dove $V_{R_{Th}} = -i R_{Th}$.
+
+Il circuito equivalente di Thevenin coincide con la struttura del partitore di tensione
+%% disegnino del circuito finale %%
 ## 3. Enunciato e dimostrazione del teorema di Norton e sua relazione il partitore di corrente
 [...]
 ## 4. Equivalenza tra circuito di Thevenin e circuito di Norton, ovvero equivalenza tra generatore reale di tensione e generatore reale di corrente: formulazione e dimostrazione
-[...]
+I circuiti equivalenti di Thevenin e Norton rappresentano rispettivamente un generatore reale di tensione ed un generatore reale di corrente, che condividono la stessa resistenza interna
+$$
+R_{Th} = R_N
+$$
+Partendo dunque dai circuiti di Thevenin e Norton e applicando la KCL e la KVL otteniamo:
+- Thevenin: $-V_{Th} + i \cdot R_{Th} + V_{AB} = 0 \implies V_{AB} = V_{Th} - i \cdot R_{Th}$
+- Norton: $i-I_N + \frac{V_{AB}}{R_N} = 0 \implies V_{AB} = R_N \cdot i - i \cdot R_N$
+
+#dimostrazione 
+Considerando le potenze del carico
+$$
+\begin{align*}
+P_{R_L}^V & = \frac{V_{R_L}^2}{R_L}= V_T^2\frac{ R_L^2}{(R_T + R_L)^2 R_L}& \hspace{10ex} P_{R_L}^N &=  i^2_{R_L} \cdot R_L = I_N^2 \frac{R_{I_N}^2 \cdot R_L}{(R_L + R_N)^2}
+\end{align*}
+$$
+Poniamo l'uguaglianza
+$$
+V_{Th}^2 \frac{R_L}{(R_T + R_L)^2} = R_L \frac{R_N^2 \cdot I_N^2}{(R_L + R_N)^2} \implies V_T^2 = R_N^2 I_N^2 \implies V_T = R_N I_N
+$$
 ## 5. Enuncia e dimostra il teorema del massimo trasferimento di potenza per reti resistive, e spiega la differenza tra rendimento e massimo trasferimento di potenza
 [...]
 ## 6. Enunciato di dimostrazione di Millman
