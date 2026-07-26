@@ -19,3 +19,5 @@ Si parla invece di industriale per le componenti meccaniche ed elettro-meccanich
 [[1. Sistemi dinamici]]
 [[2. Risposta in frequenza]]
 [[3. Sistemi interconnessi]]
+
+[[Domande orale - automatica]]

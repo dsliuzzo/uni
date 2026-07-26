@@ -1,9 +1,7 @@
 #materia 
 #reti_logiche_e_calcolatori
 
-[[Modalità d'esame reti logiche e calcolatori]]
 
----
 # Calcolatore come #macchina_multilivello
 
 Analizziamo i vari livelli di astrazione in ordine dal più alto al più basso

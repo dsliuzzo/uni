@@ -3,7 +3,7 @@
 
 https://github.com/sflesca/EsempiAlgoritmiPython
 # Divide et impera
-Il **divide et impera** è una tecnica di programmazione molto utilizzata, che spesso sfrutta la ricorsione, specialmente nell'utilizzo nella creazione di metodi per la gestione di strutture dati.
+Il **divide et impera** è una tecnica di programmazione molto utilizzata, che spesso sfrutta la ricorsione, specialmente nella creazione di metodi per la gestione di strutture dati.
 >[!important] Il divide et impera consiste nella risoluzione di un problema in termini di se stesso
 
 In pseudocodice possiamo formalizzare il divide et impera come:
@@ -145,7 +145,7 @@ Definiamo tecnica golosa (greedy) un paradigma di costruzione di algoritmi che p
 Gli algoritmi che utilizzano la tecnica golosa permettono di ricercare una soluzione di costo minimo all'interno di un insieme di possibili soluzioni al nostro problema utilizzando i [[Strutture dati#Grafi|grafi]].
 
 >[!bug] Tramite l'uso della tecnica greedy non sempre otteniamo l'ottimo globale
->ma è comunque una approssimazione che possiamo accettare, per questo tipicamente è una tecnica applicata per algoritmi di cui non conosciamo una soluzione polinomiale.
+>ma è comunque una approssimazione che possiamo accettare, per questo tipicamente è una tecnica applicata per algoritmi di cui non conosciamo una soluzione polinomiale. (Questo non è il caso di Prim e Dijkstra che, previa dimostrazione, sono comunque ottimi globali).
 
 Per prima cosa definiamo lo spazio delle possibili soluzioni al problema, tipicamente "rilassando"  la struttura di partenza per esempio:
 - il risultato non contiene tutti i nodi
@@ -1174,8 +1174,8 @@ Spesso non si riesce a stabilire una complessità intrinseca dei problemi scritt
 >
 >*es.* [[#Cricca]]
 >
->*es.*
->[[#SubsetSum]] basta trovare un sottoinsieme per cui posso verificare che la somma dei suoi componenti è pari all'intero passato come parametro.
+>*es.* [[#SubsetSum]]
+>basta trovare un sottoinsieme per cui posso verificare che la somma dei suoi componenti è pari all'intero passato come parametro.
 >
 >*es. contrario*
 >non posso verificare se non c'è nessun sottoinsieme la cui somma è pari al parametro. Avrei bisogno di tutti i sottoinsiemi possibili ($2^n$) e dovremmo leggere tutto questo input per poter verificare la proprietà descritta.
