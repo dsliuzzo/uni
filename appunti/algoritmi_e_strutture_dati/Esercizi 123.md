@@ -1,3 +1,5 @@
+#asd 
+#appunti 
 # Foto 1 (Prova del 10 Novembre 2023)
 ## Prova 1
 Si supponga di avere tre processi che vengono accodati per l'esecuzione al tempo di arrivo specificato nella seguente tabella, dove sono indicati anche i tempi totali di CPU burst:

@@ -1,3 +1,5 @@
+#appunti 
+#elettromagnetismo_ed_elettrotecnica 
 # Blocco A: Definizioni e leggi
 ## 1. Descrivi le grandezze elettriche fondamentali tensione e corrente e le grandezze da esse derivate, potenza ed energia
 **Tensione**

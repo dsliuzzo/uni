@@ -165,9 +165,10 @@ Supponiamo di avere un costruttore che prende come input un array.
    a questo punto sposto il primo elemento (il minimo) in una variabile di supporto e metto in prima posizione l'ultimo elemento riverificando il corretto ordinamento.
    A questo punto si sarà liberata l'ultima cella dell'array in cui inserisco l'elemento estratto precedentemente nella variabile.
    ![[Strutture dati-1776195142129.webp|center|500]]
+
 Ottengo così l'array ordinato inversamente, quindi posso:
-3. lasciare che sia ordinato in questo modo e poi invertire l'ordine, aumentando però la complessità dell'algoritmo
-4. ordinare inizialmente l'heap al contrario mettendo il massimo in prima posizione invertendo tutte le relazioni d'ordine
+1. lasciare che sia ordinato in questo modo e poi invertire l'ordine, aumentando però la complessità dell'algoritmo (asintoticamente no, in quanto l'inversione ha solo un costo di $n$ ed è fatta a posteriori)
+2. ordinare inizialmente l'heap al contrario mettendo il massimo in prima posizione invertendo tutte le relazioni d'ordine
 array ordinato✨✨
 
 La sua complessità spaziale sarà data semplicemente dall'array di input.

@@ -1,3 +1,5 @@
+#automatica 
+#appunti 
 # 1. Linearità e/o Principio di Sovrapposizione degli effetti
 La linearità è una delle proprietà dei sistemi dinamici. Siano due ingressi arbitrari $u'(\cdot)$ e $u''(\cdot)$ e due condizioni iniziali arbitrarie $x'_0$ e $x''_0$, tali per cui $u'(\cdot),u''(\cdot) \in U$ e $x'_0, x''_0 \in X$, si definisce lineare un sistema in cui stato e uscita sono una combinazione lineare delle funzioni di stato e uscita singolarmente applicate
 $$
@@ -443,9 +445,9 @@ E(s) = S(s) \cdot R(s) = \frac{1}{1+L(s)} \cdot \frac{1}{s^2}
 $$
 tornando all'errore di posizione
 $$
-e_{\infty,p} = \lim_{ s \to 0 } s \cdot \frac{1}{1+L(s)} \cdot \frac{1}{s^2} = \frac{1}{1+ \lim_{ s \to 0 } sL(s)}
+e_{\infty,p} = \lim_{ s \to 0 } s \cdot \frac{1}{1+L(s)} \cdot \frac{1}{s^2} = \frac{1}{\lim_{ s \to 0 } sL(s)}
 $$
-Ne concludiamo che l'errore di posizione viene diminuito all'aumentare della costante di posizione $k_v = \lim_{ s \to 0 }sL(s)$.
+Ne concludiamo che l'errore di posizione viene diminuito all'aumentare della costante di velocità $k_v = \lim_{ s \to 0 }sL(s)$.
 
 Per aumentare il valore della costante possiamo agire sulla funzione di anello in due modi:
 - verificare se sono presenti effetti integrali nel processo ed eventualmente aggiungerli al controllore. Diversamente dall'asservimento di posizione non è sufficiente un solo effetto integrale (che rende l'errore finito ma non nullo), ma per il effettuare il reset abbiamo bisogno di due effetti integrali, andando quindi a perdere $\frac{\pi}{2}$ sul margine di fase;
