@@ -13,7 +13,7 @@ $$
 i(t) = \frac{\Delta Q}{\Delta t} = \iint_S \vec{J} \cdot d \vec{S} \ [A]
 $$
 
-**Potenza**
+**Potenza **
 La potenza è la rapidità di assorbimento di energia nel tempo
 $$
 p = \frac{d\epsilon}{dt} = \frac{d\epsilon}{dq} \cdot \frac{dq}{dt} = v(t) \cdot i(t) \ [W]
@@ -42,30 +42,7 @@ Accumula le cariche sotto forma di campo magnetico
 - $L = \frac{\Phi(t)}{i(t)} \implies \Phi(t) = L i(t) \implies v(t) = \frac{d\Phi(t)}{dt} = L \frac{di(t)}{dt}$
 - $p(t) = L i(t) \frac{di(t)}{dt}$
 - $E(t) = \int_{-\infty}^t p(\tau) d \tau = \frac{1}{2} L i^2(t)$
-## 3. Descrivi i generatori indipendenti e le loro proprietà. Descrivi anche il corto circuito e il circuito aperto e il loro utilizzo come casi limite degli elementi circuitali
-Un generatore ideale indipendente è un elemento attivo che mantiene una tensione/corrente specificata che è completamente indipendente dalle altre variabili del circuito
 
->[!multi-column]
->
->>[!blank]
->>![[Pasted image 20260316171411.png|center|350]]
->
->>[!blank]
->>![[Pasted image 20260316171436.png|center|350]]
-
-**Cortocircuito** $v(t) = 0 \ \forall i$
-Tensione ai terminali costantemente nulla
-
-**Circuito aperto** $i(t) = 0 \ \forall v$
-Corrente che lo attraversa costantemente nulla
-
-**Resistore**
-$V = R \cdot I$ per $R \to \infty$ otteniamo $\frac{V}{R} = I = 0$ circuito aperto
-$V = R \cdot I$ per $R \to 0$ otteniamo $V = 0$ cortocircuito
-**Condensatore**
-$i(t) = C \frac{dv(t)}{dt}$ se $v(t) =\text{const} \implies i(t) = 0$ circuito aperto
-**Induttore**
-$v(t) = L \frac{di(t)}{dt}$ se $i(t) =\text{const} \implies v(t) = 0$ cortocircuito
 ## 4. Introduci i concetti topologici di ramo, nodo, maglia, anello e grafo e descrivi le due leggi di Kirchhoff e le loro proprietà
 **Ramo**
 Singolo elemento attivo/passivo attraversato in ogni suo punto dalla stessa corrente
@@ -90,6 +67,31 @@ $$
 \sum_{m=1}^M \pm v_m = 0
 $$
 deriva dalla conservazione dell'energia
+
+## 3. Descrivi i generatori indipendenti e le loro proprietà. Descrivi anche il corto circuito e il circuito aperto e il loro utilizzo come casi limite degli elementi circuitali
+Un generatore ideale indipendente è un elemento attivo che mantiene una tensione/corrente specificata che è completamente indipendente dalle altre variabili del circuito
+
+>[!multi-column]
+>
+>>[!blank]
+>>![[Pasted image 20260316171411.png|center|350]]
+>
+>>[!blank]
+>>![[Pasted image 20260316171436.png|center|350]]
+
+**Cortocircuito** $v(t) = 0 \ \forall i$
+Tensione ai terminali costantemente nulla
+
+**Circuito aperto** $i(t) = 0 \ \forall v$
+Corrente che lo attraversa costantemente nulla
+
+**Resistore**
+$V = R \cdot I$ per $R \to \infty$ otteniamo $\frac{V}{R} = I = 0$ circuito aperto
+$V = R \cdot I$ per $R \to 0$ otteniamo $V = 0$ cortocircuito
+**Condensatore**
+$i(t) = C \frac{dv(t)}{dt}$ se $v(t) =\text{const} \implies i(t) = 0$ circuito aperto
+**Induttore**
+$v(t) = L \frac{di(t)}{dt}$ se $i(t) =\text{const} \implies v(t) = 0$ cortocircuito
 ## 5. Elenca i metodi di analisi che conosci e descrivi brevemente come si arriva a questi metodi partendo dalle leggi di Kirchhoff e dalla topologia dei circuiti
 Dato un circuito di $R$ rami e $N$ nodi, il suo comportamento è determinato una volta note tutte le $2R$ grandezze elettriche (tensioni/correnti). Per calcolarle possiamo sfruttare:
 - relazioni costitutive
