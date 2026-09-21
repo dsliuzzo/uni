@@ -2,8 +2,8 @@
   "cssTheme": "Minimal",
   "accentColor": "#62dbf3",
   "enabledCssSnippets": [
-    "colore titolo",
-    "MCL Multi Column"
+    "MCL Multi Column",
+    "colore titolo"
   ],
   "theme": "obsidian",
   "baseFontSizeAction": false,
