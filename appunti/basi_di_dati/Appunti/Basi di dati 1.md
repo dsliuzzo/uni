@@ -8,11 +8,11 @@ Una **base di dati** consiste in un sistema orientato alla gestione di dati, le 
 Di conseguenza rappresentiamo tutto come righe di tabelle, che vengono modificate tramite **primitive di modifica**.Relational data base management system
 # R-DBMS
 *Relational data base management system*
->[!info] Relazionale
+>[!important] Relazionale
 >Significato matematico di **relazionale**: sottoinsieme del prodotto cartesiano degli insiemi (insieme di elementi provenienti da insiemi diversi).
 >La tabella dei database è quindi una **relazione**.
 
->[!info] Data base management system
+>[!important] Data base management system
 >Pacchetti software che permettono di definire tabelle
 
 ## Modello a cascata
