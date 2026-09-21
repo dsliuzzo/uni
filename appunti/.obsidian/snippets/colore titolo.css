@@ -22,8 +22,8 @@ strong, .cm-strong {
 
 
 /* ============================================================
-   FORCE IMAGE CENTER per sintassi ![[img|center|300]]
-   ============================================================ */
+ *  FORCE IMAGE CENTER per sintassi ![[img|center|300]]
+ *  ============================================================ */
 
 /* 1. MODALITÀ LETTURA (Reading View) */
 .markdown-preview-view img[alt*="center"] {
@@ -33,28 +33,13 @@ strong, .cm-strong {
     float: none !important; /* Previene allineamenti laterali indesiderati */
 }
 
-/* 2. MODALITÀ MODIFICA (Live Preview) - Il caso più difficile */
-
-/* Caso A: Il wrapper dell'immagine */
-.markdown-source-view .image-embed[alt*="center"] {
-    display: block !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    text-align: center !important; /* Centra il contenuto inline */
-}
-
-/* Caso B: L'immagine diretta dentro la Live Preview */
-.markdown-source-view img[alt*="center"] {
-    display: block !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-
-/* Caso C: Correzione per alcuni temi che usano flexbox */
-.image-embed[alt*="center"] .image-embed-internal {
-    margin-left: auto !important;
-    margin-right: auto !important;
-    display: block !important;
+/* 2. MODALITÀ MODIFICA (Live Preview)
+ *  Non tocchiamo più img/.image-embed direttamente: forzare display:block
+ *  qui rompe il tracking di CodeMirror e il cursore non rivela più il
+ *  source mode passandoci sopra con le frecce. Centriamo invece la riga
+ *  di CodeMirror che contiene l'immagine. */
+.cm-line:has(img[alt*="center"]) {
+    text-align: center !important;
 }
 
 

@@ -1,8 +1,8 @@
 [
-  "obsidian-latex-suite",
   "obsidian-file-cleaner",
-  "multi-column-markdown",
-  "obsidian-minimal-settings",
   "image-converter",
-  "obsidian-excalidraw-plugin"
+  "obsidian-latex-suite",
+  "obsidian-minimal-settings",
+  "multi-column-markdown",
+  "tldraw"
 ]
