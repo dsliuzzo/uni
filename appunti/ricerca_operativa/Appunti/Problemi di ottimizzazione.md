@@ -8,7 +8,7 @@ $$
 $$
 - $x \in \mathbb{R}^n$ vettore delle **variabili di decisione**
 - $S$ viene chiamato **insieme ammissibile**
-- se $x \in S$ rende $x$ una **soluzione ammissibile**
+- se $x \in S$ rende $x$ una **soluzione ammissibile** di $P$
 - $f$ prende il nome di **funzione obbiettivo** (spesso viene associata al costo)
 - $f$ è una funzione di $n$ variabili reali: $f(x) = f(x_{1}, x_{2}, \dots,x_n)$
 
@@ -23,7 +23,7 @@ $$
 
 >[!important] Soluzione ottima
 >Il problema $P_{min}$ ammette **soluzione ottima** (finita) $x^* \in S$ se
->$$f(x^*) \leq f(x) \ \forall x \in S$$
+>$$ \forall x \in S : f(x^*) \leq f(x)  $$
 
 >[!question] Osservazione
 >Le definizioni per il massimo sono duali. La funzione obbiettivo viene indicata con $h$
@@ -37,7 +37,7 @@ Ponendo $h(x) = -f(x)$ rispettivamente $P_{max}$ e $P_{min}$ allora
 
 Pertanto i problemi $P_{min}$ e $P_{max}$ sono **equivalenti a meno del segno**:
 $$
-x^* = \arg \min_{x \in S} f(x) = \arg \max_{x \in S} (-f(x)) \hspace{8ex} \min_{x \in S} f(x) = - \max_{x \in S}(-f(x)) 
+x^* = \arg \min_{x \in S}( f(x)) = \arg \max_{x \in S} (-f(x)) \hspace{8ex} \min_{x \in S} (f(x)) = - \max_{x \in S}(-f(x)) 
 $$
 
 classificazione dei problemi di ottimizzazione
@@ -73,6 +73,6 @@ classificazione dei problemi di ottimizzazione
 
 
 $$
-\left\{\begin{array}{l}\min & f(x)  \\  \text{s.t.} & g_{1}(x) \geq b_{1} \\  & g_{2}(x) \geq h_{2} \\  & \vdots \\  & g_m(x) \geq h_m\end{array}\right.
+\left\{\begin{array}{l}\min & f(x)  \\  \text{s.t.} & g_{1}(x) \geq b_{1} \\  & g_{2}(x) \geq b_{2} \\  & \vdots \\  & g_m(x) \geq b_m\end{array}\right.
 $$
 Se $f$ è una funzione lineare e ciascuna $g_{1},g_{2},\dots,g_m$ sono funzioni lineari il problema si dice di **programmazione lineare**.
