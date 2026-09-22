@@ -40,9 +40,7 @@ Si implementa utilizzando le RPC (remote procedure call) tra il server e il clie
 Si evolve in [...] <- foto
 Il web server funge da smistatore di traffico - effettua operazioni di routing
 
-cos'è un **acronimo**?
-
-All'interno dell'application center si aggiunge un **container** che può fornire servizi condivisi come la gestione del traffico, sicurezza comuni a più applicazioni. Questo modello permette di automatizzare servizi e metterlo in comune. Tuttavia, nel corso del tempo, poichè l'utilizzo dei container precludeva un accordo con aziende in maniera *proprietaria*. Per questo si è iniziato ad utilizzare container **open source non proprietaria** per permettere facilmente il cambio, effettuando una *migrazione* quasi immediata.
+All'interno dell'application server si aggiunge un **container** che può fornire servizi condivisi come la gestione del traffico, sicurezza comuni a più applicazioni. Questo modello permette di automatizzare servizi e metterlo in comune. Tuttavia, nel corso del tempo, poichè l'utilizzo dei container precludeva un accordo con aziende in maniera *proprietaria*. Per questo si è iniziato ad utilizzare container **open source non proprietaria** per permettere facilmente il cambio, effettuando una *migrazione* quasi immediata.
 
 Il container che utilizzeremo è **Java Enterprise - Jakarta**: si tratta di una piattaforma per la gestione di applicazioni enterprise.
 **Java Servlet** è un insieme di oggetti Java che permette di estendere le funzionalità di un server HTTP, non creando un nuovo processo ma creando thread che lavorano concorrentemente.
