@@ -17,8 +17,15 @@
 | XOR  | $\oplus$ | $O \Longleftarrow \ I_{0} \ \text{xor} \ I_{1}$  |       |
 | NXOR |          | $O \Longleftarrow \ I_{0} \ \text{nxor} \ I_{1}$ |       |
 
-
+# Circuiti combinatori
+Insieme di porte logiche collegate in maniera opportuna per rispondere ad una determinata esigenza.
 
 ![[1. Reti logiche#Multiplexer (MUX)]]
 
 ![[1. Reti logiche#Demultiplexer (DEMUX)]]
+
+![[1. Reti logiche#Decodificatore (DECODEX)]]
+
+![[1. Reti logiche#Codificatore (CODEX)]]
+
+![[1. Reti logiche#Circuiti aritmetici]]
