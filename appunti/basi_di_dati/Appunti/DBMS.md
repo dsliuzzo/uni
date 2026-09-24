@@ -8,12 +8,16 @@ Una **base di dati** consiste in un sistema orientato alla gestione di dati, le 
 Di conseguenza rappresentiamo tutto come righe di tabelle, che vengono modificate tramite **primitive di modifica**.Relational data base management system
 # R-DBMS
 *Relational data base management system*
+
+Creare un database da 0 ha un costo enorme, mentre le esigenze sono sempre le stesse, per questo motivo vengono utilizzati i DBMS, che vengono specializzati per ogni singolo caso d'uso.
+
 >[!important] Relazionale
 >Significato matematico di **relazionale**: sottoinsieme del prodotto cartesiano degli insiemi (insieme di elementi provenienti da insiemi diversi).
+>$$R_{AB} \subseteq A \times B$$
 >La tabella dei database è quindi una **relazione**.
 
 >[!important] Data base management system
->Pacchetti software che permettono di definire tabelle
+>Pacchetti software che permettono di definire tabelle.
 
 ## Modello a cascata
 Per la progettazione di un data base vengono spesso seguiti dei passi fondamentali
@@ -41,8 +45,8 @@ Per la progettazione di un data base vengono spesso seguiti dei passi fondamenta
     - **Non funzionali**, caratteristiche che il sistema dovrebbe avere ma non sono specifiche (*es. interfaccia web, piattaforma di pagamento...*)
 
 **3) Progettazione concettuale**
-- Quali informazioni devono essere presenti per rispettare le richieste del committente
-- **Informazioni**
+- Quali **informazioni** (concetti) devono essere presenti per rispettare le richieste del committente
+- Quali sono le **correlazioni** tra le informazioni
 
 **4.1) Progettazione logica**
 - Le informazioni diventano righe di tabelle
@@ -75,3 +79,26 @@ La differenza tra informazioni e dati diventa fondamentale per la comprensione d
 >>Rappresentazione logica/fisica vincolata dalle regole di codifica di un linguaggio, di un formato o di un supporto.
 
 Definire l'uno richiede implicitamente definire prima l'altro: il dato è il significante (il veicolo), l'informazione è il significato (il carico).
+
+# Progettazione concettuale
+Per rappresentare la progettazione concettuale utilizzeremo il **modello entità/relazioni**
+
+*es.* Automatizzare la gestione delle forniture di un negozio.
+- Gestione dei fornitori (ricerca, inserimento, modifica, cancellazione, estrazione p.iva città nome)
+- Gestione merci (ricerca, inserimento, modifica, cancellazione, estrazione cod nome marca)
+- Gestione delle forniture (chi spedisce, prezzo, quali merci sono fornite da un fornitore)
+
+![[DBMS-1790248969041.webp|center|823]]
+
+- Ogni concetto prende il nome di **entità** (entity set) *rettangoli*
+- Ogni relazione $R_{AB} \subseteq A \times B$ *rombi*
+
+>[!important] Vincoli di cardinalità
+>[...]
+
+>[!important] Chiave candidata
+>[...]
+
+>[!bug] Problemi relativi alle chiavi
+>[...]
+
