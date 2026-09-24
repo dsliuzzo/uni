@@ -1,7 +1,7 @@
 #materia 
 #basi_di_dati
 # Appunti
-[[Basi di dati 1]]
+[[DBMS]]
 
 
 # Esame

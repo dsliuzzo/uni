@@ -22,9 +22,9 @@ in questo modo le prestazioni sono garantite, ma è necessario un setup di chiam
 ``` mermaid
 flowchart LR
 	s(sorgente - end device) <--> id1(disp. intermedio)
-	id1 --- id2(.)
+	id1 -.- id2(.)
 	id1 <--> id3(.)
-	id2 --- id4(.)
+	id2 -.- id4(.)
 	id3 <--> id4(.)
 	id4 <--> d(destinatario - end device)
 ```
