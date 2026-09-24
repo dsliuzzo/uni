@@ -32,7 +32,7 @@ Requisiti fondamentali, ma non funzionali:
 - **Tolleranza ai guasti**
   continuare ad operare anche se si presenta un guasto
 - **Qualità**
-  [...]
+  insieme di attributi non funzionali
 - **Time to market**
   strumenti che ci permettano di sviluppare l'applicazione velocemente
 
@@ -49,7 +49,7 @@ Il paradigma a tre livelli è diventato lo standard e si basa su:
 
 ### Single tier
 Inizialmente veniva installato tutto su una singola macchina [[0. Intro sistemi operativi#Sistema mainframe|mainframe]].
-Essendo tutto centralizzato era molto più semplice recuperare le risorse, ma tutto è strettamente integrato e quindi un guasto o la necessità di un aggiornamento sul mainframe non permette l'utilizzo del programma.
+Essendo tutto centralizzato era molto più semplice recuperare le risorse, ma tutto è strettamente integrato, quindi un guasto o la necessità di un aggiornamento sul mainframe non permette l'utilizzo del programma.
 ### Two tier
 I dati venivano mantenuti sui server, mentre tutto il resto veniva eseguito sui computer client. Le interfacce locali venivano riempite dai dati provenienti dai server.
 Rimaneva il problema di non avere un sistema distribuito e il client è costretto ad installare software molto pesante.
@@ -87,3 +87,6 @@ Per evitare questo problema implementiamo all'interno dell'application server un
 [[Jakarta]]
 
 [[Spring Boot]]
+
+
+[...] aggiungi cenni storici su passaggio da procedural - object oriented - component oriented - service oriented
