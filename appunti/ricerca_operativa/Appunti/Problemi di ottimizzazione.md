@@ -56,7 +56,7 @@ classificazione dei problemi di ottimizzazione
 >Dove $g_i:\mathbb{R}^n \to \mathbb{R}$, $b_i \in \mathbb{R}$, $\forall i \in \{1,2,\dots,m\}$
 
 >[!important] Vincolo
->Ogni disuguaglianza $g_i(x) \geq b_i$ prende il nome di **vincolo** e l'insieme $S$ è formato da tutti i punti $x \in \mathbb{R}^n$ che rispetta il sistema di disuguaglianze
+>Il sistema di disuguaglianze $g_i(x) \geq b_i$ prende il nome di **vincolo** e l'insieme $S$ è formato da tutti i punti $x \in \mathbb{R}^n$ che rispetta il sistema di disuguaglianze
 
 >[!multi-column]
 >>[!important] Soddisfatto
@@ -75,4 +75,67 @@ classificazione dei problemi di ottimizzazione
 $$
 \left\{\begin{array}{l}\min & f(x)  \\  \text{s.t.} & g_{1}(x) \geq b_{1} \\  & g_{2}(x) \geq b_{2} \\  & \vdots \\  & g_m(x) \geq b_m\end{array}\right.
 $$
-Se $f$ è una funzione lineare e ciascuna $g_{1},g_{2},\dots,g_m$ sono funzioni lineari il problema si dice di **programmazione lineare**.
+
+>[!important] Problema di programmazione lineare
+>Se $f$ è una funzione lineare e ciascuna $g_{1},g_{2},\dots,g_m$ sono funzioni lineari il problema si dice di **programmazione lineare**.
+
+## Funzione obbiettivo
+Considerando $n$ coefficienti (di costo) reali $c_{1},\dots,c_n$
+$$
+f(x) = f(x_{1},x_{2},\dots,x_n) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n = \sum_{i=1}^n c_ix_i
+$$
+prodotto scalare tra il vettore dei coefficienti e il vettore delle variabili decisionali.
+
+Consideriamo $m \times n$ coefficienti reali
+$$
+\begin{array}{cccc}
+a_{11} & a_{12} & \dots & a_{1n} \\
+a_{21} & a_{22} & \dots & a_{2n} \\
+\vdots \\
+a_{m1} & a_{m2} & \dots & a_{mn}
+\end{array}
+$$
+$$
+g_i(x) = g_i(x_{1},x_{2},\dots,x_n) = a_{i 1} x_{1} + a_{i 2} x_{2} + \dots + a_{i n} x_n = \sum_{j=1}^n a_{ij} x_j
+$$
+prodotto scalare tra la $i$esima riga e il vettore delle variabili decisionali
+
+Quindi la forma estesa di un problema di programmazione lineare si può esprimere come:
+![[Problemi di ottimizzazione-1790330573889.webp|375]]
+
+Tutti i vettori sono rappresentati da colonne
+$$
+c = \left(\begin{array}{l}c_{1} \\ c_{2} \\ \vdots \\ c_n \end{array}\right) \hspace{4ex} x = \left(\begin{array}{l}x_{1} \\ x_{2} \\ \vdots \\ x_n \end{array}\right) \hspace{4ex} A = \left[\begin{array}{cccc}a_{11} & a_{12} & \dots & a_{1n} \\
+a_{21} & a_{22} & \dots & a_{2n} \\
+\vdots \\
+a_{m1} & a_{m2} & \dots & a_{mn}\end{array}\right]
+$$
+A = matrice che contiene i *coefficienti tecnologici*
+[...] link ad algebra
+Utilizzeremo la convenzione del prodotto righe per colonne per rappresentare i prodotti scalari
+
+Quindi il sistema di vincoli diventa un prodotto scalare tra la matrice $A$ e il vettore colonna $x$
+$$
+Ax = \left[\begin{array}{cccc}a_{11} & a_{12} & \dots & a_{1n} \\
+a_{21} & a_{22} & \dots & a_{2n} \\
+\vdots \\
+a_{m1} & a_{m2} & \dots & a_{mn}\end{array}\right]
+\left(\begin{array}{l}x_{1} \\ x_{2} \\ \vdots \\ x_n \end{array}\right) = \left(\begin{array}{cccc}a_{11}x_{1} & a_{12}x_{2} & \dots & a_{1n}x_n \\
+a_{21}x_{1} & a_{22}x_{2} & \dots & a_{2n}x_n \\
+\vdots \\
+a_{m1}x_{1} & a_{m2}x_{2} & \dots & a_{mn}x_n\end{array}\right)
+$$
+Il prodotto $Ax$ può essere utilizzato per ridefinire le disuguaglianze (vincoli) in forma matriciale
+$$
+Ax \geq b
+$$
+Per quanto riguarda invece la funzione obbiettivo, sia il vettore $c$ che il vettore $x$ sono vettori colonna: non possiamo effettuare il prodotto riga per colonna, di conseguenza utilizziamo la trasposta $c^T$
+$$
+c^T x = (c_{1},c_{2},\dots,c_n) \left(\begin{array}{l}x_{1} \\  x_{2} \\  \vdots \\  x_n\end{array}\right) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n
+$$
+Ne concludiamo che un problema di programmazione matematica può essere espresso in forma compatta come
+$$
+\left\{\begin{array}{l}\min & c^T x \\ s.t. & Ax \geq b \end{array}\right.
+$$
+## Risoluzione grafica di un problema in due variabili
+[...] <-- quaderno
