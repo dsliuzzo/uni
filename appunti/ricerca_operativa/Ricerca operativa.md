@@ -14,7 +14,7 @@ Giovanni Giallombardo
 # Appunti
 È una disciplina della matematica applicata che ha come oggetto la definizione di modelli e la messa a punto di metodi per la soluzione di **problemi decisionali** (decision-making) che si manifestano in diversi
 ambiti della vita reale:
-- Ottimizzazione (Programmazione Matematica)
+- [[Problemi di ottimizzazione]] (Programmazione Matematica)
 - Simulazione
 - Teoria dei giochi
 - Teoria delle code
@@ -28,9 +28,6 @@ Un problema decisionale può essere affrontato in 5 fasi:
 3. Analisi del modello
 4. Soluzione numerica
 5. Validazione del modello
-
-
-[[Problemi di ottimizzazione]]
 
 # Esame
 ## Scritto
