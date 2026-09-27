@@ -101,17 +101,19 @@ $$
 prodotto scalare tra la $i$esima riga e il vettore delle variabili decisionali
 
 Quindi la forma estesa di un problema di programmazione lineare si può esprimere come:
-![[Problemi di ottimizzazione-1790330573889.webp|375]]
+$$
+\left\{\begin{array}{la}\min & c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n  \\  s.t. & a_{11}x_{1} + a_{12} x_{2} + \dots + a_{1n}x_n \geq b_{1} \\  & a_{21}x_{1} + a_{22}x_{2} + \dots + a_{2n}x_n \geq b_{2} \\  & \vdots \\  & a_{m 1}x_{1} + a_{m 2}x_{2} + \dots + a_{mn}x_n \geq b_m\end{array}\right.
+$$
 
-Tutti i vettori sono rappresentati da colonne
+Tutti i [[2. I vettori (algebra)|vettori]] sono rappresentati da colonne
 $$
 c = \left(\begin{array}{l}c_{1} \\ c_{2} \\ \vdots \\ c_n \end{array}\right) \hspace{4ex} x = \left(\begin{array}{l}x_{1} \\ x_{2} \\ \vdots \\ x_n \end{array}\right) \hspace{4ex} A = \left[\begin{array}{cccc}a_{11} & a_{12} & \dots & a_{1n} \\
 a_{21} & a_{22} & \dots & a_{2n} \\
 \vdots \\
 a_{m1} & a_{m2} & \dots & a_{mn}\end{array}\right]
 $$
-A = matrice che contiene i *coefficienti tecnologici*
-[...] link ad algebra
+A = [[2. I vettori (algebra)#Matrici|matrice]] che contiene i *coefficienti tecnologici*
+
 Utilizzeremo la convenzione del prodotto righe per colonne per rappresentare i prodotti scalari
 
 Quindi il sistema di vincoli diventa un prodotto scalare tra la matrice $A$ e il vettore colonna $x$
@@ -138,4 +140,5 @@ $$
 \left\{\begin{array}{l}\min & c^T x \\ s.t. & Ax \geq b \end{array}\right.
 $$
 ## Risoluzione grafica di un problema in due variabili
-[...] <-- quaderno
+[...] <-- quaderno (probabilmente prossima lezione dà le definizioni formali)
+
