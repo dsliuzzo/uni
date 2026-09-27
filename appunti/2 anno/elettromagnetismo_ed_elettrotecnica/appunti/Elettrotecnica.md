@@ -706,7 +706,7 @@ Sono considerati teoremi delle reti:
 - [[#Equivalenza dei generatori reali]]
 - [[#Teorema di Tellegen]]
 ## Principio di sovrapposizione degli effetti (PSE)
-[[elettromagnetismo#Distribuzione di cariche|principio di sovrapposizione degli effetti]]
+[[Elettromagnetismo#Distribuzione di cariche|principio di sovrapposizione degli effetti]]
 Il principio di sovrapposizione degli effetti (PSE) afferma che l’effetto dovuto all’azione di più cause concomitanti è pari alla somma degli effetti che si ottengono quando ciascuna causa agisce da sola.
 Esso coincide con la proprietà di [[#Teoremi delle reti lineari|additività]] pertanto è applicabile ai sistemi lineari.
 

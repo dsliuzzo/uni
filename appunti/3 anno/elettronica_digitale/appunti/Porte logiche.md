@@ -20,12 +20,16 @@
 # Circuiti combinatori
 Insieme di porte logiche collegate in maniera opportuna per rispondere ad una determinata esigenza.
 
+## MUX / DEMUX
 ![[1. Reti logiche#Multiplexer (MUX)]]
 
 ![[1. Reti logiche#Demultiplexer (DEMUX)]]
 
 ![[1. Reti logiche#Decodificatore (DECODEX)]]
 
+## CODEX / DECODEX
 ![[1. Reti logiche#Codificatore (CODEX)]]
+
+## Circuiti aritmetici
 
 ![[1. Reti logiche#Circuiti aritmetici]]

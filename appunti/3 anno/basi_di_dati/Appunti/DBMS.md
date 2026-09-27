@@ -90,15 +90,24 @@ Per rappresentare la progettazione concettuale utilizzeremo il **modello entità
 
 ![[DBMS-1790248969041.webp|center|823]]
 
-- Ogni concetto prende il nome di **entità** (entity set) *rettangoli*
-- Ogni relazione $R_{AB} \subseteq A \times B$ *rombi*
+>[!multi-column]
+>
+>>[!important] Entità
+>>Ogni concetto prende il nome di **entità**. Da un punto di vista matematico non sono altro che insiemi (entity set). *rettangoli*
+>
+>>[!important] Relazioni
+>>Significato matematico di relazione $R_{AB} \subseteq A \times B$: sottoinsieme del prodotto cartesiano dei due insiemi di entità che collega. Un insieme di coppie in cui il primo elemento viene dalla prima entità e il secondo elemento viene dalla seconda entità. *rombi*
 
 >[!important] Vincoli di cardinalità
->[...]
+>Sulla linea che collega una entità ad una relazione sono espressi due numeri che prendono il nome di **vincoli di cardinalità**.
+>I vincoli di cardinalità rappresentano il numero minimo e massimo di volte in cui una entità compare nel sottoinsieme *relazione*.
+>*es.* un Fornitore deve comparire almeno $0$ volte e al più $n$ volte all'interno della relazione Fornitura: **ogni Fornitore può fornire $n$ merci, ma una stessa merce al più una volta** (questo non viene specificato nel modello ER, ma viene "ereditato" dal concetto stesso di relazione, che è un insieme e di conseguenza non ammette ripetizioni).
+>Fosse stato $1:n$ ogni fornitore deve comparire almeno una volta all'interno della relazione Fornitura
 
 >[!important] Chiave candidata
->[...]
+>Definiamo come chiave un meccanismo di **identificazione** di una entità. Vengono rappresentati nel modello ER come una linea che termina con un punto pieno.
+>La chiave è quindi un **insieme minimale** (nessun suo sottoinsieme può essere identificante da solo) di attributi che ha la proprietà di essere identificativo per l'istanza dell'entity set.
+>Viene inoltre definita **candidata** perché per ogni entità possono essere definite più chiavi, sarà poi il dbms a decidere quale utilizzare in base al problema che gli si presenta davanti.
 
->[!bug] Problemi relativi alle chiavi
->[...]
+
 

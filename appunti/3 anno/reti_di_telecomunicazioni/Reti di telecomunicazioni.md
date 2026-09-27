@@ -1,5 +1,4 @@
 
----
 1. funzionamento di internet
 2. protocolli per la comunicazione
 3. architetture di rete (TCP/IP)
@@ -47,19 +46,19 @@ I canali che i pacchetti attraversano non sono dedicati in modo univoco ad un de
 >- Wavelength division
 >- Code division
 
-[...] <-- *aggiungi foto dalle slide*
+![[Reti di telecomunicazioni-1790519782217.webp|center|377]]
 
----
 
-I pacchetti possono avere velocità di trasmissioni diverse.
-I pacchetti possono sfruttare tutta la risorsa del canale o solo una parte e passare da canali eterogenei. In base al mezzo non tutte le forme d'onda vengono trasmesse --> cambia quindi anche il data rate (quantità di bit al secondo che il canale può trasportare).
+I pacchetti possono avere velocità di trasmissioni diverse e possono sfruttare tutta la risorsa del canale o solo una parte e passare da canali eterogenei. In base al mezzo non tutte le forme d'onda vengono trasmesse --> cambia quindi anche il **data rate** (quantità di bit al secondo che il canale può trasportare).
 Non dedicando le risorse a specifici flussi ci sono dei problemi:
 - **contesa per le risorse**
   immettendo sulla rete una quantità di dati eccessivi, potrebbe superare la quantità di dati che può mantenere il canale di trasmissione
 - **congestione**
   I pacchetti non accodati vengono persi
+
 --> **store and forward** - meccanismo di accodamento e instradamento
 Ogni nodo intermedio (insieme di nodi intermedi) è un sistema dotato di più code in grado di mantenere i pacchetti prima di inviarli al nodo successivo.
+
 
 Con $L$ grandezza in bit dei pacchetti ed $R$ velocità di trasmissione
 
@@ -69,27 +68,35 @@ Con $L$ grandezza in bit dei pacchetti ed $R$ velocità di trasmissione
 >>Tempo impiegato ad immettere un pacchetto sul canale ($\neq$ tempo impiegato a raggiungere un altro nodo). Può essere trovato come $\frac{L}{R}$
 >
 >>[!important] Store and forward
->>
+>>L'intero pacchetto deve arrivare prima di essere ritrasmesso al canale successivo.
 >
 >>[!important] End-end-delay
+>>Tempo necessario dalla sorgente alla destinazione, può essere calcolato come $\frac{2L}{R}$
+
+## Reti di accesso
+>[!multi-column]
 >
+>>[!blank]
+>>![[Reti di telecomunicazioni-1790519859068.webp|400]]
+>
+>>[!blank]
+>>L'accesso alla rete è organizzata in una **gerarchia** e sui vari livelli avremo nodi di tipo diverso.
+>>La suddivisione gerarchica è di livello logico, ma anche fisico: i nodi di accesso hanno hardware diverso dai core, che devono gestire il traffico di moltissime reti di accesso.
+>>Si ha quindi una differenza di costi e compiti, portando anche a rapporti gerarchici tra le aziende che offrono i servizi di connessione alla rete.
 
-[...] rivedi dal quaderno - ritardo di trasmissione, ritardo di propagazione, ritardo di accodamento, code in ingresso, code in uscita, ritardo di processamento
-
-## Reti di accesso [...] cambia titolo
-[...] 34
-Anche le reti di accesso possono essere reti di tipo diverso.
-Gerarchia della rete
-[...] slide reti di accesso 1
-La suddivisione gerarchica è di livello logico, ma anche fisico: i nodi di accesso hanno hardware diverso dai core, che devono gestire il traffico di moltissime reti di accesso.
-Si ha quindi una differenza di costi e compiti, portando anche a rapporti gerarchici tra le aziende che offrono i servizi di connessione alla rete.
 
 ## Canali di comunicazione
 ### Collegamento punto-punto
-Il collegamento può essere diretto e su livelli diversi
-- 2 end device paritari
-- end device e server
-- comunicazione con alta direttività ([...] la direzione delle onde elettromagnetiche non viaggiano in tutte le direzioni, ma solo verso il destinatario??)
+>[!multi-column]
+>
+>>[!blank]
+>>Il collegamento può essere diretto e su livelli diversi
+>>- 2 end device paritari
+>>- end device e server
+>>- comunicazione con alta direttività (la direzione delle onde elettromagnetiche non viaggiano in tutte le direzioni, ma solo verso il destinatario)
+>
+>>[!blank]
+>>![[Reti di telecomunicazioni-1790520068059.webp|center|400]]
 ### Connessione punto a multipunto
 Il segnale generato da un punto viene ricevuto da più punti, ma non in tutte le direzioni
 ### Canale broadcast
@@ -138,15 +145,16 @@ flowchart LR
 >>-**topologia logica**,  interconnessione tra nodi mediante canali.
 >
 >>[!blank]
->>[...] slide topologia fisica - topologia logica
+>>![[Reti di telecomunicazioni-1790520279316.webp|center|400]]
 
 Non necessariamente coincidono (tramite un insieme di protocolli e regole).
-Tramite software posso gestire la comunicazione tra i nodi e instradare i flussi solo in determinate direzioni
+Tramite software posso gestire la comunicazione tra i nodi e instradare i flussi solo in determinate direzioni.
 
-[...] Slide esempi di topologia di rete
+>[!question] Osservazione
+> La topologia a maglia completamente connessa per esempio a livello fisico è incredibilmente complessa, ma può essere "simulata" a livello logico con molti meno collegamenti.
+>Il processo inverso (limitare una topologia fisica molto connessa) può essere applicato per motivi di sicurezza.
 
-La topologia a maglia completamente connessa per esempio a livello fisico è incredibilmente complessa, ma può essere "simulata" a livello logico con molti meno collegamenti.
-Il processo inverso (limitare una topologia fisica molto connessa) può essere applicato per motivi di sicurezza.
+![[Reti di telecomunicazioni-1790520313788.webp|center|718]]
 
 - **completamente connessa**$$C = \frac{N(N-1)}{2}$$
   aumenta l'affidabilità, ma il numero di collegamenti è quadratica rispetto al numero di nodi.
@@ -170,59 +178,85 @@ Il processo inverso (limitare una topologia fisica molto connessa) può essere a
 >[!important] Commutazione
 >Allocare risorse
 
-Il traffico su internet è intrinsecamente intermittente, quindi la commutazione di pacchetto risulta molto conveniente.
-[...] <-- vedi cosa aggiungere dal capitolo di prima
+Il traffico su internet è intrinsecamente intermittente, quindi la [[#commutazione di pacchetto]] risulta molto conveniente.
 
 **Vantaggi**
-Statistical multiplexing. [...]
-Possibilità di controllo di correttezza lungo il percorso: se c'è un percorso non più funzionante posso cambiare percorso anche durante la comunicazione e di conseguenza può cambiare alcune caratteristiche del pacchetto (header), in modo da adattarsi al nuovo percorso.
-Inoltre si può implementare una tariffazione basata su [...]
+- Statistical multiplexing (nel circuit switching ogni slot è assegnato ad un canale, nella commutazione di pacchetto invece ogni pacchetto acquisisce il primo slot disponibile e lo libera dopo il passaggio)
+- Possibilità di controllo di correttezza lungo il percorso: se c'è un percorso non più funzionante è possibile cambiare percorso anche durante la comunicazione
+- Possibilità di conversione di velocità, formati e protocolli
+- Si può implementare una tariffazione basata sul traffico trasmesso
 
 **Svantaggi**
-Ogni pacchetto deve essere elaborato singolarmente e il ritardo di trasferimento è variabile.
+- Ogni pacchetto deve essere elaborato singolarmente
+- ritardo di trasmissione variabile.
 
 ### Ritardi nelle reti
+![[Reti di telecomunicazioni-1790523411038.webp|546]]
 #### ritardo di elaborazione
-Bisogna controllare alterazioni di bit che può portare il canale e determinare il link di uscita
+Bisogna controllare alterazioni di bit che può portare il canale e determinare il link di uscita.
 #### ritardo di accodamento
 I pacchetti si mettono in attesa nella coda e attendono di essere prelevati e spostati sul link di uscita.
 L'intensità del traffico che arriva sull'interfaccia potrebbe essere maggiore della velocità di instradamento.
-Conoscendo il tasso di arrivo medio $a$ moltiplicato per la lunghezza del pacchetto $L$ può essere diviso per la banda $R$ per ottenere l'intensità del traffico $$\frac{L \cdot a}{R}$$
-- $\frac{La}{R}$ [...]
+Conoscendo il tasso di arrivo medio $a$ moltiplicato per la lunghezza del pacchetto $L$ e poi diviso per la banda $R$ otteniamo l'intensità del traffico $$\frac{L \cdot a}{R}$$
+- $\frac{La}{R} \sim 0$ ritardo medio in coda piccolo
+- $\frac{La}{R} \to 1$ i ritardi crescono
+- $\frac{La}{R} > 1$ arrivano più pacchetti di quelli che si riescono a gestire
 #### Ritardo di trasmissione
 Rapporto tra la dimensione del pacchetto e il rate nominale
+$$
+\frac{L}{R}
+$$
 #### Ritardo di propagazione
 Tempo impiegato a raggiungere il nodo successivo $\frac{d}{s}$
 Dipende anche dalla distanza fisica tra i due nodi $d$, non solo dalla velocità di propagazione $s$
-### Non so che titolo [...]
+### Modi di servizio di una rete a pacchetto
 #### Datagramma
 Non esiste una suddivisione della comunicazione in tre fasi.
 Posso inviare pacchetti indipendenti con percorsi e dimensioni diverse.
 La tabella di instradamento associa dinamicamente l'**indirizzo di destinazione** alla **porta di uscita**.
 Posso accettare un maggior numero di utenti, ma non posso garantire una determinata qualità per tutti.
 In questo caso è necessario identificare la sorgente e la destinazione univocamente determinati.
+
+Ogni pacchetto è considerato una entità autonoma e viene trasferita in rete solo sulla base dell'indirizzo di destinazione.
+Ogni nodo ha una tabella di instradamento che associa ad ogni indirizzo di destinazione una porta di uscita, che viene aggiornata dinamicamente in base alle informazioni ricevute dai nodi adiacenti.
+
+![[Reti di telecomunicazioni-1790524354193.webp|608]]
 #### Circuito virtuale
 La comunicazione avviene tramite una connessione sul piano logico.
 Viene divisa in 3 fasi:
 - apertura connessione
 - trasferimento dati
 - chiusura connessione
-Viene stabilito un accordo preliminare tra la sorgente e la destinazione, che contengono il percorso (in condivisione con altri utenti) che verrà utilizzati per la comunicazione.
-È possibile avere pacchetti diversi che seguono lo stesso percorso.
+Viene stabilito un **accordo preliminare** tra la sorgente e la destinazione, che contengono il percorso (in condivisione con altri utenti) che verrà utilizzato per la comunicazione.
 Nel circuito virtuale i pacchetti viaggiano in ordine.
+
+![[Reti di telecomunicazioni-1790523756060.webp|475]]
+
 Viene gestito tramite il **VCI** (identificativo di circuito virtuale): ogni nodo ha una **tabella di instradamento** che associa ad ogni VCI la linea di uscita stabilita e la nuova etichetta per il nodo successivo.
-L'assegnazione dinamica delle etichette permette di ridirezionare i pacchetti su un percorso diverso.
 
-- **Tempo di trasmissione** $\frac{L}{C}$
-  lunghezza di pacchetto $L$
-  capacità del canale $C$
-- **Tempo di propagazione**
+- **Tempo di trasmissione** $T_t =\frac{L}{C}$
+  lunghezza di pacchetto $L \ [\text{bit}]$
+  capacità del canale $C \ [\text{bit/s}]$
+- **Tempo di propagazione** $T_p = \frac{l}{V}$
+  lunghezza del collegamento $l \ [m]$
+  velocità di propagazione del segnale $V \ [m\text{/s}]$
+- **Tempo di elaborazione**
   è minore, le tabelle di instradamento semplificano questo processo
-- [...]
 
-È sufficiente identificare il circuito virtuale e non sorgente e destinazione.
+Non è necessario mantenere informazioni relative a sorgente e destinazione, ma è sufficiente identificare il circuito virtuale.
 
-[...] slide vantaggi del circuito virtuale rispetto al datagramma
+>[!question] Differenza con la [[#commutazione di circuito]]
+>A differenza della commutazione di circuito le risorse non sono assegnate in modo esclusivo
+
+#### Datagramma / Circuito virtuale
+**Datagramma**
+- Destination address determina il next hop
+- i percorsi possono cambiare durante una sessione
+- come chiedere indicazioni mentre si guida
+**Circuito virtuale**
+- Ogni pacchetto trasporta un identificativo che determina il next hop
+- un percorso fisso viene determinato durante il *call setup* e resta lo stesso per tutta la durata della comunicazione
+- i router mantengono informazioni di stato per-chiamata
 
 # Modelli funzionali
 ## Architetture
