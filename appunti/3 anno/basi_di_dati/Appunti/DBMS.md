@@ -169,9 +169,29 @@ Non possiamo definire più di una relazione con uguale fornitore e merce, nonost
 Il modello di conseguenza cambia come segue:
 ![[DBMS-1790630264057.webp|center|700]]
 >[!attention] Errore grave
->Definire Data come chiave di Fornitura è un errore molto grave
+>Definire Data come chiave di Fornitura $\implies$ ☠️
 
-## Generalizzazioni
-[...]
+## Generalizzazione
+La generalizzazione è una particolare relazione, che ci permette di [[Java#Ereditarietà|ereditare]] degli attributi, in modo da non doverli ridefinire per entità che ne hanno in comune.
+![[DBMS-1790686161369.webp|center|756]]
+
+Ogni qual volta viene definita una generalizzazione bisogna specificare il tipo, tramite le **proprietà**:
+- totale/parziale:
+  è definita **totale** una generalizzazione in cui ogni istanza dell'entità padre appartiene ad uno dei figli (partizione): $(\text{St} \cap \text{Doc}) \wedge (\text{St} \cup\text{Doc} =\text{Per})$
+- inclusiva/esclusiva
+  è definita **esclusiva** una generalizzazione in cui l'intersezione delle entità figlie è nulla $\text{St} \cap\text{Doc} = \emptyset$
 ### IS-A
-[...]
+Un caso particolare della generalizzazione è IS-A
+![[DBMS-1790686970374.webp|321]]
+In questo caso non ha senso definire le proprietà totale/parziale e inclusiva/esclusiva.
+
+>[!multi-column]
+>
+>>[!blank]
+>>Potremmo anche rappresentare la ISA come una normale relazione, ma in quel caso non ereditiamo la chiave, ma quando necessario usiamo ugualmente la ISA che ha un significato semanticamente più specifico.
+>
+>>[!blank]
+>>![[DBMS-1790687256892.webp]]
+
+Nel seguente caso invece non ha senso definire una ISA:
+![[DBMS-1790687444561.webp|639]]

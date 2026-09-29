@@ -142,3 +142,8 @@ $$
 ## Risoluzione grafica di un problema in due variabili
 [...] <-- quaderno (probabilmente prossima lezione dà le definizioni formali)
 
+
+
+---
+
+risolvi problema onlyoffice
