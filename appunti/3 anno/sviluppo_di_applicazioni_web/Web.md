@@ -659,7 +659,7 @@ Destination anchors (link interni al documento):
 	- `width`, `height = length`: dimensioni (pixels o percentuale)
 	- `rowspan`, `colspan = n`: su quante righe/colonne si estende la cella
 
-#### Form
+### Form
 Sezione del documento HTML che contiene elementi di controllo con cui l'utente può inserire dati o in generale interagire.
 - i dati inseriti possono essere poi inoltrati ad un agente che può processarli
 - gli elementi di controllo sono accessibili da script client-side
