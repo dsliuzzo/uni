@@ -89,4 +89,131 @@ Per evitare questo problema implementiamo all'interno dell'application server un
 [[Spring Boot]]
 
 
+---
+
 [...] aggiungi cenni storici su passaggio da procedural - object oriented - component oriented - service oriented
+
+
+>[!important] Protocollo
+>Insieme di regole che servono a normare un aspetto di un sistema
+
+
+# Risorse
+Con il termine risorsa intendiamo qualunque entità abbia una identità.
+Gli **URI** (Uniform resource identifier) forniscono un meccanismo semplice ed estensibile per identificare una risorsa, per garantire interoperabilità
+- concetto generale (non necessariamente una entità disponibile in rete)
+- rappresenta solo l'involucro
+- rispettano una sintassi standard (insieme di termini e regole) e semantica (significato) semplice e regolare
+## Sintassi degli URI
+Ogni URI è composto dalle seguenti sezioni:
+[...] <-- riprendi slide per forma comune
+- **schema**
+  indica il tipo di URI
+- **specifica**
+	- **authority**
+	  mappa l'host e l'eventuale porta tramite il quale raggiungere il server
+	- **path**
+	  percorso gerarchico della risorsa
+	- **query**
+	  ulteriori parametri
+## URN e URL
+Esistono due specializzazioni dell'URI: URN e URL
+- **URN** uniform resource name
+  identifica la risorsa per mezzo di un nome (*es.* ISBN). L'URN deve essere unico e duraturo e deve esistere una entità che conoscendo il nome può ricondurlo ad indirizzi fisici.
+- **URL** uniform resource locator
+  tiene conto anche della modalità per accedere alla risorsa
+[...] <-- riprendi slide per forma comune URL
+
+le sezioni che compongono l'URL sono identiche a quelle dell'URI, tranne per la presenza (anche se deprecated) di username e password.
+
+[...] <-- differenze tra URN e URL
+
+# HTTP
+Protocollo generico e stateless, tramite cui client e server comunicano: richiedono e trasferiscono **rappresentazioni di risorse identificate da URL**.
+È importante la rappresentazione: uno stesso contenuto informativo può avere più rappresentazioni.
+
+- **client/server**
+  c'è una netta distinzione tra chi richiede le risorse e chi le fornisce
+- **generico**
+  è indipendente dal formato con cui i dati vengono trasmessi
+- **stateless**
+  ogni operazione non tiene memoria delle precedenti, è il client che deve ricreare il contesto per effettuare ogni richieste
+- **progettato per sistemi distribuiti complessi**
+  tra client e server possono esserci vari intermediari
+
+
+È possibile negoziare il formato dei dati, questo favorisce l'indipendenza del sistema dal formato di rappresentazione dei dati.
+Nonostante sia stateless sono comunque presenti dei sistemi di "caching sofisticato" per velocizzare le connessioni.
+Sono disponibili sistemi di autenticazione sofisticata su vari livelli.
+
+## Applicazioni HTTP
+[...]
+
+## Semantica dei messaggi HTTP
+>[!important] Idempotenti
+>Se invoco lo stesso metodo più volte dopo l'invocazione non ho nuovi effetti
+### GET
+Recupera dati dal server
+[...]
+### POST
+Inviare dati al server
+[...]
+### PUT
+Aggiornare o sostituire una risorsa esistente sul server
+[...]
+### HEAD
+Richiedere solo l'header di una risorsa
+[...]
+### DELETE
+Eliminare una risorsa sul server
+[...]
+
+## Fasi di scambio client/server
+[...]
+
+introduzione di connessioni persistenti
+pipeline (possibilità di mettere in coda più richieste, senza necessariamente attendere la risposta), ma introduce un problema: se la prima richiesta è più pesante blocca le successive.
+
+2 way handshake (protocollo di conoscenza `syn --> syn + ack <-- ack -->`)
+
+Per risolvere questo problema è stato inventato HTTP/2 che effettua una conversione del testo in binario
+- compressione dell'header
+- multiplexing (non abbiamo più pipeline ed effetto coda, ma le informazioni viaggiano in parallelo)
+
+Con HTTP/3 viene sostituito TCP con QUIC e UDP, permettendo di implementare **connection migration**: il cambio rete è trasparente
+## Una richiesta
+### Header
+```
+[...]
+```
+[...]
+**Tipi di header**
+- [...]
+- [...]
+- [...]
+## Una risposta
+
+```
+[...]
+```
+## Status code
+[...]
+
+# HTML
+>[!bug] Non è un linguaggio di programmazione
+
+[...]
+L'obbiettivo è quello di descrivere e strutturare contenuti.
+
+>[!attention] DIfferenza con markdown
+>Il markdown è un linguaggio di markup leggero, non lavora con i tag, ma ha dei caratteri particolari che fanno le veci dei tag
+
+Ancora differente dai linguaggio WYSIWYG (what you see is what you get).
+## Tag
+### Head
+Contengono metadati
+[...]
+### Body
+[...]
+#### Form
+[...]
