@@ -64,6 +64,7 @@ a_2 & a_1 & a_0 & A \\
 \end{array}
 }
 $$
+Nella notazione in complemento a 2 dato $B$ per calcolare $-B$ dobbiamo invertire tutti i bit e sommare 1.
 ## $\mathbb{R}$
 
 - rappresentazione in mantissa ed esponente
