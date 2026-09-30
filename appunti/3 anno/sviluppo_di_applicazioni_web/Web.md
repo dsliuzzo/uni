@@ -200,6 +200,24 @@ Nonostante sia stateless sono comunque presenti dei sistemi di "caching sofistic
 Sono disponibili sistemi di autenticazione sofisticata su vari livelli (supporto a vari livelli di sicurezza).
 
 ## Applicazioni HTTP
+``` mermaid
+flowchart LR
+    UA["User Agent"]
+    
+    subgraph ProxyCluster ["Intermediari"]
+        P["Proxy (Load Balancer)"]
+        GW["Gateway (es. HTTP -> SOAP)"]
+    end
+
+    T["Tunnel<br>(Connessione cieca)"]
+    OS["Origin Server<br>(Database / Backend)"]
+
+    UA -->|Richiesta HTTP| P
+    P --> GW
+    GW --> OS
+    UA -.->|Connessione diretta sicura| T
+    T -.-> OS
+```
 Ruoli delle applicazioni HTTP:
 - **User agent**
   è il client che invia richieste HTTP. Può essere un browser (Chrome, Firefox, Safari), ma anche un'app mobile, un bot o qualsiasi altro software
@@ -300,13 +318,19 @@ pipeline (possibilità di mettere in coda più richieste, senza necessariamente 
 
 3 way handshake (protocollo di conoscenza `syn --> syn + ack <-- ack -->`)
 Ogni nuova connessione comporta il costo del **TCP three-way handshake**:
-```
-Client                       Server
-  |—— SYN ——————————————————>|
-  |<—— SYN + ACK ————————————|
-  |—— ACK ——————————————————>|
-  |—— HTTP request ————————>|
-  |<—— HTTP response ————————|
+``` mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as Server
+    
+    Note over C,S: TCP Three-way Handshake (Costo di latenza)
+    C->>S: SYN
+    S->>C: SYN + ACK
+    C->>S: ACK
+    
+    Note over C,S: Scambio Dati HTTP
+    C->>S: HTTP Request (GET /index.html)
+    S->>C: HTTP Response (200 OK + HTML)
 ```
 
 Per risolvere questo problema è stato inventato **HTTP/2** (2015) che effettua una conversione del testo in binario (*binary framing*)

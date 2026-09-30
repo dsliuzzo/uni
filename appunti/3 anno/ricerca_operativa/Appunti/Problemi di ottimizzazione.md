@@ -140,10 +140,185 @@ $$
 \left\{\begin{array}{l}\min & c^T x \\ s.t. & Ax \geq b \end{array}\right.
 $$
 ## Risoluzione grafica di un problema in due variabili
-[...] <-- quaderno (probabilmente prossima lezione dà le definizioni formali)
+Finché il problema ha solo due variabili decisionali è possibile risolverlo graficamente:
+- I vincoli rappresentano dei semipiani
+- Il sistema di vincoli sarà quindi l'intersezione di questi semipiani (regione ammissibile)
+- Il vettore dei coefficienti $c = (c_{1},c_{2})^T$ rappresenta il gradiente della funzione obbiettivo (direzione di crescita)
+- La funzione obbiettivo è un fascio di rette (curva di livello) - andando in direzione del gradiente stiamo massimizzando la funzione - andando in direzione opposta la stiamo minimizzando
+Quindi, se il problema è di minimo la direzione opposta a $c$ identifica la direzione di riduzione della funzione obiettivo.
+
+### Es. 1
+>[!multi-column]
+>>[!blank]
+>>$$ \begin{cases} \min & -x_1 + x_2 \\ \text{s.t.} & x_1 + 0.5x_2 \geq 2.5 \\ & -x_1 + 4x_2 \geq 2 \\ & 2x_1 + 5.5x_2 \leq 23 \end{cases} $$
+>
+>>[!blank]
+>>Regione ammissibile
+>>![[Problemi di ottimizzazione-1790755332770.webp|400]]
+>
+>>[!blank]
+>>Funzione obbiettivo
+>>![[Problemi di ottimizzazione-1790755382367.webp|400]]
+
+Soluzione ottima:
+$$
+x^* = \left(\begin{array}{c}6 \\ 2\end{array}\right)
+$$
+Valore ottimo:
+$$
+c^T x^* = -4
+$$
+### Es. 2
+>[!multi-column]
+>
+>>[!blank]
+>>$$\begin{cases} \min & -x_1 + x_2 \\ \text{s.t.} & x_1 + 0.5x_2 \geq 2.5 \\ & 2x_1 + 5.5x_2 \leq 23 \end{cases} $$
+>
+>>[!blank]
+>>Regione ammissibile
+>>![[Problemi di ottimizzazione-1790755572256.webp]]
+>
+>>[!blank]
+>>Funzione obbiettivo
+>>![[Problemi di ottimizzazione-1790755587370.webp]]
+
+Questo è un problema inferiormente illimitato, quindi non ha un minimo
+
+### Es. 3
+>[!multi-column]
+>
+>>[!blank]
+>>$$\begin{cases}
+\min & x_1 + 0.5x_2 \\
+\text{s.t.} & x_1 + 0.5x_2 \geq 2.5 \\
+& -x_1 + 4x_2 \geq 2 \\
+& 2x_1 + 5.5x_2 \leq 23
+\end{cases}$$
+>
+>>[!blank]
+>>Regione ammissibile
+>>![[Problemi di ottimizzazione-1790755746148.webp]]
+>
+>>[!blank]
+>>Funzione obbiettivo
+>>![[Problemi di ottimizzazione-1790755755929.webp]]
+
+Otteniamo infinite soluzioni ottime lungo il segmento che congiunge
+$$
+x^{(1)} = \left(\begin{array}{c}2 \\ 1\end{array}\right) \hspace{8ex} x^{(2)} = \left(\begin{array}{c}0.5 \\ 4\end{array}\right)
+$$
+Valore ottimo:
+$$
+c^T x^{(1)} = c^T x^{(2)} = 2.5
+$$
+
+# Geometria della programmazione lineare
+## Definizioni
+>[!multi-column]
+>
+>>[!Important] Semispazi
+>>Sia $w \in \mathbb{R}^n$ un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^Tx \geq w_0\}$$
+>>si chiama **iperspazio**.
+>
+>>[!important] Iperpiani
+>>Sia $w \in \mathbb{R}^n$  un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^T x = w_0\}$$
+>>si chiama **iperpiano** e rappresenta la frontiera di un iperspazio. Il vettore $w$ è ortogonale all'iperpiano.
+>
+>>[!important] Poliedri
+>>Un poliedro è un insieme che può essere descritto come $$\{x \in \mathbb{R}^n: Ax \geq b\}$$
+>>dove $A$ è una matrice $m \times n$ e $b \in \mathbb{R}^m$. Quindi un poliedro è l'intersezione di un numero finito di semispazi (non necessariamente è limitato).
+
+>[!multi-column]
+>
+>>[!important] Insiemi convessi
+>>Un insieme $S \subset \mathbb{R}^n$ si dice **convesso** se, comunque siano scelti due vettori di $n$ componenti $x^{(1)}, x^{(2)} \in S$ e $\lambda \in [0,1]$, si ha che $$x(\lambda) = \lambda x^{(1)} + (1- \lambda) x^{(2)} \in S$$
+>>$x(\lambda)$ rappresenta il segmento che collega i due punti $x^{(1)}$ e $x^{(2)}$, quindi $S$ è convesso se il segmento che congiunge ogni coppia di suoi punti è appartenente a $S$.
+>
+>>[!important] Combinazione convessa
+>>Generalizzando il concetto di insieme convesso: consideriamo $k$ vettori $x^{(1)}, \dots, x^{(k)}$, e $k$ scalari non negativi $\lambda_{1}, \dots, \lambda_k$ tali che $\sum_{i=1}^k \lambda_i = 1$. Il vettore $$\sum_{i=1}^k \lambda_i x^{(i)}$$
+>>si chiama **combinazione convessa** dei vettori $x^{(1)},\dots,x^{(k)}$
+>
+>>[!important] Involucro convesso
+>>L'insieme di tutte le combinazioni convesse di $x^{(1)},\dots,x^{(k)}$ si chiama **involucro convesso** dei vettori $x^{(1)},\dots,x^{(k)}$.
+>>Più piccolo insieme convesso che contiene quei punti.
+
+>[!multi-column]
+>
+>>[!important] Punti estremi
+>>Consideriamo un poliedro $P$. Un vettore $x \in P$ si dice **punto estremo** di $P$ se non esistono coppie di punti $x^{(1)},x^{(2)} \in P$, entrambi diversi da $x$, e uno scalare $\lambda \in [0,1]$ tali che$$x = \lambda x^{(1)}+(1-\lambda)x^{(2)}$$
+>
+>>[!important] Vertici
+>>Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^T\overline{x} < c^Tx \forall x \in P, x \neq \overline{x}$$
+## Teorema sulle convessità delle soluzioni
+Date le seguenti considerazioni (che non contraddicono le precedenti definizioni):
+- l'intersezione di insiemi convessi è a sua volta convessa
+- un semispazio è un insieme chiuso e convesso
+- un poliedro (intersezione di un numero finito di spazi) è un insieme convesso
+- una combinazione convessa di un numero finito di elementi di un insieme convesso appartiene a quell'insieme
+- l'involucro convesso di un numero finito di vettori è un insieme convesso
+
+>[!info] Teorema sulla convessità delle soluzioni
+>Consideriamo un problema $(P)$ di programmazione lineare che ammetta un ottimo finito e indichiamo con $x^{(1)}$ una soluzione ottima. Supponiamo che esista una soluzione ammissibile $x^{(2)} \neq x^{(1)}$ tale che:$$c^Tx^{(1)} = c^Tx^{(2)}$$
+>I due vettori sono diversi, ma hanno lo stesso valore obbiettivo, quindi entrambe sono soluzioni ottime di $(P)$.
+>Consideriamo i vettori $x(\lambda) = \lambda x^{(1)} + (1-\lambda)x^{(2)}$ che sono combinazione convesse di $x^{(1)}$ e $x^{(2)}$. Il teorema precedente garantisce l'ammissibilità di $x(\lambda) \forall \lambda \in [0,1]$.
+>Inoltre$$c^T x(\lambda) = \lambda c^T x^{(1)} + (1-\lambda)c^T x^{(2)} = c^Tx^{(2)} = c^T x^{(1)}$$
+>Quindi ogni combinazione convessa di soluzioni ottime di $(P)$ è una soluzione ottima, e l'insieme delle soluzioni ottime di $(P)$ è convesso.
+
+## Problemi di PL in forma standard
+Fino ad ora abbiamo visto problemi di programmazione lineare in forma generalizzata, ora vediamo invece problemi di programmazione lineare in **forma standard**
+$$
+\begin{cases}
+\min & c_{1}x_{1}+c_{2}x_{2}+\dots+c_nx_n \\
+s.t. & a_{11}x_{1} + a_{12}x_{2} + \dots + a_{1n}x_n = b_{1}\\
+& a_{21}x_{1} + a_{22}x_{2} +\dots +a_{2n}x_n = b_{2}\\
+& \vdots \\
+& a_{m 1} x_{1} + a_{m 2}x_{2} + \dots + a_{mn}x_n = b_m \\
+& x_{1}, \dots,x_n \geq 0
+\end{cases}
+$$
+e rispetta le seguenti proprietà:
+- è un problema di minimo
+- è un sistema di disequazioni lineari
+- le uguaglianze non sono altro che coppie di disuguaglianze
+
+Anche in questo caso possiamo utilizzare la forma compatta
+$$
+\begin{cases}
+\min & c^Tx \\
+s.t. & Ax = b \\
+& x\geq 0
+\end{cases}
+$$
+dove $x,b,0$ sono vettori e $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$ e $c \in \mathbb{R}^n$.
+
+Indichiamo con $X$ l'**insieme delle soluzioni** del sistema di equazioni:
+$$X = \{x \in \mathbb{R}^n:Ax = b\}$$
+Indichiamo con $\Omega(P)$ la **regione ammissibile** del problema $(P)$:
+$$\Omega(P) = \{x \in \mathbb{R}^n:Ax = b, x \geq 0\} = X \cap \mathbb{R}_+^n \subset X$$
+
+### Ipotesi di lavoro
+Formalizziamo inoltre delle **ipotesi di lavoro**:
+- $m < n$
+- $\text{rango}(A) = m$
+
+
+>[!question] Osservazione
+>Le due ipotesi garantiscono che il sistema di equazioni abbia $\infty^{n-m}$ [[2. I vettori (algebra)#Teorema di Rouché-Capelli|soluzioni]] ed è sempre possibile esplicitare $m$ componenti di $x$ in funzione delle rimanenti $n-m$
+
+#### Motivazioni delle ipotesi
+- se $m>n$ il sistema è sovradimensionato, sono presenti più equazioni del numero di variabili, di conseguenza alcune di esse non sono linearmente indipendenti ed è possibili ricondurre il sistema ad una forma con meno equazioni
+- $m = n$ e $\text{rango}(A)=m$, allora $A$ è non singolare ed il sistema ammette un'unica soluzione: $X = \{x\}$ quindi non avrebbe senso sviluppare problemi di ottimizzazione
+	- se $\tilde{x}\geq 0$, allora $\Omega(P) = \{\tilde{x}\}$ e $x^* = \tilde{x}$
+	- altrimenti $\Omega(P) = \emptyset$
+- $m = n$ e $\text{rango}(A) < m$, allora almeno una equazione può essere eliminata
+- $m <n$, eliminando le eventuali equazioni ridondanti, si ottiene un sistema equivalente a quello iniziale con matrice dei coefficienti di rango massimo
+
+
 
 
 
 ---
 
 risolvi problema onlyoffice
+
+[...] analisi di sensibilità
