@@ -259,6 +259,130 @@ Non è necessario mantenere informazioni relative a sorgente e destinazione, ma 
 - i router mantengono informazioni di stato per-chiamata
 
 # Modelli funzionali
+Le reti sono molto complesse e composte da numerosi elementi: risulta quindi necessario organizzare tutti questi elementi.
+
+>[!important] Comunicazione
+>trasferire contenuto informativo attraverso regole e convenzioni stabilite a priori tra dispositivi, da cui dipendono anche le performance della rete.
+
+La comunicazione presuppone la cooperazione tra i nodi della rete, per questo nascono agenzie (CCITT) e organizzazioni (ISO) con il compito di imporre degli standard che tutti i sistemi nella rete devono rispettare per garantire la comunicazione.
+
+Bisogna fare attenzione a convenzione, sintassi e semantica, altrimenti potremmo creare una incoerenza tra i dispositivi.
+>[!important] Protocollo
+>I protocolli definiscono il **formato**, l'**ordine** di invio e ricezione dei messaggi tra le entità di rete, e le **azioni** intraprese alla trasmissione/ricezione del messaggio.
+>Un **protocollo** è un insieme di regole che governano il trasferimento dei dati tra entità che risiedono in diversi sistemi.
+>Descrizione formale delle procedure adottate per assicurare la comunicazione tra due o più funzioni dello **stesso livello gerarchico**.
+
+In una comunicazione i protocolli definiscono:
+- **sintassi**
+  struttura e formato di comandi e risposte e come vengono presentate
+- **semantica**
+  come deve essere interpretato un determinato messaggio
+- **temporizzazione**
+  sequenze temporali di comandi e risposte - tecniche di sincronizzazione dei nodi della rete
 ## Architetture
+Una architettura di comunicazione è composta da:
+- **sistemi**
+  effettuano il trattamento e/o trasferimento di informazione in vista di specifiche applicazioni
+- **processi applicativi**
+  coinvolti da esigenze di interazione con altri dispositivi
+- **mezzi trasmissivi**
+  la struttura fisica di interconnessione tra i sistemi
+
+![[Reti di telecomunicazioni-1790846637179.webp|center|367]]
+
+>[!multi-column]
+>
+>>[!important] Sistema
+>>Successione ordinata di sottosistemi ad ognuno del quale è associato un sottoinsieme funzionale. Ogni sottosistema potrà essere poi mappato a ciascun livello, per questo vengono sviluppati in modo ordinato, così da creare una sequenza in cui ogni sottosistema comunica con il sottosistema con livello adiacente.
+>
+>>[!important] Strato
+>>L'unione di tutti i sottosistemi omologhi (di uguale rango) appartenenti a sistemi interconnessi.
+>>Due sistemi sono in grado di comunicare su un determinato livello se i sottosistemi del medesimo rango possono ricostruire il dato risalendo lo stack (usano le stesse convenzioni e svolgono le stesse funzioni)
+
+La comunicazione tra i livelli è a livello logico, una astrazione, invece a livello fisico devo riattraversare tutti gli strati, dall'alto verso il basso.
+Abbiamo quindi la possibilità di creare una infrastruttura logica in cui un dato che viene trasmesso può essere interpretato dallo strato dell'end-device sullo stesso livello
+
+>[!multi-column]
+>
+>>[!blank]
+>>**Livello logico**
+>>![[Reti di telecomunicazioni-1790847479783.webp]]
+>
+>>[!blank]
+>>**Livello fisico**
+>>![[Reti di telecomunicazioni-1790847598113.webp]]
+
+I livelli di progettazione diranno che tipo di informazioni (di controllo) devono essere garantite per ogni livello affinché i livelli si intendano.
+
+### Tipi di informazione
+>[!multi-column]
+>
+>>[!important] Informazioni utente
+>>sono l'oggetto dello scambio
+>
+>>[!important] Informazioni di controllo
+>>sono informazioni necessarie al trasferimento dell'informazione utente $\to$ effetto collaterale affinché le informazioni arrivino
+
+Ad ogni livello viene aggiunta una informazione di controllo, interpretabile dal medesimo livello del sistema ricevente.
+
+>[!important] Unità di dati
+>le informazioni di utente o di controllo scambiate in un processo di comunicazione sono strutturate in unità informative specifiche di ogni strato, dette **unità di dati**
+
+### Incapsulamento/decapsulamento
+Per l'invio di un dato è necessario l'**incapsulamento**: ogni livello riceve informazioni dal livello superiore e viene eseguito un processo di aggiunta di informazioni di controllo, necessarie al **decapsulamento** per verificare l'integrità delle informazioni e passare il dato al livello successivo.
+![[Reti di telecomunicazioni-1790848221981.webp|center|570]]
+
+I sistemi intermedi non necessitano di tutti i livelli di progettazione, ma per il reindirizzamento sono sufficienti meno livelli:
+- **Router** primi 3
+- **Switch** primi 2
+- **Hub** solo il primo 
+![[Reti di telecomunicazioni-1790848674334.webp|center|464]]
+
+---
+
+## Modello ISO/OSI
+Il comitato di standardizzazione ISO (International standard organization) ha definito un modello di riferimento OSI (Open system Interconnection), che viene oggi universalmente accettato.
+
+È definito su 7 livelli
+![[Reti di telecomunicazioni-1790846255642.webp|center|440]]
+
+Un sistema che genera l'informazione o un host destinazione devono avere funzionalità collocate su ciascun livello.
+È come se i due sistemi sono in grado di interpretare lo stesso livello gerarchico dello stack, senza interessarsi del funzionamento degli altri livelli.
+
+## Modello TCP/IP
+![[Reti di telecomunicazioni-1790783354935.webp|233]]
+In realtà collegamento-fisico sono un unico livello di accesso alla rete.
+Prende il nome da due protocolli (anche se ne contiene in realtà di più):
+- **TCP**
+- **IP**
+
+
+## Modello ISO/OSI 2
+### Livello fisico
+[...]
+È necessaria una interfaccia fisica in grado di interpretare le forme d'onda.
+[...]
+>[!important] PDU (Protocol data unit)
+>Una unità di dati è composta da dati e unità di controllo (Header)
+>PDU di livello [...]
+
+>[!important] SAP (Service access point)
+>Punto di accesso al livello
+
+### Livello collegamento
+[...]
+### Livello di linea
+[...] <-- ci sono un po' di robe da mettere nell'incapsulamento
+![[Reti di telecomunicazioni-1790786586690.webp|230]] <-- tipo questa
+
+
+
+
+# Modelli funzionali
 ## Protocolli
-## Modello ISO/OSI e TCP/IP a confronto
+## Architetture
+## Incapsulamento
+# Modello ISO/OSI
+## Livello x
+# Modello TCP/IP
+## Livello y
