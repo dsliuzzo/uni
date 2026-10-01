@@ -349,13 +349,6 @@ Il comitato di standardizzazione ISO (International standard organization) ha de
 Un sistema che genera l'informazione o un host destinazione devono avere funzionalità collocate su ciascun livello.
 È come se i due sistemi sono in grado di interpretare lo stesso livello gerarchico dello stack, senza interessarsi del funzionamento degli altri livelli.
 
-## Modello TCP/IP
-![[Reti di telecomunicazioni-1790783354935.webp|233]]
-In realtà collegamento-fisico sono un unico livello di accesso alla rete.
-Prende il nome da due protocolli (anche se ne contiene in realtà di più):
-- **TCP**
-- **IP**
-
 
 ## Modello ISO/OSI 2
 ### Livello fisico
@@ -386,3 +379,194 @@ Prende il nome da due protocolli (anche se ne contiene in realtà di più):
 ## Livello x
 # Modello TCP/IP
 ## Livello y
+
+
+---
+
+
+
+
+
+## Modello TCP/IP
+![[Reti di telecomunicazioni-1790783354935.webp|233]]
+In realtà collegamento-fisico sono un unico livello di accesso alla rete.
+Prende il nome da due protocolli (anche se ne contiene in realtà di più):
+- **TCP**
+- **IP**
+
+
+
+### Livello di accesso alla rete
+Il livello di accesso alla rete comprende sia il livello di:
+- **collegamento**
+  punto-punto (ppp, ethernet)
+- **fisico**
+  forme d'onda
+[...]
+### Livello di rete
+Protocolli che permettono di andare da un certo sistema (sorgente) della rete ad un altro (destinazione)
+- ip, protocolli di routing
+Avendo una gestione gerarchica dei centri di smistamento non è necessario conoscere tutto l'indirizzo, ma solo a quale centro di smistamento è necessario inviare il dato
+[...]
+### Livello di trasporto
+Trasferimento dati host-host
+- tcp (orientato alla connessione), udp (non orientato alla connessione)
+[...]
+### Livello applicazione
+Supporto delle applicazioni di rete
+- ftp, smtp, http, dns
+Ogni specifica applicazione avrà i suoi protocolli
+
+# Differenze TCP/IP e ISO/OSI
+mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
+Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
+La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
+[...]
+
+
+
+---
+
+#### Controllo degli errori - Capacità di rilevare/correggere l'errore (schema a maggioranza)
+Codice ripetizione - ogni volta che inviamo un segnale ne mandiamo anche una copia
+*es.* `110 --> R3 --> 111 111 000`
+Potrebbe capitare che il canale agisce sul segnale e la destinazione interpreta in modo errato il segnale
+*es.* `111 101 000`
+In questo modo posso **rilevare** l'errore se c'è discordanza tra le terne e **correggerlo** utilizzando la maggioranza dei rimanenti.
+Se lo usassi per correggere rimarrebbe il problema se abbiamo due alterazioni nello stesso pattern, commettendo un errore.
+Se avessi una quantità di bit alterati che è la metà del pattern (estremo inferiore) posso correggerlo, invece per la **rilevazione** può avvenire anche se due bit su 3 vengono alterati.
+
+Applicando invece `R5`
+*es.* `110 --> R5 --> 11111 11111 00000`
+e c'è un errore
+*es.* `11111 10110 00000`
+posso ugualmente correggerlo $\to$ rispecchia la generalizzazione
+
+Applicando una codifica con lo scopo di correggere potrebbe andare comunque male.
+Utilizzando invece una capacità rilevativa, nel rilevare un errore, potrebbe farlo capire alla sorgente, mandandolo alla sorgente (riscontro positivo/negativo) (feedback di canale). In questo modo la sorgente può innescare una ritrasmissione e dato che il dato è bufferizzato può essere ritrasmesso.
+
+Tipicamente nella rilevazione tipicamente si utilizzano i protocolli di ritrasmissione ARQ.
+Avviando invece la modalità correttiva non abbiamo modo di rilevare e potrebbe andare bene o male.
+In base al mezzo e a degli studi su di essi possiamo decidere se implementare un rilevamento o una correzione (può dipendere per esempio dalla lentezza del canale, se il canale è particolarmente lento si tende ad utilizzare la correzione).
+
+- **FEC** correzione di errori
+- **ARQ** rilevamento e ritrasmissione
+
+>[!bug] Possibili cause di alterazione
+>- **rumore termico**, probabilità di errore avendo un certo tipo di temperatura assoluta (dipende dai mezzi trasmissivi e apparati di ricezione e trasmissione) - PDF (probability density function)
+>- **interferenza da altre trasmissioni** sullo stesso mezzo
+>- **disturbi elettromagnetici**
+>- **perdite di sincronismo**
+>- etc.
+
+>[!Important] Controllo di parità
+>Posso utilizzare dei [[4. Gestione della memoria secondaria#Dischi RAID|bit di parità]] per controllare se in un pattern c'è stato un errore.
+>Per essere più sicuri è possibili utilizzare i bit di parità in più dimensioni:
+>![[Reti di telecomunicazioni-1790867284139.webp|center|300]]
+>In questo modo aumentiamo il coding rate.
+>Per Shannon possiamo determinare il limite superiore del coding rate oltre il quale non si può andare.
+
+>[!important] Internet checksum
+>Il trasmittente somma il contenuto dei segmenti e fa il complemento ad 1 della somma. Il trasmittente mette il valore della checksum nel campo checksum dell’UDP.
+>Il ricevitore calcola la checksum del segmento ricevuto. Considera se la checksum calcolata è uguale al valore del campo checksum.
+## Livello di collegamento
+### Data-link
+Ogni nodo sulla rete ha un processo di bufferizzazione, su vari livelli, necessari per l'implementazione store and forward e rendere i livelli indipendenti.
+La quantità di bit prelevate dopo il buffer è legata ai protocolli di tipo collegamento.
+Dobbiamo fornire i seguenti servizi:
+- servizi forniti a **livello rete** per prelevare o fornire dati al livello adiacente
+- **framing** - capire quando inizia e quando si conclude una porzione di dati, su questi frame è possibile effettuare:
+	- **controllo sugli errori**
+	  che stanno avvenendo sul singolo frame, se qualcuno di questi è errato può essere ritrasmesso
+	- **controllo del flusso**
+	  controllo sulla velocità di invio dei dati - il ricevitore potrebbe non riuscire abbastanza velocemente i dati inviati
+
+
+Vari tipi di buffer che possono essere organizzati a bit (livello 1) o frame (livello 2). Servono a creare una asincronicità e parallelizzazione del funzionamento dei livelli. Inoltre tramite il buffer possiamo capire se il dato è stato corrotto, segnalandolo alla corrente in modo che la sorgente possa ritrasmetterlo: il frame verrà eliminato dal buffer solo quando abbiamo la certezza che ha raggiunto la destinazione.
+
+>[!multi-column]
+>
+>>[!important] Nodi
+>>[...]
+>
+>>[!important] Link
+>>[...]
+
+>[!important] Frame
+>PDU di livello 2 [...]
+
+Il livello **data-link** ha la responsabilità di trasferire datagrammi (frame) da un nodo al nodo adiacente su un link (collegamento punto-punto)
+
+I collegamenti sono di tipo:
+- point-to-point
+- broadcast (LAN)
+- switched (LAN commutata tramite l'uso di uno switch, che è capace di separare i **domini di collisione**)
+
+La tecnologia utilizzata per i collegamenti (link) potrebbe essere eterogenea, questo potrebbe portare a un cambio di protocolli di data-link e di accesso al mezzo; Di conseguenza il formato del frame può cambiare in funzione del mezzo di trasmissione.
+
+Definisce il collegamento su un link seriale:
+- Classificazione
+	- orientata al carattere (deprecated)
+	- orientata al bit
+- Colloquio
+	- half-duplex
+	- full-duplex
+- Relazione tra le stazioni
+	- master-slave
+	- peer-to-peer
+
+![[Reti di telecomunicazioni-1790865714210.webp|330]]
+
+[...] <-- definisci il tipo di call out Protocollo
+
+In genere si utilizzano protocolli che lavorano su firmware (stretta correlazione con la macchina per cui sono programmati) --> **adattatori**.
+Il trasmittente incapsulano i datagrammi nel frame che li compete (ricevuti dal livello superiore)
+![[Reti di telecomunicazioni-1790865886667.webp|409]]
+
+**Funzioni del livello data-link**
+[...]
+
+#### Framing
+La quantità di bit è rappresentata dal datagramma + parte di controllo
+- **parte di controllo** - Header
+- **datagramma livello superiore** - Payload
+
+I gruppi logici di bit prendono il nome di **trame**.
+Le trame permettono il reindirizzamento dei flussi.
+È possibile numerare le trame, utili a ricostruire il flusso finale.
+In questo modo in caso di errori possiamo ritrasmettere solo determinate trame.
+Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della trama, tramite **delimitatori di trama**, che identificano in modo univoco inizio e fine:
+- **flag**
+  sequenze di bit o caratteri speciali
+- **codice di linea**
+  [...]
+- **temporizzazione**
+  se abbiamo una elevata sincronizzazione posso stabilire in base al tempo l'inizio e la fine della trama
+- **conteggio**
+  una trama è composta da un determinato numero di bit che sarà sufficiente contare per determinare la fine
+
+>[!important] BSC
+>Utilizza una serie di pattern di sincronizzazione, in modo da capire la frequenza con cui vengono inviati i bit. Poi utilizza una sequenza speciale start of header
+>![[Reti di telecomunicazioni-1790866272935.webp]]
+
+>[!protocollo] HDLC
+>Utilizza come delimitatore di inizio e fine la sequenza di bit `01111110`. Per evitare che si ripresenti all'interno del payload utilizziamo la tecnica del **bit stuffing**: se devo utilizzare la sequenza riservata inserisco un bit in più che interrompe la sequenza, che verrà inserito nella trasmissione e verrà eliminato nella ricezione.
+
+>[!protocollo] Stop and wait
+>(Caso degenere del go back N con finestra unitaria, necessita di enumerazione a un bit)
+>In ogni frame c'è un CRC codice a ridondanza ciclica codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
+>Mantengo un frame nel buffer finché non ricevo un riscontro. Appena ricevo il riscontro posso eliminare il frame dal buffer e posso passare al successivo.
+>Posso gestire un pacchetto alla volta.
+>Ho quindi una bassa utilizzazione del canale.
+
+>[!protocollo] Go back N
+>Approccio a finestra a slittamento (da capire).
+>Invio una determinata quantità di frame che posso inviare prima di ricevere un riscontro - il bro ha un semaforo inizializzato a N, ogni volta che ne invia uno fa l'acquire, quando riceve riscontro fa la release.
+>Ogni frame quindi va numerato (**numeri di sequenza**), in base alla dimensione della finestra posso avere la necessità di utilizzare più bit per l'enumerazione.
+>Per il riscontro il ricevitore utilizza un ack cumulativo: se non arriva un determinato pacchetto $n$ non accetterà il pacchetto $n+1$. Ogni frame ha un timer di attesa che attende riscontro, in caso di pacchetti fuori sequenza si causa un effetto a catena.
+
+
+### Medium access control (MAC)
+Se ci sono più [...] che concorrono evitare che collidano
+
+[...] <-- prossima lezione
