@@ -266,6 +266,7 @@ Le reti sono molto complesse e composte da numerosi elementi: risulta quindi nec
 
 La comunicazione presuppone la cooperazione tra i nodi della rete, per questo nascono agenzie (CCITT) e organizzazioni (ISO) con il compito di imporre degli standard che tutti i sistemi nella rete devono rispettare per garantire la comunicazione.
 
+## Protocolli
 Bisogna fare attenzione a convenzione, sintassi e semantica, altrimenti potremmo creare una incoerenza tra i dispositivi.
 >[!important] Protocollo
 >I protocolli definiscono il **formato**, l'**ordine** di invio e ricezione dei messaggi tra le entità di rete, e le **azioni** intraprese alla trasmissione/ricezione del messaggio.
@@ -338,96 +339,7 @@ I sistemi intermedi non necessitano di tutti i livelli di progettazione, ma per 
 - **Hub** solo il primo 
 ![[Reti di telecomunicazioni-1790848674334.webp|center|464]]
 
----
-
-## Modello ISO/OSI
-Il comitato di standardizzazione ISO (International standard organization) ha definito un modello di riferimento OSI (Open system Interconnection), che viene oggi universalmente accettato.
-
-È definito su 7 livelli
-![[Reti di telecomunicazioni-1790846255642.webp|center|440]]
-
-Un sistema che genera l'informazione o un host destinazione devono avere funzionalità collocate su ciascun livello.
-È come se i due sistemi sono in grado di interpretare lo stesso livello gerarchico dello stack, senza interessarsi del funzionamento degli altri livelli.
-
-
-## Modello ISO/OSI 2
-### Livello fisico
-[...]
-È necessaria una interfaccia fisica in grado di interpretare le forme d'onda.
-[...]
->[!important] PDU (Protocol data unit)
->Una unità di dati è composta da dati e unità di controllo (Header)
->PDU di livello [...]
-
->[!important] SAP (Service access point)
->Punto di accesso al livello
-
-### Livello collegamento
-[...]
-### Livello di linea
-[...] <-- ci sono un po' di robe da mettere nell'incapsulamento
-![[Reti di telecomunicazioni-1790786586690.webp|230]] <-- tipo questa
-
-
-
-
-# Modelli funzionali
-## Protocolli
-## Architetture
-## Incapsulamento
-# Modello ISO/OSI
-## Livello x
-# Modello TCP/IP
-## Livello y
-
-
----
-
-
-
-
-
-## Modello TCP/IP
-![[Reti di telecomunicazioni-1790783354935.webp|233]]
-In realtà collegamento-fisico sono un unico livello di accesso alla rete.
-Prende il nome da due protocolli (anche se ne contiene in realtà di più):
-- **TCP**
-- **IP**
-
-
-
-### Livello di accesso alla rete
-Il livello di accesso alla rete comprende sia il livello di:
-- **collegamento**
-  punto-punto (ppp, ethernet)
-- **fisico**
-  forme d'onda
-[...]
-### Livello di rete
-Protocolli che permettono di andare da un certo sistema (sorgente) della rete ad un altro (destinazione)
-- ip, protocolli di routing
-Avendo una gestione gerarchica dei centri di smistamento non è necessario conoscere tutto l'indirizzo, ma solo a quale centro di smistamento è necessario inviare il dato
-[...]
-### Livello di trasporto
-Trasferimento dati host-host
-- tcp (orientato alla connessione), udp (non orientato alla connessione)
-[...]
-### Livello applicazione
-Supporto delle applicazioni di rete
-- ftp, smtp, http, dns
-Ogni specifica applicazione avrà i suoi protocolli
-
-# Differenze TCP/IP e ISO/OSI
-mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
-Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
-La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
-[...]
-
-
-
----
-
-#### Controllo degli errori - Capacità di rilevare/correggere l'errore (schema a maggioranza)
+### Controllo degli errori - Capacità di rilevare/correggere l'errore (schema a maggioranza)
 Codice ripetizione - ogni volta che inviamo un segnale ne mandiamo anche una copia
 *es.* `110 --> R3 --> 111 111 000`
 Potrebbe capitare che il canale agisce sul segnale e la destinazione interpreta in modo errato il segnale
@@ -469,7 +381,78 @@ In base al mezzo e a degli studi su di essi possiamo decidere se implementare un
 >[!important] Internet checksum
 >Il trasmittente somma il contenuto dei segmenti e fa il complemento ad 1 della somma. Il trasmittente mette il valore della checksum nel campo checksum dell’UDP.
 >Il ricevitore calcola la checksum del segmento ricevuto. Considera se la checksum calcolata è uguale al valore del campo checksum.
-## Livello di collegamento
+# Modello ISO/OSI
+Il comitato di standardizzazione ISO (International standard organization) ha definito un modello di riferimento OSI (Open system Interconnection), che viene oggi universalmente accettato.
+
+È definito su 7 livelli
+![[Reti di telecomunicazioni-1790846255642.webp|center|440]]
+
+Un sistema che genera l'informazione o un host destinazione devono avere funzionalità collocate su ciascun livello.
+È come se i due sistemi sono in grado di interpretare lo stesso livello gerarchico dello stack, senza interessarsi del funzionamento degli altri livelli.
+## Livello fisico
+[...]
+È necessaria una interfaccia fisica in grado di interpretare le forme d'onda.
+[...]
+>[!important] PDU (Protocol data unit)
+>Una unità di dati è composta da dati e unità di controllo (Header)
+>PDU di livello [...]
+
+>[!important] SAP (Service access point)
+>Punto di accesso al livello
+
+### Livello collegamento
+[...]
+### Livello di linea
+[...] <-- ci sono un po' di robe da mettere nell'incapsulamento
+![[Reti di telecomunicazioni-1790786586690.webp|230]] <-- tipo questa
+
+
+
+
+
+
+# Modello TCP/IP
+![[Reti di telecomunicazioni-1790783354935.webp|233]]
+In realtà collegamento-fisico sono un unico livello di accesso alla rete.
+Prende il nome da due protocolli (anche se ne contiene in realtà di più):
+- **TCP**
+- **IP**
+
+
+
+### Livello di accesso alla rete
+Il livello di accesso alla rete comprende sia il livello di:
+- **collegamento**
+  punto-punto (ppp, ethernet)
+- **fisico**
+  forme d'onda
+[...]
+### Livello di rete
+Protocolli che permettono di andare da un certo sistema (sorgente) della rete ad un altro (destinazione)
+- ip, protocolli di routing
+Avendo una gestione gerarchica dei centri di smistamento non è necessario conoscere tutto l'indirizzo, ma solo a quale centro di smistamento è necessario inviare il dato
+[...]
+### Livello di trasporto
+Trasferimento dati host-host
+- tcp (orientato alla connessione), udp (non orientato alla connessione)
+[...]
+### Livello applicazione
+Supporto delle applicazioni di rete
+- ftp, smtp, http, dns
+Ogni specifica applicazione avrà i suoi protocolli
+
+# Differenze TCP/IP e ISO/OSI
+mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
+Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
+La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
+[...]
+
+
+
+---
+
+
+## Livello di collegamento (livello 2 ISO/OSI)
 ### Data-link
 Ogni nodo sulla rete ha un processo di bufferizzazione, su vari livelli, necessari per l'implementazione store and forward e rendere i livelli indipendenti.
 La quantità di bit prelevate dopo il buffer è legata ai protocolli di tipo collegamento.
@@ -570,3 +553,37 @@ Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della 
 Se ci sono più [...] che concorrono evitare che collidano
 
 [...] <-- prossima lezione
+
+
+
+
+
+---
+
+
+
+# Modelli funzionali
+## Comunicazione e protocolli
+## Architetture a strati
+### Sistema e strato (logico vs fisico)
+### Informazioni utente e di controllo, PDU, SAP
+### Incapsulamento/decapsulamento
+### Sistemi intermedi (router, switch, hub)
+
+# Modello ISO/OSI
+## Livello fisico
+## Livello collegamento (livello 2)
+### Servizi del livello (nodi, link, frame, tipi di collegamento, adattatori)
+### Framing (header/payload, delimitatori, BSC, HDLC + bit stuffing)
+### Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)
+### Controllo del flusso e ritrasmissione (stop and wait, go back N)
+### Medium access control (MAC)
+## Livelli successivi (rete, trasporto, ... quando arriveranno)
+
+# Modello TCP/IP
+## Livello di accesso alla rete (= OSI 1 + 2, rimanda ai capitoli sopra)
+## Livello di rete
+## Livello di trasporto (qui l'Internet checksum)
+## Livello applicazione
+
+# Differenze TCP/IP e ISO/OSI
