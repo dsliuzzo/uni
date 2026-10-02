@@ -699,12 +699,13 @@ Sezione del documento HTML che contiene elementi di controllo con cui l'utente p
   ...form contents...
 </form>
 ```
-| Metodo | Scopo HTTP     | Form HTML                     | Dove vanno i dati   | Stato server  |
-| ------ | -------------- | ----------------------------- | ------------------- | ------------- |
-| GET    | Richiedere dati | Ricerca, filtri              | URL (query string)  | Non cambia    |
-| POST   | Fornire dati   | Login, registrazione, acquisti | Body della richiesta | Può cambiare |
 
-Esempio GET (i dati finiscono nell'URL):
+| Metodo | Scopo HTTP      | Form HTML                      | Dove vanno i dati    | Stato server |
+| ------ | --------------- | ------------------------------ | -------------------- | ------------ |
+| GET    | Richiedere dati | Ricerca, filtri                | URL (query string)   | Non cambia   |
+| POST   | Fornire dati    | Login, registrazione, acquisti | Body della richiesta | Può cambiare |
+
+Esempio GET (i dati finiscono nell'**URL**):
 ```
 GET /SomeProgram?firstName=Joe&lastName=Hacker HTTP/1.0
 Referer: http://localhost/GetForm.html
@@ -713,7 +714,7 @@ User-Agent: Mozilla/4.7 [en] (Win98; U)
 Host: localhost:8088
 ...
 ```
-Esempio POST (i dati finiscono nel body):
+Esempio POST (i dati finiscono nel **body**):
 ```
 POST /SomeProgram HTTP/1.0
 Referer: http://localhost/PostForm.html
@@ -723,6 +724,9 @@ Content-length: 29
 
 firstName=Joe&lastName=Hacker
 ```
+
+>[!attention] Non è il put di java
+>La post potrebbe essere usata per inviare dati e riceverne degli altri come conseguenza
 
 **Text input**
 ```html
@@ -790,3 +794,20 @@ Strumento che consente di presentare i documenti mediante viste multiple.
 </html>
 ```
 Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Frame 3 nella colonna destra (80%).
+
+
+
+
+
+---
+
+# Framework
+## Requisiti
+[...] <-- requisiti
+### Requisiti funzionali
+### Requisiti non funzionali
+#### Principi di progettazione
+[...]
+
+
+nei db relazionali è molto complesso modificare lo schema

@@ -215,9 +215,9 @@ $$
 ## Definizioni
 >[!multi-column]
 >
->>[!Important] Semispazi
+>>[!Important] Iperspazio
 >>Sia $w \in \mathbb{R}^n$ un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^Tx \geq w_0\}$$
->>si chiama **iperspazio**.
+>>si chiama **iperspazio** (generalizzazione a $n$ dimensioni del semispazio).
 >
 >>[!important] Iperpiani
 >>Sia $w \in \mathbb{R}^n$  un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^T x = w_0\}$$
@@ -288,7 +288,7 @@ s.t. & Ax = b \\
 & x\geq 0
 \end{cases}
 $$
-dove $x,b,0$ sono vettori e $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$ e $c \in \mathbb{R}^n$.
+$x, c \in \mathbb{R}^n$, $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$ e $c \in \mathbb{R}^n$.
 
 Indichiamo con $X$ l'**insieme delle soluzioni** del sistema di equazioni:
 $$X = \{x \in \mathbb{R}^n:Ax = b\}$$
@@ -318,6 +318,150 @@ Formalizziamo inoltre delle **ipotesi di lavoro**:
 
 ---
 
-risolvi problema onlyoffice
-
 [...] analisi di sensibilità
+
+in che senso tutti i problemi di programmazione lineare può essere ricondotto ad una forma standard equivalente
+
+---
+slide 3
+$$
+\begin{array}{c}
+a_i^T x \leq b_i \\
+s_i = b_i - a_i^T x\geq 0
+\end{array}
+$$
+diamo un nome allo scarto: $s_i$ che diventa a sua volta una variabile decisionale
+$$
+\begin{cases}
+s_i = b_i- a_i^T x \\
+s_i \geq 0
+\end{cases}
+$$
+trovando una $x$ che soddisfa l'uguaglianza sappiamo che esiste una $s_i$ che soddisfa l'uguaglianza e viceversa
+$$
+\begin{cases}
+a_i^T x +s_i = b_i \\
+s_i \geq 0
+\end{cases}
+$$
+ci è costato l'aggiunta di una variabile ausiliaria chiamata **slack**
+
+---
+slide 4
+possiamo fare lo stesso con la relazione $\geq$
+$$
+\begin{array}{c}
+a_i^Tx \geq b \\
+s_i = a_i^T x - b_i \geq 0
+\end{array}
+$$
+[...]
+in questo caso abbiamo un'altra variabile ausiliaria che prende il nome di **surplus**
+
+---
+slide 5
+variabili libere in segno --> dobbiamo cambiare anche la funzione obbiettivo
+$$
+x_j \lessgtr 0
+$$
+prendiamo due variabili decisionali vincolate in segno
+$$
+x_j^+, x_j^- \geq 0
+$$
+$$
+x_j = x_j^+ - x^-_j
+$$
+la differenza tra due variabili non negative non è vincolata nel segno, ma in questo modo ogni volta che vediamo $x_j$ possiamo sostituirla con questa differenza.
+Ci costa l'aggiunta di due variabili ($x_j^+, x_j^-$) e ne eliminiamo una ($x_j$), ci costa quindi l'aggiunta di 1 variabile, ma va cambiata sia nei vincoli che nella funzione obbiettivo
+
+
+Nei vincoli:
+$$
+\begin{array}{c}
+a_i^T x = b_i  \\
+a_{j 1} x_1 + \dots + a_{ij} x_j + \dots + a_{i n} x_n = b_i \\
+a_{i 1}x_1 + \dots + a_{ij} x_j^+ - a_{ij} x_j^- + \dots + a_{in} x_n = b_i
+\end{array}
+$$
+alla matrice dei vincoli si aggiunge una colonna, con gli stessi coefficienti della colonna precedente, ma con segno opposto
+$$
+(A_1 | A_2 | \dots | A_j | -A_j| \dots |A_n)
+$$
+
+Nella funzione obbiettivo:
+$$
+\displaylines{
+c_{1}x_{1} +\dots + c_j x_j  + \dots + c_n x_n\\
+c_{1}x_{1} + \dots + c_j x_j^+ - c_j x_j^- + \dots c_n x_n
+}
+$$
+quindi cambia anche
+$$
+c^T = (c_{1},\dots,c_j,- c_j,..,c_n)
+$$
+
+---
+
+consideriamo un punto $\overline{x}$ che soddisfa il vincolo
+$$
+a_i^T \overline{x} \leq b_i
+$$
+che può essere riscritto come
+$$
+\begin{cases}
+a_i^T \overline{x} + s_i = b_i \\
+s_i \geq 0
+\end{cases}
+$$
+se
+- $s_i = 0$ il vincolo **attivo** (soddisfatto per uguaglianza)
+- $s_i > 0$  il vincolo e strettamente soddisfatto (**non attivo**)
+- $s_i <0$ nel punto $\overline{x}$ il vincolo è violato
+
+---
+
+ciascuna variabile ausiliaria:
+1. non sono nelle variabili obbiettivo
+2. ciascuna sta in un unico vincolo
+
+$$
+Ax = b
+$$
+$$
+\begin{cases}
+a_{11}x_{1} & + & \dots & + & a_{1n}x_n & = & b_{1} \\
+\vdots \\
+a_{m 1} x_{1} & + & \dots & + & a_{mn}x_n & = & b_m
+\end{cases}
+$$
+$$
+\left(\begin{array}{c}
+a_{11} \\ \vdots \\ a_{m 1}
+\end{array}\right) x_{1}+ \dots + \left(\begin{array}{c}
+a_{1n} \\ \vdots \\ a_{m n}
+\end{array}\right) x_n = b
+$$
+$b$ è combinazione lineare delle colonne della matrice $A$
+$$
+A_{1}x_{1} + \dots +A_n x_n = b
+$$
+$$
+\sum_{j=1}^n A_j x_j = b 
+$$
+
+---
+
+come cercare una soluzione ottima sui vertici di un poliedro algoritmicamente --> necessità di una rappresentazione algebrica dei vertici
+**soluzione di base**
+
+nella matrice $A$ esistono $m$ colonne linearmente indipendenti
+dentro la matrice $A \exists$ una matrice quadrata $m \times n$ il cui determinante $\neq 0$ --> invertibile e non singolare
+[...]
+Indichiamo con $I_B = \{j_{1},j_{2},\dots,j_m\}$ gli indici corrispondenti a un gruppo [...]
+
+raggruppiamo le colonne linearmente indipendenti costruendo una base dello spazio vettoriale
+
+
+$$
+x = \left(\begin{array}{c}x_B \\ x_N\end{array}\right) = \left(\begin{array}{c}B^{-1} b \\ 0\end{array}\right)
+$$
