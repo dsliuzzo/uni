@@ -45,10 +45,14 @@ strong, .cm-strong {
 
 /* nuovi callout */
 .callout[data-callout="structure"] {
-    --callout-color: 168, 130, 255;
+    --callout-color: #a882ff;
     --callout-icon: boxes;
 }
 .callout[data-callout="operazioni"] {
-    --callout-color: 233, 151, 63;
+    --callout-color: #e9973f;
     --callout-icon: wrench;
+}
+.callout[data-callout="protocollo"] {
+    --callout-color: #a882ff;
+    --callout-icon: waypoints;
 }
