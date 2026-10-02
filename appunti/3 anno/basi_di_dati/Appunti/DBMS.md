@@ -194,4 +194,104 @@ In questo caso non ha senso definire le proprietà totale/parziale e inclusiva/e
 >>![[DBMS-1790687256892.webp]]
 
 Nel seguente caso invece non ha senso definire una ISA:
-![[DBMS-1790687444561.webp|639]]
+![[DBMS-1790687444561.webp|center|639]]
+>[!attention] Differenze ISA relazione
+>Seppur il significato semantico sia diverso, esiste una equivalenza tra relazioni normali e ISA, ma solo nel caso in cui le proprietà siano parziale e inclusiva.
+
+# Modello relazionale (progettazione logica)
+In questa fase definiamo quali siano le **tabelle** più opportune per rappresentare le informazioni (concetti) del modello ER, passando quindi a **dati** (codifica dei concetti secondo un linguaggio). Per farlo utilizzeremo il **modello relazionale**.
+
+>[!bug] Relazione
+>Nonostante abbiano lo stesso nome [...]
+
+Riprendendo l'esempio Fornitore-Merce trattato fino ad ora e il suo modello ER:
+![[DBMS-1790947194394.webp|center|517]]
+
+dobbiamo per prima cosa fare una distinzione, il modello relazionale consiste nella rappresentazione/descrizione della struttura dei dati, elencando **schemi di relazione** più adeguati a descrivere il modello ER definito nella fase precedente
+>[!multi-column]
+>
+>>[!important] Istanza di relazione
+>>Istanza della tabella
+>>
+>>| P.iva    | Nome     | Città    |
+>>| -------- | -------- | -------- |
+>>| F1       | A        | CS       |
+>>| F2       | B        | RC       |
+>>| $\vdots$ | $\vdots$ | $\vdots$ |
+>
+>>[!important] Schema di relazione
+>>Elenco delle intestazioni (senza le singole istanze)
+>>```
+>>Fornitore(p.iva:string, nome:string, città:string)
+>>```
+
+*es.* F1 fornisce M1,M2 e F2 fornisce M2,M3
+L'intero modello ER potrebbe essere rappresentato con un'unica tabella
+
+| P.iva | nome | città | codM | nomeM | marca    |
+| ----- | ---- | ----- | ---- | ----- | -------- |
+| F1    | A    | CS    | M1   | x     | $\alpha$ |
+| F1    | A    | CS    | M2   | y     | $\beta$  |
+| F2    | B    | RC    | M2   | y     | $\beta$  |
+| F2    | B    | RC    | M3   | z     | $\alpha$ |
+Concettualmente questa rappresentazione è corretta
+>[!bug] Problemi
+>Ripetiamo la stessa informazione più volte innecessariamente (ridondanza)
+>1. Rischio di fare errori: non possiamo garantire la consistenza del dato
+>2. La modifica diventa molto complessa e rischia di essere costosissima
+
+Inoltre avere i dati in un unica tabella $\nRightarrow$ efficienza di estrazione
+
+>[!check] Creiamo 3 tabelle distinte
+
+rappresentazione istanza di relazione:
+>[!multi-column]
+>
+>>[!blank]
+>>| P.iva | nome | città |
+>>| ----- | ---- | ----- |
+>>| F1    | A    | CS    |
+>>| F2    | B    | RC    |
+>
+>>[!blank]
+>>| Cod | nome | marca    |
+>>| --- | ---- | -------- |
+>>| M1  | x    | $\alpha$ |
+>>| M2  | y    | $\beta$  |
+>>| M3  | z    | $\alpha$ |
+>
+>>[!blank]
+>>| Fornitore | Merce |
+>>| --------- | ----- |
+>>| F1        | M1    |
+>>| F1        | M2    |
+>>| F2        | M2    |
+>>| F2        | M3    |
+
+Utilizziamo una tabella per rappresentare la relazione associando dei riferimenti univoci: le **chiavi primarie**, non come coppie di concetti.
+Rappresentazione schema di relazione:
+$$
+\displaylines{
+\text{Fornitore}(\underline{\text{p.iva}} \text{: string}, \text{nome: string},\text{ città: string}) \\
+\text{Merce}(\underline{\text{Cod}}\text{: number}, \text{ nome: string}, \text{ marca: string}) \\
+\text{Fornitura}(\underline{\text{Fornitore}}\text{: string},\text{ }\underline{Merce}\text{: number})
+}
+$$
+In questo modo evitiamo la ridondanza e quindi è minore il rischio di inconsistenze.
+In questo caso se un attributo non è necessario possiamo segnalarlo con `null` sopra l'attributo.
+
+Avendo definito tutto questo possiamo rappresentare qualsiasi versione della realtà, ma dobbiamo aggiungere delle restrizioni presenti nel modello ER:
+1. chiave candidata
+2. vincoli di cardinalità
+## Vincolo di chiave
+Quella che nel modello ER era una caratteristica identificativa ora deve diventare un vero e proprio vincolo.
+>[!important] Chiave
+>Insieme di attributi tali che non esistono due righe distinte distinte coincidenti sugli attributi chiave.
+
+>[!attention] In questo caso non parliamo di minimale
+>Il concetto di minimale non appartiene a questa progettazione, in quanto viene definita come caratteristica degli identificatori della progettazione concettuale.
+
+>[!bug] Chiave esterna/interna
+>Seppur il nome coincida il concetto di chiave interna/esterna è profondamente diverso da quanto detto per la progettazione concettuale. In questa fase prende il nome di **chiave esterna** (foreign key) un insieme di attributi che devono comparire come valori chiave di un'altra relazione e non una relazione (modello ER) che fa da attributo identificativo.
+
+## Vincoli di integrità referenziale
