@@ -570,3 +570,7 @@ Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della 
 Se ci sono più [...] che concorrono evitare che collidano
 
 [...] <-- prossima lezione
+
+
+
+test aggiornamento
