@@ -112,7 +112,19 @@ a_{21} & a_{22} & \dots & a_{2n} \\
 \vdots \\
 a_{m1} & a_{m2} & \dots & a_{mn}\end{array}\right]
 $$
-A = [[2. I vettori (algebra)#Matrici|matrice]] che contiene i *coefficienti tecnologici*
+A = [[2. I vettori (algebra)#Matrici|matrice]] che contiene i coefficienti tecnologici
+Questa matrice può essere descritta con varie notazioni
+$$
+A = \left[\begin{array}{cccc}a_{11} & a_{12} & \dots & a_{1n} \\
+a_{21} & a_{22} & \dots & a_{2n} \\
+\vdots \\
+a_{m1} & a_{m2} & \dots & a_{mn}\end{array}\right] = \left(A_{1}|A_{2}|\dots|A_n\right) = \left(\begin{array}{c}
+a_1^T \\ a_2^T \\ \vdots \\ a_m^T
+\end{array}\right)
+$$
+Dove $A_i^T = (a_{1 1}, a_{2 1},\dots,a_{m1})$ sono i vettori colonna della matrice $A$ e $a_i^T = \left(a_{11},a_{12},\dots,a_{1 n}\right)$ sono i vettori riga della matrice $A$
+>[!question] Osservazione
+>Per convenzione nel momento in cui creiamo un nuovo vettore in ricerca operativa, questo è un vettore colonna ed è proprio ciò che succede quando creiamo il vettore $a_i$ composto dagli elementi della riga $i$ della matrice $A$. Per questo nel momento in cui vogliamo rappresentare l'intera matrice dobbiamo effettuare l'operazione di trasposto sul vettore $a_i$, per renderlo nuovamente un vettore riga che può essere utilizzato all'interno del vettore colonna che rappresenta l'intera matrice 
 
 Utilizzeremo la convenzione del prodotto righe per colonne per rappresentare i prodotti scalari
 
@@ -311,7 +323,9 @@ Formalizziamo inoltre delle **ipotesi di lavoro**:
 	- altrimenti $\Omega(P) = \emptyset$
 - $m = n$ e $\text{rango}(A) < m$, allora almeno una equazione può essere eliminata
 - $m <n$, eliminando le eventuali equazioni ridondanti, si ottiene un sistema equivalente a quello iniziale con matrice dei coefficienti di rango massimo
+### Riduzione alla forma standard
 
+## Soluzioni di base
 
 
 
