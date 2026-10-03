@@ -202,7 +202,7 @@ Nel seguente caso invece non ha senso definire una ISA:
 In questa fase definiamo quali siano le **tabelle** più opportune per rappresentare le informazioni (concetti) del modello ER, passando quindi a **dati** (codifica dei concetti secondo un linguaggio). Per farlo utilizzeremo il **modello relazionale**.
 
 >[!bug] Relazione
->Nonostante abbiano lo stesso nome [...]
+>Nonostante abbiano lo stesso nome, nel modello relazionale il termine **relazione** non indica un sottoinsieme di coppie di entità, ma una qualsiasi tabella: la relazione è tra i domini degli attributi.
 
 Riprendendo l'esempio Fornitore-Merce trattato fino ad ora e il suo modello ER:
 ![[DBMS-1790947194394.webp|center|517]]
@@ -283,15 +283,28 @@ In questo caso se un attributo non è necessario possiamo segnalarlo con `null` 
 Avendo definito tutto questo possiamo rappresentare qualsiasi versione della realtà, ma dobbiamo aggiungere delle restrizioni presenti nel modello ER:
 1. chiave candidata
 2. vincoli di cardinalità
-## Vincolo di chiave
+## Vincoli di integrità
+### Vincolo di chiave
 Quella che nel modello ER era una caratteristica identificativa ora deve diventare un vero e proprio vincolo.
->[!important] Chiave
+>[!important] Chiave (primary key)
 >Insieme di attributi tali che non esistono due righe distinte distinte coincidenti sugli attributi chiave.
 
 >[!attention] In questo caso non parliamo di minimale
 >Il concetto di minimale non appartiene a questa progettazione, in quanto viene definita come caratteristica degli identificatori della progettazione concettuale.
 
->[!bug] Chiave esterna/interna
->Seppur il nome coincida il concetto di chiave interna/esterna è profondamente diverso da quanto detto per la progettazione concettuale. In questa fase prende il nome di **chiave esterna** (foreign key) un insieme di attributi che devono comparire come valori chiave di un'altra relazione e non una relazione (modello ER) che fa da attributo identificativo.
+Nel modello relazionale (nello schema di relazione) indichiamo la chiave sottolineando gli attributi che compongono l'insieme di attributi chiave.
+### Vincolo di integrità referenziale
+Un vincolo di integrità referenziale impone che i valori di riferimento a un'altra tabella (chiave esterna) siano sempre presenti nella tabella referenziata, mantenendo coerenti i legami che nel modello ER erano relazioni tra entità
+Nell'esempio precedente dobbiamo fare in modo che nella tabella Fornitura non possano essere inseriti elementi non presenti nelle tabelle Fornitore e Merce.
 
-## Vincoli di integrità referenziale
+>[!important] Chiave esterna (foreign key)
+>Seppur il nome coincida il concetto di chiave esterna è profondamente diverso da quanto detto per la progettazione concettuale. In questa fase prende il nome di **chiave esterna** (foreign key) un insieme di attributi che devono comparire come valori chiave di un'altra relazione e non una relazione (modello ER) che fa da attributo identificativo.
+
+Nello schema relazionale codifichiamo il legame con le altre tabelle come segue
+$$
+\displaylines{
+\text{Fornitura[Fornitore]}\sqsubseteq_{FK}\text{Fornitore [p.iva]} \\
+\text{Fornitura[Merce]} \sqsubseteq_{FK} \text{Merce[cod]}
+}
+$$
+
