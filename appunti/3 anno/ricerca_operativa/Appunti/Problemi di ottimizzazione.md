@@ -136,9 +136,8 @@ $$
 c^T x = (c_{1},c_{2},\dots,c_n) \left(\begin{array}{l}x_{1} \\  x_{2} \\  \vdots \\  x_n\end{array}\right) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n
 $$
 Ne concludiamo che un problema di programmazione matematica può essere espresso in forma compatta come
-$$
-\left\{\begin{array}{l}\min & c^T x \\ s.t. & Ax \geq b \end{array}\right.
-$$
+
+
 ## Risoluzione grafica di un problema in due variabili
 Finché il problema ha solo due variabili decisionali è possibile risolverlo graficamente:
 - I vincoli rappresentano dei semipiani
@@ -182,7 +181,7 @@ $$
 >>Funzione obbiettivo
 >>![[Problemi di ottimizzazione-1790755587370.webp]]
 
-Questo è un problema inferiormente illimitato, quindi non ha un minimo
+Questo è un problema inferiormente illimitato, quindi non hca un minimo
 
 ### Es. 3
 >[!multi-column]
