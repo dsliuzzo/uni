@@ -434,7 +434,110 @@ $$
 >$$\sum_{j=1}^n A_j x_j = b $$
 
 ## Soluzioni di base
+%=====================================================================
+\section{Soluzioni di base}
+%=====================================================================
+Siccome un calcolatore non è in grado di cercare una soluzione ottima sui vertici di un poliedro graficamente, per cui 
+ 
+Consideriamo un problema di PL in Forma Standard:
+\[
+(P)\qquad
+\begin{cases}
+\min & c^\top x \\
+\text{s.t.} & Ax = b \\
+& x \ge 0
+\end{cases}
+\]
+dove $X$ indica l'insieme delle soluzioni del sistema di equazioni, $\Omega(P)$ indica
+la regione ammissibile del problema $(P)$.
 
+È possibile rappresentare l'insieme dei vincoli $Ax = b$ in maniera diversa a partire dalla loro forma matriciale:
+\[
+\begin{cases}
+a_{11}x_1 + \dots + a_{1n}x_n = b_1 \\
+a_{m1}x_1 + \dots + a_{mn}x_n = b_m
+\end{cases}
+\;\longrightarrow\;
+\begin{pmatrix} a_{11} \\ \vdots \\ a_{m1} \end{pmatrix} x_1
++ \dots +
+\begin{pmatrix} a_{1n} \\ \vdots \\ a_{mn} \end{pmatrix} x_n = b
+\]
+
+Si ottiene la combinazione lineare delle colonne della matrice $A$:
+\[
+\therefore\; A_1x_1 + \dots + A_nx_n = b
+\;\longrightarrow\;
+\sum_{j=1}^{n} A_j x_j = b
+\]
+ 
+Siccome il rango di $A$ per \textit{hp} è $m$ allora il determinante della matrice è certamente $\neq 0$ ed è, quindi, \textbf{invertibile} e \textbf{non singolare}.
+\[
+\text{rango}(A) = m \iff \text{esiste almeno un gruppo di $m$ colonne in $A$ linearmente indipendenti}
+\]
+ 
+Indichiamo con $I_B = \{j_1, j_2, \dots, j_m\}$ gli indici corrispondenti a \textit{un} gruppo (tra quelli possibili) di $m$ colonne di $A$ linearmente indipendenti e con
+$I_N = \{j_{m+1}, j_{m+2}, \dots, j_n\}$ i rimanenti indici.
+ 
+\paragraph{Matrice di base:} Raggruppamento delle colonne linearmente indipendenti
+\[
+B = \begin{pmatrix} A_{j_1} & A_{j_2} & \cdots & A_{j_m} \end{pmatrix}
+\]
+ Quindi, questa matrice gode della proprietà di essere \textbf{invertibile}.
+\paragraph{Matrice non di base:} Raggruppamento di tutte le altre colonne:
+\[
+N = \begin{pmatrix} A_{j_{m+1}} & A_{j_{m+2}} & \cdots & A_{j_n} \end{pmatrix}
+\]
+ 
+\paragraph{Variabili di base e non di base:}
+In corrispondenza, permutiamo componenti del vettore $x$ con  gli stessi indici:
+\[
+x_B =
+\begin{pmatrix} x_{j_1} \\ \vdots \\ x_{j_m} \end{pmatrix} \in \mathbb{R}^m,
+\qquad
+x_N =
+\begin{pmatrix} x_{j_{m+1}} \\ \vdots \\ x_{j_n} \end{pmatrix} \in \mathbb{R}^{n-m}
+\]
+È possibile riconoscere una forma più \textbf{compatta}:
+\[
+\underbrace{A_{j_1} x_{j_1} + \dots + A_{j_m} x_{j_m}}_{Bx_B} + \underbrace{A_{j_{m+1}} x_{j_{m+1}} + \dots + A_{j_n} x_{j_n}}_{Nx_N} = b
+\]
+\[
+Ax = b \iff B x_B + N x_N = b
+\]
+\[
+B x_B = b - N x_N
+\]
+ 
+Premoltiplicando ambo i membri della precedente equazione per la matrice $B^{-1}$ si ricava:
+\[
+\begin{aligned}
+B^{-1}x_B &= B^{-1}(b - N x_N) \\
+x_B &= B^{-1}(b - N x_N) \\
+    &= B^{-1} b - B^{-1} N x_N
+\end{aligned}
+\]
+
+\paragraph{Generalmente:} Il vettore $x$ definito come segue è la rappresentazione algebrica del \textbf{vertice di un poliedro}
+
+\[
+x = \left( \begin{array}{c} x_B \\ x_N\end{array} \right) = \left( \begin{array}{c} B^{-1}b \\ 0\end{array} \right)
+\]
+ 
+\begin{infobox}[Soluzione di base]
+Si definisce \textbf{soluzione di base} del sistema di equazioni $Ax = b$
+(corrispondente alla base $B$) la soluzione che si ottiene ponendo $x_N = 0$:
+\[
+x_N = 0 \;\Rightarrow\; x_B = B^{-1} b
+\]
+La soluzione di base $x$ si dice
+\begin{itemize}
+  \item\textbf{non degenere}, se tutte le componenti di $x_B$ sono diverse da zero
+  \item \textbf{degenere}, se $x_B$ ha almeno una componente nulla
+  \item \textbf{ammissibile} se $x_B \ge 0$
+  \item \textbf{non ammissibile} se $x_B$ ha almeno una componente negativa
+\end{itemize}
+\end{infobox}
+ 
 
 
 
