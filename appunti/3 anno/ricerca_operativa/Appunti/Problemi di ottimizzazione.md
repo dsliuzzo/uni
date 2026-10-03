@@ -434,6 +434,7 @@ $$
 >$$\sum_{j=1}^n A_j x_j = b $$
 
 ## Soluzioni di base
+<<<<<<< HEAD
 Per cercare la soluzione ottima sui vertici di un poliedro aritmeticamente dobbiamo definire una rappresentazione algebrica dei vertici.
 
 Considerando un problema di programmazione lineare in forma standard:
@@ -498,3 +499,8 @@ raggruppiamo le colonne linearmente indipendenti costruendo una base dello spazi
 $$
 x = \left(\begin{array}{c}x_B \\ x_N\end{array}\right) = \left(\begin{array}{c}B^{-1} b \\ 0\end{array}\right)
 $$
+\begin{aligned}
+B^{-1}x_B &= B^{-1}(b - N x_N) \\
+x_B &= B^{-1}(b - N x_N) \\
+    &= B^{-1} b - B^{-1} N x_N
+\end{aligned}
