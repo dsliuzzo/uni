@@ -24,13 +24,12 @@
 
 ### Elementi strutturali
 
-|Elemento|Cos'è|
-|---|---|
-|`entity`|interfaccia|
-|`architecture`|implementazione / funzione / comportamento|
-|`process`|blocco di istruzioni sequenziali controllato da eventi|
-|`package`|insieme di dichiarazioni (tipi, costanti, funzioni)|
-|`library`|collezione di oggetti VHDL compilati|
+| Elemento       | Cos'è                                                  |
+| -------------- | ------------------------------------------------------ |
+| `entity`       | interfaccia                                            |
+| `architecture` | implementazione / funzione / comportamento             |
+| `package`      | insieme di dichiarazioni (tipi, costanti, funzioni)    |
+| `library`      | collezione di oggetti VHDL compilati                   |
 
 ## Entity
 
@@ -45,18 +44,15 @@ entity FullAdd is
 end FullAdd;
 ```
 
-> [!warning] Sintassi l'ultima porta **non** ha `;` prima di `)`, il `;` va dopo la parentesi chiusa
-
 - `bit` è un tipo standard: viene riconosciuto senza includere librerie, e ne sono sottintesi range e operatori
 
 ### Modi delle porte
 
-|Modo|Significato|
-|---|---|
-|`in`|sola lettura|
-|`out`|sola scrittura (**non** si può leggere dentro l'architecture), drivers multipli|
-|`inout`|bidirezionale|
-|`buffer`|come `out` ma leggibile, 1 solo driver → **sconsigliato** (barrato nelle slide)|
+| Modo     | Significato                                                                     |
+| -------- | ------------------------------------------------------------------------------- |
+| `in`     | sola lettura                                                                    |
+| `out`    | sola scrittura (**non** si può leggere dentro l'architecture), drivers multipli |
+| `inout`  | bidirezionale                                                                   |
 
 - capita di dover usare un segnale di output **all'interno** del circuito stesso (leggerlo) → uso `inout`
 - alternativa più pulita: segnale interno letto internamente e poi assegnato all'`out`
@@ -71,14 +67,14 @@ end FullAdd;
 architecture MyFA of FullAdd is
 	-- parte DICHIARATIVA
 begin
-	-- parte DEFINITORIA
+	-- parte DESCRITTIVA
 end MyFA;
 ```
 
-|Parte|Contenuto|
-|---|---|
-|tra `is` e `begin` (**dichiarazioni**)|tipi, subtype, costanti, segnali, componenti|
-|tra `begin` e `end` (**definizioni**)|assegnazioni di segnali, processi, istanze di componenti, istruzioni concorrenti|
+| Parte                                  | Contenuto                                                                        |
+| -------------------------------------- | -------------------------------------------------------------------------------- |
+| tra `is` e `begin` (**dichiarazioni**) | tipi, subtype, costanti, segnali, componenti                                     |
+| tra `begin` e `end` (**definizioni**)  | assegnazioni di segnali, processi, istanze di componenti, istruzioni concorrenti |
 
 - tra `begin` ed `end` si può usare una descrizione:
     - **strutturale**: richiamo di entity/componenti descritti altrove
@@ -99,7 +95,7 @@ end EXAMPLE;
 Per definire il funzionamento interno bisogna dare un nome ai collegamenti, che avranno un corrispettivo **fisico** (fili).
 
 ```vhdl
-signal identificatore : tipo [:= espressione];
+signal identificatore : tipo;
 ```
 
 - dichiarati nell'architecture (tra `is` e `begin`), **visibili solo al suo interno**
@@ -161,16 +157,7 @@ end FULLADD;
 ## Modelli gerarchici e component
 VHDL permette la modellazione **gerarchica**: un modulo si assembla a partire da sottomoduli.
 
-```mermaid
-flowchart LR
-	A0 & B0 & Cin --> FA0["FA0 (FullAdd)"]
-	A1 & B1 --> FA1["FA1 (FullAdd)"]
-	FA0 -- S0 --> S0o[S0]
-	FA0 -- C1 --> FA1
-	FA1 -- S1 --> S1o[S1]
-	FA1 -- Cout --> Co[Cout]
-```
-
+![[VHDL-1791038126249.webp|405]]
 Possiamo riutilizzare entity già definite:
 
 ```vhdl
@@ -208,10 +195,10 @@ end MyRCA2;
 
 ### Associazione delle porte
 
-|Tipo|Sintassi|Note|
-|---|---|---|
-|**posizionale** (default)|`port map (A0, B0, Cin, S0, C1)`|conta l'**ordine** in cui passo i segnali|
-|**per nome**|`port map (A => A0, B => B0, ...)`|a sinistra i **formali** (porte del component), a destra gli **attuali** (segnali dell'architecture); indipendente dall'ordine|
+| Tipo                      | Sintassi                           | Note                                                                                                                           |
+| ------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **posizionale** (default) | `port map (A0, B0, Cin, S0, C1)`   | conta l'**ordine** in cui passo i segnali                                                                                      |
+| **per nome**              | `port map (A => A0, B => B0, ...)` | a sinistra i **formali** (porte del component), a destra gli **attuali** (segnali dell'architecture); indipendente dall'ordine |
 
 ```vhdl
 MODULE1: HALFADDER
