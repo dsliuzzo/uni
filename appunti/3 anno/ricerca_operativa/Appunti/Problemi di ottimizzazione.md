@@ -434,9 +434,50 @@ $$
 >$$\sum_{j=1}^n A_j x_j = b $$
 
 ## Soluzioni di base
+Per cercare la soluzione ottima sui vertici di un poliedro aritmeticamente dobbiamo definire una rappresentazione algebrica dei vertici.
 
+Considerando un problema di programmazione lineare in forma standard:
+$$
+\begin{cases}
+\min & c^Tx \\
+\text{s.t.} & Ax = b \\
+& x \geq 0
+\end{cases}
+$$
+Indichiamo con $X$ l'insieme delle soluzioni del sistema di equazioni, $\Omega (P)$ indica la regione ammissibile del problema.
+Scriviamo il sistema di equazioni evidenziando le colonne della matrice $A$
+$$
+Ax = b \Longleftrightarrow A_{1}x_{1} + A_{2}x_{2} +\dots + A_nx_n = b \implies \sum_{j=1}^n A_j x_j = b
+$$
+essendo $\text{rango}(A) = m$ esiste almeno un gruppo di $m$ colonne in $A$ linearmente indipendenti.
+Indichiamo con $I_B = \{j_1, j_2,\dots,j_m\}$ gli indici corrispondenti ad un gruppo di $m$ colonne di $A$ linearmente indipendenti e con $I_N = \{j_{m+1},j_{m+2},\dots,j_{n}\}$ i rimanenti indici.
+Distinguiamo quindi 
+>[!multi-column]
+>
+>>[!important] Matrice di base
+>>$$
+>>B = \left(A_{j_{1}}|A_{j_{2}}|\dots|A_{j_m}\right)
+>>$$
+>
+>>[!important] Matrice non di base
+>>$$
+>>N = \left(A_{j{m+1}}|A_{j_{m+2}}|\dots|A_{j_n}\right)
+>>$$
 
-
+Definiamo i vettori delle variabili di base e variabili non di base
+$$
+x_B = \left(\begin{array}{c} x_{j_{1}} \\ \vdots \\ x_{j_m}\end{array}\right) \in \mathbb{R}^m \hspace{8ex} x_N = \left(\begin{array}{c} x_{j_{m+1}} \\ \vdots \\ x_{j_n}\end{array}\right) \in \mathbb{R}^{n-m}
+$$
+Permutiamo anche le componenti del vettore $x$
+$$
+A_{j_{1}}x_{j_{1}} + \dots + A_{j_m}x_{j_m} + A_{j_{m+1}} x_{j_{m+1}} + \dots + A_{j_n}x_{j_n} = b
+$$
+Possiamo quindi riscrivere il sistema di equazioni dei vincoli come
+$$
+Ax = b \implies Bx_B + Nx_N = b
+$$
+Risolvendo il sistema di equazioni rimangono $n-m$ parametri che sono esattamente da $A_{j_{m+1}}$ a $A_{j_n}$.
+Per trovare il vettore delle variabili che risolve il sistema spostiamo $Nx_N$ a secondo membro e moltiplichiamo entrambi i membri per l'inversa di $B$.
 
 
 
