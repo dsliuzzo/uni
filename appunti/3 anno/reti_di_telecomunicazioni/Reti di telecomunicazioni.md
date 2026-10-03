@@ -1,4 +1,3 @@
-
 1. funzionamento di internet
 2. protocolli per la comunicazione
 3. architetture di rete (TCP/IP)
@@ -257,7 +256,6 @@ Non è necessario mantenere informazioni relative a sorgente e destinazione, ma 
 - Ogni pacchetto trasporta un identificativo che determina il next hop
 - un percorso fisso viene determinato durante il *call setup* e resta lo stesso per tutta la durata della comunicazione
 - i router mantengono informazioni di stato per-chiamata
-
 # Modelli funzionali
 Le reti sono molto complesse e composte da numerosi elementi: risulta quindi necessario organizzare tutti questi elementi.
 
@@ -265,7 +263,6 @@ Le reti sono molto complesse e composte da numerosi elementi: risulta quindi nec
 >trasferire contenuto informativo attraverso regole e convenzioni stabilite a priori tra dispositivi, da cui dipendono anche le performance della rete.
 
 La comunicazione presuppone la cooperazione tra i nodi della rete, per questo nascono agenzie (CCITT) e organizzazioni (ISO) con il compito di imporre degli standard che tutti i sistemi nella rete devono rispettare per garantire la comunicazione.
-
 ## Protocolli
 Bisogna fare attenzione a convenzione, sintassi e semantica, altrimenti potremmo creare una incoerenza tra i dispositivi.
 >[!important] Protocollo
@@ -280,7 +277,7 @@ In una comunicazione i protocolli definiscono:
   come deve essere interpretato un determinato messaggio
 - **temporizzazione**
   sequenze temporali di comandi e risposte - tecniche di sincronizzazione dei nodi della rete
-## Architetture
+## Architetture a strati
 Una architettura di comunicazione è composta da:
 - **sistemi**
   effettuano il trattamento e/o trasferimento di informazione in vista di specifiche applicazioni
@@ -291,6 +288,8 @@ Una architettura di comunicazione è composta da:
 
 ![[Reti di telecomunicazioni-1790846637179.webp|center|367]]
 
+
+### Sistema e strato (logico vs fisico)
 >[!multi-column]
 >
 >>[!important] Sistema
@@ -301,6 +300,7 @@ Una architettura di comunicazione è composta da:
 >>Due sistemi sono in grado di comunicare su un determinato livello se i sottosistemi del medesimo rango possono ricostruire il dato risalendo lo stack (usano le stesse convenzioni e svolgono le stesse funzioni)
 
 La comunicazione tra i livelli è a livello logico, una astrazione, invece a livello fisico devo riattraversare tutti gli strati, dall'alto verso il basso.
+
 Abbiamo quindi la possibilità di creare una infrastruttura logica in cui un dato che viene trasmesso può essere interpretato dallo strato dell'end-device sullo stesso livello
 
 >[!multi-column]
@@ -314,8 +314,7 @@ Abbiamo quindi la possibilità di creare una infrastruttura logica in cui un dat
 >>![[Reti di telecomunicazioni-1790847598113.webp]]
 
 I livelli di progettazione diranno che tipo di informazioni (di controllo) devono essere garantite per ogni livello affinché i livelli si intendano.
-
-### Tipi di informazione
+### Informazioni utente e di controllo, PDU, SAP
 >[!multi-column]
 >
 >>[!important] Informazioni utente
@@ -329,6 +328,13 @@ Ad ogni livello viene aggiunta una informazione di controllo, interpretabile dal
 >[!important] Unità di dati
 >le informazioni di utente o di controllo scambiate in un processo di comunicazione sono strutturate in unità informative specifiche di ogni strato, dette **unità di dati**
 
+>[!important] PDU (Protocol data unit)
+>Una unità di dati è composta da dati e unità di controllo (Header)
+>PDU di livello [...]
+
+>[!important] SAP (Service access point)
+>Punto di accesso al livello
+
 ### Incapsulamento/decapsulamento
 Per l'invio di un dato è necessario l'**incapsulamento**: ogni livello riceve informazioni dal livello superiore e viene eseguito un processo di aggiunta di informazioni di controllo, necessarie al **decapsulamento** per verificare l'integrità delle informazioni e passare il dato al livello successivo.
 ![[Reti di telecomunicazioni-1790848221981.webp|center|570]]
@@ -339,48 +345,8 @@ I sistemi intermedi non necessitano di tutti i livelli di progettazione, ma per 
 - **Hub** solo il primo 
 ![[Reti di telecomunicazioni-1790848674334.webp|center|464]]
 
-### Controllo degli errori - Capacità di rilevare/correggere l'errore (schema a maggioranza)
-Codice ripetizione - ogni volta che inviamo un segnale ne mandiamo anche una copia
-*es.* `110 --> R3 --> 111 111 000`
-Potrebbe capitare che il canale agisce sul segnale e la destinazione interpreta in modo errato il segnale
-*es.* `111 101 000`
-In questo modo posso **rilevare** l'errore se c'è discordanza tra le terne e **correggerlo** utilizzando la maggioranza dei rimanenti.
-Se lo usassi per correggere rimarrebbe il problema se abbiamo due alterazioni nello stesso pattern, commettendo un errore.
-Se avessi una quantità di bit alterati che è la metà del pattern (estremo inferiore) posso correggerlo, invece per la **rilevazione** può avvenire anche se due bit su 3 vengono alterati.
+---
 
-Applicando invece `R5`
-*es.* `110 --> R5 --> 11111 11111 00000`
-e c'è un errore
-*es.* `11111 10110 00000`
-posso ugualmente correggerlo $\to$ rispecchia la generalizzazione
-
-Applicando una codifica con lo scopo di correggere potrebbe andare comunque male.
-Utilizzando invece una capacità rilevativa, nel rilevare un errore, potrebbe farlo capire alla sorgente, mandandolo alla sorgente (riscontro positivo/negativo) (feedback di canale). In questo modo la sorgente può innescare una ritrasmissione e dato che il dato è bufferizzato può essere ritrasmesso.
-
-Tipicamente nella rilevazione tipicamente si utilizzano i protocolli di ritrasmissione ARQ.
-Avviando invece la modalità correttiva non abbiamo modo di rilevare e potrebbe andare bene o male.
-In base al mezzo e a degli studi su di essi possiamo decidere se implementare un rilevamento o una correzione (può dipendere per esempio dalla lentezza del canale, se il canale è particolarmente lento si tende ad utilizzare la correzione).
-
-- **FEC** correzione di errori
-- **ARQ** rilevamento e ritrasmissione
-
->[!bug] Possibili cause di alterazione
->- **rumore termico**, probabilità di errore avendo un certo tipo di temperatura assoluta (dipende dai mezzi trasmissivi e apparati di ricezione e trasmissione) - PDF (probability density function)
->- **interferenza da altre trasmissioni** sullo stesso mezzo
->- **disturbi elettromagnetici**
->- **perdite di sincronismo**
->- etc.
-
->[!Important] Controllo di parità
->Posso utilizzare dei [[4. Gestione della memoria secondaria#Dischi RAID|bit di parità]] per controllare se in un pattern c'è stato un errore.
->Per essere più sicuri è possibili utilizzare i bit di parità in più dimensioni:
->![[Reti di telecomunicazioni-1790867284139.webp|center|300]]
->In questo modo aumentiamo il coding rate.
->Per Shannon possiamo determinare il limite superiore del coding rate oltre il quale non si può andare.
-
->[!important] Internet checksum
->Il trasmittente somma il contenuto dei segmenti e fa il complemento ad 1 della somma. Il trasmittente mette il valore della checksum nel campo checksum dell’UDP.
->Il ricevitore calcola la checksum del segmento ricevuto. Considera se la checksum calcolata è uguale al valore del campo checksum.
 # Modello ISO/OSI
 Il comitato di standardizzazione ISO (International standard organization) ha definito un modello di riferimento OSI (Open system Interconnection), che viene oggi universalmente accettato.
 
@@ -393,67 +359,8 @@ Un sistema che genera l'informazione o un host destinazione devono avere funzion
 [...]
 È necessaria una interfaccia fisica in grado di interpretare le forme d'onda.
 [...]
->[!important] PDU (Protocol data unit)
->Una unità di dati è composta da dati e unità di controllo (Header)
->PDU di livello [...]
-
->[!important] SAP (Service access point)
->Punto di accesso al livello
-
-### Livello collegamento
-[...]
-### Livello di linea
-[...] <-- ci sono un po' di robe da mettere nell'incapsulamento
-![[Reti di telecomunicazioni-1790786586690.webp|230]] <-- tipo questa
-
-
-
-
-
-
-# Modello TCP/IP
-![[Reti di telecomunicazioni-1790783354935.webp|233]]
-In realtà collegamento-fisico sono un unico livello di accesso alla rete.
-Prende il nome da due protocolli (anche se ne contiene in realtà di più):
-- **TCP**
-- **IP**
-
-
-
-### Livello di accesso alla rete
-Il livello di accesso alla rete comprende sia il livello di:
-- **collegamento**
-  punto-punto (ppp, ethernet)
-- **fisico**
-  forme d'onda
-[...]
-### Livello di rete
-Protocolli che permettono di andare da un certo sistema (sorgente) della rete ad un altro (destinazione)
-- ip, protocolli di routing
-Avendo una gestione gerarchica dei centri di smistamento non è necessario conoscere tutto l'indirizzo, ma solo a quale centro di smistamento è necessario inviare il dato
-[...]
-### Livello di trasporto
-Trasferimento dati host-host
-- tcp (orientato alla connessione), udp (non orientato alla connessione)
-[...]
-### Livello applicazione
-Supporto delle applicazioni di rete
-- ftp, smtp, http, dns
-Ogni specifica applicazione avrà i suoi protocolli
-
-# Differenze TCP/IP e ISO/OSI
-mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
-Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
-La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
-[...]
-
-
-
----
-
-
-## Livello di collegamento (livello 2 ISO/OSI)
-### Data-link
+## Livello collegamento (livello 2)
+### Servizi del livello (nodi, link, frame, tipi di collegamento, adattatori)
 Ogni nodo sulla rete ha un processo di bufferizzazione, su vari livelli, necessari per l'implementazione store and forward e rendere i livelli indipendenti.
 La quantità di bit prelevate dopo il buffer è legata ai protocolli di tipo collegamento.
 Dobbiamo fornire i seguenti servizi:
@@ -509,10 +416,12 @@ Il trasmittente incapsulano i datagrammi nel frame che li compete (ricevuti dal 
 **Funzioni del livello data-link**
 [...]
 
-#### Framing
+### Framing (header/payload, delimitatori, BSC, HDLC + bit stuffing)
 La quantità di bit è rappresentata dal datagramma + parte di controllo
 - **parte di controllo** - Header
 - **datagramma livello superiore** - Payload
+
+![[Reti di telecomunicazioni-1790786586690.webp|center|555]] 
 
 I gruppi logici di bit prendono il nome di **trame**.
 Le trame permettono il reindirizzamento dei flussi.
@@ -528,19 +437,69 @@ Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della 
 - **conteggio**
   una trama è composta da un determinato numero di bit che sarà sufficiente contare per determinare la fine
 
->[!important] BSC
+#### BSC
+>[!protocollo] BSC
 >Utilizza una serie di pattern di sincronizzazione, in modo da capire la frequenza con cui vengono inviati i bit. Poi utilizza una sequenza speciale start of header
 >![[Reti di telecomunicazioni-1790866272935.webp]]
 
+#### HDLC
 >[!protocollo] HDLC
 >Utilizza come delimitatore di inizio e fine la sequenza di bit `01111110`. Per evitare che si ripresenti all'interno del payload utilizziamo la tecnica del **bit stuffing**: se devo utilizzare la sequenza riservata inserisco un bit in più che interrompe la sequenza, che verrà inserito nella trasmissione e verrà eliminato nella ricezione.
 
+
+### Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)
+
+>[!bug] Possibili cause di alterazione
+>- **rumore termico**, probabilità di errore avendo un certo tipo di temperatura assoluta (dipende dai mezzi trasmissivi e apparati di ricezione e trasmissione) - PDF (probability density function)
+>- **interferenza da altre trasmissioni** sullo stesso mezzo
+>- **disturbi elettromagnetici**
+>- **perdite di sincronismo**
+>- etc.
+
+>[!important] CRC (codice a ridondanza ciclica)
+>[...]
+
+Codice ripetizione - ogni volta che inviamo un segnale ne mandiamo anche una copia
+*es.* `110 --> R3 --> 111 111 000`
+Potrebbe capitare che il canale agisce sul segnale e la destinazione interpreta in modo errato il segnale
+*es.* `111 101 000`
+In questo modo posso **rilevare** l'errore se c'è discordanza tra le terne e **correggerlo** utilizzando la maggioranza dei rimanenti.
+Se lo usassi per correggere rimarrebbe il problema se abbiamo due alterazioni nello stesso pattern, commettendo un errore.
+Se avessi una quantità di bit alterati che è la metà del pattern (estremo inferiore) posso correggerlo, invece per la **rilevazione** può avvenire anche se due bit su 3 vengono alterati.
+
+Applicando invece `R5`
+*es.* `110 --> R5 --> 11111 11111 00000`
+e c'è un errore
+*es.* `11111 10110 00000`
+posso ugualmente correggerlo $\to$ rispecchia la generalizzazione
+
+Applicando una codifica con lo scopo di correggere potrebbe andare comunque male.
+Utilizzando invece una capacità rilevativa, nel rilevare un errore, potrebbe farlo capire alla sorgente, mandandolo alla sorgente (riscontro positivo/negativo) (feedback di canale). In questo modo la sorgente può innescare una ritrasmissione e dato che il dato è bufferizzato può essere ritrasmesso.
+
+Tipicamente nella rilevazione tipicamente si utilizzano i protocolli di ritrasmissione ARQ.
+Avviando invece la modalità correttiva non abbiamo modo di rilevare e potrebbe andare bene o male.
+In base al mezzo e a degli studi su di essi possiamo decidere se implementare un rilevamento o una correzione (può dipendere per esempio dalla lentezza del canale, se il canale è particolarmente lento si tende ad utilizzare la correzione).
+
+- **FEC** correzione di errori
+- **ARQ** rilevamento e ritrasmissione
+
+>[!Important] Controllo di parità
+>Posso utilizzare dei [[4. Gestione della memoria secondaria#Dischi RAID|bit di parità]] per controllare se in un pattern c'è stato un errore.
+>Per essere più sicuri è possibili utilizzare i bit di parità in più dimensioni:
+>![[Reti di telecomunicazioni-1790867284139.webp|center|300]]
+>In questo modo aumentiamo il coding rate.
+>Per Shannon possiamo determinare il limite superiore del coding rate oltre il quale non si può andare.
+### Controllo del flusso e ritrasmissione (stop and wait, go back N)
+#### Stop and wait
+
 >[!protocollo] Stop and wait
 >(Caso degenere del go back N con finestra unitaria, necessita di enumerazione a un bit)
->In ogni frame c'è un CRC codice a ridondanza ciclica codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
+>In ogni frame c'è un [[#Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
 >Mantengo un frame nel buffer finché non ricevo un riscontro. Appena ricevo il riscontro posso eliminare il frame dal buffer e posso passare al successivo.
 >Posso gestire un pacchetto alla volta.
 >Ho quindi una bassa utilizzazione del canale.
+
+#### Go back N
 
 >[!protocollo] Go back N
 >Approccio a finestra a slittamento (da capire).
@@ -548,42 +507,48 @@ Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della 
 >Ogni frame quindi va numerato (**numeri di sequenza**), in base alla dimensione della finestra posso avere la necessità di utilizzare più bit per l'enumerazione.
 >Per il riscontro il ricevitore utilizza un ack cumulativo: se non arriva un determinato pacchetto $n$ non accetterà il pacchetto $n+1$. Ogni frame ha un timer di attesa che attende riscontro, in caso di pacchetti fuori sequenza si causa un effetto a catena.
 
-
 ### Medium access control (MAC)
 Se ci sono più [...] che concorrono evitare che collidano
-
-[...] <-- prossima lezione
-
-
-
-
-
----
-
-
-
-# Modelli funzionali
-## Comunicazione e protocolli
-## Architetture a strati
-### Sistema e strato (logico vs fisico)
-### Informazioni utente e di controllo, PDU, SAP
-### Incapsulamento/decapsulamento
-### Sistemi intermedi (router, switch, hub)
-
-# Modello ISO/OSI
-## Livello fisico
-## Livello collegamento (livello 2)
-### Servizi del livello (nodi, link, frame, tipi di collegamento, adattatori)
-### Framing (header/payload, delimitatori, BSC, HDLC + bit stuffing)
-### Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)
-### Controllo del flusso e ritrasmissione (stop and wait, go back N)
-### Medium access control (MAC)
-## Livelli successivi (rete, trasporto, ... quando arriveranno)
+[...]
+## Livelli successivi
+[...]
 
 # Modello TCP/IP
+![[Reti di telecomunicazioni-1790783354935.webp|233]]
+In realtà collegamento-fisico sono un unico livello di accesso alla rete.
+Prende il nome da due protocolli (anche se ne contiene in realtà di più):
+- **TCP**
+- **IP**
+
 ## Livello di accesso alla rete (= OSI 1 + 2, rimanda ai capitoli sopra)
+Il livello di accesso alla rete comprende sia il livello di:
+- **collegamento**
+  punto-punto (ppp, ethernet)
+- **fisico**
+  forme d'onda
+[...]
 ## Livello di rete
+Protocolli che permettono di andare da un certo sistema (sorgente) della rete ad un altro (destinazione)
+- ip, protocolli di routing
+Avendo una gestione gerarchica dei centri di smistamento non è necessario conoscere tutto l'indirizzo, ma solo a quale centro di smistamento è necessario inviare il dato
+[...]
 ## Livello di trasporto (qui l'Internet checksum)
+Trasferimento dati host-host
+- tcp (orientato alla connessione), udp (non orientato alla connessione)
+[...]
+
+[[#Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)]]
+>[!important] Internet checksum
+>Il trasmittente somma il contenuto dei segmenti e fa il complemento ad 1 della somma. Il trasmittente mette il valore della checksum nel campo checksum dell’UDP.
+>Il ricevitore calcola la checksum del segmento ricevuto. Considera se la checksum calcolata è uguale al valore del campo checksum.
 ## Livello applicazione
+Supporto delle applicazioni di rete
+- ftp, smtp, http, dns
+Ogni specifica applicazione avrà i suoi protocolli
+
 
 # Differenze TCP/IP e ISO/OSI
+mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
+Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
+La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
+[...]
