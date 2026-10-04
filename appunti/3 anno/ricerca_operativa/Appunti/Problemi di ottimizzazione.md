@@ -414,6 +414,19 @@ $$
 >- $s_i > 0$  il vincolo e strettamente soddisfatto (**non attivo**)
 >- $s_i <0$ nel punto $\overline{x}$ il vincolo è violato
 
+## Soluzioni di base
+Per cercare la soluzione ottima sui vertici di un poliedro aritmeticamente dobbiamo definire una rappresentazione algebrica dei vertici.
+
+Considerando un problema di programmazione lineare in forma standard:
+$$
+\begin{cases}
+\min & c^Tx \\
+\text{s.t.} & Ax = b \\
+& x \geq 0
+\end{cases}
+$$
+Indichiamo con $X$ l'insieme delle soluzioni del sistema di equazioni, $\Omega (P)$ indica la regione ammissibile del problema.
+
 >[!question] Osservazione
 >ciascuna variabile ausiliaria:
 >1. non sono nelle variabili obbiettivo
@@ -430,27 +443,9 @@ $$
 >a_{1n} \\ \vdots \\ a_{m n}
 >\end{array}\right) x_n = b$$
 >$b$ è combinazione lineare delle colonne della matrice $A$
->$$A_{1}x_{1} + \dots +A_n x_n = b$$
->$$\sum_{j=1}^n A_j x_j = b $$
+>$$Ax = b \Longleftrightarrow A_{1}x_{1} + A_{2}x_{2} +\dots + A_nx_n = b \implies \sum_{j=1}^n A_j x_j = b$$
 
-## Soluzioni di base
-<<<<<<< HEAD
-Per cercare la soluzione ottima sui vertici di un poliedro aritmeticamente dobbiamo definire una rappresentazione algebrica dei vertici.
-
-Considerando un problema di programmazione lineare in forma standard:
-$$
-\begin{cases}
-\min & c^Tx \\
-\text{s.t.} & Ax = b \\
-& x \geq 0
-\end{cases}
-$$
-Indichiamo con $X$ l'insieme delle soluzioni del sistema di equazioni, $\Omega (P)$ indica la regione ammissibile del problema.
-Scriviamo il sistema di equazioni evidenziando le colonne della matrice $A$
-$$
-Ax = b \Longleftrightarrow A_{1}x_{1} + A_{2}x_{2} +\dots + A_nx_n = b \implies \sum_{j=1}^n A_j x_j = b
-$$
-essendo $\text{rango}(A) = m$ esiste almeno un gruppo di $m$ colonne in $A$ linearmente indipendenti.
+essendo $\text{rango}(A) = m$ esiste almeno un gruppo di $m$ colonne in $A$ linearmente indipendenti, il determinante è $\neq 0$ ed è quindi **non invertibile** e **singolare**.
 Indichiamo con $I_B = \{j_1, j_2,\dots,j_m\}$ gli indici corrispondenti ad un gruppo di $m$ colonne di $A$ linearmente indipendenti e con $I_N = \{j_{m+1},j_{m+2},\dots,j_{n}\}$ i rimanenti indici.
 Distinguiamo quindi 
 >[!multi-column]
@@ -471,7 +466,7 @@ x_B = \left(\begin{array}{c} x_{j_{1}} \\ \vdots \\ x_{j_m}\end{array}\right) \i
 $$
 Permutiamo anche le componenti del vettore $x$
 $$
-A_{j_{1}}x_{j_{1}} + \dots + A_{j_m}x_{j_m} + A_{j_{m+1}} x_{j_{m+1}} + \dots + A_{j_n}x_{j_n} = b
+\underbrace{A_{j_{1}}x_{j_{1}} + \dots + A_{j_m}x_{j_m}}_{Bx_B} + \underbrace{A_{j_{m+1}} x_{j_{m+1}} + \dots + A_{j_n}x_{j_n}}_{Nx_N} = b
 $$
 Possiamo quindi riscrivere il sistema di equazioni dei vincoli come
 $$
@@ -479,28 +474,24 @@ Ax = b \implies Bx_B + Nx_N = b
 $$
 Risolvendo il sistema di equazioni rimangono $n-m$ parametri che sono esattamente da $A_{j_{m+1}}$ a $A_{j_n}$.
 Per trovare il vettore delle variabili che risolve il sistema spostiamo $Nx_N$ a secondo membro e moltiplichiamo entrambi i membri per l'inversa di $B$.
-
-
-
-
----
-
-come cercare una soluzione ottima sui vertici di un poliedro algoritmicamente --> necessità di una rappresentazione algebrica dei vertici
-**soluzione di base**
-
-nella matrice $A$ esistono $m$ colonne linearmente indipendenti
-dentro la matrice $A \exists$ una matrice quadrata $m \times n$ il cui determinante $\neq 0$ --> invertibile e non singolare
-[...]
-Indichiamo con $I_B = \{j_{1},j_{2},\dots,j_m\}$ gli indici corrispondenti a un gruppo [...]
-
-raggruppiamo le colonne linearmente indipendenti costruendo una base dello spazio vettoriale
-
-
+$$
+\begin{array}{rl}
+B^{-1}x_B & = B^{-1}(b - N x_N) \\
+x_B & = B^{-1}(b - N x_N) \\
+    & = B^{-1} b - B^{-1} N x_N
+\end{array}
+$$
+Il vettore $x$ definito come segue è la rappresentazione algebrica del **vertice di un poliedro**:
 $$
 x = \left(\begin{array}{c}x_B \\ x_N\end{array}\right) = \left(\begin{array}{c}B^{-1} b \\ 0\end{array}\right)
 $$
-\begin{aligned}
-B^{-1}x_B &= B^{-1}(b - N x_N) \\
-x_B &= B^{-1}(b - N x_N) \\
-    &= B^{-1} b - B^{-1} N x_N
-\end{aligned}
+>[!important] Soluzione di base
+>Si definisce soluzione di base del sistema $Ax = b$ (corrispondente alla base di $B$) la soluzione che si ottiene ponendo $x_N = 0$
+>$$
+>x_N = 0 \hspace{8ex} \implies \hspace{8ex} x_B = B^{-1}b
+>$$
+>La soluzione di base $x$ si dice
+>- **non degenere**, se tutte le componenti di $x_B$ sono diverse da zero
+>- **degenere**, se $x_B$ ha almeno una componente nulla
+>- **ammissibile**, se $x_B \geq 0$
+>- **non ammissibile**, se $x_B$ ha almeno una componente negativa
