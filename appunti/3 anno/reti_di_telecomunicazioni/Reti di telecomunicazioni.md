@@ -539,7 +539,7 @@ Funzioni fondamentali:
 - instradamento
 - indirizzamento
 - controllo di connessione
-![[Reti di telecomunicazioni-1791127810485.webp|center|538]]
+![[Reti di telecomunicazioni-1791127810485.webp|center|545]]
 L'obbiettivo fondamentale di questo livello è quello di individuare il partner nel colloquio (funzione di **instradamento**). Per far questo è necessaria una **tabella di instradamento**, che permette la scelta del SAP di uscita sulla base delle informazioni memorizzate, associando ad ogni destinazione il SAP di uscita
 
 | Destinazione | SAP uscita |
