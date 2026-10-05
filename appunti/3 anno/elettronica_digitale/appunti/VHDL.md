@@ -157,7 +157,7 @@ end FULLADD;
 ## Modelli gerarchici e component
 VHDL permette la modellazione **gerarchica**: un modulo si assembla a partire da sottomoduli.
 
-![[VHDL-1791038126249.webp|405]]
+![[VHDL-1791038126249.webp|center|405]]
 Possiamo riutilizzare entity già definite:
 
 ```vhdl

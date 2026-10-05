@@ -794,20 +794,71 @@ Strumento che consente di presentare i documenti mediante viste multiple.
 </html>
 ```
 Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Frame 3 nella colonna destra (80%).
+# Java database connectivity
+JDBC (Java Database Connectivity) è un’API di Java che permette di connettere applicazioni Java a database relazionali. Fornisce un’interfaccia standard per eseguire query SQL, aggiornare dati e gestire connessioni a database come MySQL, PostgreSQL, Oracle e altri.
+![[Web-1791201912266.webp|center|610]]
 
+>[!multi-column]
+>
+>>[!blank]
+>>Ogni applicazione java, per l'uso dei database, si interfaccia con il JDBC driver manager che a sua volta comunica con i vari driver degli specifici dbms.
+>
+>>[!blank]
+>>![[Web-1791202158637.webp|center|200]]
 
+JDBC è principalmente orientato dai [[DBMS|database relazionali]], ma può anche essere utilizzato per NoSql.
+## JDBC data types
 
+| JDBC Type                        | Java Type                  |
+| -------------------------------- | -------------------------- |
+| BIT                              | boolean                    |
+| TINYINT                          | byte                       |
+| SMALLINT                         | short                      |
+| INTEGER                          | int                        |
+| BIGINT                           | long                       |
+| REAL                             | float                      |
+| FLOAT, DOUBLE                    | double                     |
+| BINARY, VARBINARY, LONGVARBINARY | byte[]                     |
+| CHAR, VARCHAR, LONGVARCHAR       | String                     |
+| NUMERIC, DECIMAL                 | BigDecimal                 |
+| DATE                             | java.sql.Date              |
+| TIME, TIMESTAMP                  | java.sql.Timestamp         |
+| CLOB                             | Clob                       |
+| BLOB                             | Blob                       |
+| ARRAY                            | Array                      |
+| DISTINCT                         | mapping of underlying type |
+| STRUCT                           | Struct                     |
+| REF                              | Ref                        |
+| JAVA_OBJECT                      | underlying Java class      |
 
+## Query
+|Tipo SQL|Metodo JDBC|Output|Uso principale|
+|---|---|---|---|
+|SELECT|`executeQuery()`|`ResultSet`|Lettura dati|
+|INSERT / UPDATE / DELETE|`executeUpdate()`|`int` (righe modificate)|Modifica dati|
+|CREATE / ALTER / DROP|`executeUpdate()`|`0` o `int`|Definizione struttura|
+|Qualsiasi tipo|`execute()`|`boolean` + `getResultSet()` / `getUpdateCount()`|Generico / dinamico|
 
----
+Su `execute()`: restituisce `true` se il risultato è un `ResultSet` (allora lo recuperi con `getResultSet()`), `false` se è un conteggio di righe (allora usi `getUpdateCount()`). Serve quando non sai a priori che tipo di query stai eseguendo.
+## JDBC connectivity
+>[!blank|float-left]
+>```mermaid
+>flowchart TB
+>    id1(Java application) --> id2(Loading driver)
+>    id2 --> id3(Creating connection)
+>    id3 --> id4(Creating statement)
+>    id4 --> id5(Executing statement)
+>    id5 --> id6(Processing ResultSet)
+>    id6 --> id7(Closing connection)
+>```
 
-# Framework
-## Requisiti
-[...] <-- requisiti
-### Requisiti funzionali
-### Requisiti non funzionali
-#### Principi di progettazione
-[...]
-
-
-nei db relazionali è molto complesso modificare lo schema
+JDBC opera attraverso una serie di fasi per l'utilizzo dei database:
+1. **Connection**
+   stabilisce una connessione con il database - spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **polling** per riutilizzare le connessioni già aperte.
+2. **Statement**
+   creazione dell'oggetto che consente il passaggio dal livello applicativo al livello logico - consente di inviare query SQL
+3. **Result set**
+   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java
+4. **Connection**
+   chiusura della connessione
+Questa suddivisione permette di rendere il codice più modulare, portabile ed evitare problemi di performance.
