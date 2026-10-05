@@ -841,7 +841,7 @@ JDBC è principalmente orientato dai [[DBMS|database relazionali]], ma può anch
 
 Su `execute()`: restituisce `true` se il risultato è un `ResultSet` (allora lo recuperi con `getResultSet()`), `false` se è un conteggio di righe (allora usi `getUpdateCount()`). Serve quando non sai a priori che tipo di query stai eseguendo.
 ## JDBC connectivity
->[!blank|float-left]
+>[!blank|float-right]
 >```mermaid
 >flowchart TB
 >    id1(Java application) --> id2(Loading driver)
@@ -854,11 +854,143 @@ Su `execute()`: restituisce `true` se il risultato è un `ResultSet` (allora lo 
 
 JDBC opera attraverso una serie di fasi per l'utilizzo dei database:
 1. **Connection**
-   stabilisce una connessione con il database - spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **polling** per riutilizzare le connessioni già aperte.
+   stabilisce una connessione con il database - spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **polling** per riutilizzare le connessioni già aperte. È una fase strutturale, permette di creare politiche.
 2. **Statement**
-   creazione dell'oggetto che consente il passaggio dal livello applicativo al livello logico - consente di inviare query SQL
+   creazione dell'oggetto che consente il passaggio dal livello applicativo al livello logico - consente di inviare query SQL. Restituisce il result set
 3. **Result set**
-   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java
+   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java (contiene ciò che viene fornito dal database come oggetto di java)
 4. **Connection**
    chiusura della connessione
-Questa suddivisione permette di rendere il codice più modulare, portabile ed evitare problemi di performance.
+Questa suddivisione permette di rendere il codice più modulare, portabile ed evitare problemi di performance, creando una vera e propria **pipeline**.
+
+>[!bug] Aumenta la complessità
+>Dobbiamo gestire oggetti che non sono nativi di java
+
+>[!attention] Per l'esame
+>Le scelte prese in fase di progettazione devono essere dettate da cosa è necessario: se sto facendo operazioni in lettura non ho bisogno di appesantire troppo la query con livelli di sicurezza innecessari
+
+``` java
+import java.sql.*;
+public class PrimoTestJDBC {
+	public static void main(String[] args) {
+		String url = "jdbc:mysql://localhost:3306/testdb";
+		String user = "root"; String password = "admin";
+		try {
+		    Connection conn = DriverManager.getConnection(url, user, password);
+		    Statement stmt = conn.createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT id, name FROM users");
+		    while (rs.next()) {
+		        System.out.println(rs.getInt("id") + " - " + rs.getString("name"));
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		} finally {
+		    rs.close();
+		    stmt.close();
+		    conn.close();
+		}
+	}
+}
+```
+
+>[!question] Tramite java possiamo anche ricavare dei metadati da parte del database
+
+## Utilizzo di JDBC
+
+|Metodo|Classe|Cosa fa|
+|---|---|---|
+|`getConnection(url, user, password)`|`DriverManager`|Sceglie il driver dal prefisso dell'URL e apre la connessione. Lancia `SQLException` se le credenziali sono errate o il DB non è raggiungibile.|
+|`createStatement()`|`Connection`|Crea l'oggetto `Statement` per inviare SQL al DB.|
+|`executeQuery(sql)`|`Statement`|Esegue una `SELECT` e restituisce un `ResultSet`.|
+|`next()`|`ResultSet`|Sposta il cursore alla riga successiva. Restituisce `false` quando le righe sono finite. All'inizio il cursore sta _prima_ della prima riga, quindi `next()` va chiamato prima di leggere.|
+|`getInt("id")`, `getString("name")`|`ResultSet`|Leggono il valore di una colonna della riga corrente, convertendolo nel tipo Java (vedi la tabella dei tipi).|
+|`close()`|`ResultSet`, `Statement`, `Connection`|Rilascia le risorse. Si chiude in ordine inverso rispetto all'apertura: `rs`, poi `stmt`, poi `conn`.|
+### Execute Update
+Si usa per tutto ciò che **non** è una `SELECT`: modifica dati (DML) e struttura (DDL).
+
+```java
+String sql = "INSERT INTO users (name) VALUES ('Mario Verdi')";
+Statement statement = conn.createStatement();
+int rowsInserted = statement.executeUpdate(sql);
+if (rowsInserted > 0) {
+    System.out.println("Nuovo utente inserito con successo!");
+}
+statement.close();
+```
+
+- Restituisce un `int`: il **numero di righe toccate**. Per un `INSERT` di una riga vale 1, per un `UPDATE` o `DELETE` quante righe corrispondevano alla `WHERE`. Per `CREATE`/`DROP`/`ALTER` vale 0.
+- Per questo il controllo `rowsInserted > 0` dice se l'operazione ha avuto effetto.
+- Non restituisce un `ResultSet`: se gli passi una `SELECT` lancia `SQLException`.
+- Nell'esempio la colonna `id` non viene inserita perché è auto-incrementale: il DB assegna da solo il 10 a Mario Verdi.
+- `setQueryTimeout(secondi)` fissa quanto il driver aspetta il completamento di un'istruzione prima di lanciare `SQLException`.
+
+### Prepared Statement
+Il problema di `Statement` è che la query è una stringa costruita a mano. Se dentro ci metti input dell'utente per concatenazione, quell'input diventa parte del codice SQL.
+`PreparedStatement` separa **struttura** e **dati**:
+
+```java
+String sql = "INSERT INTO users (name) VALUES (?)";
+PreparedStatement statement = conn.prepareStatement(sql);
+statement.setString(1, "Mario Verdi");
+int rowsInserted = statement.executeUpdate();
+```
+
+1. Scrivi la query con dei segnaposto `?`.
+2. `prepareStatement(sql)` la manda subito al DB, che la analizza e la **precompila**.
+3. `setString(1, ...)` assegna il valore al primo `?` (indici da **1**). Esistono `setInt`, `setDouble`, `setDate`, ecc., che seguono la tabella dei tipi JDBC.
+4. `executeUpdate()` o `executeQuery()` vanno chiamati **senza argomenti**, perché la query è già stata passata prima.
+
+**Vantaggi:**
+- **Sicurezza**: i valori sono sempre trattati come dati, mai come SQL.
+- **Prestazioni**: se esegui la stessa query più volte con valori diversi (ad esempio in un ciclo), il DB la compila una volta sola.
+- **Comodità**: niente apici e concatenazioni, e il driver gestisce da solo la formattazione di date e caratteri speciali.
+
+**Limite:** il `?` sostituisce solo **valori**, non nomi di tabelle o colonne.
+
+`Statement` solo per query fisse senza input esterno, `PreparedStatement` appena c'è un valore che arriva dall'utente o la query si ripete.
+
+### SQL injection
+```java
+String username = req.getParameter("user"); // input dell'utente
+String sql = "SELECT * FROM users WHERE username = '" + username + "'";
+```
+
+Se l'utente scrive `' OR '1'='1`, la stringa finale diventa:
+
+```sql
+SELECT * FROM users WHERE username = '' OR '1'='1'
+```
+
+`'1'='1'` è sempre vero, quindi la `WHERE` non filtra più nulla e la query restituisce **tutte le righe**. Un attaccante potrebbe anche chiudere la query e aggiungerne altre, ad esempio per cancellare tabelle. Il problema è che l'input ha cambiato la **struttura** della query.
+
+Con `PreparedStatement`:
+```java
+String sql = "SELECT * FROM users WHERE username = ?";
+try (PreparedStatement ps = conn.prepareStatement(sql)) {
+    ps.setString(1, username);
+    ResultSet rs = ps.executeQuery();
+}
+```
+
+La struttura è già stata compilata prima che il valore arrivi. L'input `' OR '1'='1` viene cercato come **nome utente letterale**, cioè qualcuno che si chiama proprio così, e non trova nulla.
+
+Il `try (...)` è un **try-with-resources**: chiude automaticamente `ps` a fine blocco, anche in caso di eccezione. Evita i `close()` manuali delle slide ed è la pratica moderna.
+
+**Da ricordare per l'esame:** concatenare input in una query `Statement` = rischio injection. Soluzione = `PreparedStatement` con `?`.
+### Stored Procedures
+Una **stored procedure** è un blocco di codice SQL **salvato nel database stesso**, con un nome, che le applicazioni possono richiamare. È l'equivalente di una funzione/metodo, ma vive nel DB e lavora direttamente sui dati, non sulla memoria della tua applicazione.
+*es.*
+```sql
+CREATE PROCEDURE GetAllUsers()
+BEGIN
+    SELECT * FROM users;
+END;
+```
+
+**Perché usarle:**
+- **Riutilizzabilità**: la logica è scritta una volta e richiamabile da qualsiasi applicazione.
+- **Meno traffico**: invece di mandare più query avanti e indietro, mandi una sola chiamata e il lavoro avviene sul server DB.
+- **Prestazioni**: il DB può precompilarla e ottimizzarla.
+- **Sicurezza**: l'app chiama la procedura con dei parametri, quindi non c'è SQL costruito per concatenazione (niente injection, se i parametri sono gestiti correttamente). Inoltre puoi dare all'utente il permesso di eseguire la procedura senza dargli accesso diretto alle tabelle.
+
+### Transaction
