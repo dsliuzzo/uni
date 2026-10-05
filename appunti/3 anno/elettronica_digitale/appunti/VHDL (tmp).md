@@ -330,7 +330,7 @@ ADD_BUS(27 downto 24) <= DATA_BUS(1 to 4);   -- ok
 ADD_BUS(24 to 27)     <= DATA_BUS(1 to 4);   -- ❌ direzione opposta
 ```
 
-### Concatenazione `&`
+### Concatenazione
 
 Raggruppa bit singoli e vettori per formare array.
 

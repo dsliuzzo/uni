@@ -206,9 +206,183 @@ MODULE1: HALFADDER
 ```
 ## Operatori
 
-|Categoria|Operatori|
-|---|---|
-|Logici|`not`, `and`, `or`, `nand`, `nor`, `xor`, `xnor`|
-|Relazionali|`=`, `/=`, `<`, `<=`, `>`, `>=`|
-|Shift|`sll`, `srl`|
-|Aritmetici|`+`, `-`, `*`, `/`, `mod`, `abs`|
+| Categoria   | Operatori                                        |
+| ----------- | ------------------------------------------------ |
+| Logici      | `not`, `and`, `or`, `nand`, `nor`, `xor`, `xnor` |
+| Relazionali | `=`, `/=`, `<`, `<=`, `>`, `>=`                  |
+| Shift       | `sll`, `srl`                                     |
+| Aritmetici  | `+`, `-`, `*`, `/`, `mod`, `abs`                 |
+## Array
+
+Insieme di oggetti **dello stesso tipo**. Standard: `bit_vector` (array di `bit`), `string` (array di `character`). Si possono definire array anche di altri tipi.
+### Dichiarazione e assegnazione
+
+```vhdl
+signal ADD_BUS      : bit_vector(31 downto 0);
+signal DATA_BUS     : bit_vector(0 to 7);
+signal INTERNAL_BUS : bit_vector(1 to 8);
+signal EXT_BUS      : bit_vector(31 downto 24);
+```
+
+- `downto` → MSB a sinistra (indice alto → basso), `to` → indice crescente
+- ❌ `bit_vector(0 downto 31)` / `bit_vector(7 to 0)` (range al contrario = vuoto)
+- l'assegnazione tra array avviene **per posizione**, non per indice: `DATA_BUS <= INTERNAL_BUS;` → `DATA_BUS(0) <= INTERNAL_BUS(1)` ... `DATA_BUS(7) <= INTERNAL_BUS(8)`
+- ❌ `EXT_BUS <= ADD_BUS;` → dimensioni diverse
+
+### Inizializzazione con costanti
+
+- vettore di bit → **virgolette doppie** `"01011010"`
+- singolo bit → apici `'1'`
+
+### Slices
+
+Porzione di un array. L'ordine deve essere lo **stesso** della dichiarazione.
+
+```vhdl
+ADD_BUS(27 downto 24) <= DATA_BUS(1 to 4);   -- ok
+ADD_BUS(24 to 27)     <= DATA_BUS(1 to 4);   -- ❌ direzione opposta
+```
+
+### Concatenazione
+
+Raggruppa bit singoli e vettori per formare array.
+
+```vhdl
+-- A='1', B='0', C='0', D='1'; A_BUS="010", B_BUS="11101"
+Z_BUS <= A & B & C & D;      -- "1001"
+BYTE  <= A_BUS & B_BUS;      -- "01011101"
+```
+
+### Aggregati
+
+Modo efficiente di assegnare gli elementi di un vettore.
+
+```vhdl
+Z_BUS <= (A, B, C, D);                         -- per posizione
+Z_BUS <= (3 => '1', 1 downto 0 => '1', 2 => B); -- per indice
+BUS   <= (3 => '1', 1 => '0', others => B);     -- others: indipendente dalla dimensione
+```
+
+> [!warning] `(A,B,C,D) <= "0101";` → ambiguità tra i tipi, da evitare
+
+
+# Test bench
+>[!important] Test bench
+>Permette di simulare il componente del circuito a partire dalla forma d'onda --> in uscita ha forma d'onda.
+>Codice `VHDL` per rappresenta il circuito --> descrizione temporale delle forme d'onda
+
+--> **Regole**
+1. Non ha corrispondenza circuitale --> non ha una entity
+2. a livello gerarchico frammento di codice prescinde costituzione component da testare
+3. `architecture` definisce:
+	1. component da simulare
+	2. segnali: associare forme d'onda fisiche ad elementi di codice
+
+*es.*
+```
+A = 0 0
+B = 0 1
+Cin = 0
+
+A = 1 1
+B = 0 1
+Cin = 0
+```
+
+![[VHDL-1791209382970.webp|center|601]]
+``` vhdl
+Entity SimRCA2 is
+end SimRCA2;
+
+Architecture mySimRCA2 of SimRCA2 is
+component RCA2
+port(
+	A1, A0: in bit;
+	B1, B0: in bit:
+	Cin: in bit;
+	Cout, S1, S0: out bit
+);
+end component;
+signal A1, A0, B1, B0, Cin, Cout, S1, S0: bit;
+
+-- statement non concorrenti definiti da process: tutto ciò che contiene non è sequenziale
+begin
+	process begin
+		-- t=0
+		A1 <= '0'; A0 <= '0';
+		B1 <= '0'; B0 <= '1'; Cin <= '0';
+		wait for 10ns;
+		-- t=10
+		A1 <= '1'; A0 <= '1':
+		wait for 10ns;
+		-- t=20
+		A1 <= '0'; A0 <= '1';
+		B1 <= '1'; B0 <= '0';
+		Cin <= '1';
+		wait for 10ns;
+	end process
+	-- dichiarazione: circuit under test
+	CUT: RCA2
+		port map(A1,A0,B1,B0,Cin,Cout,S1,S0);
+end mySimRCA2;
+```
+
+*es.* Full adder con multiplexer
+![[1. Reti logiche-1790174274976.webp|center|453]]
+``` vhdl
+Entity FullAdd2 is
+port(
+	A, B, Cin: in bit;
+	Cout, S: out bit);
+end FullAdd2;
+Architecture myFA2 of FullAdd2 is
+signal y:bit;
+begin
+	Cout <= Cin when y = '1' else A; -- operazioni di multiplexaggio
+	y <= A xor B;
+	S <= y xor Cin;
+end myFA2
+```
+
+*es.* Ripple carry a 4 bit
+``` mermaid
+flowchart LR
+	FA3(FA3) --> FA2(FA2) --> FA1(FA1) --> FA0(FA0)
+	Cin --> FA0
+	A3 --> FA3
+	B3 --> FA3
+	A2 --> FA2
+	B2 --> FA2
+	A1 --> FA1
+	B1 --> FA1
+	A0 --> FA0
+	B0 --> FA0
+	FA3 --> C4
+	FA3 --> S3
+	FA2 --> S2
+	FA1 --> S1
+	FA0 --> S0
+```
+
+``` vhdl
+entity RCA4 is
+port(
+	A,B: in bit_vector(3 downto 0);
+	Cin: in bit;
+	C4: out bit;
+	S: out bit_vector(3 downto 0));
+end RCA4;
+architecture myRCA4 of RCA4 is
+component FullAdd2
+port(
+	A,B,Cin: in bit;
+	Cout,S: out bit);
+end component;
+signal C: bit_vector(3 downto 1);
+begin
+	FA0: FullAdd2 port map(A(0),B(0),Cin,C(1),S(0));
+	FA1: FullAdd2 port map(A(1),B(1),Cin,C(2),S(1));
+	FA2: FullAdd2 port map(A(2),B(2),Cin,C(3),S(2));
+	FA3: FullAdd2 port map(A(3),B(3),Cin,C4,S(3))
+end myRCA4;
+```
