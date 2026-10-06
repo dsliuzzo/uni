@@ -177,7 +177,7 @@ La generalizzazione è una particolare relazione, che ci permette di [[Java#Ered
 
 Ogni qual volta viene definita una generalizzazione bisogna specificare il tipo, tramite le **proprietà**:
 - totale/parziale:
-  è definita **totale** una generalizzazione in cui ogni istanza dell'entità padre appartiene ad uno dei figli (partizione): $(\text{St} \cap \text{Doc}) \wedge (\text{St} \cup\text{Doc} =\text{Per})$
+  è definita **totale** una generalizzazione in cui ogni istanza dell'entità padre appartiene ad uno dei figli (partizione): $\text{Per} \backslash (\text{St} \cup\text{Doc}) = \emptyset$;
 - inclusiva/esclusiva
   è definita **esclusiva** una generalizzazione in cui l'intersezione delle entità figlie è nulla $\text{St} \cap\text{Doc} = \emptyset$
 ### IS-A

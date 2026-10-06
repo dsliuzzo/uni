@@ -858,7 +858,7 @@ JDBC opera attraverso una serie di fasi per l'utilizzo dei database:
 2. **Statement**
    creazione dell'oggetto che consente il passaggio dal livello applicativo al livello logico - consente di inviare query SQL. Restituisce il result set
 3. **Result set**
-   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java (contiene ciò che viene fornito dal database come oggetto di java)
+   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java (contiene ciò che viene fornito dal database come oggetto di java iterabile)
 4. **Connection**
    chiusura della connessione
 Questa suddivisione permette di rendere il codice più modulare, portabile ed evitare problemi di performance, creando una vera e propria **pipeline**.
@@ -1019,7 +1019,7 @@ try {
 >- **Non-Repeatable Read** – leggere due volte la stessa riga e ottenere valori diversi perché un’altra transaction l’ha modificata e confermata nel frattempo.
 >- **Phantom Read** – eseguire query con lo stesso filtro e ottenere righe diverse perché un’altra transaction ha inserito nuove righe che soddisfano il filtro.
 #### Transaction isolation
-**Principio di parsimonia**.
+**Principio di parsimonia** - coperta corta - trade off.
 Per evitare inconsistenze possiamo decidere il **livello di isolamento** delle transaction per trovare un bilanciamento tra consistenza e prestazioni: un livello maggiore di isolamento riduce la **concorrenza** e le **prestazioni**.
 
 | Livello JDBC                   | Descrizione                                                       | Problemi evitati                       |
@@ -1029,3 +1029,81 @@ Per evitare inconsistenze possiamo decidere il **livello di isolamento** delle t
 | `TRANSACTION_REPEATABLE_READ`  | Garantisce che righe già lette non cambino durante la transaction | evita dirty read e non repeatable read |
 | `TRANSACTION_SERIALIZABLE`     | Massima protezione: esecuzione seriale della transaction          | evita tutte le inconsistenze           |
 Nelle transaction ad alto isolamento, il database blocca righe o tabelle, impedendo ad altre transaction di modificarle contemporaneamente. Più righe vengono bloccate e più a lungo restano bloccate, maggiore è il tempo di attesa per le altre transaction. Controlli aggiuntivi possono anche richiedere CPU, memoria e I/O extra.
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+[...] foto tommischiri
+
+
+# Servlet
+
+Le richieste che passano il filtro vengono mappate sulla servlet
+
+Va usata `import jakarta.servlet.*`
+`import javax.*` è deprecated
+
+
+`doGet()` ha due parametri `request` e `response`
+
+Hanno un ciclo di vita - attraversano vari stadi
+``` mermaid
+flowchart TB
+	in("init()") --> ser("service()") --> get("doGet()")
+	ser --> post("doPost()")
+	ser --> put("doPut()")
+	ser --> destroy("destroy()")
+```
+
+file `web.xml` all'interno della quale potevano essere definiti dei valori costanti da recuperare durante l'esecuzione, con la classe `ServletConfig` (approccio iniziale), non sono messe nel codice per basso accoppiamento.
+Possiamo invece usare le annotazioni di java `@annotation`
+
+`@WebServlet()` serve ad accoppiare le singole richieste alla corretta servlet **mapping**
+Servlet based webserver
+Se più richieste/percorsi devono arrivare/puntare alla stessa servlet possiamo utilizzare all'interno del `doGet()` il metodo 
+``` java
+String uri = request.getRequestURI()
+if(uri.endsWith("/users")){
+	// <...>
+}
+```
+per il mapping possiamo anche usare le regex ☠️ - però sono regex chill
+- exact
+- path
+- extension
+- default
+
+che hanno anche questa gerarchia di priorità se si ha match con più servlet
+Problema enorme la concorrenza
+Ogni servlet è un thread?
+dobbiamo garantire thread safety
+Il container crea una sola istanza della servlet che viene condivisa da più richieste
+non siamo noi da user che gestiamo i container, ma nasce per automatizzare degli aspetti: il ciclo di vita non è gestita da noi.
+la `request` può avere anche dei parametri chiave/valore, che possono essere recuperate tramite i metodi `request.getParameter("<chiave>")`
+occhio al cast che esonda
+gestire invocazioni HTTP e generare risposte HTTP
+
+come risposta ad una get interazione con db
+>[!bug] wrappando il db con la servlet sto violando il SoC (separation of consense): mi occupo di tutto all'interno dello stesso codice (gestione richiesta - visualizzazione - gestione dei dati è tutto insieme).
+
+HTTP di base è statico -> possiamo mascherare questa cosa tramite meccanismi che permettono di aggirare la natura stateless di HTTP -> possono essere gestite tramite servlet memorizzando diverse informazioni tramite diversi **scope**
+- request
+- session
+- application
+-> cookie
+piccoli file testuali memorizzati sul client che contengono informazioni (chiave/valore) che vengono inviate al server per personalizzare l'esperienza utente in base a cosa contiene.
+classe `Cookie`
+nella response possiamo inviare il cookie tramite `response.addCookie(c)`
+sono plain text, possono essere dei punti di vulnerabilità
+possono essere implementati tramite json oppure fare riferimento ad un altro oggetto sessione
+

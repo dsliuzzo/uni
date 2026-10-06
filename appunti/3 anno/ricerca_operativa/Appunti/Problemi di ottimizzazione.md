@@ -319,7 +319,7 @@ Formalizziamo inoltre delle **ipotesi di lavoro**:
 utili a garantire infinite soluzioni
 
 >[!question] Osservazione
->Le due ipotesi garantiscono che il sistema di equazioni abbia $\infty^{n-m}$ [[2. I vettori (algebra)#Teorema di Rouché-Capelli|soluzioni]] ed è sempre possibile esplicitare $m$ componenti di $x$ in funzione delle rimanenti $n-m$
+>Le due ipotesi garantiscono che il sistema di equazioni abbia $\infty^{n-m}$ [[2. I vettori (algebra)#Teorema di Rouché-Capelli|soluzioni]] (gradi di libertà del sistema) ed è sempre possibile esplicitare $m$ componenti di $x$ in funzione delle rimanenti $n-m$
 
 #### Motivazioni delle ipotesi
 - se $m>n$ il sistema è sovradimensionato, sono presenti più equazioni del numero di variabili, di conseguenza alcune di esse non sono linearmente indipendenti ed è possibili ricondurre il sistema ad una forma con meno equazioni
@@ -494,7 +494,9 @@ x_B & = B^{-1} \underbrace{(b - N x_N)}_{\infty\text{ sol. del sistema}} \\
     & = B^{-1} b - B^{-1} N x_N
 \end{array}
 $$
-Scelto il vettore [...] 10:10
+Scelto il vettore $x_N$ abbiamo solo numeri e quindi rimane fissata un'unica soluzione.
+Ponendo $x_N = \vec{0}$ il vettore delle variabili di base $x_B = B^{-1}b$.
+
 >[!check] Il vettore $x$ definito come segue è la rappresentazione algebrica del **vertice di un poliedro**:
 >$$
 >x = \left(\begin{array}{c}x_B \\ x_N\end{array}\right) = \left(\begin{array}{c}B^{-1} b \\ 0\end{array}\right)
@@ -511,20 +513,10 @@ Scelto il vettore [...] 10:10
 >- **ammissibile**, se $x_B \geq 0$
 >- **non ammissibile**, se $x_B$ ha almeno una componente negativa
 
-
----
-
-
-nel complesso abbiamo $m+n$ vincoli, ma trovando il vettore $x$ almeno $n-m$ vincoli sono soddisfatti per uguaglianza. Complessivamente abbiamo $n$ vincoli attivi, che sono degli iperpiani.
-$x$ è una soluzione tale per cui nel problema di base sono identificati $n$ iperpiani --> è l'intersezione di $n$ iperpiani (vertice in $\mathbb{R}^n$).
-[...] da capire semispazio o iperspazio pd
-
-[...] da riprendere
-- trovare vettori linearmente indipendenti
-- trovare matrice inversa (controlla se lo fa la calc)
-- prodotto righe per colonna
-- calcolo det (laplace - sarrus)
-
+Nel complesso nella forma standard abbiamo $m+n$ vincoli dati dalle equazioni ($m$) e dai vincoli di non negatività ($n$).
+Sia una soluzione $x$ abbiamo almeno $n-m$ vincoli soddisfatti per uguaglianza essendo $x_N = \vec{0} \in \mathbb{R}^{n-m}$.
+Considerando quindi $m+n-m$ rimangono $n$ vincoli attivi, che sono degli iperpiani.
+L'unico modo per bloccare tutti i gradi di libertà è definire un singolo punto: intersezione di questi iperpiani rappresenta un vertice in $\mathbb{R}^n$.
 ### Caratterizzazione
 Sia $X$ l'insieme delle soluzioni del sistema di equazioni $Ax = b$, con $A \in \mathbb{R}^{m \times n}$, $\text{rango}(A) = m < n$
 $$
@@ -553,27 +545,15 @@ $\implies$ $\overline{x}$ ha almeno $n-m$ componenti nulle
 $\implies$ $\overline{x}$ ha al più $m$ componenti nulle
 #### Osservazioni
 >[!question] Osservazione
->[...] <- slide 10
+>Consideriamo una soluzione di base **degenere** $\overline{x}$ e indichiamo con $p \leq n$ il numero di componenti non nulle.
+>- Si chiama **livello di generalità** la quantità $l = m-p$
+>- Dalla dimostrazione segue che per identificare $B$ occorre individuare $l = m-p$ colonne di $A$ che unite ad $A_{1},\dots,A_p$ formino un insieme di $m$ colonne linearmente indipendenti
+>- Potrebbero esistere diversi gruppi di $l$ colonne che consentono di completare la base
+>- Quindi potrebbero esistere diverse basi corrispondenti alla stessa soluzione di base $x$
+>- Nel caso di soluzione di base non degenere esiste una sola base associata
+>>[!bug] La presenza di un punto con più rappresentazioni possibili diventa problematico nella risoluzione algoritmica di problemi di PL.
 
-
-$$
-x = \left(\begin{array}{c} x_B \\ x_N \end{array}\right) = \left(\begin{array}{c} B^{-1} b\\ 0 \end{array}\right)
-$$
-$$
-x^T = (x_{1},\dots,x_p,0,\dots,0)
-$$
-$$
-B = (A_{1},\dots,A_m)
-$$
-se $p < m$ allora $B$ non è la base $B = (A_{1},\dots,A_p)$
-quando la soluzione è degenere: ho tante basi possibili associate alla stessa soluzione. Le colonne l.i. associate alle variabili pari a 0 possono essere scelte in qualsiasi modo --> **degenericità** --> lo stesso punto può avere rappresentazioni diverse, diventa problematico nella risoluzione algoritmica.
-
-$$
-x_B = B^{-1} b \equiv B x_B = b
-$$
-nel caso degenere vuol dire che in $B$ manca parte delle colonne.
 Sono indistinguibili le soluzioni, ma sono distinguibili le basi.
-Il fatto che si presentino delle soluzioni degenere ci mette in difficoltà nella risoluzione algoritmiche.
 #### Numerosità delle soluzioni di base
 Quanti sono i modi possibili di selezionare $m$ colonne date $n$ colonne possibili.
 Le sotto matrici $B \in \mathbb{R}^{m \times m}$ che è possibile estrarre dalla matrice $A \in \mathbb{R}^{m \times n}$ sono esattamente
@@ -581,53 +561,61 @@ $$
 \binom{n}{m} = \frac{n!}{m! (n - m)!}
 $$
 pertanto il numero di soluzioni di base è **limitato superiormente** da $\binom{n}{m}$.
-Algoritmicamente è fattoriale -> problemi enormi.
+Algoritmicamente è fattoriale nel caso peggiore -> problemi enormi.
 ## Teorema fondamentale della PL in forma standard
+>[!info] Teorema fondamentale della PL
+>Sia $(P)$ il problema di programmazione lineare in forma standard, sotto le ipotesi: $A \in \mathbb{R}^{m \times n}$, $\text{rango}(A) = m < n$:
+>1. Se esiste una soluzione ammissibile per $(P)$, allora esiste una soluzione ammissibile di base per $(P)$;
+>2. Se esiste una soluzione ottima per $(P)$, allora esiste una soluzione ottima di base per $(P)$.
 
+[...]
 esistono e sono in **numero finito**
 
 #dimostrazione 1 enunciato
 $\exists$ soluzione ammissibile $\overline{x}$ $\implies \exists$ SBA
-distinguiamo variabili strettamente positive e variabili nulle
+Sia $\overline{x} \in \Omega(P)$ e sia $p\leq n$ il numero delle sue componenti positive, si può scrivere:
 $$
-\overline{x}^T = (\overline{x}_1,\dots, \overline{x}_p, 0,\dots, 0)
+\overline{x} = (\overline{x}_1,\dots, \overline{x}_p, 0,\dots, 0)^T
 $$
 a questo vettore sono associate le colonne corrispondenti della matrice $A$
 $$
 A = (A_{1},\dots,A_p,A_{p+1},\dots,A_n)
 $$
-riprendendo la caratterizzazione: le colonne associate alle variabili $\neq 0$, $A_{1},\dots,A_p$ se sono l.i., la soluzione è di base ed è ammissibile - th1 dimostrato
+Se le colonne associate alle variabili $\neq 0$, $A_{1},\dots,A_p$ sono linearmente indipendenti, la soluzione è di base ed è ammissibile per quanto detto nella [[#Caratterizzazione|caratterizzazione]].
 
-
-Siano $p$ colonne linearmente dipendenti per hp
+Se invece le colonne sono linearmente dipendenti
 $$
 A = (\underbrace{A_{1},\dots,A_p}_{\begin{array}{c}\text{linearmente} \\ \text{dipendenti}\end{array}},A_{p+1},\dots,A_n)
 $$
-def dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c. $$A_{1}d_{1} + \dots + A_p d_p = \vec{0}$$
-Essendo $A\overline{x} = b$ e parte delle componenti di $\overline{x}$ sono nulle
+$\overline{x}$ non è soluzione di base e dalla definizione di dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c.
+$$A_{1}d_{1} + \dots + A_p d_p = \vec{0}$$
+Essendo $\overline{x} \in \Omega(P)$ allora $A\overline{x} = b$ e parte delle componenti di $\overline{x}$ sono nulle
 $$
 A_{1} \overline{x}_1 + \dots + A_p \overline{x}_p = b
 $$
 in quanto tutto il resto porta con se componenti nulle.
-Moltiplichiamo l'uguaglianza precedente per uno scalare
-$$\epsilon (A_{1}d_{1} + \dots + A_p d_p) = \vec{0}$$
-$$\epsilon A_{1}d_{1} + \dots + \epsilon A_p d_p = \vec{0}$$
-sottraiamo la seconda alla prima
+
+Sottraendo da quest’ultima equazione la precedente premoltiplicata per uno scalare $\epsilon$ arbitrario (essendo pari al vettore nullo stiamo sottraendo una quantità pari a 0), si ottiene
+$$A_{1} \overline{x}_1 + \dots + A_p \overline{x}_p - \epsilon (A_{1}d_{1} + \dots + A_p d_p) = b-\epsilon\vec{0}$$
 $$
-A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) = b
+A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) = b \hspace{4ex} \forall \epsilon \in \mathbb{R}
 $$
 ciò che non compare in questa sommatoria sono degli 0
-definiamo un vettore $$d^T=(d_{1},\dots,d_p,\underbrace{0,\dots,0}_{n-p})$$
+Definendo un vettore :
+$$d=(d_{1},\dots,d_p,\underbrace{0,\dots,0}_{n-p})^T \in \mathbb{R}^n$$
+Possiamo scrivere in forma compatta
+$$
+A(\overline{x} - \epsilon d) = b \hspace{4ex} \forall \epsilon \in \mathbb{R}
+$$
 sarebbe completa
 $$
 A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) + \underbrace{A_{p+1}(\overline{x}_{p+1} - \epsilon d_{p+1})+\dots+ A_n (\overline{x}_n - \epsilon d_n)}_{\text{sono tutti 0}}= b
 $$
-$$
-A(\overline{x} - \epsilon d) = b
-$$
-ci stiamo spostando da $\overline{x}$ di una quantità $\epsilon$.
-Qualunque sia $\epsilon$ soddisfa i vincoli di uguaglianza.
-Dobbiamo rispettare anche i vincoli sul segno: dobbiamo imporre/verificare
+Cioè $(\overline{x}-\epsilon d) \in \mathbb{R} \hspace{2ex} \forall \epsilon \in \mathbb{R}$
+
+Geometricamente ci stiamo spostando da $\overline{x}$ di una quantità $\epsilon$ e qualunque sia $\epsilon$ soddisfa i vincoli di uguaglianza.
+[...]
+Dobbiamo rispettare anche imporre/verificare i vincoli sul segno
 $$
 \overline{x} - \epsilon d \geq 0
 $$
@@ -675,3 +663,11 @@ ha almeno $p-1$ componenti e almeno una componente $j$ che si annulla.
 
 Annulliamo componenti rimanendo ammissibili cercando di verificare il test di l.i.
 usciremo dal loop nel peggiore dei casi avremo una componente positiva e una colonna linearmente indipendente. In questo modo troviamo la base in modo iterativo.
+
+
+
+[...] da riprendere
+- trovare vettori linearmente indipendenti
+- trovare matrice inversa (controlla se lo fa la calc)
+- prodotto righe per colonna
+- calcolo det (laplace - sarrus)
