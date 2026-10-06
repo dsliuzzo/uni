@@ -994,3 +994,38 @@ END;
 - **Sicurezza**: l'app chiama la procedura con dei parametri, quindi non c'è SQL costruito per concatenazione (niente injection, se i parametri sono gestiti correttamente). Inoltre puoi dare all'utente il permesso di eseguire la procedura senza dargli accesso diretto alle tabelle.
 
 ### Transaction
+Di default JDBC è in **auto-commit**: ogni istruzione viene salvata subito e per sempre. Per un bonifico (togli 100 ad A, aggiungi 100 a B) è pericoloso: se si rompe tutto dopo la prima istruzione, hai tolto i soldi ad A e non li hai dati a B.
+``` java
+connection.setAutoCommit(false);
+try {
+    statement.executeUpdate(...);   // operazione 1
+    statement.executeUpdate(...);   // operazione 2
+} catch (Exception e) {
+    connection.rollback();          // qualcosa è andato storto: annulla tutto
+} finally {
+    connection.commit();            // conferma
+    connection.close();
+}
+```
+- `setAutoCommit(false)` fa sì che le modifiche restino **provvisorie**, visibili solo a te.
+- `commit()` le rende definitive.
+- `rollback()` le butta via e riporta il DB a com'era prima.
+
+![[Web-1791288838030.webp|center|580]]
+
+>[!bug] Inconsistenze
+>In JDBC, ogni transaction può avere un livello di isolamento che definisce come le operazioni concorrenti sul database si “vedono” tra loro. Questo è cruciale quando più transaction accedono allo stesso set di dati contemporaneamente, perché senza controllo si rischiano inconsistenze, quali:
+>- **Dirty Read** – leggere dati modificati da un’altra transaction non ancora confermata.
+>- **Non-Repeatable Read** – leggere due volte la stessa riga e ottenere valori diversi perché un’altra transaction l’ha modificata e confermata nel frattempo.
+>- **Phantom Read** – eseguire query con lo stesso filtro e ottenere righe diverse perché un’altra transaction ha inserito nuove righe che soddisfano il filtro.
+#### Transaction isolation
+**Principio di parsimonia**.
+Per evitare inconsistenze possiamo decidere il **livello di isolamento** delle transaction per trovare un bilanciamento tra consistenza e prestazioni: un livello maggiore di isolamento riduce la **concorrenza** e le **prestazioni**.
+
+| Livello JDBC                   | Descrizione                                                       | Problemi evitati                       |
+| ------------------------------ | ----------------------------------------------------------------- | -------------------------------------- |
+| `TRANSACTION_READ_UNCOMMITTED` | Nessuna protezione, si leggono anche dati non confermati          | nessuno                                |
+| `TRANSACTION_READ_COMMITTED`   | Legge solo dati confermati                                        | evita il dirty read                    |
+| `TRANSACTION_REPEATABLE_READ`  | Garantisce che righe già lette non cambino durante la transaction | evita dirty read e non repeatable read |
+| `TRANSACTION_SERIALIZABLE`     | Massima protezione: esecuzione seriale della transaction          | evita tutte le inconsistenze           |
+Nelle transaction ad alto isolamento, il database blocca righe o tabelle, impedendo ad altre transaction di modificarle contemporaneamente. Più righe vengono bloccate e più a lungo restano bloccate, maggiore è il tempo di attesa per le altre transaction. Controlli aggiuntivi possono anche richiedere CPU, memoria e I/O extra.
