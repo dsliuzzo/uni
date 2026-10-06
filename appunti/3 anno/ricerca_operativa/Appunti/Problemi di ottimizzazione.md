@@ -476,7 +476,7 @@ Risolvendo il sistema di equazioni rimangono $n-m$ parametri che sono esattament
 Per trovare il vettore delle variabili che risolve il sistema spostiamo $Nx_N$ a secondo membro e moltiplichiamo entrambi i membri per l'inversa di $B$.
 $$
 \begin{array}{rl}
-B^{-1}x_B & = B^{-1}(b - N x_N) \\
+B^{-1}Bx_B & = B^{-1}(b - N x_N) \\
 x_B & = B^{-1}(b - N x_N) \\
     & = B^{-1} b - B^{-1} N x_N
 \end{array}
