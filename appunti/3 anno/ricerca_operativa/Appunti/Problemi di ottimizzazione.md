@@ -102,7 +102,7 @@ prodotto scalare tra la $i$esima riga e il vettore delle variabili decisionali
 
 Quindi la forma estesa di un problema di programmazione lineare si può esprimere come:
 $$
-\left\{\begin{array}{la}\min & c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n  \\  s.t. & a_{11}x_{1} + a_{12} x_{2} + \dots + a_{1n}x_n \geq b_{1} \\  & a_{21}x_{1} + a_{22}x_{2} + \dots + a_{2n}x_n \geq b_{2} \\  & \vdots \\  & a_{m 1}x_{1} + a_{m 2}x_{2} + \dots + a_{mn}x_n \geq b_m\end{array}\right.
+\left\{\begin{array}{l}\min & c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n  \\  s.t. & a_{11}x_{1} + a_{12} x_{2} + \dots + a_{1n}x_n \geq b_{1} \\  & a_{21}x_{1} + a_{22}x_{2} + \dots + a_{2n}x_n \geq b_{2} \\  & \vdots \\  & a_{m 1}x_{1} + a_{m 2}x_{2} + \dots + a_{mn}x_n \geq b_m\end{array}\right.
 $$
 
 Tutti i [[2. I vettori (algebra)|vettori]] sono rappresentati da colonne
@@ -316,7 +316,7 @@ $$\Omega(P) = \{x \in \mathbb{R}^n:Ax = b, x \geq 0\} = X \cap \mathbb{R}_+^n \s
 Formalizziamo inoltre delle **ipotesi di lavoro**:
 - $m < n$
 - $\text{rango}(A) = m$
-
+utili a garantire infinite soluzioni
 
 >[!question] Osservazione
 >Le due ipotesi garantiscono che il sistema di equazioni abbia $\infty^{n-m}$ [[2. I vettori (algebra)#Teorema di Rouché-Capelli|soluzioni]] ed è sempre possibile esplicitare $m$ componenti di $x$ in funzione delle rimanenti $n-m$
@@ -430,6 +430,12 @@ $$
 & x \geq 0
 \end{cases}
 $$
+Dove $c,x \in \mathbb{R}^n$, $A \in \mathbb{R}^{m \times n}$ e $b \in \mathbb{R}^m$
+
+>[!question] Osservazione
+>Finche usiamo i simboli è un problema di programmazione lineare.
+>Nel momento in cui utilizziamo i numeri prende il nome di **istanza di un problema di programmazione lineare**
+
 Indichiamo con $X$ l'insieme delle soluzioni del sistema di equazioni, $\Omega (P)$ indica la regione ammissibile del problema.
 
 >[!question] Osservazione
@@ -465,7 +471,8 @@ Distinguiamo quindi
 >>N = \left(A_{j_{m+1}}|A_{j_{m+2}}|\dots|A_{j_n}\right)
 >>$$
 
-Definiamo i vettori delle variabili di base e variabili non di base
+$B$ è una matrice $m \times m$ t.c. $\det(B) \neq 0$.
+Definiamo i vettori delle variabili di base e variabili fuori base
 $$
 x_B = \left(\begin{array}{c} x_{j_{1}} \\ \vdots \\ x_{j_m}\end{array}\right) \in \mathbb{R}^m \hspace{8ex} x_N = \left(\begin{array}{c} x_{j_{m+1}} \\ \vdots \\ x_{j_n}\end{array}\right) \in \mathbb{R}^{n-m}
 $$
@@ -473,23 +480,26 @@ Permutiamo anche le componenti del vettore $x$
 $$
 \underbrace{A_{j_{1}}x_{j_{1}} + \dots + A_{j_m}x_{j_m}}_{Bx_B} + \underbrace{A_{j_{m+1}} x_{j_{m+1}} + \dots + A_{j_n}x_{j_n}}_{Nx_N} = b
 $$
-Possiamo quindi riscrivere il sistema di equazioni dei vincoli come
+Possiamo quindi riscrivere il sistema di equazioni dei vincoli in forma matriciale come
 $$
 Ax = b \implies Bx_B + Nx_N = b
 $$
 Risolvendo il sistema di equazioni rimangono $n-m$ parametri che sono esattamente da $A_{j_{m+1}}$ a $A_{j_n}$.
-Per trovare il vettore delle variabili che risolve il sistema spostiamo $Nx_N$ a secondo membro e moltiplichiamo entrambi i membri per l'inversa di $B$.
+Per trovare il vettore delle variabili che risolve il sistema spostiamo $Nx_N$ a secondo membro e premoltiplichiamo entrambi i membri per l'inversa di $B$.
 $$
 \begin{array}{rl}
+B x_B & = b-Nx_N \\
 B^{-1}Bx_B & = B^{-1}(b - N x_N) \\
-x_B & = B^{-1}(b - N x_N) \\
+x_B & = B^{-1} \underbrace{(b - N x_N)}_{\infty\text{ sol. del sistema}} \\
     & = B^{-1} b - B^{-1} N x_N
 \end{array}
 $$
-Il vettore $x$ definito come segue è la rappresentazione algebrica del **vertice di un poliedro**:
-$$
-x = \left(\begin{array}{c}x_B \\ x_N\end{array}\right) = \left(\begin{array}{c}B^{-1} b \\ 0\end{array}\right)
-$$
+Scelto il vettore [...] 10:10
+>[!check] Il vettore $x$ definito come segue è la rappresentazione algebrica del **vertice di un poliedro**:
+>$$
+>x = \left(\begin{array}{c}x_B \\ x_N\end{array}\right) = \left(\begin{array}{c}B^{-1} b \\ 0\end{array}\right)
+>$$
+
 >[!important] Soluzione di base
 >Si definisce soluzione di base del sistema $Ax = b$ (corrispondente alla base di $B$) la soluzione che si ottiene ponendo $x_N = 0$
 >$$
@@ -500,3 +510,168 @@ $$
 >- **degenere**, se $x_B$ ha almeno una componente nulla
 >- **ammissibile**, se $x_B \geq 0$
 >- **non ammissibile**, se $x_B$ ha almeno una componente negativa
+
+
+---
+
+
+nel complesso abbiamo $m+n$ vincoli, ma trovando il vettore $x$ almeno $n-m$ vincoli sono soddisfatti per uguaglianza. Complessivamente abbiamo $n$ vincoli attivi, che sono degli iperpiani.
+$x$ è una soluzione tale per cui nel problema di base sono identificati $n$ iperpiani --> è l'intersezione di $n$ iperpiani (vertice in $\mathbb{R}^n$).
+[...] da capire semispazio o iperspazio pd
+
+[...] da riprendere
+- trovare vettori linearmente indipendenti
+- trovare matrice inversa (controlla se lo fa la calc)
+- prodotto righe per colonna
+- calcolo det (laplace - sarrus)
+
+### Caratterizzazione
+Sia $X$ l'insieme delle soluzioni del sistema di equazioni $Ax = b$, con $A \in \mathbb{R}^{m \times n}$, $\text{rango}(A) = m < n$
+$$
+X = \{x \in \mathbb{R}^n:Ax = b\}
+$$
+$x \in X$ è una soluzione di base $\Longleftrightarrow$ le componenti non nulle di $x$ corrispondono a colonne linearmente indipendenti della matrice $A$.
+#dimostrazione 
+$\implies$ discende dalla definizione
+$\Longleftarrow$ va dimostrata separatamente
+permutiamo, senza perdere generalità, le colonne della matrice $A$ e le variabili di $x$ in modo da mettere in testa al vettore tutte le componenti diverse da 0
+$$
+x^T = (x_{1},x_{2},\dots,x_p,0,\dots,0)
+$$
+indicando con $p \leq n$ il numero di componenti non nulle.
+
+Per ipotesi le colonne $A_{1},\dots,A_p$ sono linearmente indipendenti, di conseguenza $p \leq m$ (in quanto $m$ è il massimo numero di colonne linearmente indipendenti).
+
+1. se $p = m$ allora$$x^T = (\underbrace{x_{1},x_{2},\dots,x_m}_{B^{-1}b},0,\dots,0) \hspace{8ex} A_{1},\dots,A_m = B$$questa non è altro che la definizione di **soluzione di base non degenere**
+2. se $p < m$ allora
+   essendo $\text{rango}(A) = m$ (dentro $A$ esistono $m$ colonne linearmente indipendenti), esistono in $A$ $m-p$ colonne $A_{p+1},\dots,A_{m}$ associate a componenti nulle, che unite a $A_{1},\dots,A_p$ formano un insieme di $m$ colonne linearmente indipendenti. Perciò si può porre $$B = [A_{1},\dots,A_p,A_{p+1},\dots,A_m]$$e $x$ è una **soluzione degenere**.
+   Se non esistessero $m-p$ colonne linearmente indipendenti allora $\text{rango}(A)$ non potrebbe essere pari a $m$, oppure $p=m$: abbiamo trovato una contraddizione.
+
+**Corollario**
+$\overline{x}$ è soluzione di base
+$\implies$ $\overline{x}$ ha almeno $n-m$ componenti nulle
+$\implies$ $\overline{x}$ ha al più $m$ componenti nulle
+#### Osservazioni
+>[!question] Osservazione
+>[...] <- slide 10
+
+
+$$
+x = \left(\begin{array}{c} x_B \\ x_N \end{array}\right) = \left(\begin{array}{c} B^{-1} b\\ 0 \end{array}\right)
+$$
+$$
+x^T = (x_{1},\dots,x_p,0,\dots,0)
+$$
+$$
+B = (A_{1},\dots,A_m)
+$$
+se $p < m$ allora $B$ non è la base $B = (A_{1},\dots,A_p)$
+quando la soluzione è degenere: ho tante basi possibili associate alla stessa soluzione. Le colonne l.i. associate alle variabili pari a 0 possono essere scelte in qualsiasi modo --> **degenericità** --> lo stesso punto può avere rappresentazioni diverse, diventa problematico nella risoluzione algoritmica.
+
+$$
+x_B = B^{-1} b \equiv B x_B = b
+$$
+nel caso degenere vuol dire che in $B$ manca parte delle colonne.
+Sono indistinguibili le soluzioni, ma sono distinguibili le basi.
+Il fatto che si presentino delle soluzioni degenere ci mette in difficoltà nella risoluzione algoritmiche.
+#### Numerosità delle soluzioni di base
+Quanti sono i modi possibili di selezionare $m$ colonne date $n$ colonne possibili.
+Le sotto matrici $B \in \mathbb{R}^{m \times m}$ che è possibile estrarre dalla matrice $A \in \mathbb{R}^{m \times n}$ sono esattamente
+$$
+\binom{n}{m} = \frac{n!}{m! (n - m)!}
+$$
+pertanto il numero di soluzioni di base è **limitato superiormente** da $\binom{n}{m}$.
+Algoritmicamente è fattoriale -> problemi enormi.
+## Teorema fondamentale della PL in forma standard
+
+esistono e sono in **numero finito**
+
+#dimostrazione 1 enunciato
+$\exists$ soluzione ammissibile $\overline{x}$ $\implies \exists$ SBA
+distinguiamo variabili strettamente positive e variabili nulle
+$$
+\overline{x}^T = (\overline{x}_1,\dots, \overline{x}_p, 0,\dots, 0)
+$$
+a questo vettore sono associate le colonne corrispondenti della matrice $A$
+$$
+A = (A_{1},\dots,A_p,A_{p+1},\dots,A_n)
+$$
+riprendendo la caratterizzazione: le colonne associate alle variabili $\neq 0$, $A_{1},\dots,A_p$ se sono l.i., la soluzione è di base ed è ammissibile - th1 dimostrato
+
+
+Siano $p$ colonne linearmente dipendenti per hp
+$$
+A = (\underbrace{A_{1},\dots,A_p}_{\begin{array}{c}\text{linearmente} \\ \text{dipendenti}\end{array}},A_{p+1},\dots,A_n)
+$$
+def dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c. $$A_{1}d_{1} + \dots + A_p d_p = \vec{0}$$
+Essendo $A\overline{x} = b$ e parte delle componenti di $\overline{x}$ sono nulle
+$$
+A_{1} \overline{x}_1 + \dots + A_p \overline{x}_p = b
+$$
+in quanto tutto il resto porta con se componenti nulle.
+Moltiplichiamo l'uguaglianza precedente per uno scalare
+$$\epsilon (A_{1}d_{1} + \dots + A_p d_p) = \vec{0}$$
+$$\epsilon A_{1}d_{1} + \dots + \epsilon A_p d_p = \vec{0}$$
+sottraiamo la seconda alla prima
+$$
+A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) = b
+$$
+ciò che non compare in questa sommatoria sono degli 0
+definiamo un vettore $$d^T=(d_{1},\dots,d_p,\underbrace{0,\dots,0}_{n-p})$$
+sarebbe completa
+$$
+A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) + \underbrace{A_{p+1}(\overline{x}_{p+1} - \epsilon d_{p+1})+\dots+ A_n (\overline{x}_n - \epsilon d_n)}_{\text{sono tutti 0}}= b
+$$
+$$
+A(\overline{x} - \epsilon d) = b
+$$
+ci stiamo spostando da $\overline{x}$ di una quantità $\epsilon$.
+Qualunque sia $\epsilon$ soddisfa i vincoli di uguaglianza.
+Dobbiamo rispettare anche i vincoli sul segno: dobbiamo imporre/verificare
+$$
+\overline{x} - \epsilon d \geq 0
+$$
+$$
+\begin{cases}
+\overline{x}_1 - \epsilon d_{1} \geq 0 \\
+\vdots \\
+\overline{x}_p - \epsilon d_p \geq 0
+\end{cases}
+$$
+$$
+\overline{x}_i - \epsilon d_i \geq 0
+$$
+se $d_i = 0$ è soddisfatta $\forall \epsilon \in \mathbb{R}$
+se $d_i >0$ è soddisfatta $\forall \epsilon \leq \frac{\overline{x}_i}{d_i}$
+se $d_i < 0$ è soddisfatta $\forall \epsilon \geq \frac{\overline{x}_i}{s_i}$
+
+Alcune danno un limite superiore, altre un limite inferiore: risolvendole tutte ci aspettiamo di ottenere un intervallo di valori.
+
+Concentriamoci sul limite inferiore che chiameremo $\epsilon_1$
+$$
+\epsilon_1 = \begin{cases}
+- \infty \text{ se } d_i \geq \forall i \\
+\max \begin{cases} \frac{\overline{x}_i}{d_i} : d_i < 0 \end{cases}
+\end{cases}
+$$
+$$
+\epsilon_2 = \begin{cases}
++\infty\text{ se }d_i \leq 0 \forall i \\
+\min \begin{cases} \frac{\overline{x}_i}{d_i} : d_i > 0 \end{cases}
+\end{cases}
+$$
+$$
+\overline{x} - \epsilon d \geq 0 \hspace{4ex} \forall \epsilon \in [\epsilon_1, \epsilon_2]
+$$
+almeno uno dei due ha un valore finito altrimenti le $d_i$ sarebbero tutte nulle, andando contro l'ipotesi.
+
+Il minimo si realizza in corrispondenza di una variabile decisionale
+$$
+\overline{x}_j - \frac{\overline{x}_j}{d_j} d_j = 0
+$$
+ci sarà sicuramente una di quelle uguaglianze che sarà soddisfatta
+
+ha almeno $p-1$ componenti e almeno una componente $j$ che si annulla.
+
+Annulliamo componenti rimanendo ammissibili cercando di verificare il test di l.i.
+usciremo dal loop nel peggiore dei casi avremo una componente positiva e una colonna linearmente indipendente. In questo modo troviamo la base in modo iterativo.
