@@ -8,8 +8,8 @@ $$
 $$
 - $x \in \mathbb{R}^n$ vettore delle **variabili di decisione**
 - $S$ viene chiamato **insieme ammissibile**
-- se $x \in S$ rende $x$ una **soluzione ammissibile** di $P$
-- $f$ prende il nome di **funzione obbiettivo** (spesso viene associata al costo)
+- se $x \in S$, $x$ una **soluzione ammissibile** di $P$
+- $f$ prende il nome di **funzione obiettivo** (spesso viene associata al costo)
 - $f$ è una funzione di $n$ variabili reali: $f(x) = f(x_{1}, x_{2}, \dots,x_n)$
 
 >[!multi-column]
@@ -26,7 +26,7 @@ $$
 >$$ \forall x \in S : f(x^*) \leq f(x)  $$
 
 >[!question] Osservazione
->Le definizioni per il massimo sono duali. La funzione obbiettivo viene indicata con $h$
+>Le definizioni per il massimo sono duali. La funzione obiettivo viene indicata con $h$
 
 **EQUIVALENZA TRA PROBLEMI DI MASSIMO E DI MINIMO**
 Ponendo $h(x) = -f(x)$ rispettivamente $P_{max}$ e $P_{min}$ allora
@@ -79,7 +79,7 @@ $$
 >[!important] Problema di programmazione lineare
 >Se $f$ è una funzione lineare e ciascuna $g_{1},g_{2},\dots,g_m$ sono funzioni lineari il problema si dice di **programmazione lineare**.
 
-## Funzione obbiettivo
+## Funzione obiettivo
 Considerando $n$ coefficienti (di costo) reali $c_{1},\dots,c_n$
 $$
 f(x) = f(x_{1},x_{2},\dots,x_n) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n = \sum_{i=1}^n c_ix_i
@@ -143,19 +143,23 @@ Il prodotto $Ax$ può essere utilizzato per ridefinire le disuguaglianze (vincol
 $$
 Ax \geq b
 $$
-Per quanto riguarda invece la funzione obbiettivo, sia il vettore $c$ che il vettore $x$ sono vettori colonna: non possiamo effettuare il prodotto riga per colonna, di conseguenza utilizziamo la trasposta $c^T$
+Per quanto riguarda invece la funzione obiettivo, sia il vettore $c$ che il vettore $x$ sono vettori colonna: non possiamo effettuare il prodotto riga per colonna, di conseguenza utilizziamo la trasposta $c^T$
 $$
 c^T x = (c_{1},c_{2},\dots,c_n) \left(\begin{array}{l}x_{1} \\  x_{2} \\  \vdots \\  x_n\end{array}\right) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n
 $$
 Ne concludiamo che un problema di programmazione matematica può essere espresso in forma compatta come
-
-
+$$
+\begin{cases}
+\min & c^Tx \\
+\text{s.t.} & Ax \geq b
+\end{cases}
+$$
 ## Risoluzione grafica di un problema in due variabili
 Finché il problema ha solo due variabili decisionali è possibile risolverlo graficamente:
 - I vincoli rappresentano dei semipiani
 - Il sistema di vincoli sarà quindi l'intersezione di questi semipiani (regione ammissibile)
-- Il vettore dei coefficienti $c = (c_{1},c_{2})^T$ rappresenta il gradiente della funzione obbiettivo (direzione di crescita)
-- La funzione obbiettivo è un fascio di rette (curva di livello) - andando in direzione del gradiente stiamo massimizzando la funzione - andando in direzione opposta la stiamo minimizzando
+- Il vettore dei coefficienti $c = (c_{1},c_{2})^T$ rappresenta il gradiente della funzione obiettivo (direzione di crescita)
+- La funzione obiettivo è un fascio di rette (curva di livello) - andando in direzione del gradiente stiamo massimizzando la funzione - andando in direzione opposta la stiamo minimizzando
 Quindi, se il problema è di minimo la direzione opposta a $c$ identifica la direzione di riduzione della funzione obiettivo.
 
 ### Es. 1
@@ -168,7 +172,7 @@ Quindi, se il problema è di minimo la direzione opposta a $c$ identifica la dir
 >>![[Problemi di ottimizzazione-1790755332770.webp|400]]
 >
 >>[!blank]
->>Funzione obbiettivo
+>>Funzione obiettivo
 >>![[Problemi di ottimizzazione-1790755382367.webp|400]]
 
 Soluzione ottima:
@@ -190,7 +194,7 @@ $$
 >>![[Problemi di ottimizzazione-1790755572256.webp]]
 >
 >>[!blank]
->>Funzione obbiettivo
+>>Funzione obiettivo
 >>![[Problemi di ottimizzazione-1790755587370.webp]]
 
 Questo è un problema inferiormente illimitato, quindi non hca un minimo
@@ -211,7 +215,7 @@ Questo è un problema inferiormente illimitato, quindi non hca un minimo
 >>![[Problemi di ottimizzazione-1790755746148.webp]]
 >
 >>[!blank]
->>Funzione obbiettivo
+>>Funzione obiettivo
 >>![[Problemi di ottimizzazione-1790755755929.webp]]
 
 Otteniamo infinite soluzioni ottime lungo il segmento che congiunge
@@ -227,9 +231,9 @@ $$
 ## Definizioni
 >[!multi-column]
 >
->>[!Important] Iperspazio
+>>[!Important] Semispazio
 >>Sia $w \in \mathbb{R}^n$ un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^Tx \geq w_0\}$$
->>si chiama **iperspazio** (generalizzazione a $n$ dimensioni del semispazio).
+>>si chiama **semispazio** (generalizzazione a $n$ dimensioni del semispazio).
 >
 >>[!important] Iperpiani
 >>Sia $w \in \mathbb{R}^n$  un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^T x = w_0\}$$
@@ -270,7 +274,7 @@ Date le seguenti considerazioni (che non contraddicono le precedenti definizioni
 
 >[!info] Teorema sulla convessità delle soluzioni
 >Consideriamo un problema $(P)$ di programmazione lineare che ammetta un ottimo finito e indichiamo con $x^{(1)}$ una soluzione ottima. Supponiamo che esista una soluzione ammissibile $x^{(2)} \neq x^{(1)}$ tale che:$$c^Tx^{(1)} = c^Tx^{(2)}$$
->I due vettori sono diversi, ma hanno lo stesso valore obbiettivo, quindi entrambe sono soluzioni ottime di $(P)$.
+>I due vettori sono diversi, ma hanno lo stesso valore obiettivo, quindi entrambe sono soluzioni ottime di $(P)$.
 >Consideriamo i vettori $x(\lambda) = \lambda x^{(1)} + (1-\lambda)x^{(2)}$ che sono combinazione convesse di $x^{(1)}$ e $x^{(2)}$. Il teorema precedente garantisce l'ammissibilità di $x(\lambda) \forall \lambda \in [0,1]$.
 >Inoltre$$c^T x(\lambda) = \lambda c^T x^{(1)} + (1-\lambda)c^T x^{(2)} = c^Tx^{(2)} = c^T x^{(1)}$$
 >Quindi ogni combinazione convessa di soluzioni ottime di $(P)$ è una soluzione ottima, e l'insieme delle soluzioni ottime di $(P)$ è convesso.
@@ -291,6 +295,7 @@ e rispetta le seguenti proprietà:
 - è un problema di minimo
 - è un sistema di disequazioni lineari
 - le uguaglianze non sono altro che coppie di disuguaglianze
+- le variabili sono vincolate ad avere segno positivo
 
 Anche in questo caso possiamo utilizzare la forma compatta
 $$
@@ -368,7 +373,7 @@ x_j = x_j^+ - x^-_j
 $$
 Dobbiamo quindi sostituire ogni istanza di $x_j$ con $x_j^+ - x_j^-$.
 Stiamo quindi aggiungendo due variabili vincolate in segno e ne stiamo eliminando una.
-In questo caso però dobbiamo modificare anche la funzione obbiettivo.
+In questo caso però dobbiamo modificare anche la funzione obiettivo.
 
 Nei vincoli:
 $$
@@ -383,7 +388,7 @@ $$
 (A_1 | A_2 | \dots | A_j | -A_j| \dots |A_n)
 $$
 
-Nella funzione obbiettivo:
+Nella funzione obiettivo:
 $$
 \displaylines{
 c_{1}x_{1} +\dots + c_j x_j  + \dots + c_n x_n\\
@@ -411,7 +416,7 @@ $$
 >$$
 >se
 >- $s_i = 0$ il vincolo **attivo** (soddisfatto per uguaglianza)
->- $s_i > 0$  il vincolo e strettamente soddisfatto (**non attivo**)
+>- $s_i > 0$  il vincolo è strettamente soddisfatto (**non attivo**)
 >- $s_i <0$ nel punto $\overline{x}$ il vincolo è violato
 
 ## Soluzioni di base
@@ -429,7 +434,7 @@ Indichiamo con $X$ l'insieme delle soluzioni del sistema di equazioni, $\Omega (
 
 >[!question] Osservazione
 >ciascuna variabile ausiliaria:
->1. non sono nelle variabili obbiettivo
+>1. non sono nelle variabili obiettivo
 >2.  sta in un unico vincolo
 >$$Ax = b$$
 >$$\begin{cases}
@@ -457,7 +462,7 @@ Distinguiamo quindi
 >
 >>[!important] Matrice non di base
 >>$$
->>N = \left(A_{j{m+1}}|A_{j_{m+2}}|\dots|A_{j_n}\right)
+>>N = \left(A_{j_{m+1}}|A_{j_{m+2}}|\dots|A_{j_n}\right)
 >>$$
 
 Definiamo i vettori delle variabili di base e variabili non di base
