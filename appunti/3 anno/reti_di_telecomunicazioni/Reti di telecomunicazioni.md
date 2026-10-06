@@ -144,7 +144,7 @@ flowchart LR
 >>-**topologia logica**,  interconnessione tra nodi mediante canali.
 >
 >>[!blank]
->>![[Reti di telecomunicazioni-1790520279316.webp|center|400]]
+>>![[Reti di telecomunicazioni-1791231168755.webp|center|400]]
 
 Non necessariamente coincidono (tramite un insieme di protocolli e regole).
 Tramite software posso gestire la comunicazione tra i nodi e instradare i flussi solo in determinate direzioni.
@@ -153,7 +153,7 @@ Tramite software posso gestire la comunicazione tra i nodi e instradare i flussi
 > La topologia a maglia completamente connessa per esempio a livello fisico è incredibilmente complessa, ma può essere "simulata" a livello logico con molti meno collegamenti.
 >Il processo inverso (limitare una topologia fisica molto connessa) può essere applicato per motivi di sicurezza.
 
-![[Reti di telecomunicazioni-1790520313788.webp|center|718]]
+![[Reti di telecomunicazioni-1791231141323.webp|center|532]]
 
 - **completamente connessa**$$C = \frac{N(N-1)}{2}$$
   aumenta l'affidabilità, ma il numero di collegamenti è quadratica rispetto al numero di nodi.
@@ -462,7 +462,7 @@ Per evitare l'identificazione di un carattere di controllo all'interno del paylo
 >Utilizza come delimitatore di inizio e fine la sequenza di bit `01111110`. Per evitare che si ripresenti all'interno del payload utilizziamo la tecnica del **bit stuffing**: se devo utilizzare la sequenza riservata inserisco un bit in più che interrompe la sequenza, che verrà inserito nella trasmissione e verrà eliminato nella ricezione.
 
 
-### Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)
+### Controllo degli errori
 
 >[!bug] Possibili cause di alterazione
 >- **rumore termico**, probabilità di errore avendo un certo tipo di temperatura assoluta (dipende dai mezzi trasmissivi e apparati di ricezione e trasmissione) - PDF (probability density function)
@@ -500,6 +500,9 @@ Utilizzando una capacità rilevativa, si potrebbe mandare alla sorgente (riscont
 
 In base al mezzo e a degli studi su di essi possiamo decidere se implementare un rilevamento o una correzione (può dipendere per esempio dalla lentezza del canale, se il canale è particolarmente lento si tende ad utilizzare la correzione).
 
+[...]
+![[Reti di telecomunicazioni-1791230576523.webp]]
+
 >[!Important] Controllo di parità
 >Posso utilizzare dei [[4. Gestione della memoria secondaria#Dischi RAID|bit di parità]] per controllare se in un pattern c'è stato un errore.
 >Per essere più sicuri è possibili utilizzare i bit di parità in più dimensioni:
@@ -509,6 +512,7 @@ In base al mezzo e a degli studi su di essi possiamo decidere se implementare un
 
 >[!important] CRC (codice a ridondanza ciclica)
 >[...]
+>![[Reti di telecomunicazioni-1791230629315.webp]]
 
 ### Controllo del flusso e ritrasmissione (stop and wait, go back N)
 #### Stop and wait
