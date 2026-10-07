@@ -530,7 +530,8 @@ end CLA;
 architecture myCLA of CLA is
 signal p,g: bit_vector(2 downto 0);
 begin
-	-- mancano i calcoli di g e c
+	p <= A xor B;
+	g <= A and B;
 	c(1) <= g(0) or p(0) and Cin;
 	c(2) <= g(1) or p(1) and g(0) or p(1) and p(0) and Cin;
 	c(3) <= g(2) or p(2) and g(1) or p(2) and p(1) and g(0) or p(2) and p(1) and p(0) and Cin;
