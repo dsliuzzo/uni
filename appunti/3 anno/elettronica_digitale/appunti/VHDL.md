@@ -101,7 +101,7 @@ signal identificatore : tipo;
 - dichiarati nell'architecture (tra `is` e `begin`), **visibili solo al suo interno**
 - negli esempi: `signal datain : std_logic;` `signal addr : bit_vector(3 downto 0);`
 
-![[Porte logiche-1790763513846.webp|center|401]]
+![[VHDL-1791367673158.webp|center|458]]
 
 ```vhdl
 architecture MyFA of FullAdd is
@@ -266,7 +266,7 @@ BUS   <= (3 => '1', 1 => '0', others => B);     -- others: indipendente dalla di
 > [!warning] `(A,B,C,D) <= "0101";` → ambiguità tra i tipi, da evitare
 
 
-# Test bench
+## Test bench
 >[!important] Test bench
 >Permette di simulare il componente del circuito a partire dalla forma d'onda --> in uscita ha forma d'onda.
 >Codice `VHDL` per rappresenta il circuito --> descrizione temporale delle forme d'onda
@@ -327,6 +327,7 @@ begin
 end mySimRCA2;
 ```
 
+## When - else
 *es.* Full adder con multiplexer
 ![[1. Reti logiche-1790174274976.webp|center|453]]
 ``` vhdl
@@ -385,4 +386,153 @@ begin
 	FA2: FullAdd2 port map(A(2),B(2),Cin,C(3),S(2));
 	FA3: FullAdd2 port map(A(3),B(3),Cin,C4,S(3))
 end myRCA4;
+```
+
+## Loop
+Il codice può essere compattato, utilizzando lo statement **for**:
+- **concorrente** (for generate)
+  può essere utilizzata in componente concorrenti
+- **sequenziale** (for loop)
+  può essere utilizzata solamente all'interno di un process
+
+``` vhdl
+entity RCA8 is
+	port(
+		A,B: in bit_vector(7 downto 0);
+		Cin: in bit;
+		S: out bit_vector(8 downto 0)); -- l'uscita può essere direttamente un vettore
+end RCA8;
+
+architecture myRCA8 of RCA8 is
+
+component FullAdd2
+	port(
+		A,B,Cin: in bit;
+		Cout,S: out bit);
+end component;
+
+signal C: bit_vector(8 downto 0); -- assocerò dopo C(8) ad S(8) e C(0) a Cin
+
+begin
+	C(0) <= Cin;
+	FAi: for i in 1 to 8 generate -- la dichiarazione è implicita e la visibilità è locale al ciclo for
+		FullAddi: FullAdd2 port map(A(i-1),B(i-1),C(i-1),C(i),S(i-1)); -- elenchiamo ingressi/uscite in funzione di i
+	end generate; -- chiude il for
+	S(8) <= C(8);
+end myRCA8;
+```
+
+questa è una descrizione strutturale, invece con il full adder abbiamo fatto una descrizione comportamentale.
+>[!important] Un circuito può fare uso di entrambe le descrizioni
+
+Possiamo anche non utilizzare il component e quindi avere un circuito completamente strutturale/comportamentale (da capire [...]).
+Supponendo di avere un [[Porte logiche#Ripple carry adder|ripple carry adder]] che utilizza dei full adder con multiplexer
+>[!multi-column]
+>
+>>[!blank]
+>>``` vhdl
+>>entity RCA8_v2 is
+>>	port(A,B: in bit_vector(7 downto 0);
+>>	Cin: in bit;
+>>	S: out bit_vector(8 downto 0));
+>>end RCA8_v2;
+>>
+>>architecture myRCA8_v2 of RCA8_v2 is
+>>signal c: bit_vector(8 downto 0);
+>>signal p: bit_vector(7 downto 0);
+>>
+>>begin
+>>	p <= A xor B; -- possiamo utilizzare dei costrutti aggregati -> stiamo facendo lo xor bit a bit
+>>	c(0) <= Cin;
+>>	Circ: for i  in 0 to 7 generate
+>>		c(i+1) <= B(i) when p(i) = '0' else c(i); -- il costrutto when else è concorrenziale quindi può essere utilizzato
+>>		s(i) <= p(i) xor c(i)
+>>	end generate;
+>>	S(8) <= c(8)
+>>end myRCA2_v2;
+>>```
+>
+>>[!blank]
+>>![[VHDL-1791367949012.webp|center]]
+
+
+[...] <-- riordina con queste cose
+- assegnazione
+- istanziazione
+- when/else
+- for generate
+
+``` vhdl
+entity RCA8_v3 is
+	port(A,B: in bit_vector(7 downto 0);
+	Cin: in bit;
+	S: out bit_vector(8 downto 0));
+end RCA8_v3;
+
+architecture myRCA8_v3 of RCA8_v3 is
+signal c: bit_vector(8 downto 0);
+signal p: bit_vector(7 downto 0);
+
+begin
+	p <= A xor B;
+	S(7 downto 0) <= p xor c(7 downto 0); -- posso fare riferimento a dei sottovettori specificando gli indici
+	-- non possiamo usare il when else nell'aggregazione anche su c: nel confronto dovrei elencare tutte le possibili combinazioni di p
+	c(8 downto 1) <= p and c(7 downto 0) or A and B;
+	S(8) <= c(8);
+	c(0) <= Cin;
+end myRCA8_v3;
+```
+
+test bench
+``` vhdl
+entity SimRCA8 is
+end SimRCA8;
+architecture mySim of SimRCA8 is
+component RCA8_v3
+	port(
+		A,B: in bit_vector(7 downto 0);
+		Cin: in bit;
+		S: out bit_vector(8 downto 0));
+end component;
+
+signal A,B: bit_vector(7 downto 0);
+signal Cin: bit;
+signal S: bit_vector(8 downto 0);
+
+begin
+	cut: RCA8_v3 port map(IA,IB,ICin,OS);
+	process begin
+		-- per sequenze binarie usiamo i " "
+		-- t = 0 --
+		IA <= "00000000";
+		IB <= "11111111";
+		ICin <= '1';
+		wait for 10 ns;
+		-- t = 10 --
+		ICin <= '0';
+		wait for 10 ns;
+		-- t = 20 --
+		IA <= (others => '1'); -- tutti i bit di A assumono il valore 1
+		wait; -- buona prassi - la simulazione riparte da 0 dopo aver concluso, fino a quando non si esaurisce il tempo totale di simulazione
+	end process
+end mySim
+```
+
+
+carry look ahead
+``` vhdl
+entity CLA is
+	port(
+		A,B: in bit_vector(2 downto 0);
+		Cin: in bit;
+		c: out bit_vector(3 downto 1));
+end CLA;
+architecture myCLA of CLA is
+signal p,g: bit_vector(2 downto 0);
+begin
+	-- mancano i calcoli di g e c
+	c(1) <= g(0) or p(0) and Cin;
+	c(2) <= g(1) or p(1) and g(0) or p(1) and p(0) and Cin;
+	c(3) <= g(2) or p(2) and g(1) or p(2) and p(1) and g(0) or p(2) and p(1) and p(0) and Cin;
+end myCLA
 ```
