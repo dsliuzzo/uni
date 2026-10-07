@@ -377,12 +377,13 @@ La quantità di bit prelevate dopo il buffer è legata ai protocolli di tipo col
 Dobbiamo fornire i seguenti servizi:
 - servizi forniti a **livello rete** per prelevare o fornire dati al livello adiacente
 - **Livello data link**
-	- **framing** - capire quando inizia e quando si conclude una porzione di dati, su questi frame è possibile effettuare:
-	- **controllo sugli errori**
+	- [[#Framing]]
+	  capire quando inizia e quando si conclude una porzione di dati, su questi frame è possibile effettuare:
+	- [[#Controllo degli errori]]
 	  che stanno avvenendo sul singolo frame, se qualcuno di questi è errato può essere ritrasmesso
-	- **controllo del flusso**
+	- [[#Controllo del flusso e ritrasmissione (stop and wait, go back N)]]
 	  controllo sulla velocità di invio dei dati - il ricevitore potrebbe non riuscire abbastanza velocemente i dati inviati
-- **Livello MAC**
+- [[#Medium access control (MAC)]]
 	- Nel caso di mezzo condiviso fornisce i mezzi per condividere in maniera ottimale le risorse
 
 Vari tipi di buffer che possono essere organizzati a bit (livello 1) o frame (livello 2). Servono a creare una asincronicità e parallelizzazione del funzionamento dei livelli. Inoltre tramite il buffer possiamo capire se il dato è stato corrotto, segnalandolo alla corrente in modo che la sorgente possa ritrasmetterlo: il frame verrà eliminato dal buffer solo quando abbiamo la certezza che ha raggiunto la destinazione.
@@ -456,12 +457,24 @@ Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della 
 >Utilizza una serie di pattern di sincronizzazione SYN, in modo da capire la frequenza con cui vengono inviati i bit. Poi utilizza una sequenza speciale start of header SOH e un'altra sequenza speciale per segnalare l'inizio dei dati STX. Un'altra sequenza speciale indica la fine dei dati ETX.
 >![[Reti di telecomunicazioni-1790866272935.webp|center|400]]
 
-Per evitare l'identificazione di un carattere di controllo all'interno del payload viene utilizzato un carattere DLE (Data link escape) che precede ogni carattere di controllo, che sarà quindi valido solo se preceduto dal DLE.
+
+>[!important] DLE
+>Se nei dati compare per caso un byte uguale a un carattere di controllo, il ricevitore crederebbe che la trama sia finita. Per evitarlo si usa il carattere DLE (Data Link Escape), con la tecnica del character stuffing:
+>- i delimitatori diventano coppie `DLE STX` apre i dati, `DLE ETX` li chiude;
+>- se nei dati compare un DLE, il trasmettitore lo raddoppia (`DLE DLE`); il ricevitore, quando vede due DLE consecutivi, ne elimina uno e tratta l'altro come dato.
+>
+>Così un carattere di controllo è valido solo se preceduto da un DLE singolo.
+
 #### HDLC
 >[!protocollo] HDLC
->Utilizza come delimitatore di inizio e fine la sequenza di bit `01111110`. Per evitare che si ripresenti all'interno del payload utilizziamo la tecnica del **bit stuffing**: se devo utilizzare la sequenza riservata inserisco un bit in più che interrompe la sequenza, che verrà inserito nella trasmissione e verrà eliminato nella ricezione.
+>Utilizza come delimitatore di inizio e fine la sequenza di bit `01111110`. Per evitare che si ripresenti all'interno del payload utilizziamo la tecnica del **bit stuffing**.
 
-
+>[!important] bit stuffing
+>Per garantire che il flag non compaia mai all'interno del frame, trasmettitore e ricevitore si accordano sulla seguente regola:
+>- **in trasmissione**: dopo ogni sequenza di cinque 1 consecutivi nei dati si inserisce uno 0;
+>- **in ricezione**: dopo cinque 1 consecutivi si guarda il bit successivo: se è 0 è di riempimento e viene eliminato; se è 1, si tratta del flag.
+>
+>Poiché nei dati non possono mai comparire sei 1 consecutivi, il flag `01111110` è univoco.
 ### Controllo degli errori
 
 >[!bug] Possibili cause di alterazione
@@ -500,8 +513,10 @@ Utilizzando una capacità rilevativa, si potrebbe mandare alla sorgente (riscont
 
 In base al mezzo e a degli studi su di essi possiamo decidere se implementare un rilevamento o una correzione (può dipendere per esempio dalla lentezza del canale, se il canale è particolarmente lento si tende ad utilizzare la correzione).
 
-[...]
-![[Reti di telecomunicazioni-1791230576523.webp]]
+>[!important] Coding rate
+>Il **coding rate** è il rapporto tra bit utili e bit trasmessi
+>$$R_c = \frac{k}{n} \hspace{4ex} (k =\text{ bit di informazione, }n=\text{ bit totali})$$
+>Più ridondanza significa più protezione, ma $R_c$ più basso (si sprecano più bit).
 
 >[!Important] Controllo di parità
 >Posso utilizzare dei [[4. Gestione della memoria secondaria#Dischi RAID|bit di parità]] per controllare se in un pattern c'è stato un errore.
@@ -511,15 +526,14 @@ In base al mezzo e a degli studi su di essi possiamo decidere se implementare un
 >Per Shannon possiamo determinare il limite superiore del coding rate oltre il quale non si può andare.
 
 >[!important] CRC (codice a ridondanza ciclica)
->[...]
->![[Reti di telecomunicazioni-1791230629315.webp]]
+>Il CRC è un codice di rilevazione che fa uso di aritmetica in modulo 2.
 
-### Controllo del flusso e ritrasmissione (stop and wait, go back N)
+### Controllo del flusso e ritrasmissione
 #### Stop and wait
 
 >[!protocollo] Stop and wait
 >(Caso degenere del go back N con finestra unitaria, necessita di enumerazione a un bit)
->In ogni frame c'è un [[#Controllo degli errori (cause, ripetizione, FEC/ARQ, parità, CRC)|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
+>In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
 >Mantengo un frame nel buffer finché non ricevo un riscontro. Appena ricevo il riscontro posso eliminare il frame dal buffer e posso passare al successivo.
 >Posso gestire un pacchetto alla volta.
 >Ho quindi una bassa utilizzazione del canale.
@@ -631,3 +645,10 @@ Ogni specifica applicazione avrà i suoi protocolli (telnet, ftp, smtp, http, dn
 mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
 Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
 La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
+
+
+
+
+---
+
+

@@ -581,13 +581,13 @@ a questo vettore sono associate le colonne corrispondenti della matrice $A$
 $$
 A = (A_{1},\dots,A_p,A_{p+1},\dots,A_n)
 $$
-Se le colonne associate alle variabili $\neq 0$, $A_{1},\dots,A_p$ sono linearmente indipendenti, la soluzione è di base ed è ammissibile per quanto detto nella [[#Caratterizzazione|caratterizzazione]].
+Se le colonne associate alle variabili $\neq 0$, $A_{1},\dots,A_p$ sono **linearmente indipendenti**, la soluzione è di base ed è ammissibile per quanto detto nella [[#Caratterizzazione|caratterizzazione]].
 
 Se invece le colonne sono linearmente dipendenti
 $$
 A = (\underbrace{A_{1},\dots,A_p}_{\begin{array}{c}\text{linearmente} \\ \text{dipendenti}\end{array}},A_{p+1},\dots,A_n)
 $$
-$\overline{x}$ non è soluzione di base e dalla definizione di dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c.
+$\overline{x}$ non è soluzione di base, ma è ammissibile, e dalla definizione di dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c.
 $$A_{1}d_{1} + \dots + A_p d_p = \vec{0}$$
 Essendo $\overline{x} \in \Omega(P)$ allora $A\overline{x} = b$ e parte delle componenti di $\overline{x}$ sono nulle
 $$
@@ -613,11 +613,11 @@ A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon 
 $$
 Cioè $(\overline{x}-\epsilon d) \in \mathbb{R} \hspace{2ex} \forall \epsilon \in \mathbb{R}$
 
-Geometricamente ci stiamo spostando da $\overline{x}$ di una quantità $\epsilon$ e qualunque sia $\epsilon$ soddisfa i vincoli di uguaglianza.
-[...]
-Dobbiamo rispettare anche imporre/verificare i vincoli sul segno
+Chiamiamo la nuova soluzione $x = \overline{x} - \epsilon d$. Geometricamente ci stiamo spostando da $\overline{x}$ di una quantità $\epsilon$ e qualunque sia $\epsilon$ soddisfa i vincoli di uguaglianza.
+
+Dobbiamo anche imporre/verificare i vincoli sul segno
 $$
-\overline{x} - \epsilon d \geq 0
+x = \overline{x} - \epsilon d \geq 0
 $$
 $$
 \begin{cases}
@@ -629,40 +629,46 @@ $$
 $$
 \overline{x}_i - \epsilon d_i \geq 0
 $$
+Otteniamo $p$ disuguaglianze in 1 incognita $\epsilon$
+
 se $d_i = 0$ è soddisfatta $\forall \epsilon \in \mathbb{R}$
 se $d_i >0$ è soddisfatta $\forall \epsilon \leq \frac{\overline{x}_i}{d_i}$
-se $d_i < 0$ è soddisfatta $\forall \epsilon \geq \frac{\overline{x}_i}{s_i}$
+se $d_i < 0$ è soddisfatta $\forall \epsilon \geq \frac{\overline{x}_i}{d_i}$
 
 Alcune danno un limite superiore, altre un limite inferiore: risolvendole tutte ci aspettiamo di ottenere un intervallo di valori.
-
-Concentriamoci sul limite inferiore che chiameremo $\epsilon_1$
+Poniamo ora
 $$
 \epsilon_1 = \begin{cases}
-- \infty \text{ se } d_i \geq \forall i \\
-\max \begin{cases} \frac{\overline{x}_i}{d_i} : d_i < 0 \end{cases}
+- \infty & \text{ se } d_i \geq 0 \forall i \\
+\max \left\{ \frac{\overline{x}_i}{d_i} : d_i < 0 \right\} & \text{altrimenti}
 \end{cases}
 $$
+Se non abbiamo $d_i$ negative non può essere ammesso il rapporto $\frac{\overline{x}}{d_i}$ non esiste, quindi non abbiamo un limite inferiore, è proprio $-\infty$. Se invece abbiamo dei $d_i$ negativi, il limite inferiore di $\epsilon$ sarà $\frac{\overline{x}}{d_i}$
 $$
 \epsilon_2 = \begin{cases}
-+\infty\text{ se }d_i \leq 0 \forall i \\
-\min \begin{cases} \frac{\overline{x}_i}{d_i} : d_i > 0 \end{cases}
++\infty & \text{ se }d_i \leq 0 \forall i \\
+\min \left\{ \frac{\overline{x}_i}{d_i} : d_i > 0 \right\} & \text{altrimenti}
 \end{cases}
 $$
+In modo duale possiamo sviluppare il limite superiore
 $$
 \overline{x} - \epsilon d \geq 0 \hspace{4ex} \forall \epsilon \in [\epsilon_1, \epsilon_2]
 $$
 almeno uno dei due ha un valore finito altrimenti le $d_i$ sarebbero tutte nulle, andando contro l'ipotesi.
 
-Il minimo si realizza in corrispondenza di una variabile decisionale
+Supponendo che il minimo esista, si realizza in corrispondenza di una variabile decisionale
 $$
 \overline{x}_j - \frac{\overline{x}_j}{d_j} d_j = 0
 $$
 ci sarà sicuramente una di quelle uguaglianze che sarà soddisfatta
 
-ha almeno $p-1$ componenti e almeno una componente $j$ che si annulla.
+ha al più (il minimo può essere trovato da più componenti) $p-1$ componenti negative.
 
-Annulliamo componenti rimanendo ammissibili cercando di verificare il test di l.i.
-usciremo dal loop nel peggiore dei casi avremo una componente positiva e una colonna linearmente indipendente. In questo modo troviamo la base in modo iterativo.
+Ripetiamo questo processo iterativamente eliminando componenti e verificando la dipendenza lineare.
+Nel peggiore dei casi, usciremo dal loop avremo una componente positiva e una colonna linearmente indipendente. In questo modo troviamo la base in modo iterativo.
+
+
+
 
 
 
