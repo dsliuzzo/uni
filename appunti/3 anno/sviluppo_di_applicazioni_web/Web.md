@@ -794,6 +794,26 @@ Strumento che consente di presentare i documenti mediante viste multiple.
 </html>
 ```
 Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Frame 3 nella colonna destra (80%).
+# Principi di progettazione
+
+>[!multi-column]
+>
+>>[!important] Separation of Concerns
+>>Separazione delle varie responsabilità
+>
+>>[!important] High Cohesion
+>>Ogni componente dovrebbe occuparsi di diverse responsabilità
+>
+
+>[!multi-column]
+>
+>>[!important] Low Coupling
+>>Riduzione delle dipendenze tra componenti
+>
+>>[!important] Dependency Inversion
+>>Evitare che un componente dipenda da implementazioni concrete
+>
+
 # Java database connectivity
 JDBC (Java Database Connectivity) è un’API di Java che permette di connettere applicazioni Java a database relazionali. Fornisce un’interfaccia standard per eseguire query SQL, aggiornare dati e gestire connessioni a database come MySQL, PostgreSQL, Oracle e altri.
 ![[Web-1791201912266.webp|center|610]]
@@ -1029,81 +1049,497 @@ Per evitare inconsistenze possiamo decidere il **livello di isolamento** delle t
 | `TRANSACTION_REPEATABLE_READ`  | Garantisce che righe già lette non cambino durante la transaction | evita dirty read e non repeatable read |
 | `TRANSACTION_SERIALIZABLE`     | Massima protezione: esecuzione seriale della transaction          | evita tutte le inconsistenze           |
 Nelle transaction ad alto isolamento, il database blocca righe o tabelle, impedendo ad altre transaction di modificarle contemporaneamente. Più righe vengono bloccate e più a lungo restano bloccate, maggiore è il tempo di attesa per le altre transaction. Controlli aggiuntivi possono anche richiedere CPU, memoria e I/O extra.
-
-
----
-
-
-
-
-
-
-
-
-
-
-
-[...] foto tommischiri
-
-
 # Servlet
+>[!important] Una Servlet è un componente Java server-side, gestito da un Servlet Container, che riceve richieste (tipicamente) HTTP e produce risposte (tipicamente) HTTP.
 
-Le richieste che passano il filtro vengono mappate sulla servlet
-
+Una Servlet è un programma Java che viene eseguito su un server e gestisce le richieste dei client web (solitamente browser).
+Fa parte della piattaforma Jakarta e viene utilizzata principalmente per creare applicazioni web dinamiche.
+È importante soprattutto perché molte tecnologie di livello superiore (Spring, REST API, …) si appoggiano direttamente o indirettamente al modello Servlet.
+Caratteristiche principali di una Servlet:
+- È un componente **server-side**: elabora le richieste HTTP e genera risposte in modo dinamico.
+- **Ciclo di vita** gestito dal server: il container servlet gestisce la parte infrastrutturale (inizializzazione, gestione richieste, mapping, distruzione).
+- Estende **HttpServlet**: la maggior parte delle servlet estende HttpServlet e sovrascrive metodi come `doGet()` o `doPost()`.
+- Gestisce **richieste** e **risposte**: interagisce con i client tramite HttpServletRequest (input) e HttpServletResponse (output).
+![[Web-1791380291194.webp|center|820]]
+https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html
 Va usata `import jakarta.servlet.*`
 `import javax.*` è deprecated
+## Ciclo di vita di una servlet
+>[!blank|float-right]
+>![[Web-1791380598308.webp|center|150]]
 
+Il metodo init() in una servlet viene richiamato una sola volta quando la servlet viene caricata per la prima volta in memoria dal contenitore. Questo avviene prima che la servlet inizi a gestire le richieste. Può essere richiamata in **lazy loading** (predefinito), viene richiamato `init()` alla prima richiesta, oppure **eager loading**, la servlet viene caricata all'avvio del server.
 
-`doGet()` ha due parametri `request` e `response`
+### Parametri di inizializzazione
+Possono essere passati dei parametri di inizializzazione tramite un file `web.xml` all'interno della quale potevano essere definiti dei valori costanti da recuperare durante l'esecuzione, con la classe `ServletConfig` (approccio iniziale), non sono messe nel codice per basso accoppiamento.
 
-Hanno un ciclo di vita - attraversano vari stadi
-``` mermaid
-flowchart TB
-	in("init()") --> ser("service()") --> get("doGet()")
-	ser --> post("doPost()")
-	ser --> put("doPut()")
-	ser --> destroy("destroy()")
+I parametri sono **statici**: li definisce il programmatore/amministratore del server e non cambiano a ogni richiesta. `init()` li legge una sola volta e li memorizza in variabili, poi usate nelle risposte.
+
+```xml
+<servlet>
+	<servlet-name>ShowMessage</servlet-name>
+	<servlet-class>ShowMessage</servlet-class>
+	<init-param>
+		<param-name>message</param-name>
+		<param-value>Hello, Servlet!</param-value>
+	</init-param>
+	<init-param>
+		<param-name>repeats</param-name>
+		<param-value>3</param-value>
+	</init-param>
+</servlet>
 ```
 
-file `web.xml` all'interno della quale potevano essere definiti dei valori costanti da recuperare durante l'esecuzione, con la classe `ServletConfig` (approccio iniziale), non sono messe nel codice per basso accoppiamento.
-Possiamo invece usare le annotazioni di java `@annotation`
-
-`@WebServlet()` serve ad accoppiare le singole richieste alla corretta servlet **mapping**
-Servlet based webserver
-Se più richieste/percorsi devono arrivare/puntare alla stessa servlet possiamo utilizzare all'interno del `doGet()` il metodo 
 ``` java
-String uri = request.getRequestURI()
-if(uri.endsWith("/users")){
-	// <...>
+public class ShowMessage extends HttpServlet {
+	private String message;
+	private String defaultMessage = "No message.";
+	private int repeats = 1;
+
+	public void init() throws ServletException {
+		ServletConfig config = getServletConfig();
+		message = config.getInitParameter("message"); // da web.xml
+		if (message == null) {
+			message = defaultMessage;
+		}
+		try {
+			String repeatString = config.getInitParameter("repeats");
+			repeats = Integer.parseInt(repeatString);
+		} catch (NumberFormatException nfe) {}
+	}
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html");
+		// <head-title>
+		for (int i = 0; i < repeats; i++) {
+			out.println(message + " ");
+		}
+		// <closing HTML tags>
+	}
 }
 ```
-per il mapping possiamo anche usare le regex ☠️ - però sono regex chill
-- exact
-- path
-- extension
-- default
+Nel `doGet()` generiamo la pagina HTML che mostra il `message` definito in `init()`, ripetuto `repeats` volte.
 
-che hanno anche questa gerarchia di priorità se si ha match con più servlet
+Un metodo più moderno consiste nell'utilizzo delle annotazioni di java `@annotation`: `@WebServlet` e `@WebInitParam` al posto di `web.xml`.
+``` java
+@WebServlet(urlPatterns = {"/showMessage"},
+	initParams = {
+		@WebInitParam(name = "message", value = "Hello from annotation!"),
+		@WebInitParam(name = "repeats", value = "3")
+	})
+public class ShowMessage extends HttpServlet {...}
+```
+
+## Mapping
+`@WebServlet()` serve ad accoppiare le singole richieste alla corretta servlet **mapping**: il container sa quale servlet associare a quale URL tramite l'annotazione. In precedenza si usava il file `web.xml`, denominato **deployment descriptor**.
+Servlet based webserver
+
+``` java
+@WebServlet("/hello")
+public class HelloWorld extends HttpServlet {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		PrintWriter out = response.getWriter();
+		out.println("Hello World");
+	}
+}
+```
+Il metodo viene invocato automaticamente dal container quando arriva una richiesta del tipo `GET /myapp/hello HTTP/1.1`, dove `/hello` è l'URL associato alla servlet.
+
+Una singola servlet può essere associata a **più URL**:
+``` java
+@WebServlet({"/users", "/customers", "/hello"})
+```
+Il container mantiene una relazione tra gli URL ricevuti e la stessa istanza della servlet. Utile quando voglio più URL che espongono esattamente la stessa funzionalità, **senza duplicare la servlet** (es. carrello raggiungibile da più pagine).
+
+Se più richieste/percorsi devono arrivare/puntare alla stessa servlet possiamo utilizzare all'interno del `doGet()` il metodo (recuperando l'URL dalla `HttpServletRequest`)
+``` java
+String uri = request.getRequestURI();
+if (uri.endsWith("/users")) {
+	// gestione users
+} else if (uri.endsWith("/customers")) {
+	// gestione customers
+}
+```
+
+per il mapping possiamo anche usare le regex ☠️ - però sono regex chill
+Jakarta Servlet prevede quattro modalità di mapping:
+
+| Tipo      | Esempio   | Cosa intercetta                               |
+| --------- | --------- | --------------------------------------------- |
+| Exact     | `/users`  | solo `/users`                                 |
+| Path      | `/api/*`  | tutto ciò che inizia con `/api/`              |
+| Extension | `*.jsp`   | URL che terminano con `.jsp`                  |
+| Default   | `/`       | richieste non intercettate da mapping più specifici |
+
+>[!important] Regola di precedenza
+>Se due servlet fanno match si considera, in ordine: **1.** exact match → **2.** longest path match → **3.** extension match → **4.** default mapping.
+
+``` java
+@WebServlet("/users")
+class UsersServlet extends HttpServlet {}
+
+@WebServlet("/users/*")
+class UserDetailsServlet extends HttpServlet {}
+```
+- `/users` → `UsersServlet`
+- `/users/123` → `UserDetailsServlet`
+
+Quando le regole di routing diventano numerose, i framework introducono un livello di astrazione superiore per gestirle in modo più **dichiarativo**.
+
+## Concorrenza
 Problema enorme la concorrenza
-Ogni servlet è un thread?
-dobbiamo garantire thread safety
-Il container crea una sola istanza della servlet che viene condivisa da più richieste
+Il container crea una sola istanza della servlet che viene condivisa da più richieste: richieste alla stessa servlet possono essere elaborate **contemporaneamente da thread differenti**.
+
+>[!question] Ogni servlet è un thread?
+>No: una sola istanza, condivisa da più thread (uno per richiesta). Dobbiamo garantire **thread safety**.
+
+``` java
+public class MyServlet extends HttpServlet {
+	private String username;
+	protected void doGet(...) {
+		...
+	}
+}
+```
+- le **variabili locali** della richiesta sono normalmente sicure
+- gli **attributi di istanza** condivisi devono essere progettati considerando l'accesso concorrente
+- esempio: Thread A → `username = "X"`, Thread B → `username = "Y"`
+
 non siamo noi da user che gestiamo i container, ma nasce per automatizzare degli aspetti: il ciclo di vita non è gestita da noi.
-la `request` può avere anche dei parametri chiave/valore, che possono essere recuperate tramite i metodi `request.getParameter("<chiave>")`
-occhio al cast che esonda
+
+## Richieste e risposte HTTP
 gestire invocazioni HTTP e generare risposte HTTP
 
-come risposta ad una get interazione con db
->[!bug] wrappando il db con la servlet sto violando il SoC (separation of consense): mi occupo di tutto all'interno dello stesso codice (gestione richiesta - visualizzazione - gestione dei dati è tutto insieme).
+Una servlet può generare **HTML** invece di testo semplice: basta impostare il content type e scrivere il markup sul `PrintWriter`.
+``` java
+response.setContentType("text/html");
+PrintWriter out = response.getWriter();
+out.println("<HTML>\n" +
+	"<HEAD><TITLE>Hello WWW</TITLE></HEAD>\n" +
+	"<BODY>\n" +
+	"<H1>Hello WWW</H1>\n" +
+	"</BODY></HTML>");
+```
+Risponde sempre a una GET, ma restituisce una pagina HTML vera e propria, con titolo e intestazione `<H1>` "Hello WWW".
 
-HTTP di base è statico -> possiamo mascherare questa cosa tramite meccanismi che permettono di aggirare la natura stateless di HTTP -> possono essere gestite tramite servlet memorizzando diverse informazioni tramite diversi **scope**
-- request
-- session
-- application
--> cookie
+### Parametri dinamici
+la `request` può avere anche dei parametri chiave/valore, che possono essere recuperate tramite i metodi `request.getParameter("<chiave>")`
+Sono i parametri inviati dal client (browser, app, ecc.) con una richiesta HTTP (GET o POST). Possono cambiare a ogni richiesta: sono **dinamici**, cioè non specificati nel file di configurazione (a differenza degli init parameter).
+
+``` java
+String nome = request.getParameter("nome");   // "Mario"
+String etaStr = request.getParameter("eta");  // "25"
+int eta = Integer.parseInt(etaStr);           // 25
+out.println("Hello " + nome + eta);
+```
+invocata da una GET tipo `http://localhost:8080/miaServlet?nome=Mario&eta=25`, in cui i dati arrivano nell'URL sotto forma di **query string**.
+occhio al cast che esonda
+
+### GET e POST
+In entrambi i casi `request.getParameter(...)` può essere utilizzato per leggere i parametri.
+
+>[!important] La differenza fondamentale non è "GET usa getParameter, POST usa qualcos'altro"
+>È il modo in cui i dati sono trasportati nella richiesta HTTP e soprattutto la **semantica HTTP** dell'operazione.
+
+- **GET**: parametri nella query string → `GET /users?id=15` → `request.getParameter("id")`
+- **POST**: ad esempio un form → `doPost()` legge i campi con `getParameter("name")`, `getParameter("email")`
+
+``` html
+<form method="post" action="/users">
+	<input name="name">
+	<input name="email">
+	<button type="submit">Save</button>
+</form>
+```
+
+Inoltre la servlet può:
+- leggere gli **HTTP headers**: `String userAgent = request.getHeader("User-Agent");`
+- impostare un **codice di risposta**: `response.setStatus(HttpServletResponse.SC_OK);`
+- ordinare al browser una **nuova richiesta** (soon…)
+
+### Header
+Gli HTTP header sono metadati inviati insieme a una richiesta o risposta HTTP. Deprecati in stampa perché possono contenere informazioni sensibili.
+
+| Tipo di header | Scopo                                                         |
+| -------------- | ------------------------------------------------------------- |
+| Generali       | Informazioni generali sulla comunicazione                     |
+| Richiesta      | Informazioni sulle preferenze del client o sull'autenticazione |
+| Entità         | Descrivere il corpo del messaggio                             |
+
+``` java
+out.println("Request Method:" + request.getMethod());      // GET
+out.println("Request URI:" + request.getRequestURI());     // /showMessage
+out.println("Request Protocol:" + request.getProtocol());  // HTTP/1.1
+
+Enumeration headerNames = request.getHeaderNames();
+while (headerNames.hasMoreElements()) {
+	String headerName = (String) headerNames.nextElement();
+	out.println(headerName + "=" + request.getHeader(headerName) + " ");
+}
+
+public void doPost(HttpServletRequest request, HttpServletResponse response)
+		throws ServletException, IOException {
+	doGet(request, response);
+}
+```
+Stampiamo tutti gli header della richiesta HTTP in una pagina HTML, gestendo sia richieste GET che POST in modo identico (`doPost()` richiama `doGet()`). Tra gli header compaiono `Host`, `Connection`, `User-Agent`, `Accept-Language`, `Cookie`, ...
+
+## Servlet e database
+come risposta ad una get interazione con db
+Servlet in ascolto su `http://localhost:8080/MyWebApp/hello`, dove `MyWebApp` è l'applicazione che contiene le servlet (`HelloServlet`, `LoginServlet`, `ProductServlet`, `OrderServlet`).
+
+``` java
+@WebServlet("/hello")
+public class HelloServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		resp.setContentType("text/html;charset=UTF-8");
+		String mysqlURL = "jdbc:mysql://localhost:3306/testdb";
+		String us = "root";
+		String pwd = "admin";
+		try {
+			PrintWriter out = resp.getWriter();
+			out.println("<html><body><h2>Elenco Nomi:</h2><ul>");
+			Connection conn = DriverManager.getConnection(mysqlURL, us, pwd);
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT id, name FROM users");
+			while (rs.next()) {
+				out.println("<li>Codice: " + rs.getInt(1) + ", Nome: " + rs.getString(2) + "</li>");
+			}
+			out.println("</ul></body></html>");
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ServletException("Errore JDBC", e);
+		}
+	}
+}
+```
+Il risultato è una pagina con l'elenco `Codice: 1, Nome: Alice`, ... Le eccezioni vengono rilanciate come `ServletException`.
+
+Lo stesso vale con una **stored procedure**, chiamata con `CallableStatement`:
+``` java
+@WebServlet("/userStats")
+public class UserStatsServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			Connection conn = DriverManager.getConnection(mysqlURL, us, pwd);
+			CallableStatement stmt = conn.prepareCall("{call getUserStats(?, ?)}");
+			stmt.registerOutParameter(1, java.sql.Types.INTEGER); // totalUsers
+			stmt.registerOutParameter(2, java.sql.Types.DOUBLE);  // averageAge
+			stmt.execute();
+			int totalUsers = stmt.getInt(1);
+			double averageAge = stmt.getDouble(2);
+			response.getWriter().println("<h1>User Statistics</h1>");
+			response.getWriter().println("<p>Total Users: " + totalUsers + "</p>");
+			response.getWriter().println("<p>Average Age: " + averageAge + "</p>");
+		} catch (SQLException e) { e.printStackTrace(); }
+	}
+}
+```
+``` sql
+CREATE PROCEDURE getUserStats(OUT totalUsers INT, OUT averageAge DOUBLE)
+BEGIN
+	SELECT COUNT(*) INTO totalUsers FROM Users;
+	SELECT AVG(age) INTO averageAge FROM Users;
+END;
+```
+
+>[!bug] wrappando il db con la servlet sto violando il SoC (separation of concerns): mi occupo di tutto all'interno dello stesso codice (gestione richiesta - visualizzazione - gestione dei dati è tutto insieme).
+
+## Stato
+HTTP di base è stateless: ogni richiesta è indipendente -> possiamo mascherare questa cosa tramite meccanismi che permettono di aggirare la natura stateless di HTTP -> possono essere gestite tramite servlet memorizzando diverse informazioni tramite diversi **scope** (attributi memorizzati nelle Servlet API)
+
+| Scope       | Durata                | Condivisione                                 |
+| ----------- | --------------------- | -------------------------------------------- |
+| Request     | singola richiesta     | componenti coinvolti nella request           |
+| Session     | sessione utente       | richieste dello stesso client/sessione       |
+| Application | applicazione web      | servlet/componenti dell'applicazione         |
+
+### Stato nella servlet
+``` java
+public class GetCounter extends HttpServlet {
+	private int getNum;
+
+	public void init(ServletConfig config) throws ServletException {
+		getNum = 0;
+	}
+
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		getNum++;
+		resp.getWriter().println("GETs=" + getNum);
+	}
+}
+```
+`getNum` è una variabile **di istanza** della servlet, condivisa tra tutte le richieste e tutti i client:
+- contatore globale della servlet, tutti i client "vedono" lo stesso valore
+- non si azzera finché la servlet rimane in memoria
+
+>[!bug] Limite
+>Non è thread-safe (più richieste simultanee → rischio conteggio errato), serve una variabile per-client.
+
+### Cookie
 piccoli file testuali memorizzati sul client che contengono informazioni (chiave/valore) che vengono inviate al server per personalizzare l'esperienza utente in base a cosa contiene.
+Un cookie è un piccolo file di dati memorizzato nel **browser**, in genere utilizzato per il monitoraggio delle sessioni o delle preferenze dell'utente.
+1. la servlet crea e invia un cookie al browser
+2. il browser memorizza il cookie
+3. alla richiesta successiva, il browser invia il cookie al server
+
+Possono contenere solo **stringhe** e hanno limiti di dimensione (~4KB).
+
 classe `Cookie`
 nella response possiamo inviare il cookie tramite `response.addCookie(c)`
+``` java
+Cookie c = new Cookie("name", "value");
+c.setMaxAge(...);       // il cookie persiste su disco
+c.setHttpOnly(true);    // non accessibile da JavaScript (sicurezza)
+c.setSecure(true);      // invio solo su HTTPS
+response.addCookie(c);
+```
 sono plain text, possono essere dei punti di vulnerabilità
-possono essere implementati tramite json oppure fare riferimento ad un altro oggetto sessione
+possono essere implementati tramite json oppure fare riferimento ad un altro oggetto sessione:
+- **Opzione 1**: serializzazione e codifica
+``` java
+Map<String,String> info = new HashMap<>();
+info.put("user", "Mario");
+info.put("role", "admin");
+String json = new Gson().toJson(info); // libreria Gson
+Cookie c = new Cookie("userInfo", URLEncoder.encode(json, "UTF-8"));
+response.addCookie(c);
+```
+- **Opzione 2**: riferimento a sessione
+``` java
+Cookie c = new Cookie("sessionId", session.getId());
+response.addCookie(c);
+```
 
+Per un cookie persistente si può estendere `Cookie`:
+``` java
+public class LongLivedCookie extends Cookie {
+	public static final int SECONDS_PER_YEAR = 60*60*24*365;
+	public LongLivedCookie(String name, String value) {
+		super(name, value);
+		setMaxAge(SECONDS_PER_YEAR);
+	}
+}
+```
+
+**Leggere** i cookie:
+``` java
+Cookie[] cookies = request.getCookies();
+if (cookies != null) {
+	for (int i = 0; i < cookies.length; i++) {
+		Cookie c = cookies[i];
+		if (c.getName().equals("someName")) {
+			// do something with c
+			break;
+		}
+	}
+}
+```
+
+| Proprietà / Funzione | Metodi                              | Descrizione                                              |
+| -------------------- | ----------------------------------- | -------------------------------------------------------- |
+| Nome                 | `getName()`                         | Restituisce il nome del cookie (immutabile)              |
+| Valore               | `getValue()` / `setValue(String)`   | Legge o modifica il valore                               |
+| Durata               | `getMaxAge()` / `setMaxAge(int)`    | Legge o imposta la durata in secondi (-1 = sessione)     |
+| Percorso             | `getPath()` / `setPath(String)`     | Legge o imposta il percorso URL per cui il cookie è valido |
+| Sicurezza HTTPS      | `getSecure()` / `setSecure(boolean)` | Legge o imposta se il cookie va inviato solo su HTTPS   |
+| Commento             | `getComment()` / `setComment(String)` | Legge o imposta un commento descrittivo                |
+| Versione protocollo  | `getVersion()` / `setVersion(int)`  | Legge o imposta la versione del protocollo cookie        |
+| Copia                | `clone()`                           | Crea una copia del cookie                                |
+
+### Sessioni
+`HttpSession` è un contenitore dati per singolo client (utente/browser). Ogni client ha la sua sessione unica, identificata da un cookie `JSESSIONID`.
+``` java
+HttpSession session = request.getSession(true); // crea una nuova sessione se non esiste; con false restituisce null
+ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
+if (cart == null) { // nessun carrello nella sessione
+	cart = new ShoppingCart();
+	session.setAttribute("shoppingCart", cart);
+}
+// do something with cart
+```
+Comportamento: il contatore è individuale per client e si mantiene finché dura la sessione (timeout o chiusura del browser, a seconda della configurazione).
+
+| Metodo                                                | Descrizione                                                                              |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `getAttribute`                                        | Estrae un valore memorizzato nella sessione, `null` se al nome non è associato nulla     |
+| `setAttribute`                                        | Associa un valore a un nome                                                              |
+| `removeAttribute`                                     | Rimuove i valori associati al nome                                                       |
+| `getAttributeNames`                                   | Restituisce i nomi di tutti gli attributi nella sessione                                 |
+| `getId`                                               | Restituisce l'identificativo univoco della sessione                                      |
+| `isNew`                                               | Determina se la sessione è nuova per il client                                           |
+| `getCreationTime`                                     | Restituisce l'ora in cui la sessione è stata creata                                      |
+| `getLastAccessedTime`                                 | Restituisce l'ora dell'ultima richiesta inviata dal client                               |
+| `getMaxInactiveInterval`, `setMaxInactiveInterval`    | Ottiene o imposta il tempo di inattività dopo cui la sessione viene invalidata           |
+| `invalidate`                                          | Invalida la sessione e disassocia tutti gli oggetti ad essa associati                    |
+
+Servlet che conta quante volte uno specifico utente ha visitato la pagina nella stessa sessione:
+``` java
+public class SessionCounter extends HttpServlet {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		resp.setContentType("text/html");
+		PrintWriter out = resp.getWriter();
+		HttpSession session = req.getSession(true);
+		String heading;
+		Integer accessCount = (Integer) session.getAttribute("accessCount");
+		if (accessCount == null) {
+			accessCount = 0;
+			heading = "Welcome, Newcomer";
+		} else {
+			heading = "Welcome Back";
+			accessCount = accessCount.intValue() + 1;
+		}
+		session.setAttribute("accessCount", accessCount);
+		out.println("<h1>" + heading + "</h1><hr><h3>Access no." + accessCount + "</h3>");
+	}
+}
+```
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant S as Server
+    Note over B,S: Prima visita
+    B->>S: GET /SessionCounter
+    Note right of S: crea sessione (JSESSIONID=ABC123XYZ), accessCount=0
+    S-->>B: cookie JSESSIONID
+    Note over B,S: Visita successiva
+    B->>S: GET /SessionCounter + Cookie: JSESSIONID
+    Note right of S: trova sessione con ID ABC123XYZ, legge accessCount e incrementa
+    S-->>B: risposta HTML
+```
+
+### Session vs Cookie
+| Caratteristica         | Sessione                                                 | Cookie                                                  |
+| ---------------------- | -------------------------------------------------------- | ------------------------------------------------------- |
+| Posizione              | Memorizzata sul **server**                               | Memorizzato sul **client** (browser)                    |
+| Dimensione dei dati    | Grandi quantità di dati (oggetti, informazioni utente)   | Limitata (tipicamente ~4 KB max)                        |
+| Persistenza            | Fino al timeout (o finché non viene invalidata)          | Può persistere per giorni, settimane o mesi             |
+| Sicurezza              | Più sicura (dati lato server)                            | Meno sicura (l'utente può modificare i cookie)          |
+| Metodo di tracciamento | Usa un Session ID memorizzato in un cookie               | Usa coppie chiave-valore                                |
+| Durata                 | Termina alla chiusura del browser (default) o al timeout | Può scadere in un momento futuro                        |
+| Accesso                | Solo sul server (`session.getAttribute()`)               | Sia dal server che dal client (es. JavaScript)          |
+| Caso d'uso             | Dati sensibili (sessioni di login, carrelli)             | Preferenze (tema, lingua)                               |
+
+### URL rewriting
+Se i cookie non sono abilitati, alcuni server possono usare l'**URL rewriting**: l'ID sessione viene passato direttamente nell'URL.
+`http://example.com/app/page;jsessionid=ABC123DEF456`
+Utile, ma meno sicura e meno pratica!
+
+| Aspetto                    | Dettaglio                                                                                                                             |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Sicurezza                  | L'ID sessione è visibile nell'URL → rischio di furto della sessione se qualcuno copia l'URL o se l'URL è salvato nei log o condiviso |
+| Usabilità                  | Se l'utente copia/incolla l'URL o lo condivide, anche altri possono accedere alla sua sessione                                        |
+| SEO e caching              | Ogni URL con ID sessione è unico → i motori di ricerca possono indicizzare molteplici URL identici; anche proxy o cache potrebbero memorizzare pagine diverse per lo stesso contenuto |
+| Persistenza della sessione | Funziona solo se ogni link nella pagina viene codificato con `response.encodeURL()` o `encodeRedirectURL()`, altrimenti la sessione si perde al click su un link |
+| Link interni e navigazione | Tutti i link e form devono passare l'ID sessione: serve molta attenzione nella generazione dinamica dei link                           |
+| Timeout e invalidazione    | Non cambia: l'ID sessione rimane valido fino alla scadenza, ma se l'utente chiude la pagina senza passare l'ID negli URL, la sessione può andare persa |
