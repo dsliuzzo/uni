@@ -651,4 +651,40 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 ---
 
+protocolli di livello collegamento - data link
+compito di portare i frame dall'altra parte del canale
+punto - punto
+regolamentano il flusso dei frame che deve essere inviato, evitando di sovraccaricare la scheda del ricevente
 
+ritardo di trasmissione
+$$
+T = \frac{L(\text{bit})}{}
+$$
+tempo necessario ad immettere il frame nel canale
+funzione della quantità di dati mandati sul canale e del supporto
+
+
+ritardo di propagazione
+distanza/lunghezza del canale
+$$
+\tau = \frac{d(\text{m})}{s (\text{m/s})}
+$$
+funzione del mezzo e del supporto
+
+
+## stop & wait
+Utilizza gli acknowledgement, i frame sono bufferizzati, se la sorgente non ha riscontro lo riprende come copia dal buffer e lo ritrasmette
+Inizialmente il riscontro poteva essere:
+- positivo
+  se arriva posso andare avanti e rimuovere il frame precedente
+- negativo
+  quel pacchetto è arrivato corrotto e va rimandato
+
+>[!bug] se il riscontro non arriva
+
+-> combina due aspetti
+ogni frame inviato ha un timer di ritrasmissione - tempo di attesa definito dal tipo di protocollo
+
+
+
+## go back N
