@@ -680,11 +680,125 @@ Inizialmente il riscontro poteva essere:
 - negativo
   quel pacchetto è arrivato corrotto e va rimandato
 
+1.
+
 >[!bug] se il riscontro non arriva
 
--> combina due aspetti
+--> combina due aspetti
 ogni frame inviato ha un timer di ritrasmissione - tempo di attesa definito dal tipo di protocollo
+è fondamentale la dimensione del timer (c'è il rischio di non dare il tempo di essere elaborato)
+$$
+t_{out} \geq 2 \tau + 2 T_{e} + T_r
+$$
+conoscendo questi tempo (condizioni e caratteristiche del canale, del calcolatore che riceve e che tramette)
+mettendolo inferiore causiamo ritrasmissioni inutili
+
+2.
+
+senza numero di sequenza il problema è sulla stazione ricevente, se scade il timeout riceve un altro frame, ma non sa se è il precedente o è un nuovo frame
+non possiamo controllare se tutti i bit coincidono:
+- violiamo la logica a livelli
+- sarebbe troppo pesante come gestione
 
 
+in questo caso è sufficiente un solo bit
+conservo il numero di sequenza lato ricevitore, se ricevo lo stesso bit che sto mantenendo è una ritrasmissione, se è il bit opposto è il successivo.
 
+come valutiamo l'efficienza di un protocollo
+efficienza
+$$
+E = \frac{T}{T_{tot}} \in [0,1]
+$$
+in $T_{tot}$ abbiamo tempi necessari e tempi morti
+$$
+T_{tot} = \tau + T + T_r + \tau + T + T_r = 2 \tau + T + 2 T_r + [\dots]
+$$
+questo tempo dipende anche dal fatto che il timer può essere considerato dal momento in cui preleviamo il frame dalla coda o dal momento in cui il frame è sul collegamento
+$$
+E = \frac{T}{2 \tau + T + 2T_r + T_E} = \frac{1}{2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}} 
+$$
+ma se il frame non arriva bisogna ritrasmettere, il tempo totale diventa 2 volte il tempo totale e se poi non arriva aumenta ancora di più. Estendiamo il concetto di efficienza
+$$
+E = \frac{T}{E[n_r] \cdot T_{tot}}
+$$
+con $E[n_r]$ (numero medio di trasmissioni) variabile aleatoria che rappresenta il numero di ritrasmissioni. La distribuzione di questa variabile aleatoria dipende dal canale di trasmissione.
+Semplificando le cose: il numero medio di trasmissioni
+$$
+E[n_r] = \frac{1}{1-p}
+$$
+dove $p$ è la probabilità di errore di frame (cioè che il frame arrivi alterato al ricevitore).
+
+Quindi l'efficienza del canale diventa
+$$
+E = \frac{1}{\frac{1}{1-p} \left(2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}\right)}
+$$
+Ipotizziamo l'esistenza di un canale non rumoroso, se la probabilità di errore è nullo $p = 1$
+In generale $2 \frac{T_r}{T} + \frac{T_E}{T}$ sono trascurabili rispetto al resto dei termini
+$$
+E = \frac{1-p}{1+2a} \hspace{8ex} a = \frac{\tau}{T} > 0
+$$
+$a$ rapporto tra la propagazione e la trasmissione, caratteristica del canale
+il denominatore è maggiore di 1, nella migliore delle ipotesi $p\to 0$, ne concludiamo che con questo tipo di protocolli non possiamo avere una alta efficienza.
 ## go back N
+protocollo ARQ
+effetto sliding window
+logica ricevitore
+mantiene le informazioni di sequenza dell'ultimo frame che ho ricevuto in ordine
+4
+importanza di numerare
+ipotizziamo di avere una finestra di dimensione $n$ ed $m$ è il numero di bit usato per numerare i frame
+se arrivano tutti i frame, ma vengono persi tutti i frame -> scadono i timer di tutti i frame -> vengono tutti ritrasmessi
+*es.* $n = 4$ e $m = 2$
+nel momento della ritrasmissione il ricevitore avrà di nuovo 0 1 2 3, ma con questa numerazione il successivo (4) sarebbe numerato ancora con 0 -> si crea ambiguità
+$\implies$ il numero di bit associati alla numerazione deve rispettare
+$$
+2^m > n
+$$
+se abbiamo questo tipo di relazione vuol dire che se io dovessi andare eventualmente riesco a discriminare i bit ritrasmessi da quelli nuovi perché come bit nuovo non mi aspetto 0 , ma mi aspetto 5, mi posso aspettare 6. mentre come bit ritrasmessi mi aspetto valori inferiori al numero di sequenza che sto ricevendo.
+
+il tempo necessario a trasmettere tutti i frame nella finestra è esattamente
+$$
+n \cdot T
+$$
+nella realtà è maggiore
+
+la scelta della lunghezza $n$ della finestra di tolleranza deve essere tale che prima di finire l'invio del primo treno arrivi il primo riscontro
+
+il time out deve essere scelto [...] apri il libro
+
+i casi possibili sono
+con 0 ritrasmissione il tempo necessario è T
+abbiamo 1 ritrasmissione il tempo di attesa del protocollo è $T+1(T + t_{out})$
+con 2 ritrasmissioni $T + 2(T + t_{out})$
+In sostanza
+$$
+T_{tot} = T + n_r(T+t_{out})
+$$
+con $n_r$ numero di **ritrasmissioni** (sopra era $n_t$)
+
+calcoliamo l'efficienza
+$$
+E = \frac{T}{E[T_{tot}]} = \frac{T}{E[T+n_r(T+t_{out})]} = \frac{T}{E[T] + E[n_r(T+t_{out})]}
+$$
+essendo $T$ non dipendente da nessuna variabile aleatoria $E[T] = T$. Solo $n_r$ è una variabile aleatoria
+$$
+E = \frac{T}{T+E[n_r](T+t_{out})}
+$$
+essendo
+$$
+E[n_t] = \frac{1}{1-p}
+$$
+e
+$$
+E[n_r] = E[n_t] - 1 = \frac{1}{1-p} - 1 = \frac{p}{1-p}
+$$
+quindi
+$$
+E = \frac{T}{T+ \frac{p}{1-p}(T+t_{out})} = \frac{1-p}{1+ p \frac{t_{out}}{T}}
+$$
+
+
+
+
+## Selective repeat
+protocollo ARQ
