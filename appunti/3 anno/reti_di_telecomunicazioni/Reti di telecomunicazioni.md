@@ -589,14 +589,14 @@ Possiamo quindi riscrivere l'efficienza come
 $$
 E = \frac{T}{2 \tau + T + 2T_r + T_E} = \frac{1}{2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}}
 $$
-Per valutare correttamente l'efficienza dobbiamo tenere in considerazione la possibilità che il frame debba essere ritrasmesso anche più di una volta, ma questa è una variabile aleatoria, di conseguenza estendiamo il concetto di efficienza aggiungendo il [[2. Variabili aleatorie#Valore atteso|valore atteso]] $E[n_r]$ per misurare il numero medio di trasmissioni necessarie ad avere il primo successo, che può essere approssimato ad una [[Modelli matematici#Prove di Bernoulli (binomiale - geometrico)|geometrica]]:
+Per valutare correttamente l'efficienza dobbiamo tenere in considerazione la possibilità che il frame debba essere ritrasmesso anche più di una volta, ma questa è una variabile aleatoria, di conseguenza estendiamo il concetto di efficienza aggiungendo il [[2. Variabili aleatorie#Valore atteso|valore atteso]] $E[n_t]$ per misurare il numero medio di trasmissioni necessarie ad avere il primo successo, che può essere approssimato ad una [[Modelli matematici#Prove di Bernoulli (binomiale - geometrico)|geometrica]]:
 $$
-E[n_r] = \frac{1}{1-p}
+E[n_t] = \frac{1}{1-p}
 $$
 dove $p$ è la probabilità di errore di frame (cioè che il frame arrivi alterato al ricevitore).
 La formula dell'efficienza diventa quindi
 $$
-E = \frac{T}{E[n_r] \cdot T_{tot}} = \frac{T}{\frac{1}{1-p} \cdot T_{tot}} = \frac{1}{\frac{1}{1-p} \left(2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}\right)}
+E = \frac{T}{E[n_t] \cdot T_{tot}} = \frac{T}{\frac{1}{1-p} \cdot T_{tot}} = \frac{1}{\frac{1}{1-p} \left(2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}\right)}
 $$
 Ipotizziamo l'esistenza di un canale non rumoroso, se la probabilità di errore è nullo $p = 0$ e sapendo che in generale $2 \frac{T_r}{T} + \frac{T_E}{T}$ sono trascurabili rispetto al resto dei termini:
 $$
@@ -610,11 +610,56 @@ Il denominatore è maggiore di 1, nella migliore delle ipotesi $p\to 0$, ne conc
 In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità.
 #### Go back N
 Protocollo ARQ
->[!protocollo] Go back N
->Approccio a finestra a slittamento (da capire).
->Invio una determinata quantità di frame che posso inviare prima di ricevere un riscontro - il bro ha un semaforo inizializzato a N, ogni volta che ne invia uno fa l'acquire, quando riceve riscontro fa la release.
->Ogni frame quindi va numerato (**numeri di sequenza**), in base alla dimensione della finestra posso avere la necessità di utilizzare più bit per l'enumerazione.
->Per il riscontro il ricevitore utilizza un ack cumulativo: se non arriva un determinato pacchetto $n$ non accetterà il pacchetto $n+1$. Ogni frame ha un timer di attesa che attende riscontro, in caso di pacchetti fuori sequenza si causa un effetto a catena.
+Funzionamento simile allo [[#Stop and wait]] ma con $n$ frame.
+>[!multi-column]
+>
+>>[!protocollo] Trasmettitore
+>>Invia una finestra di $n$ frame in sequenza, avvia un timer per ciascun frame e poi attende gli ACK. Nel caso in cui non riceve il riscontro e il timer associato ad un frame $i$ termina ritrasmetterà il frame $i$ e tutti i successivi (effetto a cascata), anche se avesse ricevuto l'ACK del frame $i+1$ o successivi, che risulteranno quindi persi
+>
+>>[!protocollo] Ricevitore
+>>Mantiene le informazioni dell'ultimo frame ricevuto
+
+![[Reti di telecomunicazioni-1791462631656.webp]]
+
+Il **numero di sequenza** diventa ora cruciale per capire quale frame è stato ricevuto: vengono usati $m$ bit per enumerare i frame (*es.* con una finestra di $n = 4$ sono necessari almeno $m=2$ bit per enumerare i frame).
+
+>[!bug] Numero di bit necessari alla enumerazione dei frame
+>Nel Go-Back-N, se tutti i frame della finestra (ad esempio 0, 1, 2, 3) arrivano correttamente al ricevitore ma tutti gli ACK vanno persi, i timer del mittente scadono e l'intera finestra viene ritrasmessa. Se la numerazione usasse solo i numeri da 0 a 3 (m = 2 bit), il ricevitore, che si aspetta il frame successivo, il quale ripartirebbe da 0, non potrebbe distinguere una ritrasmissione dal frame nuovo. Per evitare l'ambiguità, il numero di bit m usati per la numerazione deve soddisfare$$2^m > n$$
+>dove $n$ è la dimensione della finestra di trasmissione. In questo modo il numero di sequenza atteso non coincide mai con quello del primo frame ritrasmesso. Nell'esempio, con $n = 4$ servono $m = 3$ bit (numeri da 0 a 7): dopo aver ricevuto i frame 0-3 il ricevitore si aspetta il 4, ma riceve di nuovo lo 0, quindi capisce che è una ritrasmissione e lo scarta, reinviando l'ACK.
+
+La scelta della lunghezza $n$ della finestra di tolleranza deve essere tale che prima di finire l'invio del primo treno arrivi il primo riscontro.
+
+[...] <-- come scegliere il time out
+
+**Efficienza**
+Nel caso migliore il tempo necessario a trasmettere tutti i frame nella finestra è esattamente
+$$
+n \cdot T
+$$
+Ma questa è un grossa approssimazione.
+Indicando con $n_r$ il numeri di **ritrasmissioni** (non di trasmissioni come nello stop & wait) indichiamo il tempo totale con
+$$
+T_{tot} = T + n_r(T+t_{out})
+$$
+Partendo da questa considerazione e sfruttando la linearità dell'operatore valore atteso, possiamo calcolare l'efficienza come
+$$
+E = \frac{T}{E[T_{tot}]} = \frac{T}{E[T + n_r(T+t_{out})]} = \frac{T}{E[T] + E[n_r(T+t_{out})]}
+$$
+essendo $T$ non dipendente da nessuna variabile aleatoria $E[T] = T$. Solo $n_r$ è una variabile aleatoria
+$$
+E = \frac{T}{T+E[n_r](T+t_{out})}
+$$
+Il valore atteso del numero di ritrasmissioni è pari al valore atteso del numero di trasmissioni a cui sottraiamo la prima trasmissione
+$$
+E[n_t] = \frac{1}{1-p} \implies E[n_r] = E[n_t] -1 = \frac{1}{1-p} - 1 = \frac{p}{1-p}
+$$
+Ne concludiamo che
+$$
+E = \frac{T}{T+ \frac{p}{1-p}(T+t_{out})} = \frac{1-p}{1+ p \frac{t_{out}}{T}}
+$$
+#### Selective repeat
+Protocollo ARQ
+[...]
 
 ### Medium access control (MAC)
 Nel caso di reti broadcast al livello di linea viene aggiunta la funzionalità di accesso multiplo detta MAC (Medium Access Control).
@@ -718,69 +763,4 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 
 
-
 ---
-
-## go back N
-protocollo ARQ
-effetto sliding window
-logica ricevitore
-mantiene le informazioni di sequenza dell'ultimo frame che ho ricevuto in ordine
-4
-importanza di numerare
-ipotizziamo di avere una finestra di dimensione $n$ ed $m$ è il numero di bit usato per numerare i frame
-se arrivano tutti i frame, ma vengono persi tutti i frame -> scadono i timer di tutti i frame -> vengono tutti ritrasmessi
-*es.* $n = 4$ e $m = 2$
-nel momento della ritrasmissione il ricevitore avrà di nuovo 0 1 2 3, ma con questa numerazione il successivo (4) sarebbe numerato ancora con 0 -> si crea ambiguità
-$\implies$ il numero di bit associati alla numerazione deve rispettare
-$$
-2^m > n
-$$
-se abbiamo questo tipo di relazione vuol dire che se io dovessi andare eventualmente riesco a discriminare i bit ritrasmessi da quelli nuovi perché come bit nuovo non mi aspetto 0 , ma mi aspetto 5, mi posso aspettare 6. mentre come bit ritrasmessi mi aspetto valori inferiori al numero di sequenza che sto ricevendo.
-
-il tempo necessario a trasmettere tutti i frame nella finestra è esattamente
-$$
-n \cdot T
-$$
-nella realtà è maggiore
-
-la scelta della lunghezza $n$ della finestra di tolleranza deve essere tale che prima di finire l'invio del primo treno arrivi il primo riscontro
-
-il time out deve essere scelto [...] apri il libro
-
-i casi possibili sono
-con 0 ritrasmissione il tempo necessario è T
-abbiamo 1 ritrasmissione il tempo di attesa del protocollo è $T+1(T + t_{out})$
-con 2 ritrasmissioni $T + 2(T + t_{out})$
-In sostanza
-$$
-T_{tot} = T + n_r(T+t_{out})
-$$
-con $n_r$ numero di **ritrasmissioni** (sopra era $n_t$)
-
-calcoliamo l'efficienza
-$$
-E = \frac{T}{E[T_{tot}]} = \frac{T}{E[T+n_r(T+t_{out})]} = \frac{T}{E[T] + E[n_r(T+t_{out})]}
-$$
-essendo $T$ non dipendente da nessuna variabile aleatoria $E[T] = T$. Solo $n_r$ è una variabile aleatoria
-$$
-E = \frac{T}{T+E[n_r](T+t_{out})}
-$$
-essendo
-$$
-E[n_t] = \frac{1}{1-p}
-$$
-e
-$$
-E[n_r] = E[n_t] - 1 = \frac{1}{1-p} - 1 = \frac{p}{1-p}
-$$
-quindi
-$$
-E = \frac{T}{T+ \frac{p}{1-p}(T+t_{out})} = \frac{1-p}{1+ p \frac{t_{out}}{T}}
-$$
-
-
-
-
-## Selective repeat
-protocollo ARQ
