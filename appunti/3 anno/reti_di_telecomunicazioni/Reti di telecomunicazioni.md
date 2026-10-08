@@ -541,10 +541,7 @@ Valutiamo l'**efficienza** di un protocollo come:
 $$
 E = \frac{T}{T_{tot}} \in [0,1]
 $$
-dove $T$ è il ritardo di trasmissione e il tempo totale contiene sia i tempi necessario che i tempi morti
-$$
-T_{tot} = \underbrace{T+\tau}
-$$
+dove $T$ è il ritardo di trasmissione e il tempo totale $T_{tot}$ contiene sia i tempi necessario che i tempi morti
 #### Stop and wait
 >[!multi-column]
 >
@@ -577,16 +574,42 @@ $$t_{out} \geq 2 \tau + 2 T_{e} + T_r$$
 ![[Reti di telecomunicazioni-1791457573851.webp|683]]
 
 
+**Efficienza**
+Riprendendo l'efficienza
+$$
+E = \frac{T}{T_{tot}} \in [0,1]
+$$
+in questo protocollo possiamo considerare $T_{tot}$ come:
+$$
+T_{tot} = \underbrace{T+\tau+T_r}_{\text{frame}} + \underbrace{T_E + \tau + T_r}_{ACK} = T+T_E + 2 \tau + 2 T_r
+$$
+dove $T$ ritardo di trasmissione, $T_{E}$ tempo di trasmissione dell'ACK, $\tau$ ritardo di propagazione e $T_r$ tempo di elaborazione.
 
+Possiamo quindi riscrivere l'efficienza come
+$$
+E = \frac{T}{2 \tau + T + 2T_r + T_E} = \frac{1}{2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}}
+$$
+Per valutare correttamente l'efficienza dobbiamo tenere in considerazione la possibilità che il frame debba essere ritrasmesso anche più di una volta, ma questa è una variabile aleatoria, di conseguenza estendiamo il concetto di efficienza aggiungendo il [[2. Variabili aleatorie#Valore atteso|valore atteso]] $E[n_r]$ per misurare il numero medio di trasmissioni necessarie ad avere il primo successo, che può essere approssimato ad una [[Modelli matematici#Prove di Bernoulli (binomiale - geometrico)|geometrica]]:
+$$
+E[n_r] = \frac{1}{1-p}
+$$
+dove $p$ è la probabilità di errore di frame (cioè che il frame arrivi alterato al ricevitore).
+La formula dell'efficienza diventa quindi
+$$
+E = \frac{T}{E[n_r] \cdot T_{tot}} = \frac{T}{\frac{1}{1-p} \cdot T_{tot}} = \frac{1}{\frac{1}{1-p} \left(2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}\right)}
+$$
+Ipotizziamo l'esistenza di un canale non rumoroso, se la probabilità di errore è nullo $p = 0$ e sapendo che in generale $2 \frac{T_r}{T} + \frac{T_E}{T}$ sono trascurabili rispetto al resto dei termini:
+$$
+E = \frac{1-p}{1+2a} \hspace{8ex} a = \frac{\tau}{T} > 0
+$$
+dove $a$ rapporto tra la propagazione e la trasmissione, caratteristica del canale.
 
-(Caso degenere del go back N con finestra unitaria, necessita di enumerazione a un bit).
-In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
-Mantengo un frame nel buffer finché non ricevo un riscontro. Appena ricevo il riscontro posso eliminare il frame dal buffer e posso passare al successivo.
-Posso gestire un pacchetto alla volta.
-Ho quindi una bassa utilizzazione del canale.
+Il denominatore è maggiore di 1, nella migliore delle ipotesi $p\to 0$, ne concludiamo che con questo tipo di protocolli non possiamo avere una alta efficienza.
 
+[...]
+In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità.
 #### Go back N
-
+Protocollo ARQ
 >[!protocollo] Go back N
 >Approccio a finestra a slittamento (da capire).
 >Invio una determinata quantità di frame che posso inviare prima di ricevere un riscontro - il bro ha un semaforo inizializzato a N, ogni volta che ne invia uno fa l'acquire, quando riceve riscontro fa la release.
@@ -698,38 +721,6 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 ---
 
-
-## stop & wait
-in $T_{tot}$ abbiamo tempi necessari e tempi morti
-$$
-T_{tot} = \tau + T + T_r + \tau + T + T_r = 2 \tau + T + 2 T_r + [\dots]
-$$
-questo tempo dipende anche dal fatto che il timer può essere considerato dal momento in cui preleviamo il frame dalla coda o dal momento in cui il frame è sul collegamento
-$$
-E = \frac{T}{2 \tau + T + 2T_r + T_E} = \frac{1}{2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}} 
-$$
-ma se il frame non arriva bisogna ritrasmettere, il tempo totale diventa 2 volte il tempo totale e se poi non arriva aumenta ancora di più. Estendiamo il concetto di efficienza
-$$
-E = \frac{T}{E[n_r] \cdot T_{tot}}
-$$
-con $E[n_r]$ (numero medio di trasmissioni) variabile aleatoria che rappresenta il numero di ritrasmissioni. La distribuzione di questa variabile aleatoria dipende dal canale di trasmissione.
-Semplificando le cose: il numero medio di trasmissioni
-$$
-E[n_r] = \frac{1}{1-p}
-$$
-dove $p$ è la probabilità di errore di frame (cioè che il frame arrivi alterato al ricevitore).
-
-Quindi l'efficienza del canale diventa
-$$
-E = \frac{1}{\frac{1}{1-p} \left(2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}\right)}
-$$
-Ipotizziamo l'esistenza di un canale non rumoroso, se la probabilità di errore è nullo $p = 1$
-In generale $2 \frac{T_r}{T} + \frac{T_E}{T}$ sono trascurabili rispetto al resto dei termini
-$$
-E = \frac{1-p}{1+2a} \hspace{8ex} a = \frac{\tau}{T} > 0
-$$
-$a$ rapporto tra la propagazione e la trasmissione, caratteristica del canale
-il denominatore è maggiore di 1, nella migliore delle ipotesi $p\to 0$, ne concludiamo che con questo tipo di protocolli non possiamo avere una alta efficienza.
 ## go back N
 protocollo ARQ
 effetto sliding window
