@@ -529,14 +529,61 @@ In base al mezzo e a degli studi su di essi possiamo decidere se implementare un
 >Il CRC è un codice di rilevazione che fa uso di aritmetica in modulo 2.
 
 ### Controllo del flusso e ritrasmissione
-#### Stop and wait
+È necessario regolamentare il flusso dei frame che deve essere inviato, evitando di sovraccaricare la scheda del ricevente.
+Per la valutazione dei protocolli è necessario definire i ritardi:
+- **ritardo di trasmissione**$$T (\text{sec}) = \frac{L(\text{bit})}{V_T (\text{bit/sec})}$$ funzione della lunghezza del frame $L$
+- **ritardo di propagazione**$$\tau (\text{sec})= \frac{d(\text{m})}{V_p (\text{m/sec})}$$funzione della lunghezza del canale $d$
 
->[!protocollo] Stop and wait
->(Caso degenere del go back N con finestra unitaria, necessita di enumerazione a un bit)
->In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
->Mantengo un frame nel buffer finché non ricevo un riscontro. Appena ricevo il riscontro posso eliminare il frame dal buffer e posso passare al successivo.
->Posso gestire un pacchetto alla volta.
->Ho quindi una bassa utilizzazione del canale.
+Inoltre faremo uso del **diagramma di timing** che rappresenta su due linee del tempo i due sistemi:
+![[Reti di telecomunicazioni-1791451492256.webp|center|662]]
+
+Valutiamo l'**efficienza** di un protocollo come:
+$$
+E = \frac{T}{T_{tot}} \in [0,1]
+$$
+dove $T$ è il ritardo di trasmissione e il tempo totale contiene sia i tempi necessario che i tempi morti
+$$
+T_{tot} = \underbrace{T+\tau}
+$$
+#### Stop and wait
+>[!multi-column]
+>
+>>[!protocollo] Trasmettitore
+>>Prepara il frame in un tempo pari al ritardo di trasmissione, invia il frame, ne mantiene una copia in un buffer e avvia un timer. Solo nel momento in cui riceve il riscontro (`ACK`) invia il frame successivo. Se il riscontro non arriva entro lo scadere del timer oppure arriva un riscontro negativo, può rinviare la copia del frame precedente. 
+>
+>>[!protocollo] Ricevitore
+>>Mantiene un bit utile a tracciare il **numero di sequenza** (i frame arrivati hanno un numero di sequenza che si alterna tra 0 e 1). Alla ricezione del frame invia un `ACK` al trasmettitore e aggiorna il numero di sequenza.
+
+![[Reti di telecomunicazioni-1791456564669.webp|741]]
+
+Inizialmente il riscontro potevano essere:
+- positivo
+  se arriva posso andare avanti e rimuovere il frame precedente
+- negativo
+  quel pacchetto è arrivato corrotto e va rimandato
+>[!bug] Il problema principale è se viene perso il riscontro
+>Questo problema viene risolto tramite l'implementazione di un timer associato ad ogni frame inviato, che può essere avviato nel momento in cui la sorgente inizia l'elaborazione del frame o dal momento in cui viene immesso nella rete.
+
+![[Reti di telecomunicazioni-1791456808592.webp|659]]
+
+È fondamentale scegliere bene il tempo necessario al timer prima di rinviare il frame, in quanto, se è un tempo troppo breve, rischiamo di effettuare troppo ritrasmissioni innecessarie; se invece è troppo lungo, la comunicazione è più lenta.
+Possiamo definire il tempo di attesa in modo corretto tramite la seguente disuguaglianza
+$$t_{out} \geq 2 \tau + 2 T_{e} + T_r$$
+[...] ricontrolla formula da cla
+
+>[!important] Numero di sequenza
+>Anche nello Stop-and-Wait, dove si trasmette e si riceve un solo frame alla volta, è necessario un numero di sequenza, anche di un solo bit. Se l'ACK va perso o arriva in ritardo, allo scadere del timer il mittente ritrasmette il frame, ma il ricevitore non è in grado di stabilire se si tratti di un duplicato del frame precedente o di un nuovo frame. Associando un bit a ogni frame, il ricevitore si aspetta un'alternanza dei valori (0, 1, 0, 1, …): se riceve due volte lo stesso bit, capisce che si tratta di una ritrasmissione e scarta il duplicato, reinviando l'ACK.
+
+![[Reti di telecomunicazioni-1791457573851.webp|683]]
+
+
+
+
+(Caso degenere del go back N con finestra unitaria, necessita di enumerazione a un bit).
+In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità
+Mantengo un frame nel buffer finché non ricevo un riscontro. Appena ricevo il riscontro posso eliminare il frame dal buffer e posso passare al successivo.
+Posso gestire un pacchetto alla volta.
+Ho quindi una bassa utilizzazione del canale.
 
 #### Go back N
 
@@ -651,64 +698,8 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 ---
 
-protocolli di livello collegamento - data link
-compito di portare i frame dall'altra parte del canale
-punto - punto
-regolamentano il flusso dei frame che deve essere inviato, evitando di sovraccaricare la scheda del ricevente
-
-ritardo di trasmissione
-$$
-T = \frac{L(\text{bit})}{}
-$$
-tempo necessario ad immettere il frame nel canale
-funzione della quantità di dati mandati sul canale e del supporto
-
-
-ritardo di propagazione
-distanza/lunghezza del canale
-$$
-\tau = \frac{d(\text{m})}{s (\text{m/s})}
-$$
-funzione del mezzo e del supporto
-
 
 ## stop & wait
-Utilizza gli acknowledgement, i frame sono bufferizzati, se la sorgente non ha riscontro lo riprende come copia dal buffer e lo ritrasmette
-Inizialmente il riscontro poteva essere:
-- positivo
-  se arriva posso andare avanti e rimuovere il frame precedente
-- negativo
-  quel pacchetto è arrivato corrotto e va rimandato
-
-1.
-
->[!bug] se il riscontro non arriva
-
---> combina due aspetti
-ogni frame inviato ha un timer di ritrasmissione - tempo di attesa definito dal tipo di protocollo
-è fondamentale la dimensione del timer (c'è il rischio di non dare il tempo di essere elaborato)
-$$
-t_{out} \geq 2 \tau + 2 T_{e} + T_r
-$$
-conoscendo questi tempo (condizioni e caratteristiche del canale, del calcolatore che riceve e che tramette)
-mettendolo inferiore causiamo ritrasmissioni inutili
-
-2.
-
-senza numero di sequenza il problema è sulla stazione ricevente, se scade il timeout riceve un altro frame, ma non sa se è il precedente o è un nuovo frame
-non possiamo controllare se tutti i bit coincidono:
-- violiamo la logica a livelli
-- sarebbe troppo pesante come gestione
-
-
-in questo caso è sufficiente un solo bit
-conservo il numero di sequenza lato ricevitore, se ricevo lo stesso bit che sto mantenendo è una ritrasmissione, se è il bit opposto è il successivo.
-
-come valutiamo l'efficienza di un protocollo
-efficienza
-$$
-E = \frac{T}{T_{tot}} \in [0,1]
-$$
 in $T_{tot}$ abbiamo tempi necessari e tempi morti
 $$
 T_{tot} = \tau + T + T_r + \tau + T + T_r = 2 \tau + T + 2 T_r + [\dots]
