@@ -764,3 +764,129 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 
 ---
+
+
+
+$$
+n_t = \frac{1}{1-p}
+$$
+qual è la probabilità di errore di bit
+
+BER (bit error rate) a cui diamo un valore medio (una sorta di probabilità a regime)
+ma noi lavoriamo su insiemi di bit --> frame
+probabilità di errore di trama/frame
+Ipotesi semplificativa che per alcuni canali va bene -> la probabilità di errore del singolo bit è indipendente (anche se nei sistemi reali non è così - burst di errori) -> prove di Bernoulli
+$$
+P_f = 1-\underbrace{(1-p)^{L_f}}_{\begin{array}{c}\text{probabilità} \\ \text{di frame} \\ \text{senza errori}\end{array}}
+$$
+dove $L_f$ lunghezza del frame (in numero di bit)
+è come se avessimo
+$$
+\underbrace{(1-p) \cdot \dots \cdot (1-p)}_{L_f \text{ volte}}
+$$
+eventi congiunti -> prodotto di probabilità
+quindi il complemento a 1 è la probabilità di avere un errore
+
+chiamiamo $a_i$ (PDF) la probabilità di successo della trama dell'$i$esimo tentativo. Fino ad $i-1$ era sbagliato.
+La probabilità di successo all'$i$esimo tentativo sono prove di benoulli -> quindi la distribuzione di probabilità è una binomiale
+$$
+a_i = p_f^{i-1}(1-p_f)
+$$
+posso mettere elevato a $i-1$ per l'indipendenza
+probabilità che io abbia $i-1$ errati ($p_f$) e 1 con successo ($1-p_f$)
+
+un'altra grandezza $\overline{N}_s$ numero medio (nel discreto) di frame inviati con successo
+$$
+\overline{N}_s = \sum_{i=1}^{+\infty} i a_i = \sum_{i=1}^{+\infty} i p_f^{i-1}(1-p_f)
+$$
+dove $a_i$ è la funzione densità
+serie della derivata geometrica
+
+la serie geometrica
+$$
+\sum_{i=1}^{+\infty} p^i = \frac{1}{1-p}
+$$
+quindi la derivata della geometrica
+$$
+\displaylines{
+\frac{d}{dp} \left( \sum_{i=1}^{+\infty} p^i \right) = \sum_{i=1}^{+\infty} i p^{i-1} \\
+\frac{d}{dp} \left( \frac{1}{1-p} \right) = \frac{1}{(1-p)^2} \\
+\implies \sum_{i=1}^{+\infty} i p^{i-1} = \frac{1}{(1-p)^2}
+}
+$$
+tornando alla media
+$$
+\overline{N}_s = (1-p_f) \cdot \frac{1}{(1-p_f)^2} = \frac{1}{1-p_f}
+$$
+
+
+---
+
+Efficienza go back N
+riprendendo dalla fine di [[#Go back N]]
+andando a dimensionare il $t_{out}$ (tempo di time out) al minimale (tempo minimo di attesa - il minimo per ricevere un riscontro)
+$$
+t_{out} = 2 \tau + 2 T_{E} + T_R
+$$
+$T_E$ tempo di elaborazione e $T_R$ tempo del riscontro
+Tornando all'efficienza
+$$
+E = \frac{1-p}{1+p\left( \frac{2 \tau + 2 T_E + T_R}{T} \right)} = \frac{1-p}{1+p\left( \frac{2\tau}{T} + \frac{2T_E}{T} + \frac{T_R}{T} \right)}
+$$
+trascuriamo quelli di prima
+$$
+\frac{1-p}{1+2 a p}
+$$
+con $a = \frac{\tau}{T}$
+se abbiamo un canale con poco rumore - hp semplificativa nullo $p\to 0$
+abbiamo un effetto di riduzione sia a numeratore che numeratore -> efficienza di canale unitaria
+sul piano teorico abbiamo una efficienza vicina all'unità (top fruit)
+
+efficienza del selective repeat
+$$
+E = (1-p)
+$$
+---
+
+i timer scadono in successione -> ritrasmissione di una serie di frame o addirittura intera finestra di trasmissione
+porta il ricevitore ad essere molto semplice -> basta mantenere il numero di sequenza che confronterà con quello ricevuto. Se il numero ricevuto è maggiore del corrente non ci sono buchi ed è il successivo, se invece è minore ignora ciò che ha
+
+il selective repeat invece trasmette un `NACK` (negative acknowledgement) che segnala solo il frame perso, ma i successivi vengono mantenuti.
+Questo porta ad una maggiore complessità nel ricevente
+devo sempre stare dove ci sono i buchi ed immagazzinare anche i successivi
+dedicherò della bufferizzazione ai frame persi
+il fuori ordine che sono disposto ad accettare è limitato
+se quel frame perso non arriva dopo a un certo punto si blocca la finestra: la finestra è scorrevole, ma se l'estremo inferiore non riceve riscontro blocca la finestra
+permette di avere una sequenza non ordinata, entro certi limiti
+per confrontarlo con gli altri protocolli utilizziamo le probabilità (oltre una certa probabilità mi conviene un protocollo rispetto ad un altro).
+Potrebbe dipendere anche dalla dimensione della finestra se le formule sono più complete.
+[...] <-- metti grafico comparing dei protocolli ARQ
+non è scontato dire che uno è meglio dell'altro
+
+vedi da slide trasmettitore che rallenta
+![[Reti di telecomunicazioni-1791469873324.webp|267]]
+il ricevitore bufferizza i frame e li manda ai livelli superiori dopo aver decapsulato
+se i ricevitori agiscono con lentezza il ricevitore comunica che la comunicazione deve essere rallentata altrimenti potrebbe esaurire lo spazio di buffer
+usiamo un particolare insieme di bit (RNR)
+questo avviene se il livello rete è più lento di quanto il livello collegamento può generare
+
+
+---
+
+protocollo HDLC
+ma quindi stop and wait, go back N e selective repeat non sono protocolli?
+![[Reti di telecomunicazioni-1791470030834.webp|391]]
+Lo stop and wait funziona su canali half duplex
+mentre go back N e selective repeat hanno bisogno del full duplex
+
+modalità master-slave
+normal response mode
+
+[...] slide (39-...)
+
+
+MAC
+spesso associato alle LAN
+mezzo condiviso in cui altre stazioni mandano frame in contemporanea -> contesa sul mezzo
+
+[...] fino a slide 21
