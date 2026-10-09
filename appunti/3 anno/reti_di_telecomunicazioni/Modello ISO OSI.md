@@ -25,6 +25,10 @@ Fornisce i mezzi funzionali e procedurali per il trasferimento delle unità dati
 Funzioni fondamentali:
 - rilevazione e recupero degli errori di trasmissioni
 - controllo di flusso
+
+È suddiviso in due sotto livelli:
+- **Data-link**
+- [[#Medium access control (MAC)]]
 ## Servizi del livello
 Ogni nodo sulla rete ha un processo di bufferizzazione, su vari livelli, necessari per l'implementazione store and forward e rendere i livelli indipendenti.
 La quantità di bit prelevate dopo il buffer è legata ai protocolli di tipo collegamento.
@@ -432,7 +436,7 @@ Il campo RN è un campo il cui valore cambia in base al tipo di frame
   Sono trame numerate per il controllo dell'invio del flusso di informazione (ad es. riscontri non associati ad informazione in senso opposto).
 	- Type contiene il tipo di frame
 		- RR | 00 | receiver ready | RN contiene la prossima trama attesa e permette di riscontrare le trame fino a RN-1
-		- RNR | 10 | receiver not ready | permette di bloccare l'invio di nuove trame e riscontrare fino alla trame RN-1
+		- RNR | 10 | receiver not ready | permette di bloccare l'invio di nuove trame (nel caso in cui il buffer del ricevitore è pieno) e riscontrare fino alla trame RN-1
 		- REJ | 01 | reject | richiede la ritrasmissione delle trame da RN in avanti ([[#Go back N]])
 		- SREJ | 11 | selective reject | è usato per richiedere la ritrasmissione di una singola trama ([[#Selective repeat]])
 
@@ -461,8 +465,16 @@ Contiene il codice rivelatore d’errore usato per riconoscere le trame errate.
 >>La fase di instaurazione della connessione avviene mediante lo scambio di messaggi che consentono di definire il modo di trasferimento (SNRM, SARM, SABM).
 >>Alla fine della fase di trasferimento dati la connessione viene chiusa mediante il comando di DISC.
 ## Medium access control (MAC)
-Nel caso di reti broadcast al livello di linea viene aggiunta la funzionalità di accesso multiplo detta MAC (Medium Access Control).
-Se ci sono più dati che concorrono sullo stesso mezzo dobbiamo evitare che collidano.
+Per l'utilizzo delle LAN è nata la necessità di suddividere il [[#Livello collegamento (livello 2)|livello 2]] dello stack ISO OSI in due sotto livelli:
+- Data-link (visto fino ad ora)
+- MAC (Medium Access Control)
+
+Nel caso di reti [[Reti di telecomunicazioni#Topologia di rete|broadcast]] al livello di linea viene aggiunta la funzionalità di accesso multiplo detta **MAC** in quanto se ci sono più dati che concorrono sullo stesso mezzo dobbiamo evitare che collidano (contesa sul mezzo).
+
+Le trasmissioni vengono quindi suddivise in trame e ogni ad ogni stazione viene associato (dal produttore) un indirizzo MAC.
+Il MAC address della stazione destinazione viene indicato nel campo destinazione dell’header di trama. Quando una stazione riceve una trama verifica se il valore del campo destinazione della trama corrisponde ad un suo indirizzo. Solo in questo caso copia la trama ricevuta e la passa per ulteriori elaborazioni ai livelli superiori.
+
+![[Modello ISO OSI-1791573711701.webp|373]]
 
 # Livello rete (livello 3)
 Fornisce i mezzi funzionali e procedurali per lo scambio di informazioni tra entità di livello di trasporto.
