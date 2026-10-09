@@ -583,11 +583,12 @@ A = (A_{1},\dots,A_p,A_{p+1},\dots,A_n)
 $$
 Se le colonne associate alle variabili $\neq 0$, $A_{1},\dots,A_p$ sono **linearmente indipendenti**, la soluzione è di base ed è ammissibile per quanto detto nella [[#Caratterizzazione|caratterizzazione]].
 
-Se invece le colonne sono linearmente dipendenti
+Se invece le colonne sono **linearmente dipendenti**
 $$
 A = (\underbrace{A_{1},\dots,A_p}_{\begin{array}{c}\text{linearmente} \\ \text{dipendenti}\end{array}},A_{p+1},\dots,A_n)
 $$
-$\overline{x}$ non è soluzione di base, ma è ammissibile, e dalla definizione di dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c.
+$\overline{x}$ non è soluzione di base, ma è ammissibile (voglio spostarmi da $\overline{x}$ cercando un'altra soluzione senza perdere l'ammissibilità -> ci spostiamo lungo $d$ di una quantità $\epsilon$).
+Dalla definizione di dipendenza lineare: siccome sono linearmente dipendenti $\implies \exists p$ coefficienti $d_{1},\dots,d_p$ non tutti nulli t.c.
 $$A_{1}d_{1} + \dots + A_p d_p = \vec{0}$$
 Essendo $\overline{x} \in \Omega(P)$ allora $A\overline{x} = b$ e parte delle componenti di $\overline{x}$ sono nulle
 $$
@@ -601,13 +602,13 @@ $$
 A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) = b \hspace{4ex} \forall \epsilon \in \mathbb{R}
 $$
 ciò che non compare in questa sommatoria sono degli 0
-Definendo un vettore :
+Definendo un vettore:
 $$d=(d_{1},\dots,d_p,\underbrace{0,\dots,0}_{n-p})^T \in \mathbb{R}^n$$
 Possiamo scrivere in forma compatta
 $$
 A(\overline{x} - \epsilon d) = b \hspace{4ex} \forall \epsilon \in \mathbb{R}
 $$
-sarebbe completa
+la forma completa comprende anche dei termini che si annullano in quanto possiamo espandere il vettore $d = (d_{1},\dots,d_p,0,\dots,0)$ e le componenti $\overline{x}_{p+1},\dots,\overline{x}_n$ valgono 0 ([...] riprendi perchè)
 $$
 A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) + \underbrace{A_{p+1}(\overline{x}_{p+1} - \epsilon d_{p+1})+\dots+ A_n (\overline{x}_n - \epsilon d_n)}_{\text{sono tutti 0}}= b
 $$
@@ -635,7 +636,13 @@ se $d_i = 0$ è soddisfatta $\forall \epsilon \in \mathbb{R}$
 se $d_i >0$ è soddisfatta $\forall \epsilon \leq \frac{\overline{x}_i}{d_i}$
 se $d_i < 0$ è soddisfatta $\forall \epsilon \geq \frac{\overline{x}_i}{d_i}$
 
-Alcune danno un limite superiore, altre un limite inferiore: risolvendole tutte ci aspettiamo di ottenere un intervallo di valori.
+È un sistema di disequazioni, alcune danno un limite superiore, altre un limite inferiore: risolvendole tutte ci aspettiamo di ottenere un intervallo di valori.
+
+Definiamo ora il min $\epsilon_1$ e il sup $\epsilon_2$ che, date le considerazioni sui termini $d_i$ sicuramente
+$$
+\epsilon_1 < 0 < \epsilon_2
+$$
+
 Poniamo ora
 $$
 \epsilon_1 = \begin{cases}
@@ -654,18 +661,102 @@ In modo duale possiamo sviluppare il limite superiore
 $$
 \overline{x} - \epsilon d \geq 0 \hspace{4ex} \forall \epsilon \in [\epsilon_1, \epsilon_2]
 $$
-almeno uno dei due ha un valore finito altrimenti le $d_i$ sarebbero tutte nulle, andando contro l'ipotesi.
+>[!question] Domande d'esame
+>Potrebbe essere $\epsilon_1 = -\infty$ e $\epsilon_2 = + \infty$?
+>Le due condizioni non sono mutualmente esclusive, ma se lo fossero contemporaneamente tutte le componenti $d_i$ sarebbero nulle, andando contro l'ipotesi iniziale che il vettore $d$ ha componenti non tutte nulle.
 
-Supponendo che il minimo esista, si realizza in corrispondenza di una variabile decisionale
+Supponendo che il minimo/massimo esista possiamo osservare che sostituendo il suo valore corrispondente all'interno di una componente del nuovo vettore delle soluzioni $x$ otteniamo:
 $$
-\overline{x}_j - \frac{\overline{x}_j}{d_j} d_j = 0
+x_j = \overline{x_j} - \epsilon_{1 / 2}d_j = \overline{x}_j - \frac{\overline{x}_j}{d_j} d_j = 0
 $$
-ci sarà sicuramente una di quelle uguaglianze che sarà soddisfatta
+Ne concludiamo che il nuovo vettore delle soluzioni $x$ ha al più (il minimo può essere trovato da più componenti) $p-1$ componenti pari a 0.
 
-ha al più (il minimo può essere trovato da più componenti) $p-1$ componenti negative.
-
-Ripetiamo questo processo iterativamente eliminando componenti e verificando la dipendenza lineare.
+Ripetiamo questo processo iterativamente eliminando componenti e verificando la dipendenza lineare delle componenti.
 Nel peggiore dei casi, usciremo dal loop avremo una componente positiva e una colonna linearmente indipendente. In questo modo troviamo la base in modo iterativo.
+
+---
+dimostrazione del secondo enunciato
+Se esiste una soluzione ottima $x^* \in \Omega(P)$, allora esiste una soluzione ottima di base per $(P)$.
+Essendo ottima è anche ammissibile
+$$
+x^* = (x_{1}^*,\dots,x_p^*,0,\dots,0)^T
+$$
+Se le p colonne sono linearmente dipendenti è ottima ed è di base.
+Se non lo è riprendiamo gli stessi procedimenti della dimostrazione 1
+definiamo un nuovo vettore
+$$
+x = x^*-\epsilon d \in \Omega(P) \forall \epsilon \in [\epsilon_1, \epsilon_2]
+$$
+ma nello spostamento dobbiamo mantenere l'ottimalità, non solo l'ammissibilità
+La funzione obbiettivo vale
+$$
+c^T x^*
+$$
+per non perdere l'ottimalità dobbiamo osservare
+$$
+\begin{array}{c}
+c^T x & = c^T (x^*- \epsilon d) \\
+& = c^T x^* - \epsilon c^T d
+\end{array}
+$$
+stiamo sottraendo una quantità
+perdere ottimalità in corrispondenza della nuova $x$ vuol dire perdere $x^*$, dovremmo dimostrare invece che $c^Td$ sia pari a 0, perché $\epsilon$ può essere positiva o negativa
+$$
+c^T d = 0
+$$
+assurdo
+ipotizziamo che $c^T d> 0$
+$$
+c^T x = c^T x^* - \epsilon \underbrace{c^T d}_{> 0} \hspace{4ex} \forall \epsilon \in [\epsilon_{1}, \epsilon_{2}]
+$$
+$\epsilon$ può essere positivo o negativo, concentriamoci sulle $\epsilon$ positive $\epsilon \in [0,\epsilon_{2}]$
+=> stiamo sottraendo una quantità positiva, $c^Tx < c^T x^*$, ma **non può essere**, $c^Tx^*$ è ottimo
+
+Ipotizzando invece che $c^T d < 0$ consideriamo il caso in cui $\epsilon \in [\epsilon_{1},0]$, sono entrambi $<0$
+$$
+\displaylines{
+c^T x = c^T x^* - \underbrace{\epsilon c^T d}_{> 0} \\
+c^T x < c^T x^*
+}
+$$
+e anche questo non può essere.
+
+
+
+
+
+---
+
+perché sono importanti i vincoli sul segno della forma standard
+questo tipo di vincolo impedisce ai vincoli lineari di andare a $+\infty$ o $-\infty$
+
+---
+
+[...] riprendi proprietà delle slide
+
+---
+
+>[!info] Teorema
+
+dimostrazione delle nuove slide non penso che la farò
+
+
+enunciato di tipo geometrico
+>[!info] Teorema fondamentale (geometrico)
+>Sia $(P)$ il problema di programmazione lineare in forma standard sotto le ipotesi $$A \in \mathbb{R}^{m \times n} \hspace{4ex}\text{rango}(A) = m < n$$
+>1. Se il poliedro $\Omega(P)$ è non vuoto allora esiste almeno un punto estremo in $\Omega(P)$.
+>2. Se il problema $(P)$ ammette ottimo finito, allora uno dei punti estremi di $\Omega(P)$ è soluzione ottima
+
+una soluzione di base degenere ha più di $n-m$ zeri
+un vertice è degenere se ci passano più di più di due iperpiani
+abbiamo più modi di descrivere lo stesso vertice
+
+
+>[!important] Basi adiacenti
+>Basi che condividono tutte le colonne meno 1
+
+
+
 
 
 
