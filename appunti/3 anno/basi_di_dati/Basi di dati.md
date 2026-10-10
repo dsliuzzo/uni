@@ -11,3 +11,5 @@ Scritto e orale di pari importanza
 
 ## Orale
 La prima domanda fa da cut off ed è una di 3 opzioni che dice a lezione
+
+1. Definizione formale del vincolo di chiave primaria e esterna nel modello relazionale

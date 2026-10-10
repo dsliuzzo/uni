@@ -47,6 +47,7 @@ Per la progettazione di un data base vengono spesso seguiti dei passi fondamenta
 **3) Progettazione concettuale**
 - Quali **informazioni** (concetti) devono essere presenti per rispettare le richieste del committente
 - Quali sono le **correlazioni** tra le informazioni
+- Quali sono le caratteristiche dei concetti
 
 **4.1) Progettazione logica**
 - Le informazioni diventano righe di tabelle
@@ -106,13 +107,13 @@ Ad ogni elemento (entità o relazione) sono associati degli **attributi** che ca
 Se non specificato diversamente, ogni attributo è come se avesse un [[#Vincoli di cardinalità|vincolo di cardinalità]] $1:1$
 
 Se un attributo non è necessario (se non è una chiave) può essere specificato tramite la scritta `(NULL)` nel modello ER; in questo caso il vincolo di candinalità è $0:1$
-## Vincoli di cardinalità
+## Cardinalità
 Sulla linea che collega una entità ad una relazione sono espressi due numeri che prendono il nome di **vincoli di cardinalità**.
 I vincoli di cardinalità rappresentano il numero minimo e massimo di volte in cui una entità compare nel sottoinsieme *relazione*.
 *es.* un Fornitore deve comparire almeno $0$ volte e al più $n$ volte all'interno della relazione Fornitura: **ogni Fornitore può fornire $n$ merci, ma una stessa merce al più una volta** (questo non viene specificato nel modello ER, ma viene "ereditato" dal concetto stesso di relazione, che è un insieme e di conseguenza non ammette ripetizioni).
 Fosse stato $1:n$ ogni fornitore deve comparire almeno una volta all'interno della relazione Fornitura.
 
-## Identificatori (chiave)
+## Identificatori (chiave candidata)
 >[!important] Chiave candidata
 >Definiamo come chiave un meccanismo di **identificazione** di una entità. Vengono rappresentati nel modello ER come una linea che termina con un punto pieno.
 >La chiave è quindi un **insieme minimale** (nessun suo sottoinsieme può essere identificante da solo) di attributi che ha la proprietà di essere identificativo per l'istanza dell'entity set.
@@ -225,6 +226,9 @@ dobbiamo per prima cosa fare una distinzione, il modello relazionale consiste ne
 >>Fornitore(p.iva:string, nome:string, città:string)
 >>```
 
+>[!important] Tupla
+>Singola riga dell'istanza di relazione
+
 *es.* F1 fornisce M1,M2 e F2 fornisce M2,M3
 L'intero modello ER potrebbe essere rappresentato con un'unica tabella
 
@@ -284,21 +288,46 @@ Avendo definito tutto questo possiamo rappresentare qualsiasi versione della rea
 1. chiave candidata
 2. vincoli di cardinalità
 ## Vincoli di integrità
-### Vincolo di chiave
+### Vincolo di chiave primaria
 Quella che nel modello ER era una caratteristica identificativa ora deve diventare un vero e proprio vincolo.
->[!important] Chiave (primary key)
->Insieme di attributi tali che non esistono due righe distinte distinte coincidenti sugli attributi chiave.
+>[!important] Chiave primaria (primary key)
+>Dato uno schema di relazione
+>$$R_{1}(A_{1},\dots,A_n)$$
+>Definiamo la **chiave primaria** come la specifica di un insieme di attributi
+>$$k = \{A_{1}',\dots,A_k'\} \subseteq \{A_{1},\dots,A_n\}$$
+
+Una istanza di relazione soddisfa il vincolo di chiave se non esistono tuple distinte che coincidono negli attributi che compongono l'insieme chiave.
 
 >[!attention] In questo caso non parliamo di minimale
 >Il concetto di minimale non appartiene a questa progettazione, in quanto viene definita come caratteristica degli identificatori della progettazione concettuale.
+>Nella progettazione logica stiamo solo traducendo le caratteristiche/proprietà che abbiamo identificato nella progettazione concettuale.
 
 Nel modello relazionale (nello schema di relazione) indichiamo la chiave sottolineando gli attributi che compongono l'insieme di attributi chiave.
+
+#### Chiavi secondarie
+Se nel modello ER sono presenti più chiavi candidate nella traduzione nel modello relazionale una di esse diventerà la **chiave primaria**, mentre le altre saranno **chiavi secondarie**.
+Indichiamo la chiave secondaria con `UNIQUE`
+$$
+\text{Fornitore} ( \underline{\text{P.iva}}, \overbrace{\text{nome, città}}^{\text{UNIQUE}})
+$$
+La scelta della chiave primaria avviene in base al fatto che poi verrà utilizzata come meccanismo principale di organizzazione nella rappresentazione della tabella.
 ### Vincolo di integrità referenziale
 Un vincolo di integrità referenziale impone che i valori di riferimento a un'altra tabella (chiave esterna) siano sempre presenti nella tabella referenziata, mantenendo coerenti i legami che nel modello ER erano relazioni tra entità
 Nell'esempio precedente dobbiamo fare in modo che nella tabella Fornitura non possano essere inseriti elementi non presenti nelle tabelle Fornitore e Merce.
 
 >[!important] Chiave esterna (foreign key)
->Seppur il nome coincida il concetto di chiave esterna è profondamente diverso da quanto detto per la progettazione concettuale. In questa fase prende il nome di **chiave esterna** (foreign key) un insieme di attributi che devono comparire come valori chiave di un'altra relazione e non una relazione (modello ER) che fa da attributo identificativo.
+>Dati 2 schemi di relazione
+>$$R_{1}(A_{1},\dots,A_n) \hspace{4ex} R_{2}(B_{1},\dots,B_n)$$
+>la **chiave esterna** è una espressione del tipo
+>$$R_{1}[A_{1}',\dots,A_k'] \sqsubseteq_{FK} R_{2}[B_{1}',\dots,B_k']$$
+>Dove $\{B_{1}',\dots,B_k'\}$ è chiave di $R_{2}$ e $\{A_{1}',\dots,A_k'\} \subseteq \{A_{1},\dots,A_m\}$
+
+Sia $r_{1}$ una istanza di $R_{1}$ ed $r_{2}$ una istanza di $R_{2}$, $r_{1}$ ed $r_{2}$ soddisfano il vincolo di chiave esterna solo se
+$$
+\forall t_{1} \in r_{1}, \exists t_{2} \in r_{2} \ : \ t_{1}[A_{1}'] = t_{2}[B_{1}'] \wedge \dots \wedge t_{1}[A_k'] = t_{2}[B_k']
+$$
+
+>[!bug] Seppur il nome coincida il concetto di chiave esterna è profondamente diverso da quanto detto per la progettazione concettuale.
 
 Nello schema relazionale codifichiamo il legame con le altre tabelle come segue
 $$
@@ -307,4 +336,6 @@ $$
 \text{Fornitura[Merce]} \sqsubseteq_{FK} \text{Merce[cod]}
 }
 $$
-
+### Vincolo di cardinalità
+In base alla cardinalità descritta nel modello ER possono esistere vari modi di rappresentarlo nel modello relazionale
+#### Vincolo 0:1
