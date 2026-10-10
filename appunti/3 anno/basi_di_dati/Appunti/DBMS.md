@@ -338,4 +338,6 @@ $$
 $$
 ### Vincolo di cardinalità
 In base alla cardinalità descritta nel modello ER possono esistere vari modi di rappresentarlo nel modello relazionale
+![[DBMS-1791643675437.webp|center|555]]
 #### Vincolo 0:1
+[...]

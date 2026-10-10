@@ -473,8 +473,7 @@ Nel caso di reti [[Reti di telecomunicazioni#Topologia di rete|broadcast]] al li
 
 Le trasmissioni vengono quindi suddivise in trame e ogni ad ogni stazione viene associato (dal produttore) un indirizzo MAC.
 Il MAC address della stazione destinazione viene indicato nel campo destinazione dell’header di trama. Quando una stazione riceve una trama verifica se il valore del campo destinazione della trama corrisponde ad un suo indirizzo. Solo in questo caso copia la trama ricevuta e la passa per ulteriori elaborazioni ai livelli superiori.
-
-![[Modello ISO OSI-1791573711701.webp|373]]
+![[Modello ISO OSI-1791643795037.webp|center|500]]
 
 # Livello rete (livello 3)
 Fornisce i mezzi funzionali e procedurali per lo scambio di informazioni tra entità di livello di trasporto.
