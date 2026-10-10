@@ -568,10 +568,7 @@ Algoritmicamente è fattoriale nel caso peggiore -> problemi enormi.
 >1. Se esiste una soluzione ammissibile per $(P)$, allora esiste una soluzione ammissibile di base per $(P)$;
 >2. Se esiste una soluzione ottima per $(P)$, allora esiste una soluzione ottima di base per $(P)$.
 
-[...]
-esistono e sono in **numero finito**
-
-#dimostrazione 1 enunciato
+#dimostrazione **1 enunciato**
 $\exists$ soluzione ammissibile $\overline{x}$ $\implies \exists$ SBA
 Sia $\overline{x} \in \Omega(P)$ e sia $p\leq n$ il numero delle sue componenti positive, si può scrivere:
 $$
@@ -674,21 +671,24 @@ Ne concludiamo che il nuovo vettore delle soluzioni $x$ ha al più (il minimo pu
 Ripetiamo questo processo iterativamente eliminando componenti e verificando la dipendenza lineare delle componenti.
 Nel peggiore dei casi, usciremo dal loop avremo una componente positiva e una colonna linearmente indipendente. In questo modo troviamo la base in modo iterativo.
 
----
-dimostrazione del secondo enunciato
+
+#dimostrazione **2 enunciato**
 Se esiste una soluzione ottima $x^* \in \Omega(P)$, allora esiste una soluzione ottima di base per $(P)$.
 Essendo ottima è anche ammissibile
 $$
-x^* = (x_{1}^*,\dots,x_p^*,0,\dots,0)^T
+x^* = (x_{1}^*,\dots,x_p^*,0,\dots,0)^T \hspace{4ex} p \leq n
 $$
-Se le p colonne sono linearmente dipendenti è ottima ed è di base.
-Se non lo è riprendiamo gli stessi procedimenti della dimostrazione 1
-definiamo un nuovo vettore
+Se le $p$ colonne di $A$ associate alle $p$ componenti $\neq 0$ di $x^*$ sono linearmente indipendenti allora $x^*$ è soluzione ottima di base.
+
+Se $x^*$ non è soluzione di base è possibile costruire (per il primo enunciato del teorema)
 $$
 x = x^*-\epsilon d \in \Omega(P) \forall \epsilon \in [\epsilon_1, \epsilon_2]
 $$
-ma nello spostamento dobbiamo mantenere l'ottimalità, non solo l'ammissibilità
-La funzione obbiettivo vale
+traslando il vettore $x^*$ lungo il vettore $d$ di una quantità $\epsilon$.
+
+![[Problemi di ottimizzazione-1791625254598.webp|center|519]]
+Per il primo enunciato sappiamo che l'ammissibilità è mantenuta, dobbiamo quindi dimostrare che manteniamo anche l'ottimalità.
+Sapendo che la nostra funzione obbiettivo vale
 $$
 c^T x^*
 $$
@@ -699,57 +699,53 @@ c^T x & = c^T (x^*- \epsilon d) \\
 & = c^T x^* - \epsilon c^T d
 \end{array}
 $$
-stiamo sottraendo una quantità
-perdere ottimalità in corrispondenza della nuova $x$ vuol dire perdere $x^*$, dovremmo dimostrare invece che $c^Td$ sia pari a 0, perché $\epsilon$ può essere positiva o negativa
+Dobbiamo dimostrare che $c^T d=0$
+
+Per assurdo vediamo i casi possibili:
 $$
-c^T d = 0
+\begin{align*}
+c^\top d < 0 &\implies \forall \varepsilon \in [\varepsilon_1, 0) \hspace{8ex} c^\top (x^* - \varepsilon d) < c^\top x^* \\
+c^\top d > 0 &\implies \forall \varepsilon \in (0, \varepsilon_2] \hspace{8ex} c^\top (x^* - \varepsilon d) < c^\top x^*
+\end{align*}
 $$
-assurdo
-ipotizziamo che $c^T d> 0$
+Pertanto, procedendo iterativamente come nella dimostrazione (1), partendo da $x^∗$ è possibile costruire una soluzione ammissibile di base ottima per (P).
+
+### Proprietà
+Nella dimostrazione (1) si è utilizzata la proprietà:
+$\overline{x} \in \Omega(P)$ ma non di base $\implies \exists d \in \mathbb{R}^n:(\overline{x} - \epsilon d) \in \Omega(P) \forall \varepsilon \in [\varepsilon_{1}, \varepsilon_{2}]$
+L'insieme
 $$
-c^T x = c^T x^* - \epsilon \underbrace{c^T d}_{> 0} \hspace{4ex} \forall \epsilon \in [\epsilon_{1}, \epsilon_{2}]
+\Gamma = \{x = \overline{ x } - \varepsilon d : \varepsilon \in [\varepsilon_{1}, \varepsilon_2]\}
 $$
-$\epsilon$ può essere positivo o negativo, concentriamoci sulle $\epsilon$ positive $\epsilon \in [0,\epsilon_{2}]$
-=> stiamo sottraendo una quantità positiva, $c^Tx < c^T x^*$, ma **non può essere**, $c^Tx^*$ è ottimo
+è un segmento di retta di cui $\overline{x}$ è un punto interno. Pertanto in termini geometrici si può scrivere:
+$\overline{x} \in \Omega(P)$ ma non di base $\implies$ $\overline{x}$ è interno al segmento $\Gamma \subset \Omega(P)$.
 
-Ipotizzando invece che $c^T d < 0$ consideriamo il caso in cui $\epsilon \in [\epsilon_{1},0]$, sono entrambi $<0$
-$$
-\displaylines{
-c^T x = c^T x^* - \underbrace{\epsilon c^T d}_{> 0} \\
-c^T x < c^T x^*
-}
-$$
-e anche questo non può essere.
+Nella dimostrazione (2) si è provato che:
+$x^∗$ soluzione ottima ma non di base $\implies x^*$ è interno ad un segmento $\Gamma$ ortogonale a $c$ i cui infiniti punti sono soluzioni ottime per (P).
+Il segmento ammissibile all’interno del quale si trova la soluzione ottima non di base $x^∗$ deve essere ortogonale al gradiente della funzione obiettivo $\nabla z = c$, e quindi collineare alle linee di livello della
+funzione.
+### Enunciato di tipo geometrico
+Sia $(P)$ un problema di programmazione lineare in forma standard, e $\Omega(P)$ la sua regione ammissibile.
+$\overline{x} \in \Omega(P)$ è una soluzione di base ammissibile per $(P)$ se e solo se $\overline{x}$ è un **punto estremo del poliedro** $\Omega(P)$
 
-
-
-
-
----
-
-perché sono importanti i vincoli sul segno della forma standard
-questo tipo di vincolo impedisce ai vincoli lineari di andare a $+\infty$ o $-\infty$
-
----
-
-[...] riprendi proprietà delle slide
-
----
-
->[!info] Teorema
-
-dimostrazione delle nuove slide non penso che la farò
-
-
-enunciato di tipo geometrico
->[!info] Teorema fondamentale (geometrico)
+>[!info] Teorema fondamentale (insiemistica)
 >Sia $(P)$ il problema di programmazione lineare in forma standard sotto le ipotesi $$A \in \mathbb{R}^{m \times n} \hspace{4ex}\text{rango}(A) = m < n$$
 >1. Se il poliedro $\Omega(P)$ è non vuoto allora esiste almeno un punto estremo in $\Omega(P)$.
 >2. Se il problema $(P)$ ammette ottimo finito, allora uno dei punti estremi di $\Omega(P)$ è soluzione ottima
 
-una soluzione di base degenere ha più di $n-m$ zeri
-un vertice è degenere se ci passano più di più di due iperpiani
-abbiamo più modi di descrivere lo stesso vertice
+>[!important] Vertice
+>Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^T \overline{x} < c^T x \forall x \in P \ : \ x \neq \overline{x}$$
+
+Consideriamo un poliedro P. Un vettore $\overline{x} \in P$ è un **vertice** di $P$ se e solo se in $\overline{x}$ sono attivi $n$ vincoli definiti da vettori di coefficienti che sono linearmente indipendenti (vincoli linearmente indipendenti).
+
+Consideriamo un poliedro $P$ in **forma standard**. Un vettore $\overline{x} \in P$ è un **vertice** di $P$ se in $\overline{x}$ sono attivi $n-m$ vincoli di segno che uniti agli $m$ vincoli di eguaglianza formano un insieme di $n$ vincoli linearmente indipendenti.
+
+Date queste considerazioni possiamo quindi rielaborare il teorema fondamentale da un punto di vista geometrico
+
+>[!info] Teorema fondamentale (geometrico)
+>Sia $(P)$ il problema di programmazione lineare in forma standard sotto le ipotesi $$A \in \mathbb{R}^{m \times n} \hspace{4ex}\text{rango}(A) = m < n$$
+>1. Se il poliedro $\Omega(P)$ è non vuoto allora esiste almeno un **vertice** in $\Omega(P)$.
+>2. Se il problema $(P)$ ammette ottimo finito, allora uno dei **vertici** di $\Omega(P)$ è soluzione ottima
 
 
 >[!important] Basi adiacenti
