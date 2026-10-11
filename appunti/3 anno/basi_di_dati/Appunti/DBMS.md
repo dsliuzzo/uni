@@ -339,5 +339,50 @@ $$
 ### Vincolo di cardinalità
 In base alla cardinalità descritta nel modello ER possono esistere vari modi di rappresentarlo nel modello relazionale
 ![[DBMS-1791643675437.webp|center|555]]
-#### Vincolo 0:1
-[...]
+#### Vincolo uno a molti
+Per definire un vincolo 1:1 possiamo agire in due modi
+
+**Metodo 1**
+Possiamo creare una nuova relazione e usare solo Merce come chiave
+$$
+\displaylines{
+\text{Fornitore}(\underline{p.iva}, \text{nome}, \text{città}) \\
+\text{Merce}(\underline{\text{cod}}, \text{nome}) \\
+\text{Marca}(\underline{\text{nome}}, \text{sede}) \\ \\
+\text{Produzione}(\underline{\text{Merce}}, \text{Marca}) \\
+\text{Produzione}[\text{Merce}] \sqsubseteq_{FK} \text{Merce}[\text{cod}] \\
+\text{Produzione}[\text{Marca}] \sqsubseteq_{FK} \text{Marca}[\text{nome}]
+}
+$$
+**Metodo 2**
+Non creiamo una nuova relazione, ma usiamo la foreign key, accorpando la relazione all'entità
+$$
+\displaylines{
+\text{Fornitore}(\underline{p.iva}, \text{nome}, \text{città}) \\
+\text{Merce}(\underline{\text{cod}}, \text{nome}, \text{marca}) \\
+\text{Marca}(\underline{\text{nome}}, \text{sede}) \\ \\
+\text{Marca}[\text{marca}] \sqsubseteq_{FK} \text{Marca}(\text{nome})
+}
+$$
+#### Vincolo 0/1 a molti
+Nel caso in cui l'attributo marca all'interno di Merce può non essere usato (0:1), possiamo usare il [[#Vincolo 1 1|metodo 1]], ma con l'attributo `NULL`
+$$
+\displaylines{
+\text{Fornitore}(\underline{p.iva}, \text{nome}, \text{città}) \\
+\text{Merce}(\underline{\text{cod}}, \text{nome}, \overbrace{\text{marca}}^{\text{NULL}}) \\
+\text{Marca}(\underline{\text{nome}}, \text{sede}) \\ \\
+\text{Merce}[\text{marca}] \sqsubseteq_{FK} \text{Marca}[\text{nome}]
+}
+$$
+#### Vincolo molti a molti
+Nel caso in cui i vincoli da entrambi i lati sono $0:n$ dobbiamo obbligatoriamente creare una nuova relazione
+$$
+\displaylines{
+\text{Fornitore}(\underline{p.iva}, \text{nome}, \text{città}) \\
+\text{Merce}(\underline{\text{cod}}, \text{nome}) \\
+\text{Marca}(\underline{\text{nome}}, \text{sede}) \\ \\
+\text{Fornitura}(\underline{\text{Fornitore}}, \underline{\text{Merce}}, \text{prezzo}) \\
+\text{Fornitura}[\text{Fornitore}] \sqsubseteq_{FK} \text{Fornitore}[\text{p.iva}] \\
+\text{Fornitura}[\text{Merce}] \sqsubseteq_{FK} \text{Merce}[\text{cod}]
+}
+$$

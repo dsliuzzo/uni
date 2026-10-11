@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="40e8f817-6544-40ee-9041-c139f7c70c46" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../appunti/3 anno/basi_di_dati/Appunti/DBMS.md" beforeDir="false" afterPath="$PROJECT_DIR$/../appunti/3 anno/basi_di_dati/Appunti/DBMS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../appunti/3 anno/sviluppo_di_applicazioni_web/Web.md" beforeDir="false" afterPath="$PROJECT_DIR$/../appunti/3 anno/sviluppo_di_applicazioni_web/Web.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/github - uni.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Barbiere_addormentato/Barbiere.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Barbiere_addormentato/Cliente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Barbiere_addormentato/Sala.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Barbiere_addormentato/SalaLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Barbiere_addormentato/SalaSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Cinque_filosofi/Filosofo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Cinque_filosofi/Tavolo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Cinque_filosofi/TavoloLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Cinque_filosofi/TavoloSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Lettori_Scrittori/Lettore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Lettori_Scrittori/MemoriaCondivisa.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Lettori_Scrittori/MemoriaCondivisaLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Lettori_Scrittori/MemoriaCondivisaSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Lettori_Scrittori/Scrittore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Produttore_Consumatore/Buffer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Produttore_Consumatore/BufferLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Produttore_Consumatore/BufferLCFifo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Produttore_Consumatore/BufferSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Produttore_Consumatore/Consumatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Produttore_Consumatore/Produttore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Cantiere_04_07_2022/CantiereFerroviarioA.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Cantiere_04_07_2022/CantiereFerroviarioB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Cantiere_04_07_2022/CantiereFerroviarioSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Cantiere_04_07_2022/Operaio.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Cantiere_04_07_22/CantiereFerroviarioSemVar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Ferryboat_06_06_2022/Addetto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Ferryboat_06_06_2022/Autovettura.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Ferryboat_06_06_2022/FerryBoatLCVar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Ferryboat_06_06_2022/Ferryboat.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Ferryboat_06_06_2022/FerryboatLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Galleria_08_07_2022/Galleria.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Galleria_08_07_2022/GalleriaSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Galleria_08_07_2022/GalleriaSemVar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Galleria_08_07_2022/GalleriaSemVar2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Galleria_08_07_2022/Guida.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Galleria_08_07_2022/Visitatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Magazzino_17_06_2026/Magazzino.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Magazzino_17_06_2026/MagazzinoLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Magazzino_17_06_2026/Muletto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Magazzino_17_06_2026/Operatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_MuseoC_07_02_2022/MuseoC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_MuseoC_07_02_2022/MuseoSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_MuseoC_07_02_2022/MuseoSemVar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_MuseoC_07_02_2022/Visitatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Pizzeria_20_03_2023/Cliente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Pizzeria_20_03_2023/Pizzaiolo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Pizzeria_20_03_2023/Pizzeria.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Pizzeria_20_03_2023/PizzeriaLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Pizzeria_20_03_2023/PizzeriaLCb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Salto_09_09_2022/Giudice.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Salto_09_09_2022/Saltatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Salto_09_09_2022/Salto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Salto_09_09_2022/SaltoSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tista_12_07_2023/Pilota.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tista_12_07_2023/Pista.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tista_12_07_2023/PistaLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tista_12_07_2023/PistaLCb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tista_12_07_2023/PistaOggetto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tour_16_06_2021/Guida.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tour_16_06_2021/TourFirenze.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tour_16_06_2021/TourFirenzeLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_Tour_16_06_2021/Turista.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_aeroporto_08_11_2024/Addetto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_aeroporto_08_11_2024/BancoCheckIn.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_aeroporto_08_11_2024/BancoCheckInB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_aeroporto_08_11_2024/BancoCheckInSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_aeroporto_08_11_2024/BancoCheckInSemFIFO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_aeroporto_08_11_2024/Passeggero.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_biblioteca_13_01_2025/Biblioteca.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_biblioteca_13_01_2025/BibliotecaLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_biblioteca_13_01_2025/Bibliotecario.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_biblioteca_13_01_2025/Utente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_callcenter_20_01_2023/CallCenter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_callcenter_20_01_2023/CallCenterLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_callcenter_20_01_2023/Cliente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_callcenter_20_01_2023/Operatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_cinema_05_02_2025/Addetto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_cinema_05_02_2025/Cinema.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_cinema_05_02_2025/CinemaSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_cinema_05_02_2025/Cliente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_cinema_05_02_2025/MainCinema.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_funivia/Funivia.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_funivia/FuniviaSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_funivia/Pilota.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_funivia/Turista.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_parcoAttrazioni_09_06_2025/Bambino.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_parcoAttrazioni_09_06_2025/OperatoreGiostra.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_parcoAttrazioni_09_06_2025/ParcoAttrazioni.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_parcoAttrazioni_09_06_2025/ParcoAttrazioniLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pavimento_21_06_2023/Pavimento.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pavimento_21_06_2023/PavimentoSemA.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pavimento_21_06_2023/PavimentoSemB.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pavimento_21_06_2023/Piastrellista.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_prontoSoccorso_04_06_2024/Medico.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_prontoSoccorso_04_06_2024/Paziente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_prontoSoccorso_04_06_2024/ProntoSoccorso.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_prontoSoccorso_04_06_2024/ProntoSoccorsoLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pullman_07_02_2024/Autista.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pullman_07_02_2024/Passeggero.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pullman_07_02_2024/Pullman.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_pullman_07_02_2024/PullmanSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_reparto_15_01_2024/Medico.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_reparto_15_01_2024/Reparto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_reparto_15_01_2024/RepartoLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_reparto_15_01_2024/Visitatore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_stabilimentoBalneare_09_09_2024/Bagnante.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_stabilimentoBalneare_09_09_2024/Gestore.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_stabilimentoBalneare_09_09_2024/Stabilimento.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_stabilimentoBalneare_09_09_2024/StabilimentoSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_ufficioPostale_10_11_2023/Cliente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_ufficioPostale_10_11_2023/Impiegato.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_ufficioPostale_10_11_2023/UfficioPostale.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_ufficioPostale_10_11_2023/UfficioPostaleLC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_universita_17_07_2024/Docente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_universita_17_07_2024/Esame.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_universita_17_07_2024/EsameSem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/so/Prova_universita_17_07_2024/Studente.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/so/so.iml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="3KYQfcfGqkmNr5SN6vkE987CHv6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/home/dsliuzzo/Documents/uni/code/web",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.27258.48" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.27258.48" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="40e8f817-6544-40ee-9041-c139f7c70c46" name="Changes" comment="" />
+      <created>1791732126738</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1791732126738</updated>
+      <workItem from="1791732129159" duration="19000" />
+    </task>
+    <servers />
+  </component>
+</project>

@@ -236,15 +236,20 @@ Riprendendo l'efficienza
 $$
 E = \frac{T}{T_{tot}} \in [0,1]
 $$
-in questo protocollo possiamo considerare $T_{tot}$ come:
-$$
-T_{tot} = \underbrace{T+\tau+T_r}_{\text{frame}} + \underbrace{T_E + \tau + T_r}_{ACK} = T+T_E + 2 \tau + 2 T_r
-$$
-dove $T$ ritardo di trasmissione, $T_{E}$ tempo di elaborazione dell'ACK, $\tau$ ritardo di propagazione e $T_r$ tempo del riscontro.
+>[!multi-column]
+>
+>>[!blank]
+>>in questo protocollo possiamo considerare $T_{tot}$ come:
+>$$T_{tot} = \underbrace{T+\tau+T_E}_{\text{frame}} + \underbrace{T_r + \tau + T_E}_{ACK} = T+T_r + 2 \tau + 2 T_E$$
+>dove $T$ ritardo di trasmissione (sorgente impiega $T$ per immettere il pacchetto sul canale), $T_{E}$ tempo di elaborazione dell'ACK, $\tau$ ritardo di propagazione e $T_r$ tempo del riscontro (il destinatario impiega $T_r$ per immettere il pacchetto nel canale).
+>
+>>[!blank]
+>>![[Modello ISO OSI-1791736998136.webp]]
+
 
 Possiamo quindi riscrivere l'efficienza come
 $$
-E = \frac{T}{2 \tau + T + 2T_r + T_E} = \frac{1}{2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}}
+E = \frac{T}{T+T_r + 2 \tau + 2 T_E} = \frac{1}{1+\frac{T_r}{T}+2 \frac{\tau}{T} + 2 \frac{T_E}{T}}
 $$
 Per valutare correttamente l'efficienza dobbiamo tenere in considerazione la possibilità che il frame debba essere ritrasmesso anche più di una volta, ma questa è una variabile aleatoria, di conseguenza estendiamo il concetto di efficienza aggiungendo il [[2. Variabili aleatorie#Valore atteso|valore atteso]] $E[n_t]$ per misurare il numero medio di trasmissioni necessarie ad avere il primo successo, che può essere approssimato ad una [[Modelli matematici#Prove di Bernoulli (binomiale - geometrico)|geometrica]]:
 $$
@@ -253,7 +258,7 @@ $$
 dove $p$ è la probabilità di errore di frame (cioè che il frame arrivi alterato al ricevitore).
 La formula dell'efficienza diventa quindi
 $$
-E = \frac{T}{E[n_t] \cdot T_{tot}} = \frac{T}{\frac{1}{1-p} \cdot T_{tot}} = \frac{1}{\frac{1}{1-p} \left(2 \frac{\tau}{T} + 1 + 2 \frac{T_r}{T} + \frac{T_E}{T}\right)}
+E = \frac{T}{E[n_t] \cdot T_{tot}} = \frac{T}{\frac{1}{1-p} \cdot T_{tot}} = \frac{1}{\frac{1}{1-p} \left(1+\frac{T_r}{T}+2 \frac{\tau}{T} + 2 \frac{T_E}{T}\right)}
 $$
 Ipotizziamo l'esistenza di un canale non rumoroso, se la probabilità di errore è nullo $p = 0$ e sapendo che in generale $2 \frac{T_r}{T} + \frac{T_E}{T}$ sono trascurabili rispetto al resto dei termini:
 $$
