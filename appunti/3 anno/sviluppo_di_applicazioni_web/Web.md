@@ -1545,16 +1545,734 @@ Utile, ma meno sicura e meno pratica!
 | Timeout e invalidazione    | Non cambia: l'ID sessione rimane valido fino alla scadenza, ma se l'utente chiude la pagina senza passare l'ID negli URL, la sessione può andare persa |
 ## ServletContext
 
+> [!important] Il **ServletContext** rappresenta il contesto (ambiente condiviso) della Web Application. È creato e gestito dal Servlet Container (es. Tomcat) ed è condiviso da **tutte** le servlet della stessa applicazione.
+
+Cookie e sessioni risolvono il problema "n utenti : 1 servlet". Il ServletContext risolve "N servlet : 1 web application": permette alle servlet di accedere a configurazioni globali, informazioni e risorse comuni.
+
+```java
+ServletContext context = getServletContext();
+```
+
+```mermaid
+flowchart TD
+    C["ServletContext<br>(1 per Web Application)"]
+    C --> L["LoginServlet<br>(ServletConfig)"]
+    C --> P["ProductServlet<br>(ServletConfig)"]
+    C --> O["OrderServlet<br>(ServletConfig)"]
+```
+
+|Oggetto|Cosa rappresenta|Ambito|
+|---|---|---|
+|`ServletConfig`|configurazione di **1 servlet**|una sola servlet|
+|`ServletContext`|contesto **condiviso dalla web application**|tutte le servlet|
+|`HttpSession`|stato **associato a 1 utente**|richieste dello stesso client|
+
+> [!note] Collegamento con gli scope Il ServletContext è lo scope **Application** della tabella vista in [[#Stato]]: gli attributi vivono finché vive l'applicazione.
+
+Esempi d'uso:
+
+1. **Leggere parametri globali** (definiti in `web.xml` con `<context-param>`, non legati a una servlet specifica come gli `<init-param>`)
+
+```xml
+<context-param>
+	<param-name>applicationName</param-name>
+	<param-value>MyShop</param-value>
+</context-param>
+```
+
+```java
+ServletContext context = getServletContext();
+String name = context.getInitParameter("applicationName");
+```
+
+2. **Condividere informazioni tra componenti** (attributi di contesto)
+
+```java
+context.setAttribute("numberOfUsers", 100);
+Integer n = (Integer) context.getAttribute("numberOfUsers");
+```
+
+3. **Navigare nelle risorse** della web application (vedi [[#Dispatching]]). Si può anche accedere ai file dell'applicazione, es. `context.getResourceAsStream("/WEB-INF/config.txt")`.
+
+> [!bug] Concorrenza Il contesto è condiviso da **tutti i thread** di **tutti gli utenti**: come per gli attributi di istanza della servlet, un `setAttribute` + `getAttribute` non è atomico. Per contatori e strutture condivise usare classi thread-safe (`AtomicInteger`, `ConcurrentHashMap`) o `synchronized`.
+
 ## Dispatching
+
+Il **RequestDispatcher** permette a una servlet di **delegare** l'elaborazione di una richiesta a un'altra risorsa del server (servlet, pagina HTML, JSP). Si usa per passare il controllo (es. tra i 3 livelli) o per richiedere contenuto riutilizzabile (header, menu, footer, banner...).
+
+1. si ottiene il dispatcher dal `ServletContext`, fornendo un URL **relativo alla radice dell'applicazione** (deve iniziare con `/`)
+2. si invoca `forward()` o `include()`
+
+```java
+String url = "/presentations/presentation1.html";
+RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
+```
+
+> [!note] Alternativa Anche `request.getRequestDispatcher(path)` restituisce un dispatcher, ma accetta anche percorsi **relativi** alla richiesta corrente (ad es. `"index.jsp"`).
+
+### Forward o include?
+
+Entrambi delegano l'elaborazione a un'altra risorsa, ma in modo diverso:
+
+> [!important] `forward()` → **passa il controllo** `include()` → **include il contenuto**
+
+> [!multi-column]
+> 
+> > [!blank] **forward**
+> > 
+> > ```mermaid
+> > sequenceDiagram
+> >    participant B as Browser
+> >    participant S1 as Servlet1
+> >    participant S2 as Servlet2
+> >    B->>S1: 1. request
+> >    S1->>S2: 2. forward(request, response)
+> >    S2-->>B: 3. risposta generata da Servlet2
+> > ```
+> 
+> > [!blank] **include**
+> > 
+> > ```mermaid
+> > sequenceDiagram
+> >    participant B as Browser
+> >    participant S1 as Servlet1
+> >    participant S2 as Servlet2
+> >    B->>S1: 1. request
+> >    S1->>S2: 2. include(request, response)
+> >    S2-->>S1: 3. contenuto di Servlet2
+> >    S1-->>B: 4. risposta finale (S1 + S2)
+> > ```
+
+|Aspetto|`forward()`|`include()`|
+|---|---|---|
+|Chi risponde al client|la risorsa a cui si inoltra|la servlet chiamante (con dentro il contenuto incluso)|
+|Dopo la chiamata|il controllo **non torna** alla servlet chiamante|il controllo **torna** alla servlet chiamante|
+|Uso tipico|passare a una vista (JSP), cambiare "pagina"|comporre la pagina (header, menu, footer)|
+
+> [!attention] Forward ≠ redirect Il forward avviene **dentro il server**: il browser non lo sa, l'**URL non cambia** e la richiesta è **una sola** (request e response sono le stesse, quindi gli attributi della request restano disponibili). `response.sendRedirect()` invece dice al browser di fare una **nuova richiesta** (2 richieste, URL che cambia, attributi della request persi). Inoltre con `forward()` la risposta non deve essere già stata inviata (_committed_), altrimenti `IllegalStateException`.
+
+Esempio: la servlet sceglie la pagina in base al parametro `operation`
+
+```java
+private void gotoPage(String address, HttpServletRequest request,
+		HttpServletResponse response) throws ServletException, IOException {
+	RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(address);
+	dispatcher.forward(request, response);
+}
+
+public void doGet(HttpServletRequest request, HttpServletResponse response)
+		throws ServletException, IOException {
+	String operation = request.getParameter("operation");
+	if (operation == null)
+		operation = "unknown";
+	if (operation.equals("operation1"))
+		gotoPage("/operations/presentation1.html", request, response);
+	else if (operation.equals("operation2"))
+		gotoPage("/operations/presentation2.html", request, response);
+	else
+		gotoPage("/operations/unknownRequestHandler.html", request, response);
+}
+```
+
+### Mapping, routing, dispatching
+
+Tre concetti facili da confondere, chiariti seguendo il percorso di una richiesta HTTP:
+
+1. **Mapping** (`@WebServlet`): la _regola_ (configurazione) che dice al container quale servlet gestisce un certo URL → "quale servlet deve ricevere questa richiesta?"
+2. **Routing**: l'_applicazione_ delle regole di mapping per indirizzare una richiesta concreta. I Filter hanno un loro mapping e intercettano la richiesta prima/dopo la servlet: possono lasciarla proseguire, modificarla o bloccarla, **interferendo con il routing**.
+3. **Dispatching** (`forward`/`include`): avviene **dentro il server**, dopo che una servlet è già stata coinvolta. Non è un nuovo routing del browser.
+
+```mermaid
+flowchart TD
+    B["Browser"] -->|"HTTP Request"| C["Servlet Container"]
+    C -->|"Routing / Mapping"| F["Filter"]
+    F -->|"chain.doFilter()"| S["Servlet"]
+    S -->|"Dispatching: forward()"| S2["Servlet2"]
+    S -->|"Dispatching: include()"| R["altra risorsa"]
+```
+
+Esempio: `@WebServlet("/products/*")` (mapping) → arriva `GET /products/123` (richiesta concreta) → il routing la indirizza a `ProductServlet`.
 
 ## Filtri
 
+> [!important] Un **Filter** è un componente Java che **intercetta le richieste HTTP** prima che arrivino alla servlet (o altra risorsa) e/o **modifica le risposte**.
+
+Si usa per funzionalità **trasversali** (_cross-cutting concerns_), cioè comuni a molte servlet:
+
+- autenticazione / autorizzazione
+- logging / monitoraggio
+- compressione o modifica delle risposte
+- gestione dell'encoding (UTF-8)
+- caching o filtro dei contenuti
+
+Evitano **ridondanza** (servlet più snelle, funzionalità comuni centralizzate) e favoriscono la **separazione delle responsabilità** (SoC).
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant F as Filter
+    participant S as Servlet / JSP / HTML
+    B->>F: request
+    Note over F: codice PRIMA di chain.doFilter()
+    F->>S: chain.doFilter(request, response)
+    S-->>F: risposta
+    Note over F: codice DOPO chain.doFilter()
+    F-->>B: risposta
+```
+
+### Interfaccia Filter
+
+Un Filter è una classe Java che implementa l'interfaccia `jakarta.servlet.Filter` (come per le servlet, `javax.servlet` è deprecato) e i suoi 3 metodi:
+
+|Metodo|Quando viene chiamato|
+|---|---|
+|`init(FilterConfig filterConfig)`|**una sola volta**, quando il container crea e inizializza il filtro|
+|`doFilter(ServletRequest, ServletResponse, FilterChain)`|**per ogni richiesta** che passa dal filtro: può modificare request/response o passare il controllo al filtro/servlet successivo con `chain.doFilter(request, response)`|
+|`destroy()`|**una sola volta**, quando il filtro viene rimosso dal container e le risorse vengono liberate|
+
+> [!note] `init` e `destroy` Dalla Servlet 4.0 `init()` e `destroy()` hanno un'implementazione di default: l'unico metodo davvero obbligatorio è `doFilter()`.
+
+> [!important] Il ruolo di `chain.doFilter()` Se un filtro **non** chiama `chain.doFilter()` la richiesta si ferma lì: è così che un filtro può **bloccare** una richiesta (es. utente non autenticato).
+
+**Registrazione**: nel `web.xml` oppure con l'annotazione `@WebFilter`. Quando il container avvia l'applicazione crea **un'istanza** di ciascun filtro dichiarato (quindi, come per le servlet, serve attenzione alla concorrenza).
+
+```xml
+<filter>
+	<filter-name>LoggingFilter</filter-name>
+	<filter-class>com.example.LoggingFilter</filter-class>
+</filter>
+
+<filter-mapping>
+	<filter-name>LoggingFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+
+```java
+@WebFilter("/*") // il filtro si applica a tutte le richieste
+public class LoggingFilter implements Filter {
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+		// logica di inizializzazione, es. lettura di init param
+		String someParam = filterConfig.getInitParameter("paramName");
+		System.out.println("Filter initialized with param: " + someParam);
+	}
+
+	@Override
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
+		long start = System.currentTimeMillis();
+		chain.doFilter(req, res); // passa il controllo al prossimo elemento
+		long elapsed = System.currentTimeMillis() - start;
+		System.out.println("Richiesta gestita in " + elapsed + " ms");
+	}
+
+	@Override
+	public void destroy() { }
+}
+```
+
+I filtri vengono eseguiti **nell'ordine in cui sono dichiarati** nel `web.xml`.
+
+> [!attention] Ordine con le annotazioni Con `@WebFilter` l'ordine di esecuzione **non è specificato** dallo standard: se l'ordine conta (es. prima l'encoding, poi l'autenticazione) conviene dichiararlo nel `web.xml`.
+
+Esempio: filtro di autenticazione che blocca chi non ha fatto login
+
+```java
+@WebFilter("/private/*")
+public class AuthFilter implements Filter {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+			throws IOException, ServletException {
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) res;
+		HttpSession session = request.getSession(false); // non crea una nuova sessione
+		if (session != null && session.getAttribute("user") != null) {
+			chain.doFilter(req, res); // autenticato: prosegui
+		} else {
+			response.sendRedirect(request.getContextPath() + "/login.html"); // bloccata
+		}
+	}
+}
+```
+
+### Filtri: esempi
+
+Catena di filtri + front controller:
+
+```mermaid
+flowchart TD
+    B["Browser"] --> E["Encoding Filter"]
+    E --> A["Authentication Filter"]
+    A --> FC["Front Controller Servlet"]
+    FC --> SV["Service"]
+    SV --> DB["Database"]
+    FC --> CS["Controller Servlet specifica"]
+    CS --> V["Pagina Web (View)"]
+    V --> B2["Browser"]
+```
+
+> [!note] Front Controller Una servlet unica che riceve **tutte** le richieste e le smista ai controller specifici. È un pattern (vedi [[#Pattern]]): in Spring è la `DispatcherServlet`.
+
+Esempio completo di navigazione (login → home → ordini) che usa filtri, sessioni, cookie e `include`:
+
+```mermaid
+flowchart TD
+    B["Browser"] -->|"1 request"| F["Filter (logging / encoding)"]
+    F --> LH["Login.html"]
+    LH -->|"form submit"| LS["LoginServlet"]
+    LS --> L1["accesso ai dati (validazione)"]
+    LS --> L2["crea SESSION"]
+    LS --> L3["crea COOKIE (remember user)"]
+    LS --> HS["HomeServlet"]
+    HS --> H1["legge SESSION"]
+    HS --> H2["legge COOKIE"]
+    HS --> H3["logica applicativa"]
+    HS --> D["Dashboard.html"]
+    D --> D1["include Header.html"]
+    D --> D2["include Menu.html"]
+    D --> OS["OrderServlet"]
+    OS --> O1["legge SESSION"]
+    OS --> O2["recupero dati ordine"]
+    OS --> OH["Orders.html"]
+    OH --> BR["Browser (HTML)"]
+```
+
 ## Listener
+
+> [!important] I **Listener** sono componenti che reagiscono **automaticamente** a determinati **eventi** del ciclo di vita dell'applicazione web, delle sessioni HTTP e delle richieste.
+
+- la **Servlet** gestisce _esplicitamente_ una richiesta
+- il **Listener** reagisce a un _evento_ che si verifica nel container: non è il client a chiamarlo direttamente
+
+Senza listener bisognerebbe controllare manualmente ogni evento in ogni servlet: con i listener è il container a **notificare** automaticamente gli oggetti interessati.
+
+```mermaid
+flowchart TD
+    C["Jakarta Servlet Container"]
+    C --> R["HTTP Request"] --> RL["ServletRequestListener"] --> RO["Servlet"]
+    C --> S["Session"] --> SL["HttpSessionListener"] --> SO["HttpSession"]
+    C --> A["Application"] --> AL["ServletContextListener"] --> AO["ServletContext"]
+```
+
+|Livello|Interfaccia|Eventi osservati|
+|---|---|---|
+|Application|`ServletContextListener`|avvio (`contextInitialized`) e arresto (`contextDestroyed`) dell'applicazione|
+|Session|`HttpSessionListener`|creazione (`sessionCreated`) e distruzione (`sessionDestroyed`) delle sessioni|
+|Request|`ServletRequestListener`|ciclo di vita delle richieste (`requestInitialized` / `requestDestroyed`)|
+
+Esistono anche i listener sugli **attributi** (es. `ServletContextAttributeListener`, `HttpSessionAttributeListener`) che segnalano quando un attributo viene aggiunto, rimosso o sostituito.
+
+Usi tipici dei listener di Application: inizializzare risorse, caricare configurazioni, inizializzare cache o strutture condivise, **liberare le risorse allo shutdown**.
+
+**Registrazione** con l'annotazione `@WebListener`, che indica al container che quella classe è un listener (il tipo dipende dall'interfaccia implementata):
+
+```java
+@WebListener
+public class AppListener implements ServletContextListener {
+	public void contextInitialized(ServletContextEvent sce) {
+		// all'avvio: inizializzo una risorsa condivisa nel contesto
+		sce.getServletContext().setAttribute("activeUsers", new AtomicInteger(0));
+	}
+	public void contextDestroyed(ServletContextEvent sce) {
+		// allo shutdown: libero le risorse
+	}
+}
+```
+
+```java
+@WebListener
+public class SessionCountListener implements HttpSessionListener {
+	public void sessionCreated(HttpSessionEvent se) {
+		AtomicInteger n = (AtomicInteger) se.getSession().getServletContext().getAttribute("activeUsers");
+		n.incrementAndGet();
+	}
+	public void sessionDestroyed(HttpSessionEvent se) {
+		AtomicInteger n = (AtomicInteger) se.getSession().getServletContext().getAttribute("activeUsers");
+		n.decrementAndGet();
+	}
+}
+```
+
+Così il numero di utenti con una sessione attiva viene tenuto aggiornato **senza** scrivere codice in nessuna servlet (`AtomicInteger` perché il contesto è condiviso tra thread).
+
+> [!important] Filter vs Listener Il **Filter** partecipa **attivamente** alla pipeline della richiesta (può modificarla o bloccarla). Il **Listener** **osserva** eventi del container.
+
+## Riepilogo annotazioni
+
+|Annotazione|Si applica a|Scopo|
+|---|---|---|
+|`@WebServlet`|servlet|mapping URL → servlet (alternativa a `web.xml`)|
+|`@WebFilter`|filtro|registra un filtro e i pattern URL a cui si applica|
+|`@WebListener`|listener|indica al container che la classe è un listener|
+|`@WebInitParam`|servlet/filtro|parametro di inizializzazione (alternativa a `<init-param>`)|
+|`@MultipartConfig`|servlet|abilita la gestione di richieste `multipart/form-data` (upload di file)|
+
+### @MultipartConfig
+
+Per ricevere file caricati da un form HTML (`method="post"` e `enctype="multipart/form-data"`) la servlet deve essere annotata con `@MultipartConfig`: si accede poi ai file con `request.getPart()`.
+
+```java
+@WebServlet("/upload")
+@MultipartConfig
+public class UploadServlet extends HttpServlet {
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Part file = request.getPart("file"); // "file" = name del campo del form
+		String fileName = file.getSubmittedFileName();
+		file.write("/tmp/" + fileName);
+	}
+}
+```
+
+Parametri opzionali: `location`, `maxFileSize`, `maxRequestSize`, `fileSizeThreshold`.
+
+> [!attention] Cosa significa "multipart" La slide lo descrive come tecnica che divide un file grande in blocchi caricati in parallelo e ricomposti alla fine. In ambito servlet indica invece la **codifica `multipart/form-data`** del form: il corpo della POST è diviso in **parti** (`Part`), una per ogni campo del form (anche più file), e viaggia in **una sola richiesta**.
+
+> [!bug] Sicurezza `getSubmittedFileName()` è deciso dal client: usarlo così com'è per costruire un percorso permette di scrivere file dove non si dovrebbe (_path traversal_). Va sempre validato/sostituito, come per l'input delle query (vedi [[#SQL injection]]).
+
+## Servlet asincrone
+
+Quando arriva una richiesta il container assegna **un thread** alla servlet e il thread resta occupato finché la servlet non termina. È un problema se l'elaborazione è lunga e il thread deve solo **aspettare**: risposta da un altro servizio, operazione di I/O, risultato di un'elaborazione, arrivo di un evento. Il numero di thread del container è limitato (thread pool): thread bloccati = meno richieste servibili.
+
+> [!important] Le **Asynchronous Servlet** permettono di **sospendere** l'elaborazione della richiesta **senza tenere occupato il thread** del container.
+
+Esempio: in un e-commerce il calcolo delle spese di spedizione è affidato a un servizio esterno.
+
+```mermaid
+sequenceDiagram
+    participant C as Container
+    participant S as ShippingServlet
+    participant W as Altro thread
+    participant E as Servizio di spedizione
+    C->>S: richiesta (thread del container)
+    S->>S: startAsync()
+    S-->>C: thread liberato
+    S->>W: elaborazione affidata a un altro thread
+    W->>E: calcolo spese
+    E-->>W: risultato
+    W->>W: complete()
+    W-->>C: HTTP Response
+```
+
+1. **dichiarare** che la servlet supporta l'elaborazione asincrona
+2. usare `startAsync()` → elaborazione → `complete()`
+
+```java
+@WebServlet(value = "/shipping", asyncSupported = true)
+public class ShippingServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		AsyncContext ctx = req.startAsync(); // sospende la richiesta, il thread del container è libero
+		ctx.start(() -> {
+			try {
+				double cost = callShippingService(); // metodo ipotetico: chiamata lenta al servizio esterno
+				ctx.getResponse().getWriter().println("Spedizione: " + cost);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				ctx.complete(); // la risposta viene inviata al client
+			}
+		});
+	}
+}
+```
+
+> [!attention] Non rende il lavoro più veloce L'elaborazione dura quanto prima: si **libera il thread del container** per altre richieste (scalabilità), non si accorcia l'attesa del singolo utente. Tutti i filtri e le servlet della catena devono avere `asyncSupported = true`.
 
 # Pattern
 
+> [!important] Un **pattern** è uno schema di soluzione (ricorrente) da adattare a un problema concreto (ricorrente).
+
+Problema ricorrente → riconosciamo una struttura comune → usiamo uno schema di soluzione già sperimentato.
+
+```mermaid
+flowchart TD
+    A["PROBLEMA RICORRENTE"] --> B["Come posso organizzare questa soluzione?"]
+    B --> C["SCHEMA RICORRENTE"]
+    C --> D["PATTERN"]
+    D --> E["adattato al caso concreto"]
+```
+
+Un pattern **non** è: una classe, una libreria, un algoritmo da copiare, una regola obbligatoria. Descrive _come organizzare_ una soluzione, non è una soluzione pronta.
+
+La parola pattern rimane la stessa, ma cambia l'oggetto a cui applichiamo lo schema:
+
+- come strutturare un'applicazione web separando presentazione, logica e dati? → **MVC** → architectural/design pattern
+- come separare l'accesso al database dal resto dell'applicazione? → **DAO** → design/data-access pattern
+- come identificare una risorsa sul Web? → **URI** → pattern sintattico/di identificazione
+
+|Tipo di pattern|A cosa serve|Esempi|
+|---|---|---|
+|Pattern di programmazione|problemi ricorrenti nella scrittura del codice|Iterator, Factory, Singleton|
+|Design pattern|organizzare classi e oggetti per problemi ricorrenti di progettazione|MVC, DAO, Observer, Strategy|
+|Architectural pattern|struttura complessiva di un sistema software|Layered Architecture, Client–Server, Microservices|
+|Integration pattern|comunicazione e scambio di dati tra componenti/sistemi|Message Queue, Publish/Subscribe, API Gateway|
+|Data-access pattern|organizzare l'accesso e la gestione dei dati|DAO, Repository, Unit of Work|
+|Security pattern|problemi ricorrenti di sicurezza|Authentication, Authorization, Secure Session|
+
+> [!note] Pattern ≠ espressione regolare Una **regex** è un linguaggio formale per descrivere un pattern _testuale_. Es. pattern: "un numero di telefono italiano" → regex: `^\+39\s?[0-9]{9,10}$`
+
+## Model-View-Controller (MVC)
+
+> [!important] Pattern **architetturale** molto diffuso (programmazione a oggetti e applicazioni web) che **separa la logica di presentazione dei dati dalla logica di business**. Si posiziona a livello logico/di business e di presentazione in un'architettura multi-tier (vedi [[#Three tier]]).
+
+- **Model**: i dati e la logica di business
+- **View**: come i dati vengono presentati all'utente
+- **Controller**: riceve le richieste, coordina Model e View
+
+```mermaid
+flowchart LR
+    U["User"] -->|"Request"| C["Controller"]
+    C -->|"Request Data"| M["Model"]
+    M -->|"Response Data"| C
+    C -->|"Send Data"| V["View"]
+    V -->|"Response"| U
+```
+
+Nelle applicazioni Java web:
+
+1. la richiesta arriva a una **Servlet** (controller), che elabora i parametri, accede al database (pattern **DAO**), esegue la logica di business, ecc.
+2. i risultati vengono inseriti in **JavaBean** (oggetti di trasferimento dati che mantengono i dati strutturati e accessibili)
+3. la richiesta viene inoltrata (`forward`) a una pagina **JSP** (view) che formatta il risultato; si possono usare diverse JSP per diversi tipi di presentazione
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant S as Servlet (Controller)
+    participant D as DAO / DB (Model)
+    participant J as JSP (View)
+    B->>S: request
+    S->>D: legge i dati
+    D-->>S: lista di JavaBean
+    S->>S: request.setAttribute("lista", lista)
+    S->>J: forward(request, response)
+    J-->>B: HTML formattato
+```
+
+> [!note] In breve Servlet → legge DB → popola lista di JavaBean → mette la lista nella Request → JSP legge la lista e visualizza.
+
+Un **JavaBean** è una classe Java semplice: attributi privati, getter/setter, costruttore senza argomenti, (di solito) `Serializable`.
+
+```java
+public class User implements Serializable {
+	private int id;
+	private String name;
+
+	public User() { }
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
+}
+```
+
+> [!question] Perché MVC? Risolve il problema visto in [[#Servlet e database]]: la servlet che gestiva richiesta, dati e HTML insieme violava la SoC. Con MVC ogni parte ha una sola responsabilità.
+
 # JSP
+
+## Il framework JSP (JavaServer Pages)
+
+> [!important] **Idea**: creare pagine web dinamiche in cui la maggior parte della pagina è **HTML standard** e il **codice Java** è contenuto tra **tag speciali**.
+
+La pagina JSP, ospitata in un server web, viene **tradotta automaticamente in una servlet** dal container (**una volta**). La servlet risultante è ciò che viene effettivamente invocato a ogni richiesta.
+
+> [!question] Perché serve se esistono già le servlet? Nella servlet l'HTML è dentro stringhe Java (`out.println("<li>...")`): scomodo da scrivere e da mantenere. La JSP **inverte** il rapporto: HTML con un po' di Java dentro. Per questo è adatta come **View** in MVC.
+
+Esempio: `firstJSPage.jsp`
+
+```jsp
+<html>
+[...]
+<body>
+<H2>JSP Expressions</H2>
+<UL>
+	<LI>Current time: <%= new java.util.Date() %>
+	<LI>Your hostname: <%= request.getRemoteHost() %>
+	<LI>Your session ID: <%= session.getId() %>
+	<LI>The <CODE>testParam</CODE> form parameter: <%= request.getParameter("testParam") %>
+</UL>
+</body>
+</html>
+```
+
+Tutto ciò che sta tra `<%= ... %>` è codice Java, il resto è HTML. Gli oggetti `request`, `session`, ... sono già disponibili senza dichiararli (oggetti impliciti):
+
+|Oggetto|Tipo|Note|
+|---|---|---|
+|`request`|`HttpServletRequest`|la richiesta|
+|`response`|`HttpServletResponse`|la risposta|
+|`out`|`JspWriter`|come `PrintWriter`, ma con **buffering** specifico per JSP|
+|`session`|`HttpSession`|la sessione (se non disabilitata)|
+|`application`|`ServletContext`|il contesto condiviso ([[#ServletContext]])|
+|`config`|`ServletConfig`|configurazione della servlet generata|
+|`pageContext`|`PageContext`|accesso a tutti gli scope della pagina|
+|`page`|`Object`|la servlet stessa (come `this`)|
+|`exception`|`Throwable`|solo nelle pagine di errore|
 
 ## Ciclo di vita di una JSP
 
+```mermaid
+flowchart TD
+    A["1. Traduzione<br>JSP → Servlet Java"] --> B["2. Compilazione<br>.java → .class (bytecode)"]
+    B --> C["3. Inizializzazione<br>jspInit()"]
+    C --> D["4. Gestione richieste<br>_jspService() per ogni richiesta"]
+    D -->|"nuova richiesta"| D
+    D --> E["5. Distruzione<br>jspDestroy()"]
+```
+
+|Fase|Cosa succede|
+|---|---|
+|1. Traduzione|alla **prima richiesta** (o dopo una modifica) il container traduce il contenuto JSP in codice Java, generando una servlet equivalente|
+|2. Compilazione|la servlet generata viene compilata in **bytecode**, pronta per essere eseguita dal server|
+|3. Inizializzazione|il container crea un'istanza della servlet e chiama `jspInit()` per inizializzare risorse (connessioni, oggetti, configurazioni)|
+|4. Gestione richieste|per **ogni richiesta** il container invoca `_jspService()`, che genera dinamicamente la risposta e produce l'HTML inviato al browser|
+|5. Distruzione|quando la JSP non serve più (es. il server viene fermato) il container chiama `jspDestroy()`, libera risorse e chiude le connessioni|
+
+> [!attention] Equivoco: la traduzione non avviene a ogni richiesta
+> 
+> - **Traduzione**: in genere alla prima richiesta dopo una modifica. I costrutti JSP diventano codice servlet (`jspInit()`, `_jspService()`, ...).
+> - **Richiesta**: viene eseguito il **codice servlet**. Non c'è alcuna interpretazione della JSP originale: si usa solo la servlet che ne è derivata.
+> 
+> Per questo la prima richiesta a una JSP nuova o modificata è più lenta.
+
+La servlet generata implementa `HttpJspPage` (derivata da `Servlet`): è quindi valido tutto quanto visto sul ciclo di vita e sulla **concorrenza** delle servlet (una sola istanza, più thread).
+
 ## Tipi di codice Java
+
+|Tipo|Sintassi|Scopo|Esempio|
+|---|---|---|---|
+|Expression|`<%= ... %>`|stampare un valore|`<%= x + 1 %>`|
+|Scriptlet|`<% ... %>`|eseguire codice Java|`<% int x = 5; %>`|
+|Declaration|`<%! ... %>`|definire variabili/metodi|`<%! int y = 0; %>`|
+
+> [!attention] Uso moderno Scriptlet, Expression e Declaration **non sono più raccomandati** nei progetti Java EE moderni (ora Jakarta EE): si usano **JSTL** (JSP Standard Tag Library) ed **EL** (Expression Language), che vedremo dopo. Lo studio resta utile per capire l'evoluzione delle tecnologie web Java e per mantenere **applicazioni legacy**.
+
+### JSP Expressions
+
+- **Formato**: `<%= Java expression %>`
+- **Effetto**: l'espressione è valutata, **convertita in stringa** e inserita nella pagina HTML nel punto in cui si trovava nella JSP (niente `;` finale)
+- **Esempio**: `Current time: <%= new java.util.Date() %>`, `Your hostname: <%= request.getRemoteHost() %>`
+
+Corrispondenza JSP → servlet:
+
+```jsp
+<H1>A Random Number</H1>
+<%= Math.random() %>
+```
+
+```java
+public void _jspService(HttpServletRequest request, HttpServletResponse response)
+		throws ServletException, IOException {
+	response.setContentType("text/html");
+	HttpSession session = request.getSession(true);
+	JspWriter out = ...; // ottenuto dal pageContext
+	out.println("<H1>A Random Number</H1>");
+	out.println(Math.random());
+}
+```
+
+Il metodo `_jspService()` è **generato automaticamente** dal motore JSP quando la pagina viene compilata in servlet: gestisce la richiesta HTTP e genera la risposta. `JspWriter` è simile a `PrintWriter` ma pensato per il meccanismo di buffering delle JSP.
+
+> [!note] Schema semplificato Nelle slide il codice generato è semplificato: nel codice reale il content type si imposta sulla `response` e `out` è un `JspWriter` ricavato dal `pageContext`. Il concetto da ricordare: l'HTML statico e le expression diventano chiamate a `out.println()` dentro `_jspService()`.
+
+### JSP Scriptlets
+
+- **Formato**: `<% Java code %>`
+- **Effetto**: il codice viene inserito **letteralmente** nel `_jspService()` della servlet
+- **Esempio**:
+
+```jsp
+<% String queryData = request.getQueryString();
+   out.println("Attached GET data: " + queryData); %>
+<% response.setContentType("text/plain"); %>
+```
+
+Corrispondenza: `<%= foo() %>` → `out.println(foo());` e `<% bar(); %>` → `bar();` (una expression stampa, uno scriptlet esegue e basta).
+
+### JSP Declarations
+
+- **Formato**: `<%! Java code %>`
+- **Effetto**: il codice viene inserito **letteralmente nella definizione della classe** della servlet, **fuori** da qualsiasi metodo esistente → campi e metodi della servlet
+- **Esempio**:
+
+```jsp
+<%! private int someField = 5; %>
+<%! private void someMethod(...) { ... } %>
+```
+
+```jsp
+<BODY>
+<H1>JSP Declarations</H1>
+<%! private int accessCount = 0; %>
+<H2>Accesses to page since server reboot: <%= ++accessCount %></H2>
+</BODY>
+```
+
+Corrispondenza JSP → servlet:
+
+```jsp
+<H1>Some Heading</H1>
+<%!
+	private String randomHeading() {
+		return ("<H2>" + Math.random() + "</H2>");
+	}
+%>
+<%= randomHeading() %>
+```
+
+```java
+public class [..] implements HttpJspPage {
+	private String randomHeading() {          // <-- dalla declaration
+		return ("<H2>" + Math.random() + "</H2>");
+	}
+
+	public void _jspService(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		out.println("<H1>Some Heading</H1>");
+		out.println(randomHeading());          // <-- dall'expression
+	}
+}
+```
+
+> [!bug] Concorrenza `accessCount` è un campo della servlet generata: è **condiviso da tutte le richieste e da tutti gli utenti** e `++accessCount` non è atomico (stesso problema di `getNum` in [[#Stato nella servlet]]). Si azzera al riavvio del server.
+
+> [!note] jspInit() e jspDestroy() Poiché le declaration finiscono nella classe, è possibile **ridefinire** `jspInit()` e `jspDestroy()` dentro un `<%! ... %>`.
+
+## Direttive
+
+Le direttive `<%@ ... %>` forniscono **metadati** e configurazioni sulla pagina al container JSP.
+
+### Direttiva page
+
+`<%@ page ... %>` definisce impostazioni della pagina:
+
+|Attributo|Sintassi|Finalità|
+|---|---|---|
+|`import`|`<%@ page import="package.class" %>` / `import="p.c1,...,p.cN"`|genera gli `import` nella parte superiore della servlet|
+|`contentType`|`<%@ page contentType="MIME-Type" %>`|specifica il **tipo MIME** della risposta: dice al browser come interpretare il contenuto inviato|
+|`isThreadSafe`|`<%@ page isThreadSafe="true" %>` (default) / `"false"`|comunica al sistema se il codice è thread-safe, così può impedire l'accesso simultaneo|
+
+> [!attention] isThreadSafe Il default è `true`: il sistema presuppone che gli aggiornamenti a campi e dati condivisi siano già **sincronizzati** da noi. `false` impedisce l'accesso concorrente ma **peggiora le prestazioni**: meglio scrivere codice thread-safe.
+
+Altri attributi utili: `pageEncoding` (encoding della pagina), `session="false"` (non crea la sessione), `errorPage` / `isErrorPage` (gestione degli errori).
+
+### Inclusione di file
+
+Per riutilizzare parti di pagina (header, menu, footer) esistono due modi:
+
+```jsp
+<jsp:include page="Relative URL" flush="true" />
+<%@ include file="Relative URL" %>
+```
+
+|Aspetto|`<jsp:include page="..." />`|`<%@ include file="..." %>`|
+|---|---|---|
+|Quando avviene|**a runtime**, quando la pagina viene eseguita|**in fase di traduzione** della pagina in servlet|
+|Tipo|inclusione **dinamica**|inclusione **statica** (il contenuto viene "incollato" nella JSP)|
+|Modifiche al file incluso|visibili subito, senza toccare la/le pagina/e principale/i|i server non sono tenuti a rilevarle e molti non lo fanno|
+|Equivalente nelle servlet|`RequestDispatcher.include()`|—|
+
+Finalità: riutilizzare contenuti JSP, HTML o testo normale e aggiornarli in un punto solo.
+
+> [!note] Direttiva o azione? Formalmente `<%@ include %>` è una **direttiva** (elaborata in traduzione), mentre `<jsp:include>` è una **azione standard** (elaborata a runtime). Le slide le raggruppano sotto "File Inclusion".
