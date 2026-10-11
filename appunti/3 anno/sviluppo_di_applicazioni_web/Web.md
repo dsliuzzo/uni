@@ -1543,3 +1543,18 @@ Utile, ma meno sicura e meno pratica!
 | Persistenza della sessione | Funziona solo se ogni link nella pagina viene codificato con `response.encodeURL()` o `encodeRedirectURL()`, altrimenti la sessione si perde al click su un link |
 | Link interni e navigazione | Tutti i link e form devono passare l'ID sessione: serve molta attenzione nella generazione dinamica dei link                           |
 | Timeout e invalidazione    | Non cambia: l'ID sessione rimane valido fino alla scadenza, ma se l'utente chiude la pagina senza passare l'ID negli URL, la sessione può andare persa |
+## ServletContext
+
+## Dispatching
+
+## Filtri
+
+## Listener
+
+# Pattern
+
+# JSP
+
+## Ciclo di vita di una JSP
+
+## Tipi di codice Java

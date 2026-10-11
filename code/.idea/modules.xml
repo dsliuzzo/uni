@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/github - uni.iml" filepath="$PROJECT_DIR$/.idea/github - uni.iml" />
-      <module fileurl="file://$PROJECT_DIR$/poo/poo.iml" filepath="$PROJECT_DIR$/poo/poo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/code.iml" filepath="$PROJECT_DIR$/.idea/code.iml" />
+      <module fileurl="file://$PROJECT_DIR$/poo/src/poo.iml" filepath="$PROJECT_DIR$/poo/src/poo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/poo/poo2.iml" filepath="$PROJECT_DIR$/poo/poo2.iml" />
       <module fileurl="file://$PROJECT_DIR$/so/so.iml" filepath="$PROJECT_DIR$/so/so.iml" />
     </modules>
   </component>
