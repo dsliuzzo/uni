@@ -755,3 +755,33 @@ begin
 	end process;
 end Behavioral;
 ```
+
+aggiungiamo un ulteriore FA4 er gestire il segno
+mandiamo `c(4)` a FA4 insieme a una copia dei bit più significativi.
+
+``` vhdl
+entity RCA is
+port(
+	a,b: in bit_vector(3 downto 0);
+	cin: in bit;
+	s: out bit_vector(4 downto 0));
+end RCA;
+
+architecture Struct of RCA is
+
+component FA is
+	port(	a, b, cin : in bit;
+			cout, s   : out bit);
+end component;
+
+signal c: bit_vector(5 downto 0);
+
+begin
+	FAgen: for i in 0 to 3 generate
+		fullAdd: FA port map(a(i), b(i), c(i), c(i+1), s(i));
+		c(0) <= cin;
+		s(4) <= c(4);
+	end generate;
+	FAmsb: FA port map(a(3), b(3), c(4), c(5), s(4));
+end Struct;
+```
