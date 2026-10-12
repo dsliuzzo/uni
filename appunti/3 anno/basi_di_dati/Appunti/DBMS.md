@@ -434,18 +434,118 @@ $$
 Ci comportiamo in modo analogo al 2:2, ma aggiungendo un terzo attributo, che dichiariamo come NULL.
 
 In questo caso non è necessario mettere il prezzo3 a NULL, così evitiamo di implementare la possibilità di inserire un fornitore3 senza prezzo3.
+
+#### Vincolo uno a uno
+In questi casi tipicamente le due entità possono essere accorpate in una unica relazione
+>[!multi-column]
+>
+>>[!blank]
+>>![[DBMS-1791829956609.webp]]
+>
+>>[!blank]
+>>$$\text{Cliente}(\underline{\text{CF}}, \text{nome}, \text{dataR}, \text{tipo})$$
+
+Dobbiamo fare attenzione alle [[#Chiavi secondarie]] nel caso in cui siano presenti delle chiavi candidate diverse dalla relazione stessa e dobbiamo decidere quale delle due chiavi candidate sarà la chiave primaria della relazione e quale la secondaria
+>[!multi-column]
+>
+>>[!blank]
+>>![[DBMS-1791829813851.webp]]
+>
+>>[!blank]
+>>$$\text{ClienteConTessera}(\underline{\text{CF}}, \overbrace{\text{ID}}^{\text{UNIQUE}}, \text{nome}, \text{dataR}, \text{tipo})$$
+
+Se invece abbiamo uno dei due lati a 0:1 tipicamente definiamo una nuova relazione
+>[!multi-column]
+>
+>>[!blank]
+>>![[DBMS-1791829829708.webp]]
+>
+>>[!blank]
+>>$$\displaylines{
+>>\text{Cliente}(\underline{\text{CF}}, \text{nome}) \\
+>>\text{Tessera}(\underline{\text{ID}}, \text{dataR}, \text{tipo}, \overbrace{\text{cliente}}^\text{UNIQUE}) \\
+>>\text{Tessera}[\text{cliente}] \sqsubseteq_{FK} \text{Cliente}[\text{CF}]
+>>}$$
 ### ISA (modello relazionale)
 ![[DBMS-1791808941122.webp|center|143]]
 In questo caso è sufficiente aggiungere un attributo con NULL: se un operaio ha la specializzazione allora sarà un operaio specializzato, altrimenti no
 $$\text{Operaio}(\underline{\text{matr}}, \text{nome}, \overset{\text{NULL}}{\text{specializzazione}})$$
 
 Se invece sono presenti delle relazioni specifiche per la sotto entità allora dobbiamo definire separatamente altre relazioni
+![[DBMS-1791827446802.webp|center|481]]
+$$
+\displaylines{
+\text{Certificazione(\underline{operaioSpecializzato, data}, descrizione)} \\
+\text{Certificazione[operaioSpecializzato]} \sqsubseteq_{FK} \text{Operaio[matricola]}
+}
+$$
 
+Tuttavia posso inserire anche operai non specializzati, perché i valori sono presi dalla chiave di Operaio. Serve quindi un'altra soluzione: se non divido le entità non riesco a distinguere la classe generale dalla specifica. Per questo trasformo l'ISA in relazione:
+![[DBMS-1791827618776.webp|center|710]]
+$$
+\displaylines{
+\text{Operaio}(\underline{\text{matr.}}, \text{nome}) \\
+\text{OperaioSpecializzato}(\underline{\text{operaio}}, \text{specializzazione}) \\
+\text{Certificazione}(\underline{\text{operaioSpecializzato}}, \underline{\text{data}}, \text{descrizione}) \\ \\
+\text{Certificazioe}[\text{operaioSpecializzato}] \sqsubseteq_{FK} \text{OperaioSpecializzato}[\text{operaio}] \\
+\text{OperaioSpecializzato}[\text{operaio}] \sqsubseteq_{FK} \text{Operaio}[\text{matr}]
+}
+$$
+
+Tipicamente se la sotto entità non è collegata ad altro possiamo accorparla, se invece:
+- la maggior parte degli operai non sono specializzati
+- gli operai specializzati hanno molti attributi
+- ci sono delle relazioni con la sotto entità
+creiamo una nuova relazione.
 ### Generalizzazione (modello relazionale)
-**Metodo 1**
+![[DBMS-1791828394851.webp|center|793]]
 
-**Metodo 2**
 
-**Metodo 3**
+**Metodo 1 - Unica relazione con attributo tipo**
+Esprimendo il tipo ($0$: docente, $1$: studente, $2$: solo persona, $3$: docente e studente), si ignora l'altro campo. Garantisce quindi totalità ed esclusività (volendo si possono rappresentare anche gli altri vincoli).
+$$
+\text{Persona}(\underline{CF}, \text{nome}, \text{tipo}, \text{SSD}, \text{CDL})
+$$
+Tuttavia, se sono presenti relazioni, sia per studente/docente sia per persona, il problema si ripresenta: non possiamo rappresentare la relazione di Studente con Titolo di studio.
 
-### Casi particolari
+**Metodo 2 - Relazione per il padre e per ogni figlio**
+Va bene se docente e studente hanno molti attributi e altre relazioni. Consiste nel trasformare la generalizzazione in più relazioni, senza garantire né l'esclusività né la totalità:
+$$
+\displaylines{
+\text{Persona}(\underline{\text{CF}}, \text{nome}) \\
+\text{Studente}(\underline{\text{persona}}, \text{CDL}) \\
+\text{Docente}(\underline{\text{persona}}, \text{SSD}) \\
+\text{Titolo}(\underline{\text{numero progressivo}}, \underline{\text{studente}}, \text{descrizione}) \\ \\
+\text{Studente}[\text{persona}] \sqsubseteq_{FK} \text{Persona} (\text{CF}) \\
+\text{Docente}[\text{persona}] \sqsubseteq_{FK} \text{Persona} (\text{CF}) \\
+\text{Titolo}[\text{studente}] \sqsubseteq_{FK} \text{Studente} (\text{persona}) \\
+}
+$$
+**Metodo 3 - Eliminazione del padre**
+Si elimina Persona ripetendo i campi comuni nelle entità
+$$
+\displaylines{
+\text{Studente}(\underline{\text{CF}}, \text{nome}, \text{CDL}) \\
+\text{Docente}(\underline{\text{CF}}, \text{nome}, \text{SSD}) \\
+\text{Titolo}(\underline{\text{numero progressivo}}, \underline{\text{studente}}, \text{descrizione}) \\ \\
+\text{Titolo}[\text{studente}] \sqsubseteq_{FK} \text{Studente}[\text{CF}]
+}
+$$
+Con questa soluzione garantisco la totalità, ma non l'esclusività. Supponendo inoltre che Persona abbia relazioni:
+$$
+\displaylines{
+\text{IndirizzoS(\underline{ID}, descrizione, studente)} \\
+\text{IndirizzoD(\underline{ID}, descrizione, docente)} \\ \\
+\text{IndirizzoS[studente]} \sqsubseteq_{FK} \text{Studente[CF]} \\
+\text{IndirizzoD[docente]} \sqsubseteq_{FK} \text{Docente[CF]}
+}
+$$
+Ma perdendo l'esclusività si perde anche negli indirizzi: posso avere più indirizzi con ID diversi.
+
+**In conclusione**
+
+|              | **Totalità** | **Generalità** | **Relazioni** |
+| ------------ | ------------ | -------------- | ------------- |
+| **Metodo 1** | ✅            | ❌              | Solo padre    |
+| **Metodo 2** | ❌            | ❌              | ✅             |
+| **Metodo 3** | ✅            | ✅              | ❌             |
