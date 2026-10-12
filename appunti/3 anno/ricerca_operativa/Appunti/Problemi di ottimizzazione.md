@@ -736,9 +736,12 @@ $\overline{x} \in \Omega(P)$ è una soluzione di base ammissibile per $(P)$ se e
 >[!important] Vertice
 >Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^T \overline{x} < c^T x \forall x \in P \ : \ x \neq \overline{x}$$
 
+#### Caratterizzazione algebrica
 Consideriamo un poliedro P. Un vettore $\overline{x} \in P$ è un **vertice** di $P$ se e solo se in $\overline{x}$ sono attivi $n$ vincoli definiti da vettori di coefficienti che sono linearmente indipendenti (vincoli linearmente indipendenti).
 
-Consideriamo un poliedro $P$ in **forma standard**. Un vettore $\overline{x} \in P$ è un **vertice** di $P$ se in $\overline{x}$ sono attivi $n-m$ vincoli di segno che uniti agli $m$ vincoli di eguaglianza formano un insieme di $n$ vincoli linearmente indipendenti.
+Applicando la precedente definizione ad unpoliedro in forma standard}ne deriva un corollario della caratterizzazione algebrica.
+
+Sia $P = \{\, x \in \mathbb{R}^n : Ax = b,\ x \ge 0 \,\}, qquad A \in \mathbb{R}^{m \times n},\ \operatorname{rank}(A) = m$  un poliedro $P$ in **forma standard**. Un vettore $\overline{x} \in P$ è un **vertice** di $P$ se e solo se in $\overline{x}$ sono attivi $n-m$ vincoli di segno che uniti agli $m$ vincoli di eguaglianza formano un insieme di $n$ vincoli linearmente indipendenti.
 
 Date queste considerazioni possiamo quindi rielaborare il teorema fondamentale da un punto di vista geometrico
 
