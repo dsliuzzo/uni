@@ -537,3 +537,36 @@ begin
 	c(3) <= g(2) or p(2) and g(1) or p(2) and p(1) and g(0) or p(2) and p(1) and p(0) and Cin;
 end myCLA
 ```
+
+
+
+
+---
+
+utilizzeremo il pacchetto vivado
+path senza spazi
+
+create a new project -> project name -> project type (RTL project) -> add sources (altri file) -> add constrains (impostazioni predefinite *es.* frequenza di funzionamento) -> default part (family: zynq 7000, chip: xc7z020cig400-3) -> finish
+
+add sources -> add or create design sources -> create file (File name = nome della entity) -> finish
+
+``` vhdl
+entity FA is
+	port(	a, b, cin : in bit;
+			cout, s   : out bit);
+end FA;
+
+architecture Behavioral of FA is
+signal p: bit;
+begin
+  p <= a xor b;
+  cout <= a when p='0' else cin;
+  s <= p xor cin;
+end Behavioral;
+```
+
+RTL analisys -> open elaborated design
+
+usiamo il FA come component in un RCA
+
+add sources -> add or create design sources -> create file -> finish
