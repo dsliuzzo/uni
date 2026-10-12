@@ -336,10 +336,27 @@ $$
 \text{Fornitura[Merce]} \sqsubseteq_{FK} \text{Merce[cod]}
 }
 $$
+#### Chiavi candidate esterne in chiavi
+>[!multi-column]
+>
+>>[!blank]
+>>Se nel modello ER abbiamo delle chiavi esterne nel modello relazionale nel momento in cui definiamo la foreign key dobbiamo fare attenzione a legare tutti gli attributi che compongono la chiave interna di Merce e inserire tutti gli attributi all'interno della relazione Produzione
+>>$$\begin{array}{c}
+>>\text{Fornitore}(\underline{\text{p.iva}}, \text{nome}, \text{città}) \\
+>>\text{Merce}(\underline{\text{nome}}, \underline{\text{marca}}) \\
+>>\text{Marca}(\underline{\text{nome}}, \text{sede}) \\ \\
+>>\text{Fornitura}(\underline{\text{fornitore}}, \underline{\text{nomeM}}, \underline{\text{marcaM}}, \text{prezzo}) \\ \\
+>>\text{Fornitura}[\text{fornitore}] \sqsubseteq_{FK} \text{Fornitore}[\text{p.iva}] \\
+>>\text{Fornitura}[\text{nomeM}, \text{marcaM}] \sqsubseteq_{FK}\text{Merce}[\text{nome}, \text{marca}]
+>>\end{array}$$
+>
+>>[!blank]
+>>![[DBMS-1791804621439.webp|491]]
 ### Vincolo di cardinalità
 In base alla cardinalità descritta nel modello ER possono esistere vari modi di rappresentarlo nel modello relazionale
 ![[DBMS-1791643675437.webp|center|555]]
 #### Vincolo uno a molti
+1:1 --- 0:n
 Per definire un vincolo 1:1 possiamo agire in due modi
 
 **Metodo 1**
@@ -364,7 +381,8 @@ $$
 \text{Marca}[\text{marca}] \sqsubseteq_{FK} \text{Marca}(\text{nome})
 }
 $$
-#### Vincolo 0/1 a molti
+#### Vincolo 0 a molti
+0:1 --- 0:n
 Nel caso in cui l'attributo marca all'interno di Merce può non essere usato (0:1), possiamo usare il [[#Vincolo 1 1|metodo 1]], ma con l'attributo `NULL`
 $$
 \displaylines{
@@ -375,6 +393,7 @@ $$
 }
 $$
 #### Vincolo molti a molti
+0:n --- 0:n
 Nel caso in cui i vincoli da entrambi i lati sono $0:n$ dobbiamo obbligatoriamente creare una nuova relazione
 $$
 \displaylines{
@@ -386,3 +405,47 @@ $$
 \text{Fornitura}[\text{Merce}] \sqsubseteq_{FK} \text{Merce}[\text{cod}]
 }
 $$
+#### Vincolo 1:n
+0:n --- 1:n
+*es.* Ogni merce è fornita da almeno un fornitore
+Nel modello relazionale per rappresentare il vincolo 1:n non esiste un modo pulito privo di errori:
+potremmo definire la prima istanza messa in relazione come attributo dell'entità e tutti gli altri tramite relazione
+$$
+\displaylines{
+\text{Merce}(\underline{\text{nome}}, \underline{\text{marca}},\text{fornitore}, \text{prezzo}) \\
+\text{Merce}[\text{fornitore}] \sqsubseteq_{FK} \text{Fornitore}[\text{p.iva}]
+}
+$$
+causando in questo modo ridondanza: il fornitore presente come attributo potrebbe anche essere presente nella relazione vera e propria.
+
+Se vogliamo evitare questo problema rilassiamo il vincolo 1:n trattandolo come 0:n.
+#### Vincolo 2:2
+In questo caso è spesso sufficiente aggiungere due attributi alla relazione. Se la cardinalità del vincolo è troppo grande decidiamo di rilassare la struttura e trattarlo come 0:n.
+Rimane il problema però che i due attributi non possono essere uguali, per questo definiamo dei **check**.
+
+>[!important] Check
+>Dei vincoli che verranno verificati solo tra gli attributi di ciascuna tupla
+
+questi verificheranno che il fornitore1 sia diverso dal fornitore2
+$$
+\text{Merce}(\underline{\text{nome}}, \underline{\text{marca}}, \text{fornitore1}, \text{fornitore2}, \text{prezzo1}, \text{prezzo2}) \hspace{8ex} \text{fornitore1} \overset{\text{CHECK}}{\neq} \text{fornitore2}
+$$
+#### Vincolo 2:3
+Ci comportiamo in modo analogo al 2:2, ma aggiungendo un terzo attributo, che dichiariamo come NULL.
+
+In questo caso non è necessario mettere il prezzo3 a NULL, così evitiamo di implementare la possibilità di inserire un fornitore3 senza prezzo3.
+### ISA (modello relazionale)
+![[DBMS-1791808941122.webp|center|143]]
+In questo caso è sufficiente aggiungere un attributo con NULL: se un operaio ha la specializzazione allora sarà un operaio specializzato, altrimenti no
+$$\text{Operaio}(\underline{\text{matr}}, \text{nome}, \overset{\text{NULL}}{\text{specializzazione}})$$
+
+Se invece sono presenti delle relazioni specifiche per la sotto entità allora dobbiamo definire separatamente altre relazioni
+
+### Generalizzazione (modello relazionale)
+**Metodo 1**
+
+**Metodo 2**
+
+**Metodo 3**
+
+### Casi particolari
