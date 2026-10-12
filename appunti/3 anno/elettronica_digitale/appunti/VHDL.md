@@ -388,7 +388,7 @@ begin
 end myRCA4;
 ```
 
-## Loop
+## For generate
 Il codice può essere compattato, utilizzando lo statement **for**:
 - **concorrente** (for generate)
   può essere utilizzata in componente concorrenti
@@ -455,12 +455,115 @@ Supponendo di avere un [[Porte logiche#Ripple carry adder|ripple carry adder]] c
 >>[!blank]
 >>![[VHDL-1791367949012.webp|center]]
 
+## Statement sequenziali
 
-[...] <-- riordina con queste cose
-- assegnazione
-- istanziazione
-- when/else
-- for generate
+- eseguiti **in sequenza**, uno dopo l'altro
+- producono (solitamente) logica **sincrona** (macchine a stati, contatori...), ma possono creare anche logica combinatoria
+
+### Process
+
+- un `process` è uno statement **concorrente** che racchiude statement **sequenziali**
+- gli statement interni sono eseguiti in ordine; **non** si possono inserire statement concorrenti
+- esiste **solo** nell'architecture
+
+```vhdl
+etichetta : process (sensitivity list)
+begin
+	-- sequential statements
+end process etichetta;
+```
+
+- **sensitivity list**: lista di segnali; ogni **evento** su un segnale della lista attiva il process
+
+```vhdl
+process (clock, reset)
+begin
+	if (reset = '0') then
+		q <= '0';
+	elsif (clock'event and clock = '1') then   -- fronte di salita
+		q <= d;
+	end if;
+end process;
+-- = flip-flop D con clear asincrono (FDC)
+```
+
+> [!tip] `clock'event and clock='1'` si può scrivere anche `rising_edge(clock)` (richiede `std_logic`)
+
+### `if ... then ... else`
+
+```vhdl
+if (cond1) then
+	...        -- eseguito se cond1 è TRUE
+elsif (cond2) then
+	...        -- eseguito se cond2 TRUE e cond1 FALSE
+else
+	...
+end if;
+```
+
+- valutazione **in ordine** dall'alto verso il basso
+
+### Latch involontari
+
+```vhdl
+process (address)
+begin
+	if (address = "01") then
+		chipselect <= '1';
+	end if;               -- manca l'else!
+end process;
+```
+
+Se `address` ≠ `"01"`, `chipselect` **mantiene il valore** → il tool sintetizza un **latch** (equivale a `else chipselect <= chipselect;`). → in logica combinatoria **assegnare sempre il segnale in tutti i rami** (`else` completo).
+
+### `case`
+
+```vhdl
+case instruction is
+	when add  => result <= sum;
+	when sub  => result <= diff;
+	when mult => result <= prod;
+	when others => null;       -- tutti i casi devono essere coperti
+end case;
+```
+
+### For loop
+
+```vhdl
+for i in 0 to 7 loop
+	-- sequential statements    -- eseguito n volte
+end loop;
+
+while condition loop            -- condition = boolean, testata PRIMA di ogni iterazione
+	-- sequential statements    -- se subito false, il loop non viene eseguito
+end loop;
+```
+
+- nel `while` il parametro va definito esplicitamente (es. `variable i : integer := 0;` e incrementato con `i := i + 1;`)
+
+```vhdl
+process (oe, data_in)
+	variable i : integer := 0;
+begin
+	if (oe = '1') then
+		while i < 8 loop
+			data_out(i) <= data_in(i);
+			i := i + 1;
+		end loop;
+	else
+		data_out <= (others => 'Z');   -- alta impedenza → buffer tri-state
+	end if;
+end process;
+```
+
+
+
+
+
+
+
+
+---
 
 ``` vhdl
 entity RCA8_v3 is
@@ -570,3 +673,85 @@ RTL analisys -> open elaborated design
 usiamo il FA come component in un RCA
 
 add sources -> add or create design sources -> create file -> finish
+
+``` vhdl
+entity RCA is
+port(
+	a,b: in bit_vector(3 downto 0);
+	cin: in bit;
+	s: out bit_vector(4 downto 0));
+end RCA;
+
+architecture Struct of RCA is
+
+component FA is
+	port(	a, b, cin : in bit;
+			cout, s   : out bit);
+end component;
+
+signal c: bit_vector(4 downto 0);
+
+begin
+	FAgen: for i in 0 to 3 generate
+		fullAdd: FA port map(a(i), b(i), c(i), c(i+1), s(i));
+		c(0) <= cin;
+		s(4) <= c(4);
+	end generate;
+end Struct;
+```
+
+add sources -> simulation source -> create file -> nome -> finish
+
+``` vhdl
+entity TestECA4 is
+
+end TestECA4;
+
+architecture Behavioral of TestECA4 is
+
+component RCA
+	port(
+		a,b: in bit_vector(3 downto 0);
+		cin: in bit;
+		s: out bit_vector(4 downto 0));
+end component;
+signal a, b: bit_vector(3 downto 0);
+signal cin: bit;
+signal s: bit_vector(4 downto 0);
+
+begin
+	Circ: RCA port map(a, b, cin, s);
+	process begin
+		cin <= '0';
+		a <= (others => '1');
+		b <= (others => '0');
+		wait for 10 ns;
+		cin <= '1';
+		wait for 10 ns;
+		-- wait;
+	end process;
+end Behavioral;
+```
+
+
+Uso di librerie esterne
+```vhdl
+library ieee;
+use ieee.numeric_bit.all;
+-- generare tutte le possibili combinazioni degli operandi
+-- [...] --
+begin
+	Circ: RCA port map(a, b, cin, s);
+	process begin
+		cin <= '0';
+		for i in 0 to 15 loop -- versione sequenziale del loop
+			for j in 0 to 15 loop
+				a <= bit_vector(to_unsigned(i, 4));
+				b <= bit_vector(to_unsigned(j, 4));
+				wait for 10 ns;
+			end loop;
+		end loop;
+		-- wait;
+	end process;
+end Behavioral;
+```
