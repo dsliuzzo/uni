@@ -756,6 +756,276 @@ Date queste considerazioni possiamo quindi rielaborare il teorema fondamentale d
 
 
 
+---
+
+
+>[!multi-column]
+>
+>>[!blank]
+>>![[Problemi di ottimizzazione-1791875071974.webp]]
+>
+>>[!blank]
+>>![[Problemi di ottimizzazione-1791875082404.webp]]
+
+$$
+A = (0,1) \hspace{8ex} x_{3}
+$$
+sostituiamo le coordinate in una equazione che contiene $x_{3}$
+$$
+2x_{1} +x_{2} + x_{3} = 4 \implies x_{3} = 4-1 = 3
+$$
+in corrispondenza di quel punto $x_{3}$ deve rispettare il vincolo di uguaglianza.
+Se volessimo invece prendere $x_{4}$ non possiamo usare questo stesso vincolo
+$$
+-2x_{1}+x_{2}+x_{4} = 2 \implies x_{4} = 2-1 = 1
+$$
+$x_{5}$ è presente nel terzo vincolo
+$$
+x_{1}+x_{2}-x_{5} = 1 \implies x_{5} = 1-1 = 0
+$$
+quindi possiamo descrivere
+$$
+x_A = (0,1,3,1,0)^T
+$$
+possiamo ripetere questo per ognuno dei punti.
+
+Per la rappresentazione grafica di più variabili su un piano a 2 dimensioni possiamo usare le variabili come combinazione lineare
+$$
+\begin{cases}
+2x_{1}+x_{2}+x_{3} = 4 \\
+x_{3} \geq 0
+\end{cases}
+$$
+ponendo $x_{3} = 0$ otteniamo
+$$
+2x_{1}+x_{2} = 4
+$$
+non ho ben capito il segno $\leq$ p $\geq$
+abbiamo bisogno che le variabili stiano su un unico vincolo
+
+la regione ammissibile è identica, ma possiamo caratterizzare il grafico con punti in $\mathbb{R}^5$
+
+$x \in \mathbb{R}^5 \hspace{2ex} m = 3 \hspace{2ex} n = 5 \hspace{2ex} A\in \mathbb{R}^{3 \times 5}$
+- 3 vincoli di eguaglianza
+- 5 vincoli di segno
+
+I punti che abbiamo trovato sono vertici in $\mathbb{R}^5$, sono l'intersezione tra 5 iperpiani (3 iperpiani sono i vincoli di eguaglianza, 2 di quei 5 vincoli di segno sono soddisfatti per uguaglianza (0 nelle soluzioni)).
+
+Vertici adiacenti - basi adiacenti
+vertici sono adiacenti se condividono un segmento
+Il concetto di adiacenza tra basi è perfettamente allineato con il concetto di adiacenza tra vertici
+
+---
+
+
+$$
+\displaylines{
+C = (3,3) \to x_C = (3,3,0,0,0)^T \\
+B_{1} = \{1,2,3\} \\
+B_{2} = \{1,2,4\} \\
+B_{3} = \{1,2,5\}
+}
+$$
+Se io scrivessi un'algoritmo che lavora su basi adiacenti, nel caso in cui ci siano soluzioni degeneri, non generiamo un nuovo punto, ma rimaniamo nello stesso. Il punto è descritto da tutte queste basi, ma $B_{3}$ rappresenta tutta la base ammissibile, non solo il punto.
+Non tutte le intersezioni hanno lo stesso contenuto informativo.
+Algoritmicamente deve essere scritto in modo tale da capire che tra tutte quelle basi ce n'è una che descrive l'essenza geometrica della regione ammissibile, non solo il punto.
+
+
+
+# Algoritmo del simplesso
+Schema di algoritmo
+$$
+\begin{array}{rl}
+1:&\text{if} \Omega(P) \neq \emptyset \text{then} \\
+2:&\hspace{4ex} \text{calcola una soluzione di base ammissibile }\overline{x} \text{ di } \Omega (P) \\
+3:&\text{else} \\
+4:&\hspace{4ex} \text{exit} \\
+5:&\text{end if} \\ \hline
+6:&\text{if }\overline{x}\text{ è soluzione ottima per }(P) \text{ then} \\
+7:&\hspace{4ex} x^* := \overline{x}, z^*:= c^T\overline{x} \\
+8:&\hspace{4ex} \text{exit} \\
+9:&\text{end if} \\
+10:&\text{if esiste una sba }x \text{ adiacente a }\overline{x}\text{ con }c^Tx \leq c^T \overline{x} \text{ then} \\
+11:&\hspace{4ex} \overline{x}:= x, \text{go to 6} \\
+12:&\text{else} \\
+13:&\hspace{4ex} \text{exit} \\
+14:&\text{end if}
+\end{array}
+$$
+## Condizioni di ottimalità
+Indichiamo gli indici delle colonne in base con
+$$\mathcal{B} = \{\mathcal{B}(1), \ldots, \mathcal{B}(m)\}$$
+e gli indici delle colonne fuori base con
+$$\mathcal{N} = \{\mathcal{N}(1), \ldots, \mathcal{N}(n-m)\}$$
+Matrice di base
+$$B = \begin{pmatrix} A_{\mathcal{B}(1)} \mid A_{\mathcal{B}(2)} \mid \cdots \mid A_{\mathcal{B}(m)} \end{pmatrix}$$
+Matrice non di base
+$$N = \begin{pmatrix} A_{\mathcal{N}(1)} \mid A_{\mathcal{N}(2)} \mid \cdots \mid A_{\mathcal{N}(n-m)} \end{pmatrix}$$
+
+Ora dobbiamo parlare anche della funzione obbiettivo -> partizioniamo anche il vettore dei coefficienti di costo come per le variabili di base
+
+>[!multi-column]
+>
+>>[!blank]
+>>**Variabili di base**
+>>$$x_B = \begin{pmatrix} x_{\mathcal{B}(1)} \\ \vdots \\ x_{\mathcal{B}(m)} \end{pmatrix} \in \mathbb{R}^m$$
+>
+>>[!blank]
+>>**Coefficienti di costo delle variabili di base**
+>>$$c_B = \begin{pmatrix} c_{\mathcal{B}(1)} \\ \vdots \\ c_{\mathcal{B}(m)} \end{pmatrix} \in \mathbb{R}^m$$
+
+>[!multi-column]
+>
+>>[!blank]
+>>**Variabili fuori base**
+>>$$x_N = \begin{pmatrix} x_{\mathcal{N}(1)} \\ \vdots \\ x_{\mathcal{N}(n-m)} \end{pmatrix} \in \mathbb{R}^{n-m}$$
+>
+>>[!blank]
+>>**Coefficienti di costo delle variabili fuori base**
+>>$$c_N = \begin{pmatrix} c_{\mathcal{N}(1)} \\ \vdots \\ c_{\mathcal{N}(n-m)} \end{pmatrix} \in \mathbb{R}^{n-m}$$
+
+Soluzioni del sistema $Ax = b$ rispetto alla base $B$:
+$$\begin{aligned}
+x_B &= B^{-1}(b - N x_N) \\
+    &= B^{-1}b - B^{-1}N x_N
+\end{aligned}$$
+$$
+\overline{x} = \left(\begin{array}{c}B^{-1}b \\ 0\end{array}\right)
+$$
+
+quindi
+$$
+\begin{align*}
+c^T \overline{x} &= (c_B^T \cdot c_N^T) \binom{\overline{x}_B}{\overline{x}_N} \\
+& = c^T_B \overline{x}_B + c_N^T \overline{x}_N \\
+& = c_B^T B^{-1}b
+\end{align*}
+$$
+dobbiamo capire se $\overline{x}$ è soluzione ottima.
+Dobbiamo confrontare $\overline{x}$ con un qualsiasi altro punto ammissibile.
+Conoscendo una base siamo in grado di generare qualunque punto dello spazio vettoriale, in particolare qualsiasi punto in grado di soddisfare il sistema di equazioni.
+$$
+\overline{x} = \binom{B^{-1}}{0}
+$$
+$$
+\begin{align*}
+Ax & = b (B \quad N) \binom{x_B}{x_N} \\
+& = B x_B + N x_N = b \\
+& = Bx_B = b- Nx_N \\
+& = x_B = B^{-1}b -B^{-1}N x_N
+\end{align*}
+$$
+qualunque soluzione del sistema lineare associata alla stessa base
+$$
+x = \binom{B^{-1}b-B^{-1}Nx_N}{x_N}
+$$
+quando $x_N = \vec{0}$ allora otteniamo una nuoa base.
+$x_N$ sotto il nostro controllo
+Mettendo invece almeno una componente di $x_N$ non nulla otteniamo un nuovo vettore dello spazio vettoriale e tipicamente questa componente la poniamo $>0$, anche se non assicura di avere $x_B > 0$ e quindi ammissibile.
+Stiamo prendendo una qualsiasi soluzione e ne stiamo calcolando il valore della funzione obbiettivo
+$$
+\begin{align*}
+c^T \overline{x} & = (c_B^T  c_N^T) \binom{x_B}{x_N} = (c_B^T c_N^T)\binom{B^{-1}b-B^{-1}Nx_N}{x_N} \\
+c^Tx& = c_B^T (B^{-1}b - B^{-1} N x_N) + c_N^T x_N \\
+c^Tx& = c_B^T B^{-1}b -c_B^T B^{-1} N x_N + c_N^T x_N \\
+\end{align*}
+$$
+sapendo che il valore di funzione obbiettivo nel punto fornito
+$$
+c^T \overline{x} = c_B^T B^{-1} b
+$$
+possiamo sostituirlo nell'equazione della nuova $c^Tx$ e raggruppiamo rispetto a $x_N$ (il cui ordine è importante, è una colonna)
+$$
+\begin{align*}
+c^Tx = c^T \overline{x} + \overbrace{(c_N^T-c_B^TB^{-1}N)}^{\hat{c}_N^T} x_N
+\end{align*}
+$$
+dove $\hat{c}_N^T$ prende il nome di **vettore dei coefficienti di costo ridotto delle variabili fuori base**
+$$
+c^T x - c^T \overline{ x} = \hat{c}_N^Tx_N
+$$
+stiamo confrontando la funzione obbiettivo nel punto che ci è stato dato con la funzione obbiettivo in un qualsiasi altro punto che soddisfa il sistema di equazioni.
+Questo confronto non dipende più dalle variabili di base, ma solo da quelle fuori base.
+Se genero una qualsiasi soluzione il mio studio si può concentrare sulle variabili $x_N$ e sul vettore dei coefficienti (che è noto).
+
+>[!info] Teorema: condizione sufficiente di ottimalità
+
+Hp : $\hat{c}_N \geq 0$ (questo garantisce l'ammissibilità)
+se $x_N$ è tutto nullo otteniamo $\overline{x}$
+$$\implies c^Tx - c^T\overline{x} \geq 0 \implies c^Tx \geq c^T \overline{x} \quad \forall x \in \Omega(P)$$
+che non è altro che la definizione di ottimo
+
+piccolo corollario
+se sono tutti strettamente $> 0$
+diventano tutti strettamente $> 0$
+quindi qualunque altra soluzione ha valore strettamente maggiore della corrente: quella soluzione ottima è unica
+condizione sufficiente per condizione ottima unica.
+
+[...] sono bruciato fai slide approfondimento
+
+
+*es.*
+$$
+A = \left(\begin{array}{cccccc}
+1 & 2 & 3 & 1 & 0 & 0 \\
+2 & -1 & -5 & 0 & 1 & 0  \\
+1 & 2 & -1 & 0 & 0 & 1
+\end{array}\right)
+$$
+$$
+B =\{1,3,4\} = \left(\begin{array}{cccccc}
+1 & 3 & 1 \\
+2 & -5 & 0 \\
+1 & -1 & 0
+\end{array}\right)
+\hspace{8ex}
+N = \{2,5,6\} = \left(\begin{array}{cccccc}
+2 & 0 & 0  \\
+-1 & 1 & 0 \\
+2 & 0 & 1
+\end{array}\right)
+$$
+$$
+\displaylines{
+\overline{x}_B^T = (\overline{x}_1, \overline{x}_3, \overline{x}_4) \\
+c_B^T = (1,1,1) \\
+\overline{x}_N^T = (\overline{x}_2, \overline{x}_5, \overline{x}_6) \\
+c_N^T = (2,1,1)
+}
+$$
+$$
+B^{-1} = \frac{1}{3}\left(\begin{array}{ccc}
+0 & -1 & 5 \\
+0 & -1 & 2 \\
+3 & 4 & -11
+\end{array}\right)
+$$
+$$
+\overline{x}_B = B^{-1}b = (1,0,2)^T \hspace{8ex} \overline{x}_N = (0,0,0)
+$$
+$$
+\overline{x} = (1,0,0,2,0,0)^T
+$$
+è ammissibile.
+Calcoliamo i coefficienti di costo ridotto
+$$
+\hat{c}_N^T = C_N^T - c_B^T B^{-1} N = \left( \frac{10}{3}, \frac{1}{3}, \frac{7}{3} \right)^T
+$$
+è ottima ed è unica (sono tutti maggiori di 0)
+
+## Cambio della soluzione di base ammissibile
+Nel caso in cui il test non va a buon fine
+[...] non ho capito
+
+$$
+I x_B = B^{-1}b - B^{-1}Nx_N
+$$
+sto scrivendo tutte le possibili soluzioni del sistema al variare di $N$, sto riscrivendo $Ax = b$
+
+
+
+
+
 
 
 
@@ -767,3 +1037,4 @@ Date queste considerazioni possiamo quindi rielaborare il teorema fondamentale d
 - trovare matrice inversa (controlla se lo fa la calc)
 - prodotto righe per colonna
 - calcolo det (laplace - sarrus)
+- prodotto matriciale
