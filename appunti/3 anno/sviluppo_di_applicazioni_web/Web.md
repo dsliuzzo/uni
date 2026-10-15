@@ -1445,16 +1445,16 @@ if (cookies != null) {
 }
 ```
 
-| Proprietà / Funzione | Metodi                              | Descrizione                                              |
-| -------------------- | ----------------------------------- | -------------------------------------------------------- |
-| Nome                 | `getName()`                         | Restituisce il nome del cookie (immutabile)              |
-| Valore               | `getValue()` / `setValue(String)`   | Legge o modifica il valore                               |
-| Durata               | `getMaxAge()` / `setMaxAge(int)`    | Legge o imposta la durata in secondi (-1 = sessione)     |
-| Percorso             | `getPath()` / `setPath(String)`     | Legge o imposta il percorso URL per cui il cookie è valido |
-| Sicurezza HTTPS      | `getSecure()` / `setSecure(boolean)` | Legge o imposta se il cookie va inviato solo su HTTPS   |
-| Commento             | `getComment()` / `setComment(String)` | Legge o imposta un commento descrittivo                |
-| Versione protocollo  | `getVersion()` / `setVersion(int)`  | Legge o imposta la versione del protocollo cookie        |
-| Copia                | `clone()`                           | Crea una copia del cookie                                |
+| Proprietà / Funzione | Metodi                                | Descrizione                                                |
+| -------------------- | ------------------------------------- | ---------------------------------------------------------- |
+| Nome                 | `getName()`                           | Restituisce il nome del cookie (immutabile)                |
+| Valore               | `getValue()` / `setValue(String)`     | Legge o modifica il valore                                 |
+| Durata               | `getMaxAge()` / `setMaxAge(int)`      | Legge o imposta la durata in secondi (-1 = sessione)       |
+| Percorso             | `getPath()` / `setPath(String)`       | Legge o imposta il percorso URL per cui il cookie è valido |
+| Sicurezza HTTPS      | `getSecure()` / `setSecure(boolean)`  | Legge o imposta se il cookie va inviato solo su HTTPS      |
+| Commento             | `getComment()` / `setComment(String)` | Legge o imposta un commento descrittivo                    |
+| Versione protocollo  | `getVersion()` / `setVersion(int)`    | Legge o imposta la versione del protocollo cookie          |
+| Copia                | `clone()`                             | Crea una copia del cookie                                  |
 
 ### Sessioni
 `HttpSession` è un contenitore dati per singolo client (utente/browser). Ogni client ha la sua sessione unica, identificata da un cookie `JSESSIONID`.
@@ -2146,7 +2146,8 @@ La servlet generata implementa `HttpJspPage` (derivata da `Servlet`): è quindi 
 |Scriptlet|`<% ... %>`|eseguire codice Java|`<% int x = 5; %>`|
 |Declaration|`<%! ... %>`|definire variabili/metodi|`<%! int y = 0; %>`|
 
-> [!attention] Uso moderno Scriptlet, Expression e Declaration **non sono più raccomandati** nei progetti Java EE moderni (ora Jakarta EE): si usano **JSTL** (JSP Standard Tag Library) ed **EL** (Expression Language), che vedremo dopo. Lo studio resta utile per capire l'evoluzione delle tecnologie web Java e per mantenere **applicazioni legacy**.
+> [!attention] Uso moderno
+> Scriptlet, Expression e Declaration **non sono più raccomandati** nei progetti Java EE moderni (ora Jakarta EE): si usano **JSTL** (JSP Standard Tag Library) ed **EL** (Expression Language), che vedremo dopo. Lo studio resta utile per capire l'evoluzione delle tecnologie web Java e per mantenere **applicazioni legacy**.
 
 ### JSP Expressions
 
@@ -2235,9 +2236,11 @@ public class [..] implements HttpJspPage {
 }
 ```
 
-> [!bug] Concorrenza `accessCount` è un campo della servlet generata: è **condiviso da tutte le richieste e da tutti gli utenti** e `++accessCount` non è atomico (stesso problema di `getNum` in [[#Stato nella servlet]]). Si azzera al riavvio del server.
+> [!bug] Concorrenza
+> `accessCount` è un campo della servlet generata: è **condiviso da tutte le richieste e da tutti gli utenti** e `++accessCount` non è atomico (stesso problema di `getNum` in [[#Stato nella servlet]]). Si azzera al riavvio del server.
 
-> [!note] jspInit() e jspDestroy() Poiché le declaration finiscono nella classe, è possibile **ridefinire** `jspInit()` e `jspDestroy()` dentro un `<%! ... %>`.
+> [!note] jspInit() e jspDestroy()
+>  Poiché le declaration finiscono nella classe, è possibile **ridefinire** `jspInit()` e `jspDestroy()` dentro un `<%! ... %>`.
 
 ## Direttive
 
@@ -2253,7 +2256,8 @@ Le direttive `<%@ ... %>` forniscono **metadati** e configurazioni sulla pagina 
 |`contentType`|`<%@ page contentType="MIME-Type" %>`|specifica il **tipo MIME** della risposta: dice al browser come interpretare il contenuto inviato|
 |`isThreadSafe`|`<%@ page isThreadSafe="true" %>` (default) / `"false"`|comunica al sistema se il codice è thread-safe, così può impedire l'accesso simultaneo|
 
-> [!attention] isThreadSafe Il default è `true`: il sistema presuppone che gli aggiornamenti a campi e dati condivisi siano già **sincronizzati** da noi. `false` impedisce l'accesso concorrente ma **peggiora le prestazioni**: meglio scrivere codice thread-safe.
+> [!attention] isThreadSafe
+> Il default è `true`: il sistema presuppone che gli aggiornamenti a campi e dati condivisi siano già **sincronizzati** da noi. `false` impedisce l'accesso concorrente ma **peggiora le prestazioni**: meglio scrivere codice thread-safe.
 
 Altri attributi utili: `pageEncoding` (encoding della pagina), `session="false"` (non crea la sessione), `errorPage` / `isErrorPage` (gestione degli errori).
 
