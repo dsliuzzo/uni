@@ -554,13 +554,21 @@ Ma perdendo l'esclusività si perde anche negli indirizzi: posso avere più indi
 
 
 
+# Implementazione 
+Una volta definito lo schema logico si passa all'**implementazione**: lo schema di relazione viene tradotto in istruzioni SQL (*DDL*, Data Definition Language) che creano la base di dati.
+## Sintassi
+### Creazione del database
 
+> [!note] Creare e selezionare il database
+> ```sql
+> CREATE DATABASE MyDB;  -- spazio logico dello schema di DB
+> USE MyDB;              -- senza USE servirebbe il prefisso MyDB. in ogni istruzione
+> ```
 
----
+### Creazione di una tabella
 
-MySQL
-schema di data base -> spazio logico in cui manteniamo le tabelle
-creazione del database
+Dato lo schema di relazione, con il vincolo di unicità sul nome:
+
 $$
 \displaylines{
 \text{Fornitore}(\underline{P.iva}, \overset{\text{UNIQUE}}{\text{nome}}, \text{città}) \\
@@ -569,53 +577,88 @@ $$
 }
 $$
 
-``` sql
-CREATE DATABASE MioDB;
-USE MioDB; -- se non lo utilizzassi dovrei usare MioDB come prefisso
-CREATE TABLE Fornitore AS (
-piva NUMBER(12) PRIMARY KEY, -- numero con 12 cifre
-nome VARCHAR2(16) UNIQUE, -- i tipi specifici dipendono dal dbms es. varchar2 è una ottimizzazione di varchar
-citta VARCHAR2(25)
-); -- premendo invio viene creata la tabella e viene creata una istanza di relazione
-```
-modo migliore per scrivere chiavi con più attributi
-``` sql
-CREATE TABLE Fornitore AS (
-piva NUMBER(12),
-nome VARCHAR2(16),
-citta VARCHAR2(25) NOT NULL,
-PRIMARY KEY(piva),
-UNIQUE(nome)
-);
-```
-si possono inserire anche i check.
-`NULL`/`NOT NULL` rende un attributo obbligatoria. Da predefinito dipende dal dbms
+> [!info] CREATE TABLE: vincoli sulla stessa riga
+> ```sql
+> -- DEFINIZIONE DELLO SCHEMA DI RELAZIONE
+> CREATE TABLE Fornitore (
+>     piva  NUMBER(12) PRIMARY KEY,  -- numero con 12 cifre
+>     nome  VARCHAR2(16) UNIQUE,     -- stringa di lunghezza variabile (max 16)
+>     città VARCHAR2(25)
+> );
+> ```
+> Eseguendo l'istruzione (invio) si crea lo **schema**; la tabella nasce vuota, cioè con un'istanza di relazione senza tuple.
 
-``` sql
-CREATE TABLE Fornitura AS (
-fornitore NUMBER(12) REFERENCES Fornitore(piva), -- chiavi esterna - metodo 1
-merce NUMBER(6) REFERENCES Merce(cod),
-prezzo NUMBER(4,2), -- numeri decimali - numero di lunghezza 4 di cui 2 decimali
-PRIMARY KEY(fornitore, merce), -- qui lo abbiamo dovuto mettere per forza separato
-);
-```
-``` sql
-CREATE TABLE Fornitura AS (
-fornitore NUMBER(12),
-merce NUMBER(6),
-prezzo NUMBER(4,2),
-PRIMARY KEY(fornitore, merce),
-FOREIGN KEY fornitore REFERENCES Fornitore(piva) -- chiavi esterne - metodo 2
-FOREIGN KEY merce REFERENCES Merce(cod)
-);
-```
+Una versione più *pulita* dichiara i vincoli dopo gli attributi, e indica `NOT NULL` accanto a quelli obbligatori:
 
-inserimento tuple
-``` sql
-INSERT INTO Fornitore VALUES
-	('F1', 'A', 'CS'),
-	('F2', 'B', 'RC');
-```
+> [!info] CREATE TABLE: vincoli dichiarati alla fine
+> ```sql
+> CREATE TABLE Fornitore (
+>     piva  NUMBER(12),
+>     nome  VARCHAR2(16),
+>     città VARCHAR2(25) NOT NULL,
+>     PRIMARY KEY (piva),
+>     UNIQUE (nome)
+> );
+> ```
+
+> [!warning] Attenzione: NULL e nomi dei tipi
+> Se dopo un attributo non si specifica nulla, il fatto che possa essere `NULL` o meno **dipende dal DBMS**: bisogna consultarne la documentazione. Lo stesso vale per i nomi dei tipi (`NUMBER`, `VARCHAR2` sono di Oracle; in MySQL si usano ad esempio `INT`, `DECIMAL`, `VARCHAR`).
+
+### Chiavi esterne
+
+$$
+\text{Fornitura}(\underline{\text{fornitore, merce}},\ \text{prezzo})
+$$
+
+Una chiave esterna si può dichiarare in due modi:
+
+1. **(M1)** accanto all'attributo, con `REFERENCES`;
+2. **(M2)** a fine tabella, con `FOREIGN KEY`.
+
+> [!info] Modo 1: REFERENCES accanto all'attributo
+> ```sql
+> CREATE TABLE Fornitura (
+>     fornitore NUMBER(12) REFERENCES Fornitore(piva),
+>     merce     NUMBER(6)  REFERENCES Merce(codice),
+>     prezzo    NUMBER(4,2),  -- 4 cifre in totale, di cui 2 decimali
+>     PRIMARY KEY (fornitore, merce)
+> );
+> ```
+
+> [!info] Modo 2: FOREIGN KEY a fine tabella
+> ```sql
+> CREATE TABLE Fornitura (
+>     fornitore NUMBER(12),
+>     merce     NUMBER(6),
+>     prezzo    NUMBER(4,2),
+>     PRIMARY KEY (fornitore, merce),
+>     FOREIGN KEY (fornitore) REFERENCES Fornitore(piva),
+>     FOREIGN KEY (merce)     REFERENCES Merce(codice)
+> );
+> ```
+
+> [!note] Osservazione
+> Le tabelle `Fornitore` e `Merce` devono essere create **prima** di `Fornitura`, perché la chiave esterna può riferirsi solo a una tabella già esistente. Con una chiave esterna **composta** (come `Merce_nome, Merce_marca`) si usa un'unica clausola `FOREIGN KEY (a, b) REFERENCES T(x, y)`, non una per attributo.
+
+### Manipolazione dei dati
+
+Una volta create le tabelle è possibile interagirvi (*DML*, Data Manipulation Language):
+
+> [!info] INSERT e SELECT
+> ```sql
+> -- INSERIRE TUPLE
+> INSERT INTO Fornitore VALUES
+>     (1, 'A', 'CS'),   -- elenco delle tuple
+>     (2, 'B', 'RC');
+>
+> -- VISUALIZZAZIONE DELLA TABELLA
+> SELECT * FROM Fornitore;  -- mostra il contenuto corrente della tabella
+> ```
+> Le tuple vengono inserite nell'ordine degli attributi dello schema. Il risultato di `SELECT` è l'**istanza di relazione** in quel momento.
+
+
+
+---
 
 visualizzare tuple
 ``` sql
@@ -798,107 +841,3 @@ per evitare formule troppo lunghe e omonimi usiamo gli attributi posizionali.
 5. le città in cui è fornita la merce M2
 6. le coppie nome_merce - nome_fornitore t.c. il fornitore con quel nome fornisce la merce con quel nome (collegare 3 tabelle usa le parentesi per evitare ambiguità nella notazione posizionale)
 
-
-
-
-
-
-
-# Implementazione in SQL
-
-Una volta definito lo schema logico si passa all'**implementazione**: lo schema di relazione viene tradotto in istruzioni SQL (*DDL*, Data Definition Language) che creano la base di dati.
-
-## Creazione del database
-
-> [!note] Creare e selezionare il database
-> ```sql
-> CREATE DATABASE MyDB;  -- spazio logico dello schema di DB
-> USE MyDB;              -- senza USE servirebbe il prefisso MyDB. in ogni istruzione
-> ```
-
-## Creazione di una tabella
-
-Dato lo schema di relazione, con il vincolo di unicità sul nome:
-
-$$
-\text{Fornitore}(\underline{\text{P.IVA}},\ \text{nome},\ \text{città}) \qquad \text{nome} = \texttt{UNIQUE}
-$$
-
-> [!info] CREATE TABLE: vincoli sulla stessa riga
-> ```sql
-> -- DEFINIZIONE DELLO SCHEMA DI RELAZIONE
-> CREATE TABLE Fornitore (
->     piva  NUMBER(12) PRIMARY KEY,  -- numero con 12 cifre
->     nome  VARCHAR2(16) UNIQUE,     -- stringa di lunghezza variabile (max 16)
->     città VARCHAR2(25)
-> );
-> ```
-> Eseguendo l'istruzione (invio) si crea lo **schema**; la tabella nasce vuota, cioè con un'istanza di relazione senza tuple.
-
-Una versione più *pulita* dichiara i vincoli dopo gli attributi, e indica `NOT NULL` accanto a quelli obbligatori:
-
-> [!info] CREATE TABLE: vincoli dichiarati alla fine
-> ```sql
-> CREATE TABLE Fornitore (
->     piva  NUMBER(12),
->     nome  VARCHAR2(16),
->     città VARCHAR2(25) NOT NULL,
->     PRIMARY KEY (piva),
->     UNIQUE (nome)
-> );
-> ```
-
-> [!warning] Attenzione: NULL e nomi dei tipi
-> Se dopo un attributo non si specifica nulla, il fatto che possa essere `NULL` o meno **dipende dal DBMS**: bisogna consultarne la documentazione. Lo stesso vale per i nomi dei tipi (`NUMBER`, `VARCHAR2` sono di Oracle; in MySQL si usano ad esempio `INT`, `DECIMAL`, `VARCHAR`).
-
-## Chiavi esterne
-
-$$
-\text{Fornitura}(\underline{\text{fornitore, merce}},\ \text{prezzo})
-$$
-
-Una chiave esterna si può dichiarare in due modi:
-
-1. **(M1)** accanto all'attributo, con `REFERENCES`;
-2. **(M2)** a fine tabella, con `FOREIGN KEY`.
-
-> [!info] Modo 1: REFERENCES accanto all'attributo
-> ```sql
-> CREATE TABLE Fornitura (
->     fornitore NUMBER(12) REFERENCES Fornitore(piva),
->     merce     NUMBER(6)  REFERENCES Merce(codice),
->     prezzo    NUMBER(4,2),  -- 4 cifre in totale, di cui 2 decimali
->     PRIMARY KEY (fornitore, merce)
-> );
-> ```
-
-> [!info] Modo 2: FOREIGN KEY a fine tabella
-> ```sql
-> CREATE TABLE Fornitura (
->     fornitore NUMBER(12),
->     merce     NUMBER(6),
->     prezzo    NUMBER(4,2),
->     PRIMARY KEY (fornitore, merce),
->     FOREIGN KEY (fornitore) REFERENCES Fornitore(piva),
->     FOREIGN KEY (merce)     REFERENCES Merce(codice)
-> );
-> ```
-
-> [!note] Osservazione
-> Le tabelle `Fornitore` e `Merce` devono essere create **prima** di `Fornitura`, perché la chiave esterna può riferirsi solo a una tabella già esistente. Con una chiave esterna **composta** (come `Merce_nome, Merce_marca`) si usa un'unica clausola `FOREIGN KEY (a, b) REFERENCES T(x, y)`, non una per attributo.
-
-## Manipolazione dei dati
-
-Una volta create le tabelle è possibile interagirvi (*DML*, Data Manipulation Language):
-
-> [!info] INSERT e SELECT
-> ```sql
-> -- INSERIRE TUPLE
-> INSERT INTO Fornitore VALUES
->     (1, 'A', 'CS'),   -- elenco delle tuple
->     (2, 'B', 'RC');
->
-> -- VISUALIZZAZIONE DELLA TABELLA
-> SELECT * FROM Fornitore;  -- mostra il contenuto corrente della tabella
-> ```
-> Le tuple vengono inserite nell'ordine degli attributi dello schema. Il risultato di `SELECT` è l'**istanza di relazione** in quel momento.
