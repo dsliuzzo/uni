@@ -1,0 +1,6 @@
+Time resolution is 1 ps
+Warning: NUMERIC_BIT.TO_SIGNED: vector truncated
+Time: 0 ps  Iteration: 0  Process: /testRCAbehav/line__22  File: /home/dsliuzzo/Downloads/testRCAbehav.vhd
+Warning: NUMERIC_BIT.TO_SIGNED: vector truncated
+Time: 10 ns  Iteration: 0  Process: /testRCAbehav/line__22  File: /home/dsliuzzo/Downloads/testRCAbehav.vhd
+INFO: xsimkernel Simulation Memory Usage: 353748 KB (Peak: 419284 KB), Simulation CPU Usage: 820 ms

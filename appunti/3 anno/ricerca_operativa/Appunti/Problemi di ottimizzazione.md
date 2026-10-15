@@ -755,83 +755,84 @@ Date queste considerazioni possiamo quindi rielaborare il teorema fondamentale d
 >Basi che condividono tutte le colonne meno 1
 
 
+#### Esempio 1
+Consideriamo il problema
+$$ (P) \quad \begin{cases} \max & x_1 + 2x_2 \\ \text{s.t.} & 2x_1 + x_2 \le 4 \\ & -2x_1 + x_2 \le 2 \\ & x_1 + x_2 \ge 1 \\ & x_1, x_2 \ge 0 \end{cases} $$
+e lo risolviamo graficamente identificando tutti i vertici. Successivamente, costruiamo il problema equivalente in forma standard, trasformiamo le coordinate dei vertici nel nuovo spazio delle variabili decisionali.
+![[Problemi di ottimizzazione-1791900288583.webp|center|465]]
+Vertici della regione ammissibile:
+$$ \begin{aligned} A &= (0,1), & B &= (0,2), & C &= \left(\tfrac{1}{2}, 3\right) \\ D &= (2,0), & E &= (1,0) && \end{aligned} $$
+**Forma standard**
+Per rappresentare le soluzioni in $\mathbb{R}^5$ ogni disuguaglianza va trasformata in uguaglianza introducendo una variabile non negativa: si **somma** per un vincolo $\le$ (variabile di slack), si **sottrae** per un vincolo $\ge$ (variabile di surplus).
 
----
+$$ \begin{aligned} 2x_1 + x_2 \le 4 &\iff 2x_1 + x_2 + x_3 = 4, ; x_3 \ge 0 \\ x_1 + x_2 \ge 1 &\iff x_1 + x_2 - x_5 = 1, ; x_5 \ge 0 \end{aligned} $$
 
+La retta $2x_1 + x_2 = 4$ si ottiene ponendo $x_3 = 0$, mentre la porzione di piano per cui $x_3 > 0$ è il semipiano ammissibile. La regione ammissibile resta identica, ma ora i suoi punti sono caratterizzati da vettori in $\mathbb{R}^5$ (il grafico è la proiezione sul piano $(x_1, x_2)$). Ogni variabile aggiuntiva compare in **un solo** vincolo: per questo si calcola da quel vincolo, senza usare gli altri.
 
->[!multi-column]
->
->>[!blank]
->>![[Problemi di ottimizzazione-1791875071974.webp]]
->
->>[!blank]
->>![[Problemi di ottimizzazione-1791875082404.webp]]
+$$ (P) \quad \begin{cases} \min & -x_1 - 2x_2 \\ \text{s.t.} & 2x_1 + x_2 + x_3 = 4 \\ & -2x_1 + x_2 + x_4 = 2 \\ & x_1 + x_2 - x_5 = 1 \\ & x_1, x_2, x_3, x_4, x_5 \ge 0 \end{cases} $$
 
-$$
-A = (0,1) \hspace{8ex} x_{3}
-$$
-sostituiamo le coordinate in una equazione che contiene $x_{3}$
-$$
-2x_{1} +x_{2} + x_{3} = 4 \implies x_{3} = 4-1 = 3
-$$
-in corrispondenza di quel punto $x_{3}$ deve rispettare il vincolo di uguaglianza.
-Se volessimo invece prendere $x_{4}$ non possiamo usare questo stesso vincolo
-$$
--2x_{1}+x_{2}+x_{4} = 2 \implies x_{4} = 2-1 = 1
-$$
-$x_{5}$ è presente nel terzo vincolo
-$$
-x_{1}+x_{2}-x_{5} = 1 \implies x_{5} = 1-1 = 0
-$$
-quindi possiamo descrivere
-$$
-x_A = (0,1,3,1,0)^T
-$$
-possiamo ripetere questo per ognuno dei punti.
+**Coordinate dei vertici in $\mathbb{R}^5$**
+Prendiamo $A = (0,1)$. Sostituiamo le coordinate nel vincolo che contiene la variabile da trovare:
+$$\begin{align*} 2x_1 + x_2 + x_3 = 4 &\implies x_3 = 4 - 1 = 3 \\ -2x_1 + x_2 + x_4 = 2 &\implies x_4 = 2 - 1 = 1 \\ x_1 + x_2 - x_5 = 1 &\implies x_5 = 1 - 1 = 0 \end{align*} $$
 
-Per la rappresentazione grafica di più variabili su un piano a 2 dimensioni possiamo usare le variabili come combinazione lineare
-$$
-\begin{cases}
-2x_{1}+x_{2}+x_{3} = 4 \\
-x_{3} \geq 0
-\end{cases}
-$$
-ponendo $x_{3} = 0$ otteniamo
-$$
-2x_{1}+x_{2} = 4
-$$
-non ho ben capito il segno $\leq$ p $\geq$
-abbiamo bisogno che le variabili stiano su un unico vincolo
+Quindi $x_A = (0, 1, 3, 1, 0)^\top$. Ripetiamo per ogni punto:
+$$ \begin{array}{lcl} A = (0,1) & \to & x_A = (0,, 1,, 3,, 1,, 0)^\top \\ B = (0,2) & \to & x_B = (0,, 2,, 2,, 0,, 1)^\top \\ C = (\tfrac{1}{2}, 3) & \to & x_C = (\tfrac{1}{2},, 3,, 0,, 0,, \tfrac{5}{2})^\top \\ D = (2,0) & \to & x_D = (2,, 0,, 0,, 6,, 1)^\top \\ E = (1,0) & \to & x_E = (1,, 0,, 2,, 4,, 0)^\top \end{array} $$
 
-la regione ammissibile è identica, ma possiamo caratterizzare il grafico con punti in $\mathbb{R}^5$
+Verifica dei vincoli per ogni punto:
 
-$x \in \mathbb{R}^5 \hspace{2ex} m = 3 \hspace{2ex} n = 5 \hspace{2ex} A\in \mathbb{R}^{3 \times 5}$
-- 3 vincoli di eguaglianza
-- 5 vincoli di segno
+- **vincoli di uguaglianza:** soddisfatti per costruzione $\implies$ soluzione ammissibile
+- **vincoli di segno:** tutte le componenti sono $\ge 0$, e due di esse sono nulle (vincoli di segno attivi)
 
-I punti che abbiamo trovato sono vertici in $\mathbb{R}^5$, sono l'intersezione tra 5 iperpiani (3 iperpiani sono i vincoli di eguaglianza, 2 di quei 5 vincoli di segno sono soddisfatti per uguaglianza (0 nelle soluzioni)).
+Le componenti nulle individuano le variabili fuori base, le altre sono la base associata:
 
-Vertici adiacenti - basi adiacenti
-vertici sono adiacenti se condividono un segmento
-Il concetto di adiacenza tra basi è perfettamente allineato con il concetto di adiacenza tra vertici
+$$ \begin{array}{lll} A: & x_1 = x_5 = 0 & B_A = {2,3,4} \\ B: & x_1 = x_4 = 0 & B_B = {2,3,5} \\ C: & x_3 = x_4 = 0 & B_C = {1,2,5} \\ D: & x_2 = x_3 = 0 & B_D = {1,4,5} \\ E: & x_2 = x_5 = 0 & B_E = {1,3,4} \end{array} $$
 
----
+**Interpretazione**
+Si può osservare che in ogni vettore compaiono $2$ zeri: $m = 3, ; n = 5 \implies n - m = 2$ (condizione necessaria non violata). Ogni vertice si trova all'intersezione di due rette linearmente indipendenti.
 
+Infatti, esiste una corrispondenza tra i vertici e le soluzioni di base: $x \in \mathbb{R}^5$, $m = 3$, $n = 5$ dove $A \in \mathbb{R}^{3 \times 5}$ con 3 vincoli di uguaglianza (3 iperpiani) e 5 vincoli di segno.
 
-$$
-\displaylines{
-C = (3,3) \to x_C = (3,3,0,0,0)^T \\
-B_{1} = \{1,2,3\} \\
-B_{2} = \{1,2,4\} \\
-B_{3} = \{1,2,5\}
-}
-$$
-Se io scrivessi un'algoritmo che lavora su basi adiacenti, nel caso in cui ci siano soluzioni degeneri, non generiamo un nuovo punto, ma rimaniamo nello stesso. Il punto è descritto da tutte queste basi, ma $B_{3}$ rappresenta tutta la base ammissibile, non solo il punto.
-Non tutte le intersezioni hanno lo stesso contenuto informativo.
-Algoritmicamente deve essere scritto in modo tale da capire che tra tutte quelle basi ce n'è una che descrive l'essenza geometrica della regione ammissibile, non solo il punto.
+$\therefore$ i punti sono generati da:
 
+- **vincoli di uguaglianza:** 3 iperpiani, soddisfatti per costruzione
+- **vincoli di segno:** $2$ dei $5$ soddisfatti con uguaglianza ($2$ componenti nulle per punto)
 
+**Quindi,** i punti sono **vertici** in $\mathbb{R}^5$ dati dalle intersezioni di $5$ iperpiani (2 VS, 3 VU).
 
+**Adiacenza**
+Due vertici sono detti adiacenti se condividono il segmento che li congiunge (condividono la coordinata della retta su cui giacciono e hanno al più una coordinata diversa). Il concetto è allineato con quello di **basi adiacenti**: due basi sono adiacenti se differiscono per un solo indice.
+
+$$ \begin{array}{lll} A \text{--} B: & x_1 = 0 & {2,3,4} \leftrightarrow {2,3,5} \\ B \text{--} C: & x_4 = 0 & {2,3,5} \leftrightarrow {1,2,5} \\ C \text{--} D: & x_3 = 0 & {1,2,5} \leftrightarrow {1,4,5} \\ D \text{--} E: & x_2 = 0 & {1,4,5} \leftrightarrow {1,3,4} \\ E \text{--} A: & x_5 = 0 & {1,3,4} \leftrightarrow {2,3,4} \end{array} $$
+
+Qui ogni vertice ha esattamente una base, quindi il passaggio tra basi adiacenti corrisponde sempre a uno spostamento lungo un lato.
+
+#### Esempio 2
+Consideriamo il problema
+
+$$ (P) \quad \begin{cases} \max & 3x_1 + x_2 \ \text{s.t.} & x_1 + x_2 \le 6 \ & x_2 \le 3 \ & x_1 + 2x_2 \le 9 \ & x_1, x_2 \ge 0 \end{cases} $$
+
+e identifichiamo vertici e basi ammissibili adiacenti.
+![[Problemi di ottimizzazione-1791900990248.webp|center|482]]
+Vertici della regione ammissibile:
+$$ \begin{aligned} A &= (0,0), & B &= (0,3) \\ C &= (3,3), & D &= (6,0) \end{aligned} $$
+
+Costruiamo la forma standard:
+
+$$ (P) \quad \begin{cases} \min & -3x_1 - x_2 \\ \text{s.t.} & x_1 + x_2 + x_3 = 6 \\ & x_2 + x_4 = 3 \\ & x_1 + 2x_2 + x_5 = 9 \\ & x_1, x_2, x_3, x_4, x_5 \ge 0 \end{cases} $$
+
+Coordinate dei punti nel nuovo spazio a 5 variabili:
+$$ \begin{array}{lcl} A = (0,0) & \to & x_A = (0,, 0,, 6,, 3,, 9)^\top \\ B = (0,3) & \to & x_B = (0,, 3,, 3,, 0,, 3)^\top \\ C = (3,3) & \to & x_C = (3,, 3,, 0,, 0,, 0)^\top \\ D = (6,0) & \to & x_D = (6,, 0,, 0,, 3,, 3)^\top \end{array} $$
+
+Per $A$, $B$, $D$ ci sono due componenti nulle, come previsto ($n - m = 2$), e ogni vertice ha una sola base:
+
+$$ \begin{aligned} B_A &= {3,4,5} \\ B_B &= {2,3,5} \\ B_D &= {1,4,5} \end{aligned} $$
+
+### Soluzione degenere
+Il punto $x_C$ ha **tre** componenti nulle invece di due: è una soluzione di base **degenere**, e corrisponde al vertice $C$ identificato dall'intersezione di 3 rette ($x_3 = x_4 = x_5 = 0$), quando per individuarlo ne bastano 2. Le basi $B_1 = {1,2,3}$, $B_2 = {1,2,4}$ e $B_3 = {1,2,5}$ sono tra loro adiacenti, ma identificano tutte la stessa soluzione di base ammissibile:
+
+$$ C = (3,3) \to x_C = (3,3,0,0,0)^\top $$
+
+Quindi non tutte le intersezioni hanno lo stesso contenuto informativo. Un algoritmo che lavora su basi adiacenti, in presenza di soluzioni degeneri, può cambiare base senza generare un nuovo punto: rimane nello stesso vertice $C$. L'algoritmo deve essere scritto tenendone conto.
 # Algoritmo del simplesso
 Schema di algoritmo
 $$
@@ -852,7 +853,18 @@ $$
 14:&\text{end if}
 \end{array}
 $$
+- 2. se esiste una soluzione ammissibile allora calcola la soluzione di base ammissibile
+- 6. [[#Condizioni di ottimalità]]
+- 10. condizione non peggioramento della funzione obbiettivo
+- 13. non sono riuscito a dire che è ottima, non ho trovato un vertice adiacente che mi ha permesso di migliorare la funzione obbiettivo -> non trovo la base adiacente, ho trovato una direzione lungo la quale posso spostarmi senza trovarlo un altro vertice, si va a $-\infty$
+
+L’algoritmo si divide in due fasi:
+- Prima fase (righe 1–5): verifica dell’ammissibilità e calcolo di una soluzione ammissibile di base $\bar{x} \in \Omega(P)$ (inizializzazione).
+- Seconda fase (righe 6–14): test di ottimalità e cambio di sba, ripetuti finché non si trova l’ottimo oppure si verifica che il problema è inferiormente illimitato.
+Tuttavia, analizzeremo l’algoritmo al contrario: a partire da una sba verifichiamo la sua ottimalità.
 ## Condizioni di ottimalità
+Analizziamo la seconda fase dell'algoritmo del simplesso, diamo come input una soluzione di base ammissibile.
+
 Indichiamo gli indici delle colonne in base con
 $$\mathcal{B} = \{\mathcal{B}(1), \ldots, \mathcal{B}(m)\}$$
 e gli indici delle colonne fuori base con
@@ -889,40 +901,39 @@ $$\begin{aligned}
 x_B &= B^{-1}(b - N x_N) \\
     &= B^{-1}b - B^{-1}N x_N
 \end{aligned}$$
+Consideriamo la soluzione ammissibile di base $\bar{x} \in \Omega(P)$ corrispondente alla base $B$
 $$
-\overline{x} = \left(\begin{array}{c}B^{-1}b \\ 0\end{array}\right)
+\overline{x} = \binom{\bar{x}_B}{\bar{x}_N} = \binom{B^{-1}b}{0} \geq \binom{0}{0}
 $$
-
-quindi
+con valore di funzione obbiettivo
 $$
 \begin{align*}
-c^T \overline{x} &= (c_B^T \cdot c_N^T) \binom{\overline{x}_B}{\overline{x}_N} \\
-& = c^T_B \overline{x}_B + c_N^T \overline{x}_N \\
+\bar{z}=c^T \overline{x} &= (c_B^T \ , \ c_N^T) \binom{\overline{x}_B}{\overline{x}_N} \\
+& = c^T_B \overline{x}_B + \underbrace{c_N^T \overline{x}_N}_{=0} \\
 & = c_B^T B^{-1}b
 \end{align*}
 $$
-dobbiamo capire se $\overline{x}$ è soluzione ottima.
-Dobbiamo confrontare $\overline{x}$ con un qualsiasi altro punto ammissibile.
+### Espressione della funzione obbiettivo e costi ridotti
+Dobbiamo confrontare $\overline{x}$ con un qualsiasi altro punto ammissibile, per capire se $\bar{x}$ è soluzione ottima.
 Conoscendo una base siamo in grado di generare qualunque punto dello spazio vettoriale, in particolare qualsiasi punto in grado di soddisfare il sistema di equazioni.
 $$
-\overline{x} = \binom{B^{-1}}{0}
+\overline{x} = \binom{B^{-1} b}{0} \geq \binom{0}{0}
 $$
+Consideriamo il sistema di equazioni
 $$
-\begin{align*}
-Ax & = b (B \quad N) \binom{x_B}{x_N} \\
-& = B x_B + N x_N = b \\
-& = Bx_B = b- Nx_N \\
-& = x_B = B^{-1}b -B^{-1}N x_N
-\end{align*}
+\displaylines{
+Ax  = b \\
+(B \quad N) \binom{x_B}{x_N} = b \\
+B x_B + N x_N = b \\
+Bx_B = b- Nx_N \\
+x_B = B^{-1}b -B^{-1}N x_N
+}
 $$
 qualunque soluzione del sistema lineare associata alla stessa base
 $$
 x = \binom{B^{-1}b-B^{-1}Nx_N}{x_N}
 $$
-quando $x_N = \vec{0}$ allora otteniamo una nuoa base.
-$x_N$ sotto il nostro controllo
-Mettendo invece almeno una componente di $x_N$ non nulla otteniamo un nuovo vettore dello spazio vettoriale e tipicamente questa componente la poniamo $>0$, anche se non assicura di avere $x_B > 0$ e quindi ammissibile.
-Stiamo prendendo una qualsiasi soluzione e ne stiamo calcolando il valore della funzione obbiettivo
+Determiniamo l’espressione della funzione obiettivo per $x$ sostituendo $x_B$ calcolata:
 $$
 \begin{align*}
 c^T \overline{x} & = (c_B^T  c_N^T) \binom{x_B}{x_N} = (c_B^T c_N^T)\binom{B^{-1}b-B^{-1}Nx_N}{x_N} \\
@@ -930,41 +941,79 @@ c^Tx& = c_B^T (B^{-1}b - B^{-1} N x_N) + c_N^T x_N \\
 c^Tx& = c_B^T B^{-1}b -c_B^T B^{-1} N x_N + c_N^T x_N \\
 \end{align*}
 $$
-sapendo che il valore di funzione obbiettivo nel punto fornito
+Se $x\neq 0$ si hanno $n − m$ gradi di libertà per ricavare nuove basi. In particolare, modificare $x_N$ modifica anche il valore di $x_B$ non garantendo l’ammissibilità della soluzione.
+Sapendo che la funzione obiettivo nel punto fornito vale:
 $$
-c^T \overline{x} = c_B^T B^{-1} b
+\hat{c}_N^T := c_N^T - c_B^T B^{-1}N
 $$
-possiamo sostituirlo nell'equazione della nuova $c^Tx$ e raggruppiamo rispetto a $x_N$ (il cui ordine è importante, è una colonna)
+dove $\hat{c}_N^T$ prende il nome di **vettore dei coefficienti di costo ridotto delle variabili fuori base**.
+Riscriviamo l’equazione precedente e raggruppiamo rispetto a $x_N$ (**hp**. contiene valori positivi):
 $$
-\begin{align*}
-c^Tx = c^T \overline{x} + \overbrace{(c_N^T-c_B^TB^{-1}N)}^{\hat{c}_N^T} x_N
-\end{align*}
+c^Tx = c^T \overline{x} + \overbrace{(c_N^T-c_B^TB^{-1}N)}^{\hat{c}_N^T} x_N \hspace{8ex} \forall x \in \Omega(P)
 $$
-dove $\hat{c}_N^T$ prende il nome di **vettore dei coefficienti di costo ridotto delle variabili fuori base**
+ottenendo l’espressione della funzione obiettivo del problema $(P)$ come funzione delle sole
+variabili $x_N \in \mathbb{R}^{n-m}$
+Ponendo quindi
 $$
-c^T x - c^T \overline{ x} = \hat{c}_N^Tx_N
+c^Tx - c^T \bar{x} = \hat{c}_N^T x_N
 $$
-stiamo confrontando la funzione obbiettivo nel punto che ci è stato dato con la funzione obbiettivo in un qualsiasi altro punto che soddisfa il sistema di equazioni.
-Questo confronto non dipende più dalle variabili di base, ma solo da quelle fuori base.
-Se genero una qualsiasi soluzione il mio studio si può concentrare sulle variabili $x_N$ e sul vettore dei coefficienti (che è noto).
+è possibile ricavare **condizione sufficiente di ottimalità**
 
->[!info] Teorema: condizione sufficiente di ottimalità
+>[!quote] In parole umane
+>Stiamo confrontando la funzione obbiettivo nel punto che ci è stato dato con la funzione obbiettivo in un qualsiasi altro punto che soddisfa il sistema di equazioni.
+>Questo confronto non dipende più dalle variabili di base, ma solo da quelle fuori base.
+>Se genero una qualsiasi soluzione il mio studio si può concentrare sulle variabili $x_N$ e sul vettore dei coefficienti (che è noto).
 
-Hp : $\hat{c}_N \geq 0$ (questo garantisce l'ammissibilità)
-se $x_N$ è tutto nullo otteniamo $\overline{x}$
-$$\implies c^Tx - c^T\overline{x} \geq 0 \implies c^Tx \geq c^T \overline{x} \quad \forall x \in \Omega(P)$$
-che non è altro che la definizione di ottimo
+### Condizione sufficiente di ottimalità
+Osserviamo che per $x_N = 0$ si ha $c^Tx = c^T \bar{x} = \bar{z}$. Per ogni altro punto ammissibile $x \in \Omega(P)$ dovrà valere
+$x_N \geq 0$ ($x_N \neq 0$). Pertanto:
+$$
+\text{(Hp): } \underbrace{\hat{c}_N \ge 0}_{\text{garantisce ammissibilità}} \;\Rightarrow\; \hat{c}_N^\top x_N \ge 0 \;\Rightarrow\; \underbrace{c^Tx \geq c^T \overline{x}}_{\text{def. di ottimo}} \qquad \forall x \in \Omega(P)
+$$
+>[!info] Teorema
+>Data una base ammissibile $B$ della matrice $A$ del problema $(P)$ in forma standard, se il vettore dei costi ridotti è non negativo
+>$$
+>\hat{c}_N^T = c_N^T - c_B^T B^{-1}N \geq 0
+>$$
+>allora la soluzione di base ammissibile associata alla base $B$ è ottima per $(P)$
 
-piccolo corollario
-se sono tutti strettamente $> 0$
-diventano tutti strettamente $> 0$
-quindi qualunque altra soluzione ha valore strettamente maggiore della corrente: quella soluzione ottima è unica
-condizione sufficiente per condizione ottima unica.
+>[!info] Corollario
+>Data una base ammissibile $B$ della matrice $A$ del problema $(P)$ in forma standard
+>$$
+>\begin{align*}
+>\text{se} \ \hat{c}_N > 0 \implies & c^\top x - c^\top \bar{x} > 0 \\
+> & c^\top x \underbrace{>}_{\exists!} c^\top \bar{x} \qquad \forall x \in \Omega(P)
+>\end{align*}
+>$$
+>Allora la soluzione di base ammissibile associata alla base $B$ è l'**unica** soluzione ottima per $(P)$.
 
-[...] sono bruciato fai slide approfondimento
-
-
-*es.*
+### Approfondimenti
+Fornita una base riusciamo a descrivere qualunque soluzione ammissibile del problema. Infatti, trasformando la funzione obiettivo originale del problema $(P)$
+$$
+z(x) = c^T x :\mathbb{R}^n \to \mathbb{R}
+$$
+nella funzione ridotta alla sola dipendenza delle variabili fuori base ($n-m$ variabili decisionali) definita come:
+$$
+\hat{z}(x_N) = \bar{z} + \hat{c}_N^Tx_N: \mathbb{R}^{n-m} \to \mathbb{R}
+$$
+Per effetto di tale trasformazione la funzione obbiettivo (dipende solo dalle variabili fuori base)
+($\mathbb{R}^n \to \mathbb{R}^{n-m}$), il problema originale
+$$
+(P) \begin{cases}
+\min & z(x)  \\
+\text{s.t.} & x \in \Omega(P)
+\end{cases}
+$$
+diventa il seguente **problema ridotto**
+$$
+(\hat{P}) \begin{cases}
+\min & \hat{z}(x_N) = \bar{z} + \hat{c}_N^T x_N \\
+\text{s.t.} & B^{-1}b - B^{-1} Nx_N \geq 0 \\
+& x_N \geq 0
+\end{cases}
+$$
+equivalente a $(P)$ a patto di conoscere la base.
+#### Esercizio 4
 $$
 A = \left(\begin{array}{cccccc}
 1 & 2 & 3 & 1 & 0 & 0 \\
@@ -1012,15 +1061,24 @@ $$
 \hat{c}_N^T = C_N^T - c_B^T B^{-1} N = \left( \frac{10}{3}, \frac{1}{3}, \frac{7}{3} \right)^T
 $$
 è ottima ed è unica (sono tutti maggiori di 0)
-
 ## Cambio della soluzione di base ammissibile
-Nel caso in cui il test non va a buon fine
-[...] non ho capito
+Se non è soddisfatta la [[#Condizione sufficiente di ottimalità|condizione sufficiente di ottimalità]] di una soluzione, allora è possibile effettuare delle operazioni di **cambio di base**.
+Sia $\bar{x}$ una soluzione ammissibile di base per $(P)$:
+$$
+\bar{x} = \binom{B^{-1}b}{0} \geq \binom{0}{0}
+$$
+Possiamo esprimere il problema $(P)$ come **forma canonica** rispetto a $B$
+$$
+\begin{cases}
+\min & 0^T x_B + \hat{c}_N^T x_N \\
+\text{s.t.} & I \cdot x_B + B^{-1}Nx_N = B^{-1}b \leftarrow \text{modo }\neq\text{ di scrivere }Ax = b \\
+& x_B, x_N \geq 0
+\end{cases}
+$$
+Si noti che i vincoli sul segno garantiscono l'ammissibilità della soluzione di base, tuttavia, in questo caso, l'ammissibilità non dipende solo da $x_N$ (variabili decisionali) poiché al suo variare cambia anche $x_B$.
 
-$$
-I x_B = B^{-1}b - B^{-1}Nx_N
-$$
-sto scrivendo tutte le possibili soluzioni del sistema al variare di $N$, sto riscrivendo $Ax = b$
+Nella minimizzazione del problema si possono eliminare le costanti $\implies$ elimino $\bar{z}$.
+
 
 
 

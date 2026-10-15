@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../../../../../../Downloads/RCAbehav.vhd" \
+"../../../../../../../../../Downloads/testRCAbehav.vhd" \
+
+# Do not sort compile order
+nosort

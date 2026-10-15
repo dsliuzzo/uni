@@ -349,3 +349,184 @@ I sistemi intermedi non necessitano di tutti i livelli di progettazione, ma per 
 mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
 Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
 La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
+
+
+
+
+
+
+
+
+
+---
+
+
+Accesso concorrente alle stazioni -> problema della collisione
+già accade per due stazioni -> per $n$ stazioni è solo peggio
+sovrapposizione dei segnali
+questo avviene su vari tipi di rete
+- wlan
+- broadcast
+
+nè la stazione A nè la stazione B può comunicare
+
+vogliamo mantenere un il protocollo semplice per limitare lo scambio di informazioni superflue che sarebbero utili solo al controllo e non allo scambio effettivo di informazioni.
+
+il data rate del mezzo di trasmissione è elevato (100 mbit/s $\uparrow$)
+# Protocollo Aloha
+## Aloha puro
+Anni 70-80
+I pacchetti possono essere trasmessi non appena vengono generati (arrivo dal livello superiore) -> Rischio collisione.
+Non presupponiamo di eliminare la collisione, ma la gestione
+ritrasmettiamo i pacchetti dopo un certo tempo (*es.* chiamata ad un amico occupato, lo richiamo dopo un po', tempo random)
+Perchè il tempo random è importante?
+protocolli di accesso di accesso al mezzo senza un gestore centrale ([...] guarda cla)
+
+la collisione c'è anche su parziale collisione
+>[!important] Intervallo di vulnerabilità
+>Intervallo $V$ entro cui una eventuale comunicazione aggiuntiva può determinare una collisione - può avvenire sia prima che dopo
+
+In questo caso 
+$$
+V = 2T
+$$
+Per $2T$ devo garantire non ci siano comunicazione di altri (mio inizio coincide con fine di un altro e mia fine non coincida con inizio di un altro).
+
+Se trasmetto e verifico che c'è collisione genero un nuovo tempo randomatico (in un range massimale) nel continuo (distribuzione uniforme). È difficile che esca lo stesso numero da due estrazioni diverse (su due stazioni diverse).
+Se ho collisione l'estensione del tempo raddoppia per aumentare la probabilità che le stazioni si distribuiscano.
+
+**Performance**
+Distribuzione di [[Modelli matematici#Modello di Poisson|Poisson]]
+Approssimazione della binomiale
+Ci permette di capire un certo numero $n$ di eventi che si verificano in un certo periodo di osservazione ipotizzando di conoscere la frequenza media.
+Conoscendo la frequenza media dei pacchetti $\lambda$ 
+$$
+P(x=n) = \frac{e^{-\lambda} \lambda^n}{n!}
+$$
+assenza di memoria e si presuppone che il processo sia aderente al modello -> assumiamo che i nodi non siano organizzati e non c'è influenza tra di loro -> indipendenza degli eventi.
+
+Traffico normalizzato (traffico complessivo osservabile sul canale dalla generazione complessiva delle stazioni):
+$$
+G = \lambda T \ [\text{Erlang}]
+$$
+$\lambda$ tasso medio di pacchetti inviati sul canale
+$T$ intervallo di osservazione
+
+Unità di misura Erlang - durata temporale di una chiamata rapportata ad 1 ora di chiamata
+Sapendo che un canale support un tot di Erlang posso capire di quanti canali ho bisogno per rispondere ad una certa domanda di occupazione del canale.
+
+Avendo $G$ possiamo calcolare la prob di avere $n$ pacchetti immessi sul canale dalle stazioni distribuite in un intervallo di tempo $T$
+$$
+P(n , T) = \frac{(\lambda T)^n e^{-\lambda T}}{n!} = \frac{G^n e^{-G}}{n!}
+$$
+Invece di $T$ mettiamo l'intervallo di vulnerabilità e io voglio $n = 0$ per evitare le collisioni
+Quindi nell'aloah
+$$
+P(n, 2T) = \frac{(2\lambda T)^n e^{-2\lambda T}}{n!} = \frac{2Ge^{-2G}}{n!}
+$$
+quindi
+$$
+P_r(0) = P_s = e^{-2G}
+$$
+$P_s$ probabilità di successo (avere 0 pacchetti)
+
+Se volessi calcolare quindi il numero medio di pacchetti trasmessi con successo $S$
+$$
+S = P_s \cdot G 
+$$
+$G$ pacchetti complessivi -> ma una parte collide, moltiplicandoci la probabilità di successo ottengo il numero di pacchetti che arriverà con successo in un determinato intervallo di tempo
+
+Performance $S$
+![[Reti di telecomunicazioni-1791993483435.webp|280]]
+
+finchè il carico è entro certi limiti aumentando il traffico aumentano i pacchetti che non hanno collisioni, ma all'aumentare la produttività si riduce e la maggior parte dei pacchetti avrà sollisione
+In questo modo possiamo stabilire fino a quando possiamo aumentare il traffico, dobbiamo stabilire quanto vale $S_{max}$ derivando $S$ rispetto a $G$
+troviamo il valore $G^*$ così da stabilire qual è il valore che mi stabilisce il throughput massimale (quantità di dati che non subiscono collisione)
+[...] ricontrolla questa formula
+$$
+\displaylines{
+\frac{dS}{dG} = e^{-2G}-2G e^{-2G} = 0 \\
+G_{max} = \frac{1}{2} \\
+\implies S_{max} = \frac{1}{2 e} = 0.18\dots
+}
+$$
+quindi il throughput massimo è il 18%
+
+## Aloha a slot
+Hp di ragionare nel discreto: le stazioni possono trasmettere solo in determinati istanti di tempo
+Per modellare l'uniforme divido l'intervallo $0-1$ in $n$ sotto intervalli che rappresentano i diversi slot disponibili
+Se viene selezionato lo stesso slot da due stazioni diverse viene allargata la finestra di contesa / di scelta dividendo in un numero maggiore di sotto intervalli.
+Si raddoppia un numero limitato di volte basato sul numero di stazioni.
+
+**backoff esponenziale**
+L'intervallo 
+$$
+[0, 2^{\min(k, \max)}]
+$$
+$\max$ è un valore massimo che dipende dal canale
+$k$ è il numero di collisioni che avviene su uno slot
+esponenziale in base 2 che si va a raddoppiare ad ogni collisione, fino ad un massimo prefissato.
+Se non si riesce comunque a trasmettere la connessione viene persa
+
+**Performance**
+Elimina il problema che la fine di un altr comunicazione si sovrappone all'inizio della successiva, quindi
+$$
+V = T
+$$
+l'intervallo di vulnerabilità è dimezzato.
+Quindi
+$$
+P(n,T) = \frac{G^n e^{-G}}{n!}
+$$
+quindi la probabilità di successo diventa
+$$
+P_s = P(0, T) = e^{-G}
+$$
+Andando a calcolare il throughput
+$$
+S = G e^{-G}
+$$
+![[Reti di telecomunicazioni-1791994600252.webp|413]]
+$$
+\displaylines{
+\frac{dS}{dG} = e^{-G}-Ge^{-G} = 0 \\
+G_{max} = 1 \\
+S_{max} = \frac{1}{e} = 0.36
+}
+$$
+L'aloha a slot raddoppia le performance
+La massima produttività è al 36%
+Possiamo aumentare il traffico.
+Protocolli distribuiti, semplici e che ritrasmettono in caso di collisione.
+Le collisioni vengono rilevate dai protocolli di livello 2
+# CSMA
+Negli anni viene applicato su bus bidirezionale full duplex
+Ascolto il canale e verifico se è libero - aiuta ma non funziona
+Esistono vari tipi di ascolto:
+- non persistente
+- p-persistente
+- persistente
+
+Il problema principale è il ritardo di propagazione
+$$
+t_{2}-t_{1} < \tau
+$$
+Intervallo di vulnerabilità 112-...
+
+## CSMA-CD
+Collision detection
+Eternet (cavi con doppini), mentre uno trasmette si può stare in ascolto sugli altri
+trasmissione e ricezione può avvenire nello stesso tempo
+Mentre immetto un frame ascolto, se percepisco un altro elemento mi fermo con la mia trasmissione
+riduco i tempi di occupazione inutile del canale
+ascolta prima di parlare e mentre parli
+Una volta che abbiamo rilevato la collisione siamo in parte in collisione, annulliamo la corrente comunicazione e inviamo una frequenza di jamming per avvisare tutte le altre stazioni.
+continua sulle slide
+anche qui backoff esponenziale
+guarda meglio tempi
+se il frame è troppo piccolo non ho nessun guadagno a interrompere l'immissione del frame all'interno del canale
+il protocollo stabilisce una dimensione minimale (132)
+si può inserire del padding o attendere ulteriormente per avere più dati da trasmettere
+
+## CSMA-CA
+Wi-fi
