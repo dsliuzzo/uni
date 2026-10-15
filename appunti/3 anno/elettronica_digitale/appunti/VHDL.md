@@ -154,8 +154,56 @@ entity FULLADD is
 	     CARRY     : out boolean);
 end FULLADD;
 ```
+
+### IEEE Standard logic
+I segnali possono avere più stati oltre a `'0'` e `'1'`. Lo standard **IEEE 1164** definisce `std_logic` con 9 valori:
+![[VHDL-1791986491548.webp|center|518]]
+Quando un segnale non viene inizializzato automaticamente a '0' (erroneamente), potremmo generare dei conflitti di assegnazione, che possono essere risolti con il tipo `std_logic` che può assumere i seguenti valori
+
+| Valore | Significato       |                                                                                                 |
+| ------ | ----------------- | ----------------------------------------------------------------------------------------------- |
+| `0`    | Force 0           | bit pari a 0                                                                                    |
+| `1`    | Force 1           | bit pari a 1                                                                                    |
+| `X`    | Unknown (forzato) | potrebbe succedere nell'intorno di $t=0$; se succede dopo è grave                               |
+| `L`    | Weak Low          | Potrebbe risultare tensione poso superiore a $0 \ V$ ideale, il circuito riconosce ugualmente 0 |
+| `H`    | Weak High         | Potrebbe risultare tensione poso inferiore a $5 \ V$ ideali, il circuito riconosce ugualmente 1 |
+| `W`    | Weak Unknown      | Stato logico non forzato a indefinito                                                           |
+| `Z`    | High Impedance    | Rappresenta il circuito aperto (che sia voluto o no)                                            |
+| `U`    | Uninitialized     | Inizio simulazione $t = 0$                                                                      |
+| `-`    | Don't Care        |                                                                                                 |
+
+```vhdl
+library IEEE;
+use IEEE.Std_Logic_1164.all;     -- rende visibile il package
+
+signal A, B, Z : std_logic;
+signal BUSA    : std_logic_vector(7 downto 0);   -- come bit_vector ma con 9 stati per digit
+signal BUSB    : std_ulogic_vector(7 downto 0);  -- versione senza risoluzione
+BUSA <= "ZZZZZZZZ";
+```
+
+- `std_logic` **ha la funzione di risoluzione** → permette più driver sullo stesso segnale (`std_ulogic` no)
+- definita in `std_logic_1164.vhd`
+
+**Tabella di risoluzione**
+Riga = segnale C, colonna = segnale B (due driver sullo stesso segnale).
+
+| **C \ B** | **U** | **X** | **0** | **1** | **Z** | **W** | **L** | **H** | **-** |
+| --------- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ----- |
+| **U**     | U     | U     | U     | U     | U     | U     | U     | U     | U     |
+| **X**     | U     | X     | X     | X     | X     | X     | X     | X     | X     |
+| **0**     | U     | X     | 0     | X     | 0     | 0     | 0     | 0     | X     |
+| **1**     | U     | X     | X     | 1     | 1     | 1     | 1     | 1     | X     |
+| **Z**     | U     | X     | 0     | 1     | Z     | W     | L     | H     | X     |
+| **W**     | U     | X     | 0     | 1     | W     | W     | W     | W     | X     |
+| **L**     | U     | X     | 0     | 1     | L     | W     | L     | W     | X     |
+| **H**     | U     | X     | 0     | 1     | H     | W     | W     | H     | X     |
+| **-**     | U     | X     | X     | X     | X     | X     | X     | X     | X     |
+
+- es. `0` e `1` in conflitto → `X`; `Z` cede sempre all'altro valore (utile per i bus tri-state)
+
 ## Modelli gerarchici e component
-VHDL permette la modellazione **gerarchica**: un modulo si assembla a partire da sottomoduli.
+VHDL permette la modellazione **gerarchica**: un modulo si assembla a partire da sotto moduli.
 
 ![[VHDL-1791038126249.webp|center|405]]
 Possiamo riutilizzare entity già definite:
@@ -649,7 +697,7 @@ end myCLA
 utilizzeremo il pacchetto vivado
 path senza spazi
 
-create a new project -> project name -> project type (RTL project) -> add sources (altri file) -> add constrains (impostazioni predefinite *es.* frequenza di funzionamento) -> default part (family: zynq 7000, chip: xc7z020cig400-3) -> finish
+create a new project -> project name -> project type (RTL project) -> add sources (altri file) -> add constrains (impostazioni predefinite *es.* frequenza di funzionamento) -> default part (family: zynq 7000, chip: xc7z020clg400-3) -> finish
 
 add sources -> add or create design sources -> create file (File name = nome della entity) -> finish
 
@@ -737,7 +785,7 @@ end Behavioral;
 Uso di librerie esterne
 ```vhdl
 library ieee;
-use ieee.numeric_bit.all;
+use ieee.numeric_bit.all; -- utile per il to_unsigned --
 -- generare tutte le possibili combinazioni degli operandi
 -- [...] --
 begin
@@ -785,3 +833,4 @@ begin
 	FAmsb: FA port map(a(3), b(3), c(4), c(5), s(4));
 end Struct;
 ```
+

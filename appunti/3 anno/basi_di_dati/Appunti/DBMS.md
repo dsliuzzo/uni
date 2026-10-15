@@ -549,3 +549,251 @@ Ma perdendo l'esclusività si perde anche negli indirizzi: posso avere più indi
 | **Metodo 1** | ✅            | ❌              | Solo padre    |
 | **Metodo 2** | ❌            | ❌              | ✅             |
 | **Metodo 3** | ✅            | ✅              | ❌             |
+
+
+
+
+
+
+
+---
+
+MySQL
+schema di data base -> spazio logico in cui manteniamo le tabelle
+creazione del database
+$$
+\displaylines{
+\text{Fornitore}(\underline{P.iva}, \overset{\text{UNIQUE}}{\text{nome}}, \text{città}) \\
+\text{Fornitura}(\underline{\text{fornitore, merce}}, \text{prezzo}) \\
+\text{Merce}(\underline{\text{cod}}, \text{nome}, \text{marca})
+}
+$$
+
+``` sql
+CREATE DATABASE MioDB;
+USE MioDB; -- se non lo utilizzassi dovrei usare MioDB come prefisso
+CREATE TABLE Fornitore AS (
+piva NUMBER(12) PRIMARY KEY, -- numero con 12 cifre
+nome VARCHAR2(16) UNIQUE, -- i tipi specifici dipendono dal dbms es. varchar2 è una ottimizzazione di varchar
+citta VARCHAR2(25)
+); -- premendo invio viene creata la tabella e viene creata una istanza di relazione
+```
+modo migliore per scrivere chiavi con più attributi
+``` sql
+CREATE TABLE Fornitore AS (
+piva NUMBER(12),
+nome VARCHAR2(16),
+citta VARCHAR2(25) NOT NULL,
+PRIMARY KEY(piva),
+UNIQUE(nome)
+);
+```
+si possono inserire anche i check.
+`NULL`/`NOT NULL` rende un attributo obbligatoria. Da predefinito dipende dal dbms
+
+``` sql
+CREATE TABLE Fornitura AS (
+fornitore NUMBER(12) REFERENCES Fornitore(piva), -- chiavi esterna - metodo 1
+merce NUMBER(6) REFERENCES Merce(cod),
+prezzo NUMBER(4,2), -- numeri decimali - numero di lunghezza 4 di cui 2 decimali
+PRIMARY KEY(fornitore, merce), -- qui lo abbiamo dovuto mettere per forza separato
+);
+```
+``` sql
+CREATE TABLE Fornitura AS (
+fornitore NUMBER(12),
+merce NUMBER(6),
+prezzo NUMBER(4,2),
+PRIMARY KEY(fornitore, merce),
+FOREIGN KEY fornitore REFERENCES Fornitore(piva) -- chiavi esterne - metodo 2
+FOREIGN KEY merce REFERENCES Merce(cod)
+);
+```
+
+inserimento tuple
+``` sql
+INSERT INTO Fornitore VALUES
+	('F1', 'A', 'CS'),
+	('F2', 'B', 'RC');
+```
+
+visualizzare tuple
+``` sql
+SELECT * FROM Fornitore; -- contenuto corrente della tabella fornitore
+```
+
+data una merce conoscere il fornitore che la fornisce al prezzo più basso la merce di nome x, informazione contenuta in più tabelle
+dobbiamo prima associare il nome al codice, poi posso scorrere le forniture per trovare il prezzo minimo
+**estrazione di informazioni rilevanti**
+non scriviamo esplicitamente iteratori e condizioni
+tesi di church - for e if sono in grado di risolvere tutti i problemi decidibili
+sql non rispetta questa tesi, non ha for, if o ricorsione, non è un linguaggio Turing completo e non è un linguaggio imperativo
+potrebbe essere necessario usare sql richiamato all'interno di un programma che usa un linguaggio imperativo
+
+**algebra relazionale**
+esistono plug in su MySQL che permettono di usare questo linguaggio
+
+>[!important] Interrogazione
+>Richiedere al DBMS un servizio
+
+- Interrogazione di definizione dei dati (creazione della tabella)
+- interrogazione di manipolazione dei dati (estrazione e congiunzione dei dati provenienti da diverse tabelle)
+
+
+
+
+
+**Tabella Fornitore**
+
+| piva | nome | citta |
+| ---- | ---- | ----- |
+| F1   | A    | CD    |
+| F2   | B    | RC    |
+| F3   | C    | CS    |
+**Tabella Merce**
+
+| cod | nome | marca    |
+| --- | ---- | -------- |
+| M1  | x    | $\alpha$ |
+| M2  | y    | $\beta$  |
+**Tabella Fornitura**
+
+| fornitore | merce | prezzo |
+| --------- | ----- | ------ |
+| F1        | M1    | 10     |
+| F1        | M2    | 5      |
+| F2        | M1    | 8      |
+
+
+
+*es.* estraiamo i dettagli dei fornitori che stanno a cs - operazione di selezione - tra tutte le righe della tabella restituisce solo quelle con una determinata proprietà
+$$
+\sigma_{\text{città = 'CS'} \vee (\text{nome} \neq \text{'A'} \wedge \text{cod} \neq \text{'A'})}(\text{Fornitore})
+$$
+
+| F1  | A   | CS  |
+| --- | --- | --- |
+| F3  | C   | CS  |
+
+$\sigma$ operatore di selezione
+argomento = Fornitore
+pedice = condizione che ogni tupla restituita deve rispettare
+la condizione tipicamente è booleana ed è espressa da una formula booleana che può essere più complessa eventualmente parentesizzata, sono comparazioni tra attributi e costanti
+filtraggio
+una tupla per volta e i confronti vengono fatti sui campi della tupla stessa
+L'argomento è una sola tabella -> la selezione è un operatore monadico
+viene valutata sull'istanza della relazione
+
+*es*. merci che si chiamano x o che sono prodotte dalla marca $\beta$
+$$
+\sigma_{\text{nome} = 'x' \vee \text{marca}='\beta'}(\text{Merce})
+$$
+
+il for e l'if in sql sono precablati
+
+il risultato di una selezione è un'altra tabella -> operatore rientrante, agisce su un dominio e restituisce qualcosa che appartiene allo stesso dominio, tabelle
+la tabella risultato ha la stessa struttura, stesso numero di colonne e stessi attributi
+Il numero di colonne di una tabella si chiama **arità**
+il numero di righe della nuova tabella $\subseteq$ dell'argomento
+la cardinalità del risultato $\leq$ della cardinalità dell'argomento
+
+
+filtrare le colonne
+non posso farlo con la selezione -> operatore **proiezione** -> prendere una tabella con un insieme di colonne e focalizzarsi solo su un insieme ristretto di colonne
+*es.* piva dei fornitori
+$$
+\Pi_{\text{piva}} (\text{Fornitore})
+$$
+
+| F1  |
+| --- |
+| F2  |
+| F3  |
+Posso anche avere più colonne
+$$
+\Pi_{\text{piva, città}} (\text{Fornitore})
+$$
+anche questo è un operatore monadico
+
+*es.* restituisce i nomi delle merci
+$$
+\Pi_{\text{nome}}(\text{Merce})
+$$
+restituisce l'insieme di tuple ottenuto per proiezione
+è rientrante
+cambia l'arità
+la cardinalità può variare: 
+$$
+\Pi_{\text{città}}(\text{Fornitore})
+$$
+
+| CS  |
+| --- |
+| RC  |
+è per definizione un insieme: non ammette duplicati
+anche la proiezione in un linguaggio normale sarebbe implementata con un for (senza if), ma fa anche il controllo se il valore è già presente nella tabella -> complessità computazionale maggiore ($n^2$)
+$$
+(n-1)+(n-2)+\dots+2+1 = \frac{n(n-1)}{2} = \Theta(n^2)
+$$
+nella selezione non c'è bisogno di questo controllo perché l'argomento era già una tabella e [...] spiega meglio che tanto hai capito
+
+essendo rientranti il risultato di una può essere usata come ingresso dell'altra
+*es.* nomi dei fornitori che stanno a cs
+$$
+\Pi_{\text{nome}} (\sigma_{\text{città = 'CS'}}(\text{Fornitore}))
+$$
+l'ordine è importante, se faccio prima la proiezione elimino l'attributo rilevante per la selezione
+[...] guarda cla
+
+*es.* conoscere i cod delle merci x prodotti da $\alpha$
+$$
+\Pi_{\text{cod}}[\sigma_{\text{nome='x'} \wedge \text{marca}='\alpha'}(\text{Merce})]
+$$
+*es.* codici dei fornitori che forniscono la merce M1
+$$
+\Pi_{\text{fornitore}}[\sigma_{\text{cod = 'M1'}}(\text{Fornitura})]
+$$
+
+
+spesso le informazioni di cui abbiamo bisogno non stanno su una unica tabella
+*es.* nomi dei fornitori che forniscono M1
+operatori che consentono di fare il merge di più tabelle
+operatore **join**
+per ottenere l'informazione necessaria ho bisogno di unire le informazioni che stanno in Fornitura e in Fornitore
+ottenendo una unica grande tabella
+le uniamo solo nel momento in cui facciamo la query
+$$
+\text{Fornitura} \underset{\text{fornitore = piva}}{\bowtie} \text{Fornitore}
+$$
+
+| F1  | M1  | 10  | F1  | A   | CS  |
+| --- | --- | --- | --- | --- | --- |
+| F1  | M2  | 5   | F1  | A   | CS  |
+| F2  | M1  | 8   | F2  | B   | RC  |
+
+tutte le coppie possibili fornitura-fornitore, ma abbiamo tenuto solo le coppie in cui vale la condizione
+ogni riga di fornitura la prolungo con tutte le righe che rispettano la condizione
+operatore binario
+per convenzione gli attributi di sinistra dell'uguaglianza appartengono alla tabella di sinistra e viceversa per quelle di destra.
+l'ordine non cambia il risultato
+prende in input due tabelle e ne restituisce una
+ora possiamo effettuare una proiezione sul risultato della join
+$$
+\Pi_{\text{nome}}\left[\sigma_{\text{cod = 'M1'}}\left(\text{Fornitura} \underset{\text{fornitore = piva}}{\bowtie} \text{Fornitore}\right)\right]
+$$
+
+d'ora in poi ogni attributo sia identificato dalla sua posizione per semplicità
+$$
+\Pi_{\$5}\left[\sigma_{\$2=\text{'M1'}}\left(\text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right)\right]
+$$
+per evitare formule troppo lunghe e omonimi usiamo gli attributi posizionali.
+
+
+
+*es.* per casa
+1. i dati delle forniture della merce M2
+2. le piva dei fornitori che forniscono qualcosa (è presente nella tabella fornitura)
+3. la marca delle merci di cod M2
+4. i nomi delle merci fornite da F1
+5. le città in cui è fornita la merce M2
+6. le coppie nome_merce - nome_fornitore t.c. il fornitore con quel nome fornisce la merce con quel nome (collegare 3 tabelle usa le parentesi per evitare ambiguità nella notazione posizionale)
