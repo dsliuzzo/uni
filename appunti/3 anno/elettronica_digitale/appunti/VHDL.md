@@ -804,7 +804,7 @@ begin
 end Behavioral;
 ```
 
-aggiungiamo un ulteriore FA4 er gestire il segno
+aggiungiamo un ulteriore FA4 per gestire il segno
 mandiamo `c(4)` a FA4 insieme a una copia dei bit più significativi.
 
 ``` vhdl
