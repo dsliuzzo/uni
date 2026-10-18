@@ -1,13 +1,10 @@
 #appunti 
 #fondamenti1
 ## Funzionamento hardware
-
 componente logica di una macchina realistica
 
 ## Programmazione
-
 #Algoritmo - coding programma
-
 ### #Hardware
 
 Tutto ciò che in un sistema informatico ha una consistenza
