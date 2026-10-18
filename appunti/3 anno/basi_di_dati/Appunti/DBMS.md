@@ -556,14 +556,19 @@ Ma perdendo l'esclusività si perde anche negli indirizzi: posso avere più indi
 
 # Implementazione 
 Una volta definito lo schema logico si passa all'**implementazione**: lo schema di relazione viene tradotto in istruzioni SQL (*DDL*, Data Definition Language) che creano la base di dati.
+
+>[!important] Interrogazione (query)
+>Richiedere al DBMS un servizio
+>- Interrogazione di **definizione** dei dati (creazione della tabella)
+>- interrogazione di **manipolazione** dei dati (estrazione e congiunzione dei dati provenienti da diverse tabelle)
 ## Sintassi
 ### Creazione del database
 
-> [!note] Creare e selezionare il database
-> ```sql
-> CREATE DATABASE MyDB;  -- spazio logico dello schema di DB
-> USE MyDB;              -- senza USE servirebbe il prefisso MyDB. in ogni istruzione
-> ```
+Creare e selezionare il database
+```sql
+CREATE DATABASE MyDB;  -- spazio logico dello schema di DB
+USE MyDB;              -- senza USE servirebbe il prefisso MyDB. in ogni istruzione
+```
 
 ### Creazione di una tabella
 
@@ -577,29 +582,29 @@ $$
 }
 $$
 
-> [!info] CREATE TABLE: vincoli sulla stessa riga
-> ```sql
-> -- DEFINIZIONE DELLO SCHEMA DI RELAZIONE
-> CREATE TABLE Fornitore (
->     piva  NUMBER(12) PRIMARY KEY,  -- numero con 12 cifre
->     nome  VARCHAR2(16) UNIQUE,     -- stringa di lunghezza variabile (max 16)
->     città VARCHAR2(25)
-> );
-> ```
-> Eseguendo l'istruzione (invio) si crea lo **schema**; la tabella nasce vuota, cioè con un'istanza di relazione senza tuple.
+CREATE TABLE: vincoli sulla stessa riga
+```sql
+-- DEFINIZIONE DELLO SCHEMA DI RELAZIONE
+CREATE TABLE Fornitore (
+    piva  NUMBER(12) PRIMARY KEY,  -- numero con 12 cifre
+    nome  VARCHAR2(16) UNIQUE,     -- stringa di lunghezza variabile (max 16)
+    città VARCHAR2(25)
+);
+```
+Eseguendo l'istruzione (invio) si crea lo **schema**; la tabella nasce vuota, cioè con un'istanza di relazione senza tuple.
 
 Una versione più *pulita* dichiara i vincoli dopo gli attributi, e indica `NOT NULL` accanto a quelli obbligatori:
 
-> [!info] CREATE TABLE: vincoli dichiarati alla fine
-> ```sql
-> CREATE TABLE Fornitore (
->     piva  NUMBER(12),
->     nome  VARCHAR2(16),
->     città VARCHAR2(25) NOT NULL,
->     PRIMARY KEY (piva),
->     UNIQUE (nome)
-> );
-> ```
+CREATE TABLE: vincoli dichiarati alla fine
+```sql
+CREATE TABLE Fornitore (
+    piva  NUMBER(12),
+    nome  VARCHAR2(16),
+    città VARCHAR2(25) NOT NULL,
+    PRIMARY KEY (piva),
+    UNIQUE (nome)
+);
+```
 
 > [!warning] Attenzione: NULL e nomi dei tipi
 > Se dopo un attributo non si specifica nulla, il fatto che possa essere `NULL` o meno **dipende dal DBMS**: bisogna consultarne la documentazione. Lo stesso vale per i nomi dei tipi (`NUMBER`, `VARCHAR2` sono di Oracle; in MySQL si usano ad esempio `INT`, `DECIMAL`, `VARCHAR`).
@@ -615,91 +620,71 @@ Una chiave esterna si può dichiarare in due modi:
 1. **(M1)** accanto all'attributo, con `REFERENCES`;
 2. **(M2)** a fine tabella, con `FOREIGN KEY`.
 
-> [!info] Modo 1: REFERENCES accanto all'attributo
-> ```sql
-> CREATE TABLE Fornitura (
->     fornitore NUMBER(12) REFERENCES Fornitore(piva),
->     merce     NUMBER(6)  REFERENCES Merce(codice),
->     prezzo    NUMBER(4,2),  -- 4 cifre in totale, di cui 2 decimali
->     PRIMARY KEY (fornitore, merce)
-> );
-> ```
+**Modo 1**: REFERENCES accanto all'attributo
+```sql
+CREATE TABLE Fornitura (
+    fornitore NUMBER(12) REFERENCES Fornitore(piva),
+    merce     NUMBER(6)  REFERENCES Merce(codice),
+    prezzo    NUMBER(4,2),  -- 4 cifre in totale, di cui 2 decimali
+    PRIMARY KEY (fornitore, merce)
+);
+```
 
-> [!info] Modo 2: FOREIGN KEY a fine tabella
-> ```sql
-> CREATE TABLE Fornitura (
->     fornitore NUMBER(12),
->     merce     NUMBER(6),
->     prezzo    NUMBER(4,2),
->     PRIMARY KEY (fornitore, merce),
->     FOREIGN KEY (fornitore) REFERENCES Fornitore(piva),
->     FOREIGN KEY (merce)     REFERENCES Merce(codice)
-> );
-> ```
+**Modo 2**: FOREIGN KEY a fine tabella
+```sql
+CREATE TABLE Fornitura (
+    fornitore NUMBER(12),
+    merce     NUMBER(6),
+    prezzo    NUMBER(4,2),
+    PRIMARY KEY (fornitore, merce),
+    FOREIGN KEY (fornitore) REFERENCES Fornitore(piva),
+    FOREIGN KEY (merce)     REFERENCES Merce(codice)
+);
+```
 
-> [!note] Osservazione
+> [!question] Osservazione
 > Le tabelle `Fornitore` e `Merce` devono essere create **prima** di `Fornitura`, perché la chiave esterna può riferirsi solo a una tabella già esistente. Con una chiave esterna **composta** (come `Merce_nome, Merce_marca`) si usa un'unica clausola `FOREIGN KEY (a, b) REFERENCES T(x, y)`, non una per attributo.
 
 ### Manipolazione dei dati
 
 Una volta create le tabelle è possibile interagirvi (*DML*, Data Manipulation Language):
 
-> [!info] INSERT e SELECT
-> ```sql
-> -- INSERIRE TUPLE
-> INSERT INTO Fornitore VALUES
->     (1, 'A', 'CS'),   -- elenco delle tuple
->     (2, 'B', 'RC');
->
-> -- VISUALIZZAZIONE DELLA TABELLA
-> SELECT * FROM Fornitore;  -- mostra il contenuto corrente della tabella
-> ```
-> Le tuple vengono inserite nell'ordine degli attributi dello schema. Il risultato di `SELECT` è l'**istanza di relazione** in quel momento.
-
-
-
----
-
-visualizzare tuple
-``` sql
-SELECT * FROM Fornitore; -- contenuto corrente della tabella fornitore
+INSERT e SELECT
+```sql
+-- INSERIRE TUPLE
+INSERT INTO Fornitore VALUES
+    (1, 'A', 'CS'),   -- elenco delle tuple
+    (2, 'B', 'RC');
+-- VISUALIZZAZIONE DELLA TABELLA
+SELECT * FROM Fornitore;  -- mostra il contenuto corrente della tabella
 ```
+Le tuple vengono inserite nell'ordine degli attributi dello schema. Il risultato di `SELECT` è l'**istanza di relazione** in quel momento.
 
-data una merce conoscere il fornitore che la fornisce al prezzo più basso la merce di nome x, informazione contenuta in più tabelle
-dobbiamo prima associare il nome al codice, poi posso scorrere le forniture per trovare il prezzo minimo
-**estrazione di informazioni rilevanti**
-non scriviamo esplicitamente iteratori e condizioni
-tesi di church - for e if sono in grado di risolvere tutti i problemi decidibili
-sql non rispetta questa tesi, non ha for, if o ricorsione, non è un linguaggio Turing completo e non è un linguaggio imperativo
-potrebbe essere necessario usare sql richiamato all'interno di un programma che usa un linguaggio imperativo
+## Algebre relazionale
+Fino ad ora abbiamo visto linguaggi che permettono di rappresentare un problema in termini di for e if, mentre SQL è un **linguaggio dichiarativo**: si descrive quale informazione estrarre, senza scrivere esplicitamente iteratori e condizioni, e per questo non è Turing completo; quando serve una logica più complessa, SQL va richiamato all’interno di un programma scritto in un linguaggio imperativo.
 
-**algebra relazionale**
-esistono plug in su MySQL che permettono di usare questo linguaggio
+Dato il cambio di paradigma per motivi didattici ha senso definire le query sql prima tramite algebra relazionale: un insieme di un insieme di operatori che, composti tra loro, descrivono passo per passo come ricavare un risultato da una o più relazioni.
 
->[!important] Interrogazione
->Richiedere al DBMS un servizio
+### Operatore di selezione
 
-- Interrogazione di definizione dei dati (creazione della tabella)
-- interrogazione di manipolazione dei dati (estrazione e congiunzione dei dati provenienti da diverse tabelle)
+Dati di esempio usati negli appunti:
 
+**Fornitore**
 
-
-
-
-**Tabella Fornitore**
-
-| piva | nome | citta |
+| piva | nome | città |
 | ---- | ---- | ----- |
-| F1   | A    | CD    |
+| F1   | A    | CS    |
 | F2   | B    | RC    |
 | F3   | C    | CS    |
-**Tabella Merce**
+
+**Merce**
 
 | cod | nome | marca    |
 | --- | ---- | -------- |
 | M1  | x    | $\alpha$ |
 | M2  | y    | $\beta$  |
-**Tabella Fornitura**
+
+**Fornitura**
 
 | fornitore | merce | prezzo |
 | --------- | ----- | ------ |
@@ -707,129 +692,161 @@ esistono plug in su MySQL che permettono di usare questo linguaggio
 | F1        | M2    | 5      |
 | F2        | M1    | 8      |
 
+>[!important] Selezione ($\sigma$)
+>Operatore che, data una tabella, restituisce solo le righe (tuple) che soddisfano una determinata condizione.
+>$$\sigma_{\text{condizione}}(\text{Tabella})$$
+>- **argomento**: una sola tabella, quindi è un operatore **monadico**
+>- **pedice**: la condizione che ogni tupla restituita deve rispettare
 
+La condizione è una formula booleana, anche complessa e parentesizzata, composta da confronti tra attributi e costanti. Il filtraggio avviene **una tupla per volta**, e i confronti riguardano solo i campi della tupla stessa. La selezione viene valutata sull'istanza della relazione.
 
-*es.* estraiamo i dettagli dei fornitori che stanno a cs - operazione di selezione - tra tutte le righe della tabella restituisce solo quelle con una determinata proprietà
+*Esempio:* dettagli dei fornitori che stanno a CS.
 $$
-\sigma_{\text{città = 'CS'} \vee (\text{nome} \neq \text{'A'} \wedge \text{cod} \neq \text{'A'})}(\text{Fornitore})
-$$
-
-| F1  | A   | CS  |
-| --- | --- | --- |
-| F3  | C   | CS  |
-
-$\sigma$ operatore di selezione
-argomento = Fornitore
-pedice = condizione che ogni tupla restituita deve rispettare
-la condizione tipicamente è booleana ed è espressa da una formula booleana che può essere più complessa eventualmente parentesizzata, sono comparazioni tra attributi e costanti
-filtraggio
-una tupla per volta e i confronti vengono fatti sui campi della tupla stessa
-L'argomento è una sola tabella -> la selezione è un operatore monadico
-viene valutata sull'istanza della relazione
-
-*es*. merci che si chiamano x o che sono prodotte dalla marca $\beta$
-$$
-\sigma_{\text{nome} = 'x' \vee \text{marca}='\beta'}(\text{Merce})
+\sigma_{\text{città = 'CS'}}(\text{Fornitore})
 $$
 
-il for e l'if in sql sono precablati
+| piva | nome | città |
+| ---- | ---- | ----- |
+| F1   | A    | CS    |
+| F3   | C    | CS    |
 
-il risultato di una selezione è un'altra tabella -> operatore rientrante, agisce su un dominio e restituisce qualcosa che appartiene allo stesso dominio, tabelle
-la tabella risultato ha la stessa struttura, stesso numero di colonne e stessi attributi
-Il numero di colonne di una tabella si chiama **arità**
-il numero di righe della nuova tabella $\subseteq$ dell'argomento
-la cardinalità del risultato $\leq$ della cardinalità dell'argomento
-
-
-filtrare le colonne
-non posso farlo con la selezione -> operatore **proiezione** -> prendere una tabella con un insieme di colonne e focalizzarsi solo su un insieme ristretto di colonne
-*es.* piva dei fornitori
+*Esempio:* merci che si chiamano x oppure sono prodotte dalla marca $\beta$.
 $$
-\Pi_{\text{piva}} (\text{Fornitore})
+\sigma_{\text{nome = 'x'} \,\vee\, \text{marca = '}\beta\text{'}}(\text{Merce})
 $$
 
-| F1  |
-| --- |
-| F2  |
-| F3  |
-Posso anche avere più colonne
-$$
-\Pi_{\text{piva, città}} (\text{Fornitore})
-$$
-anche questo è un operatore monadico
+| cod | nome | marca    |
+| --- | ---- | -------- |
+| M1  | x    | $\alpha$ |
+| M2  | y    | $\beta$  |
 
-*es.* restituisce i nomi delle merci
+#### Proprietà
+
+>[!important] Operatore rientrante
+>Un operatore è rientrante se agisce su un dominio e restituisce un elemento dello stesso dominio. Qui il dominio sono le tabelle: il risultato di una selezione è ancora una tabella.
+
+- La tabella risultato ha la **stessa struttura**: stessa arità e stessi attributi.
+- Le righe del risultato sono un sottoinsieme di quelle dell'argomento, quindi la cardinalità del risultato è $\leq$ quella dell'argomento.
+
+>[!important] Arità e cardinalità
+>- **Arità**: numero di colonne di una tabella
+>- **Cardinalità**: numero di righe di una tabella
+
+> In un linguaggio di programmazione tradizionale la selezione corrisponde a un `for` con un `if`; in SQL entrambi sono "precablati".
+### Operatore di proiezione
+La selezione filtra le righe, ma non permette di filtrare le **colonne**. Serve un altro operatore.
+
+>[!important] Proiezione ($\Pi$)
+>Operatore che, data una tabella, restituisce una nuova tabella contenente solo le colonne indicate.
+>$$\Pi_{\text{attributi}}(\text{Tabella})$$
+>Anche la proiezione è un operatore **monadico** e **rientrante**.
+
+*Esempio:* partita IVA dei fornitori.
+$$
+\Pi_{\text{piva}}(\text{Fornitore})
+$$
+
+| piva |
+| ---- |
+| F1   |
+| F2   |
+| F3   |
+
+È possibile proiettare più colonne:
+$$
+\Pi_{\text{piva, città}}(\text{Fornitore})
+$$
+
+*Esempio:* nomi delle merci.
 $$
 \Pi_{\text{nome}}(\text{Merce})
 $$
-restituisce l'insieme di tuple ottenuto per proiezione
-è rientrante
-cambia l'arità
-la cardinalità può variare: 
+
+#### Proprietà
+- **L'arità cambia**: diventa pari al numero di attributi proiettati.
+- **La cardinalità può variare**, perché il risultato è per definizione un insieme e non ammette duplicati.
+
 $$
 \Pi_{\text{città}}(\text{Fornitore})
 $$
 
-| CS  |
-| --- |
-| RC  |
-è per definizione un insieme: non ammette duplicati
-anche la proiezione in un linguaggio normale sarebbe implementata con un for (senza if), ma fa anche il controllo se il valore è già presente nella tabella -> complessità computazionale maggiore ($n^2$)
+| città |
+| ----- |
+| CS    |
+| RC    |
+
+#### Costo computazionale
+
+In un linguaggio tradizionale la proiezione sarebbe un `for` senza `if`, ma deve anche controllare se il valore è già presente nel risultato, per eliminare i duplicati. Questo la rende più costosa:
 $$
 (n-1)+(n-2)+\dots+2+1 = \frac{n(n-1)}{2} = \Theta(n^2)
 $$
-nella selezione non c'è bisogno di questo controllo perché l'argomento era già una tabella e [...] spiega meglio che tanto hai capito
+La selezione non ha bisogno di questo controllo: l'argomento è già un insieme, quindi un suo sottoinsieme non può contenere duplicati.
 
-essendo rientranti il risultato di una può essere usata come ingresso dell'altra
-*es.* nomi dei fornitori che stanno a cs
-$$
-\Pi_{\text{nome}} (\sigma_{\text{città = 'CS'}}(\text{Fornitore}))
-$$
-l'ordine è importante, se faccio prima la proiezione elimino l'attributo rilevante per la selezione
-[...] guarda cla
+#### Composizione di operatori
+Essendo rientranti, il risultato di un operatore può essere l'ingresso di un altro.
 
-*es.* conoscere i cod delle merci x prodotti da $\alpha$
+*Esempio:* nomi dei fornitori che stanno a CS.
 $$
-\Pi_{\text{cod}}[\sigma_{\text{nome='x'} \wedge \text{marca}='\alpha'}(\text{Merce})]
-$$
-*es.* codici dei fornitori che forniscono la merce M1
-$$
-\Pi_{\text{fornitore}}[\sigma_{\text{cod = 'M1'}}(\text{Fornitura})]
+\Pi_{\text{nome}}\left[\sigma_{\text{città = 'CS'}}(\text{Fornitore})\right]
 $$
 
+>[!warning] L'ordine conta
+>Se si proiettasse prima, si eliminerebbe l'attributo `città` necessario alla selezione.
 
-spesso le informazioni di cui abbiamo bisogno non stanno su una unica tabella
-*es.* nomi dei fornitori che forniscono M1
-operatori che consentono di fare il merge di più tabelle
-operatore **join**
-per ottenere l'informazione necessaria ho bisogno di unire le informazioni che stanno in Fornitura e in Fornitore
-ottenendo una unica grande tabella
-le uniamo solo nel momento in cui facciamo la query
+*Esempio:* codici delle merci di nome x prodotte da $\alpha$.
+$$
+\Pi_{\text{cod}}\left[\sigma_{\text{nome = 'x'} \,\wedge\, \text{marca = '}\alpha\text{'}}(\text{Merce})\right]
+$$
+
+*Esempio:* codici dei fornitori che forniscono la merce M1.
+$$
+\Pi_{\text{fornitore}}\left[\sigma_{\text{merce = 'M1'}}(\text{Fornitura})\right]
+$$
+### Operatore join
+Spesso l'informazione richiesta è distribuita su **più tabelle**. Ad esempio, per ottenere i *nomi dei fornitori che forniscono M1* servono sia `Fornitura` (chi fornisce cosa) sia `Fornitore` (il nome). Le tabelle vengono unite solo al momento dell'interrogazione.
+
+>[!important] Join ($\bowtie$)
+>Operatore **binario** che prende in input due tabelle e ne restituisce una, ottenuta prolungando ogni riga della prima con tutte le righe della seconda che rispettano la condizione di join.
+>$$T_1 \underset{\text{condizione}}{\bowtie} T_2$$
+
+Concettualmente si considerano tutte le coppie possibili di righe, e si tengono solo quelle per cui la condizione vale.
+
+*Esempio:*
 $$
 \text{Fornitura} \underset{\text{fornitore = piva}}{\bowtie} \text{Fornitore}
 $$
 
-| F1  | M1  | 10  | F1  | A   | CS  |
-| --- | --- | --- | --- | --- | --- |
-| F1  | M2  | 5   | F1  | A   | CS  |
-| F2  | M1  | 8   | F2  | B   | RC  |
+| fornitore | merce | prezzo | piva | nome | città |
+| --------- | ----- | ------ | ---- | ---- | ----- |
+| F1        | M1    | 10     | F1   | A    | CS    |
+| F1        | M2    | 5      | F1   | A    | CS    |
+| F2        | M1    | 8      | F2   | B    | RC    |
 
-tutte le coppie possibili fornitura-fornitore, ma abbiamo tenuto solo le coppie in cui vale la condizione
-ogni riga di fornitura la prolungo con tutte le righe che rispettano la condizione
-operatore binario
-per convenzione gli attributi di sinistra dell'uguaglianza appartengono alla tabella di sinistra e viceversa per quelle di destra.
-l'ordine non cambia il risultato
-prende in input due tabelle e ne restituisce una
-ora possiamo effettuare una proiezione sul risultato della join
+#### Proprietà
+- Per convenzione, nella condizione l'attributo a sinistra dell'uguaglianza appartiene alla tabella di sinistra, e viceversa.
+- L'ordine delle tabelle non cambia il risultato.
+- Il risultato è una tabella, quindi si può comporre con altri operatori.
+
+*Esempio:* nomi dei fornitori che forniscono M1.
 $$
-\Pi_{\text{nome}}\left[\sigma_{\text{cod = 'M1'}}\left(\text{Fornitura} \underset{\text{fornitore = piva}}{\bowtie} \text{Fornitore}\right)\right]
+\Pi_{\text{nome}}\left[\sigma_{\text{merce = 'M1'}}\left(\text{Fornitura} \underset{\text{fornitore = piva}}{\bowtie} \text{Fornitore}\right)\right]
 $$
 
-d'ora in poi ogni attributo sia identificato dalla sua posizione per semplicità
+| nome |
+| ---- |
+| A    |
+| B    |
+
+#### Notazione posizionale
+Per evitare formule troppo lunghe e attributi omonimi, d'ora in poi ogni attributo è identificato dalla **posizione** (`$1`, `$2`, ...). Nel risultato di una join le colonne della prima tabella vengono prima di quelle della seconda.
 $$
 \Pi_{\$5}\left[\sigma_{\$2=\text{'M1'}}\left(\text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right)\right]
 $$
-per evitare formule troppo lunghe e omonimi usiamo gli attributi posizionali.
+Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`), il secondo a `Fornitore` (`piva`).
+
+
+---
 
 
 

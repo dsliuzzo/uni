@@ -181,8 +181,12 @@ In base al mezzo e a degli studi su di essi possiamo decidere se implementare un
 ## Controllo del flusso e ritrasmissione (tecniche ARQ)
 È necessario regolamentare il flusso dei frame che deve essere inviato, evitando di sovraccaricare la scheda del ricevente.
 Per la valutazione dei protocolli è necessario definire i ritardi:
-- **ritardo di trasmissione**$$T (\text{sec}) = \frac{L(\text{bit})}{V_T (\text{bit/sec})}$$ funzione della lunghezza del frame $L$
-- **ritardo di propagazione**$$\tau (\text{sec})= \frac{d(\text{m})}{V_p (\text{m/sec})}$$funzione della lunghezza del canale $d$
+- **tempo di trasmissione**$$T (\text{sec}) = \frac{L(\text{bit})}{V_T (\text{bit/sec})}$$ funzione della lunghezza del frame $L$ e capacità del mezzo trasmissivo $V_T$
+- **tempo di propagazione**$$\tau (\text{sec})= \frac{d(\text{m})}{V_p (\text{m/sec})}$$funzione della lunghezza del canale $d$ e velocità della propagazione nel mezzo $V_p$ (es. wireless approssimiamo $V_p$ alla velocità della luce)
+- **tempo di elaborazione**
+  dipende dall'hardware della scheda di rete$$T_E$$
+- **tempo di accodamento**
+  [...]  [[Reti di telecomunicazioni#ritardo di accodamento]]
 
 Inoltre faremo uso del **diagramma di timing** che rappresenta su due linee del tempo i due sistemi:
 ![[Reti di telecomunicazioni-1791451492256.webp|center|662]]
@@ -228,7 +232,6 @@ $$t_{out} \geq 2 \tau + 2 T_{e} + T_r$$
 
 
 #### CRC
-[...]
 In ogni frame c'è un [[#Controllo degli errori|CRC]], codice generato applicando una funzione su header e payload che caratterizza il pattern di bit cercando di verificarne l'integrità.
 
 #### Efficienza (stop & wait)
@@ -480,6 +483,229 @@ Le trasmissioni vengono quindi suddivise in trame e ogni ad ogni stazione viene 
 Il MAC address della stazione destinazione viene indicato nel campo destinazione dell’header di trama. Quando una stazione riceve una trama verifica se il valore del campo destinazione della trama corrisponde ad un suo indirizzo. Solo in questo caso copia la trama ricevuta e la passa per ulteriori elaborazioni ai livelli superiori.
 ![[Modello ISO OSI-1791643795037.webp|center|500]]
 
+L'accesso concorrente delle stazioni al mezzo trasmissivo genera il problema della **collisione**, per questo è fondamentale utilizzare dei protocolli che gestiscano queste situazioni.
+![[Modello ISO OSI-1792316076558.webp|center|399]]
+In questo scenario abbiamo a disposizione un data rate del mezzo trasmissivo molto elevato (100 mbit/s $\uparrow$) e vogliamo mantenere un protocollo semplice per limitare lo scambio di informazioni superflue che sarebbero utili solo al controllo e non allo scambio effettivo di informazioni.
+### Protocollo Aloha
+In questo protocollo i pacchetti possono essere trasmessi non appena vengono generati (arrivano da un livello superiore), di conseguenza non presupponiamo di eliminare il rischio di collisione, ma di essere in grado di gestirlo.
+
+L'idea alla base dell'Aloha è ritrasmettere un pacchetto dopo un certo tempo **random** se viene rilevata una collisione (*es.* chiamata ad un amico occupato, lo richiamo dopo un po').
+
+>[!question] Perché è importante il tempo random
+>Perché se il tempo fosse fisso (o deterministico), le stazioni che collidono si comporterebbero **tutte allo stesso modo**.
+>![[Modello ISO OSI-1792316188627.webp|center|400]]
+>*es.*: A e B trasmettono insieme → collisione. Entrambe aspettano, diciamo, 5 ms. Dopo 5 ms ritrasmettono di nuovo insieme → nuova collisione. E così via, all'infinito: un livelock.
+>Con un'attesa casuale, A e B scelgono (con alta probabilità) istanti diversi, quindi una delle due trasmette per prima e il pacchetto passa senza collidere. La casualità serve a **rompere la simmetria** tra stazioni che non si coordinano tra loro (in Aloha non c'è carrier sensing né un controllore centrale).
+
+- Il range da cui si pesca il tempo va scelto con criterio: troppo piccolo → ancora molte collisioni ripetute, troppo grande → ritardi inutili.
+- Anche con tempo casuale la collisione non è esclusa, solo molto meno probabile a ogni tentativo.
+
+Per comprendere come viene gestita la collisione definiamo per prima cosa:
+>[!important] Intervallo di vulnerabilità
+>Intervallo $V$ entro cui una eventuale comunicazione aggiuntiva può determinare una collisione - può avvenire sia prima che dopo
+#### Aloha puro
+In questo caso l'intervallo di vulnerabilità è pari a
+$$
+V = 2T
+$$
+Vale a dire che per $2T$ devo garantire non ci siano comunicazione di altri (mio inizio coincide con fine di un altro e mia fine non coincida con inizio di un altro).
+![[Modello ISO OSI-1792316299341.webp|center|382]]
+Se trasmetto e verifico che c'è collisione genero un nuovo tempo randomatico (in un range massimale) nel continuo (distribuzione uniforme). È molto improbabile che due stazioni diverse generino lo stesso numero.
+
+**Performance**
+Per modellare matematicamente ciò che avviene nel protocollo Aloha pure possiamo utilizzare la distribuzione di [[Modelli matematici#Modello di Poisson|Poisson]], come approssimazione della binomiale: ci permette di capire **quante trasmissioni cadono in un dato intervallo**, ipotizzando di conoscere la frequenza media.
+Stiamo quindi ipotizzando che non ci sia organizzazione tra le varie stazioni e non c'è influenza tra di loro, garantendo così aderenza al modello matematico utilizzato (indipendenza degli eventi e assenza di memoria).
+
+In questo caso la frequenza media dell'arrivo dei pacchetto $\lambda$:
+$$
+P(\lambda=n) = \frac{\lambda^n}{n!} e^{-\lambda}
+$$
+Definiamo il **traffico normalizzato** (traffico osservabile sul canale dalla generazione complessiva delle stazioni):
+$$
+G = \lambda T \ [\text{Erlang}]
+$$
+$\lambda$ tasso medio di pacchetti inviati sul canale
+$T$ intervallo di osservazione
+$\text{Erlang}$ come unità di misura: durata temporale di occupazione del canale rapportata ad 1 ora.
+Sapendo che un canale support un tot di Erlang posso capire di quanti canali ho bisogno per rispondere ad una certa domanda di occupazione del canale.
+
+Avendo $G$ possiamo calcolare la probabilità di avere $n$ pacchetti immessi sul canale dalle stazioni distribuite in un intervallo di tempo $T$
+$$
+P(n , T) = \frac{(\lambda T)^n e^{-\lambda T}}{n!} = \frac{G^n e^{-G}}{n!}
+$$
+Per ottenere un modello di nostro interesse invece di usare un generico tempo $T$ usiamo l'intervallo di vulnerabilità ed $n=0$: vogliamo stabilire la probabilità che all'interno dell'intervallo di vulnerabilità ci siano $0$ pacchetti immessi nel canale
+$$
+P(n, 2T) = \frac{(2\lambda T)^n e^{-2\lambda T}}{n!} = \frac{2Ge^{-2G}}{n!}
+$$
+quindi
+$$
+P(0) = P_s = e^{-2G}
+$$
+$P_s$ probabilità di successo (avere 0 pacchetti).
+
+Se volessi calcolare quindi il **numero medio di pacchetti trasmessi con successo** $S$
+$$
+S = G \cdot P_s = G \cdot e^{-2G}
+$$
+Dove $G$ sono i pacchetti complessivi (di cui una parte collide) che viene moltiplicata per la probabilità di successo
+![[Modello ISO OSI-1792317600978.webp|center|420]]
+finché il carico è entro certi limiti aumentando il traffico aumentano i pacchetti che non hanno collisioni, ma all'aumentare, la produttività si riduce e la maggior parte dei pacchetti avrà collisione.
+
+In questo modo possiamo stabilire fino a quando possiamo aumentare il traffico, dobbiamo stabilire quanto vale $S_{max}$ derivando $S$ rispetto a $G$
+troviamo il valore $G^*$ così da stabilire qual è il valore che mi stabilisce il throughput massimale (quantità di dati che non subiscono collisione)
+$$
+\displaylines{
+\frac{dS}{dG} G \cdot e^{-2G}= e^{-2G}-2G e^{-2G} = 0 \\
+G_{max} = \frac{1}{2} \\
+\implies S_{max} = \frac{1}{2 e} = 0.1839
+}
+$$
+quindi il throughput massimo è il 18%.
+
+#### Aloha a slot
+Ragioniamo nel **discreto**: le stazioni possono trasmettere solo in istanti precisi, all'inizio di uno slot.
+
+**Scelta dello slot**
+- Per modellare la variabile uniforme divido l'intervallo $[0,1]$ in $n$ sotto-intervalli, ognuno corrisponde a uno slot disponibile.
+- Ogni stazione sceglie a caso uno slot tra gli $n$.
+- Se due stazioni scelgono lo **stesso slot** c'è collisione, e la **finestra di contesa** viene allargata: divido l'intervallo in più sotto-intervalli.
+- Il raddoppio avviene un numero **limitato** di volte, in base al numero di stazioni.
+
+**Durata degli slot**
+- L'ampiezza di uno slot è **sempre** pari al tempo di trasmissione di un pacchetto: $V = T$.
+- Quindi raddoppiare i sotto-intervalli **non rende gli slot più corti**: aumenta il numero di slot disponibili, cioè **allunga la finestra di contesa nel tempo**.
+
+![[Modello ISO OSI-1792318474122.webp|center|508]]
+
+>[!important] Backoff esponenziale
+>Dopo la $k$-esima collisione la stazione sceglie uno slot uniforme in
+>$$
+>\{0, 1, \dots, 2^{\min(k,\,\max)} - 1\}
+>$$
+>e aspetta quel numero di slot prima di ritrasmettere.
+>- $k$ = numero di collisioni subite dal pacchetto
+>- $\max$ = valore massimo dell'esponente, dipende dal canale
+>- la finestra **raddoppia** a ogni collisione fino al tetto $2^{\max}$
+>- se dopo il numero massimo di tentativi non si riesce a trasmettere, la trasmissione fallisce (la connessione viene persa)
+>
+>**Effetto:** più slot candidati $\implies$ meno probabilità che due stazioni scelgano lo stesso slot, ma ritardo medio maggiore.
+
+**Performance**
+Tramite questo piccolo cambiamento eliminiamo il problema di collisione per sovrapposizione trattato nell'[[#Aloha puro]], di conseguenza
+$$
+V = T
+$$
+l'intervallo di vulnerabilità è dimezzato.
+Rimangono comunque valide tutte le altre considerazioni fatte sull'aloha puro fatta eccezione per questa piccola differenza, quindi:
+$$
+P(n,T) = \frac{G^n e^{-G}}{n!}
+$$
+quindi la probabilità di successo diventa
+$$
+P_s = P(0, T) = e^{-G}
+$$
+Andando a calcolare il throughput
+$$
+S =G \cdot P_s = G e^{-G}
+$$
+![[Modello ISO OSI-1792318974122.webp|center|570]]
+
+$$
+\displaylines{
+\frac{dS}{dG} G \cdot e^{-G}= e^{-G}-Ge^{-G} = 0 \\
+G_{max} = 1 \\
+S_{max} = \frac{1}{e} = 0.36
+}
+$$
+L'aloha a slot raddoppia le performance
+La massima produttività è al 36%
+Possiamo aumentare il traffico.
+### Protocollo CSMA
+Il **CSMA** (Carrier Sensing Multiple Access) deriva direttamente dall'[[#Aloha puro]], con l'aggiunta di un feedback sull'occupazione del canale. Lo strumento che rivela l'occupazione del canale si chiama **carrier sensing** e dà il nome al protocollo. Viene applicato su topologia a **bus bidirezionale** (full duplex).
+
+> [!protocollo] CSMA: ascolta prima di trasmettere Procedura:
+> 
+> 1. la stazione che vuole emettere ascolta se il canale è occupato da una emissione precedente
+> 2. se il canale è libero (**idle**), la stazione emette
+> 3. se il canale è occupato (**busy**), la stazione ritarda l'emissione a un istante successivo
+
+Ascoltare il canale aiuta, ma **non basta**: il CSMA **non evita le collisioni**.
+
+>[!bug] Ritardo di propagazione
+>Il problema principale è il ritardo di propagazione A causa del ritardo di propagazione due nodi non possono sentirsi reciprocamente all'inizio della trasmissione. Tra due stazioni avviene una collisione se accedono al canale in istanti che distano tra loro meno del tempo di propagazione: $$ t_{2}-t_{1} < \tau $$ dove $t_1, t_2$ sono gli istanti in cui le stazioni (es. A e D) hanno verificato che il canale è libero e iniziano a trasmettere una trama.
+
+In caso di collisione il **tempo speso per trasmettere l'intero pacchetto è sprecato**: B e D continuano a trasmettere le loro trame interamente anche se c'è stata collisione. Conta quindi il ruolo della **distanza** e del ritardo di propagazione nel determinare la probabilità di collisione.
+
+>[!important] Intervallo di vulnerabilità
+>Nel CSMA è uguale a $2\tau$, dove $\tau$ è il ritardo di propagazione da estremo a estremo sul bus. $$ V = 2\tau $$ Viene detto anche **periodo cieco**.
+
+Diversamente dall'Aloha ($V = 2T$) qui l'intervallo di vulnerabilità **non dipende dalla durata della trasmissione**, ma solo dal ritardo di propagazione.
+
+- $\tau$ = tempo di propagazione con l'utente più lontano
+- $T$ = durata della trasmissione
+
+**Procedure di persistenza**
+Nel caso di canale occupato, l'istante successivo di emissione è determinato da una **procedura di persistenza**:
+
+- 1-persistente (persistente)
+- 0-persistente (non persistente)
+- p-persistente
+
+> [!multi-column]
+> 
+> > [!protocollo] 1-persistente
+> > Il terminale ascolta finché il canale è occupato e, appena torna libero, trasmette con probabilità $1$.
+> 
+> > [!protocollo] Non persistente (0-persistente)
+> > Se il canale è occupato il terminale ritarda l'emissione di un tempo random calcolato con l'algoritmo di subentro, poi riprova il canale (come se avesse colliso). Usato nelle wireless LAN.
+
+> [!protocollo] p-persistente
+> Il terminale attende che il canale torni libero, quindi:
+> 
+> - con probabilità $p$ emette
+> - con probabilità $1-p$ ritarda l'emissione di un tempo casuale (algoritmo di subentro) e riprova il canale
+
+**Prestazioni**
+Per le prestazioni si assume lo stesso modello dell'[[#Protocollo Aloha|Aloha]]:
+- $T$ tempo di trasmissione del pacchetto
+- $\tau$ tempo di propagazione
+- $a = \dfrac{\tau}{T}$
+
+Si assume inoltre la modalità **non persistente** (l'unica che consente di trattare facilmente il traffico sul canale). Si può mostrare che il throughput è $$ S = \frac{G e^{-aG}}{G(1+2a) + e^{-aG}} $$
+
+![[Modello ISO OSI-1792320159802.webp|center|533]]
+
+Più $a$ è piccolo (propagazione trascurabile rispetto alla trasmissione), più il CSMA si avvicina a $S = 1$ e supera nettamente Aloha e Aloha a slot.
+
+#### CSMA-CD
+**Collision Detection**: adotta la tecnica _"ascolta prima di parlare e mentre parli"_. Rispetto al CSMA migliora le prestazioni **riducendo la durata delle collisioni**.
+
+Nel CSMA le stazioni coinvolte in una collisione continuano a trasmettere la trama intera. Il tempo necessario perché se ne accorgano dipende dal tempo di propagazione (piccolo rispetto al tempo di trasmissione nelle LAN).
+
+> [!question] Perché continuare a trasmettere trame che hanno già colliso? Non ha senso: non appena una stazione si accorge della collisione **smette di trasmettere la trama**, riducendo i tempi di occupazione inutile del canale.
+
+È applicabile su **Ethernet** (cavi con doppini): mentre uno trasmette si può stare in ascolto sugli altri, quindi trasmissione e ricezione avvengono nello stesso tempo. Mentre immetto un frame ascolto il canale; se percepisco un altro segnale mi fermo.
+
+- carrier sensing come nel CSMA
+- le collisioni sono rilevate in breve tempo
+- le trasmissioni che hanno colliso sono abortite, riducendo lo spreco sul canale
+
+> [!important] Wired vs wireless
+> 
+> - **wired LAN**: collision detection facile, si misurano le intensità dei segnali e si confrontano i segnali trasmessi con quelli ricevuti
+> - **wireless LAN**: difficile, il ricevitore si disattiva mentre trasmette
+
+
+> [!protocollo] Cosa succede in caso di collisione
+> 
+> 1. la collisione viene **riconosciuta** (collision detection)
+> 2. la collisione viene **rinforzata** con una **sequenza di jamming**, per avvisare tutte le altre stazioni
+> 3. la comunicazione corrente viene annullata
+> 4. si riprova ad accedere dopo un intervallo di tempo casuale $\Delta T$
+> 
+> Per ridurre l'aumento di traffico dovuto alle ritrasmissioni, $\Delta T$ cresce **esponenzialmente** con il numero di collisioni consecutive: è il [[#Aloha a slot|backoff esponenziale]] già visto.
+#### CSMA-CA
+[...]
 # Livello rete (livello 3)
 Fornisce i mezzi funzionali e procedurali per lo scambio di informazioni tra entità di livello di trasporto.
 Fornisce i mezzi per instaurare, mantenere e abbattere le connessioni di rete tra entità di livello trasporto.
