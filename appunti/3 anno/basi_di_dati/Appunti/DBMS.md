@@ -811,6 +811,8 @@ Spesso l'informazione richiesta è distribuita su **più tabelle**. Ad esempio, 
 >Operatore **binario** che prende in input due tabelle e ne restituisce una, ottenuta prolungando ogni riga della prima con tutte le righe della seconda che rispettano la condizione di join.
 >$$T_1 \underset{\text{condizione}}{\bowtie} T_2$$
 
+Nel pedice di una join, $\$i = \$j$ indica l'$i$-esimo attributo dell'operando di **sinistra** e il $j$-esimo attributo dell'operando di **destra**. Nelle selezioni applicate a un prodotto cartesiano gli indici sono invece **assoluti** sulla tupla concatenata.
+
 Concettualmente si considerano tutte le coppie possibili di righe, e si tengono solo quelle per cui la condizione vale.
 
 *Esempio:*
@@ -848,73 +850,58 @@ $$
 $$
 Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`), il secondo a `Fornitore` (`piva`).
 ### Operatori insiemistici
-[...]
+L'algebra relazionale è un'estensione dell'algebra insiemistica, quindi possiamo usare anche gli operatori sugli insiemi: **prodotto cartesiano**, **unione**, **intersezione** e **sottrazione**. Poiché una tabella è un insieme di tuple, anche questi operatori sono **rientranti**: il risultato è ancora una tabella.
+#### Prodotto cartesiano
+> [!important] Prodotto cartesiano ($\times$) Operatore **binario** che, date due tabelle, restituisce tutte le possibili combinazioni di una tupla della prima con una tupla della seconda. $$T_1 \times T_2$$
 
+- la cardinalità del risultato è $m \cdot n$
+- l'arità del risultato è la somma delle arità: $m+n$
 
+_Esempio:_ coppie di nomi di fornitori. $$ \Pi_{$2, $5}(\text{Fornitore} \times \text{Fornitore}) $$
 
+> [!bug] Differenza con il prodotto cartesiano insiemistico Dati due insiemi $A$ e $P$, $A \times P$ contiene **coppie** (un elemento di $A$, un elemento di $P$). Nell'algebra relazionale invece il risultato è un insieme di **tuple** "piatte" (le due tuple vengono concatenate), non una coppia di tuple: altrimenti l'operatore non sarebbe rientrante.
 
+>[!question] Relazione con la join
+>La join deriva dal prodotto cartesiano: si considerano tutte le coppie di tuple e si mantengono solo quelle che soddisfano la condizione. $$ T_1 \underset{\text{cond}}{\bowtie} T_2 \quad \equiv \quad \sigma_{\text{cond}}(T_1 \times T_2) $$
 
+_Esempio:_ nomi dei fornitori e delle merci che forniscono, usando solo $\times$, $\sigma$ e $\Pi$. $$\Pi_{\$5, \$8} \left\{\sigma_{\$2 = \$7}\left\{\left[\sigma_{\$1 = \$4}\left( \text{Fornitura} \times \text{Fornitore} \right) \right] \times \text{Merce} \right\} \right\}$$
 
+- $\sigma_{\$1=\$4}$ tiene le coppie in cui `Fornitura.fornitore` coincide con `Fornitore.piva`
+- il secondo prodotto aggiunge `Merce` e $\sigma_{\$2=\$7}$ tiene le righe in cui `Fornitura.merce` coincide con `Merce.cod`
+- $\Pi_{\$5,\$8}$ estrae il nome del fornitore e il nome della merce
+#### Unione e intersezione
+> [!important] Compatibilità
+> L'unione ($\cup$) e l'intersezione ($\cap$) si possono applicare solo a relazioni con lo **stesso schema**, cioè **compatibili**.
 
----
+_Esempio:_ partita IVA dei fornitori che stanno a RC **oppure** che forniscono M2. $$ \Pi_{$1}\left[\sigma_{$3 = \text{'RC'}}(\text{Fornitore})\right] \cup \Pi_{$1}\left[\sigma_{$2 = \text{'M2'}}(\text{Fornitura})\right] $$
 
+|$$1$|
+|---|
+|F1|
+|F2|
 
+> [!warning] Nomi degli attributi
+> Alcuni interpreti potrebbero dare errore perché gli attributi, seppur semanticamente uguali, hanno nomi diversi ($\to$ operatore di **renaming**). Per convenzione useremo la notazione posizionale, senza renaming.
 
+- l'**unione** non è esprimibile tramite gli altri operatori dell'algebra relazionale
+- l'**intersezione** invece sì: $A \cap B = A - (A - B)$
 
-le tuple sono in memoria secondaria per garantire persistenza -> cambia il modello di costo degli algoritmi
+#### Sottrazione
+> [!important] Sottrazione ($-$)
+> Restituisce le tuple della prima relazione che **non** compaiono nella seconda. Anche qui le relazioni devono essere compatibili.
 
+*es.* partita IVA dei fornitori che non forniscono alcuna merce (non compaiono in Fornitura). $$ \Pi_{$1}(\text{Fornitore}) - \Pi_{$1}(\text{Fornitura}) $$
 
-l'operatore $\bowtie$ deriva dal $\times$ dell'algebra
-prendere ogni coppia da una tupla a sinistra e una a destra (prodotto cartesiano $\times$) e mantenere solo quelle che soddisfano una determinata proprietà
-Nell'algebra relazionale possiamo usare anche il prodotto cartesiano
+|$$1$|
+|---|
+|F3|
 
-*es.* 6
-$$
-\Pi_{\$5, \$8} \left\{\sigma_{\$2 = \$7}\left\{\left[\sigma_{\$1 = \$ 4}\left( \text{Fornitura} \times \text{Fornitore} \right) \right] \times \text{Merce} \right\} \right\}
-$$
+>[!question] Perché non si può riscrivere con la join
+>Un tentativo naturale è usare una join con condizione di disuguaglianza: $$ \Pi_{$1}\left[\text{Fornitore} \underset{$1 \neq $1}{\bowtie} \text{Fornitura}\right] \quad \textbf{(sbagliato)} $$ Restituisce F1, F2 **e** F3: ogni fornitore ha almeno una riga di `Fornitura` con partita IVA diversa dalla sua, quindi la condizione è soddisfatta quasi sempre.
 
-prendi tutte le coppie e preserva solo quelle in cui c'è concatenazione
-
-le join è equivalente alla selezione di un prodotto cartesiano
-$$
-\bowtie \quad \equiv \quad \sigma(\dots \ \times \ \dots)
-$$
-l'unica differenza con il prodotto cartesiano dell'algebra insiemistica
-dati $A$ e $P$ due insiemi
-$A \times P$ restituisce tutte le coppie composte da un elemento di $A$ e un elemento di $P$
-ciascun elemento dell'insieme risultante è una **coppia**
-invece nel prodotto cartesiano in algebra relazionale otteniamo un insieme di tuple (otteniamo un arancione ✨), non una coppia di tuple, altrimenti non sarebbe rientrante.
-
-coppie di nomi formate dai nomi di fornitore
-$$
-\Pi_{\$2, \$5}(\text{Fornitore} \times \text{Fornitore})
-$$
-l'algebra relazionale è una estensione dell'algebra insiemistica
-
-esistono quindi anche gli operatori di unione, intersezione e sottrazione
-anche queste sono rientranti -> posso effettuare l'unione di relazioni solo se hanno lo stesso schema di relazione
->[!important] I due operandi devono avere lo stesso schema, devono essere **compatibili**
-
-*es.* p.iva dei fornitori che forniscono RC o che forniscono M2
-$$
-\Pi_{\$1}[\sigma_{\ = 'RC'} (\text{Fornitore})] \cup  \Pi_{$1} [\sigma_{\$2 = 'M 2'}(\text{Fornitura})]
-$$
-alcuni interpreti potrebbero dare errore in quanto gli attributi (seppur semanticamente uguali) hanno nomi diversi $\to$ operatore renaming.
-Per convenzione li useremo senza.
-l'unione non è esprimibile tramite altri operatori dell'algebra relazionale (contrariamente all'intersezione).
-
-sottrazione
-*es.* p.iva dei fornitori che non sono in Fornitura (non forniscono alcuna merce)
-$$
-\Pi_{\$1}(\text{Fornitore}) - \Pi_{\$1}(\text{Fornitura})
-$$
-può essere riscritto con la join **non è vero**
-$$
-\Pi_{\$1}\left[\Pi_{\$1}(\text{Fornitore}) \underset{\$1 \neq \$1}{\bowtie} \Pi_{\$1}(\text{Fornitore})\right]
-$$
-sbagliatissimo a quanto pare non ci ho capito un cazzo
-
-join
-prolungo le tuple della prima relazione con le tuple della relazione quando esiste almeno una riga che fa matching (rispetta le condizioni)
-
-Il $-$ traduce una condizione universale $\forall$, mentre la join è solo un $\exists$
+> [!important] $\exists$ contro $\forall$
+> 
+> - la **join** prolunga una tupla della prima relazione quando **esiste almeno una** riga nella seconda che fa matching $\to$ condizione esistenziale $\exists$
+> - la **sottrazione** tiene una tupla quando **nessuna** riga della seconda coincide con essa $\to$ condizione universale $\forall$ (equivalente a $\neg\exists$)
+> 
+> Una join può solo verificare l'esistenza di una corrispondenza, mai la sua assenza: per questo $-$ è un operatore necessario.
