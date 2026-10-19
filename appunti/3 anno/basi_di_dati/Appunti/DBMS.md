@@ -897,7 +897,15 @@ _Esempio:_ partita IVA dei fornitori che stanno a RC **oppure** che forniscono M
 |F3|
 
 >[!question] Perché non si può riscrivere con la join
->Un tentativo naturale è usare una join con condizione di disuguaglianza: $$ \Pi_{$1}\left[\text{Fornitore} \underset{$1 \neq $1}{\bowtie} \text{Fornitura}\right] \quad \textbf{(sbagliato)} $$ Restituisce F1, F2 **e** F3: ogni fornitore ha almeno una riga di `Fornitura` con partita IVA diversa dalla sua, quindi la condizione è soddisfatta quasi sempre.
+>**NON** posso scrivere questa interrogazione con la join. Due tentativi tipici, *sbagliati*:
+>$$
+>\text{(a)} \quad \Pi_{\$1} \left[ \Pi_{\$1} (\text{Fornitore}) \underset{\$1 \neq \$1}{\bowtie} \Pi_{\$1} (\text{Fornitore}) \right]
+>$$
+>$$
+>\text{(b)} \quad \Pi_{\$1} \left[ \Pi_{\$1} (\text{Fornitore}) \underset{\$1 \neq \$1}{\bowtie} \Pi_{\$1} (\text{Fornitura}) \right]
+>$$
+>- **(a)**: prolunga ogni fornitore con tutti gli *altri fornitori* (quelli con P.IVA diversa): restituisce tutte le P.IVA, purché in Fornitore ci siano almeno due tuple. Non guarda mai Fornitura, quindi non può dire chi non fornisce merci.
+>- **(b)**: prolunga ogni fornitore con le forniture *di qualcun altro*, e lo conserva se *esiste almeno una* fornitura con P.IVA diversa dalla sua. Ma noi vogliamo che *tutte* le forniture abbiano P.IVA diversa dalla sua: $\exists s \,(s \neq t)$ non equivale a $\forall s \,(s \neq t)$.
 
 > [!important] $\exists$ contro $\forall$
 > 
