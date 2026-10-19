@@ -803,6 +803,7 @@ $$
 $$
 \Pi_{\text{fornitore}}\left[\sigma_{\text{merce = 'M1'}}(\text{Fornitura})\right]
 $$
+>[!important] Innestando le operazioni la complessità è una somma, non un prodotto
 ### Operatore join
 Spesso l'informazione richiesta è distribuita su **più tabelle**. Ad esempio, per ottenere i *nomi dei fornitori che forniscono M1* servono sia `Fornitura` (chi fornisce cosa) sia `Fornitore` (il nome). Le tabelle vengono unite solo al momento dell'interrogazione.
 
@@ -823,6 +824,8 @@ $$
 | F1        | M2    | 5      | F1   | A    | CS    |
 | F2        | M1    | 8      | F2   | B    | RC    |
 
+- il massimo numero di tuple che risultano da una join è $m \cdot n$
+- l'**arità** è $m+n$
 #### Proprietà
 - Per convenzione, nella condizione l'attributo a sinistra dell'uguaglianza appartiene alla tabella di sinistra, e viceversa.
 - L'ordine delle tabelle non cambia il risultato.
@@ -844,6 +847,8 @@ $$
 \Pi_{\$5}\left[\sigma_{\$2=\text{'M1'}}\left(\text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right)\right]
 $$
 Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`), il secondo a `Fornitore` (`piva`).
+### Operatori insiemistici
+[...]
 
 
 
@@ -854,52 +859,10 @@ Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`
 ---
 
 
->[!important] Innestando le operazioni la complessità è una somma, non un prodotto
+
 
 le tuple sono in memoria secondaria per garantire persistenza -> cambia il modello di costo degli algoritmi
 
-il massimo numero di tuple che risultano da una join è $m \cdot n$
-l'arità è $m+n$
-
-
----
-
-*es.* per casa
-1. i dati delle forniture della merce M2
-2. le piva dei fornitori che forniscono qualcosa (è presente nella tabella fornitura)
-3. la marca delle merci di cod M2
-4. i nomi delle merci fornite da F1
-5. le città in cui è fornita la merce M2
-6. le coppie nome_merce - nome_fornitore t.c. il fornitore con quel nome fornisce la merce con quel nome (collegare 3 tabelle usa le parentesi per evitare ambiguità nella notazione posizionale)
-
-fatti
-
-1. 
-$$
-\sigma_{\$2 = 'M2'}(\text{Fornitura})
-$$
-2. 
-$$
-\Pi_{\$1}(\text{Fornitura})
-$$
-3. 
-$$
-\Pi_{\$3}(\sigma_{\$1 = 'M 2'}(\text{Merce}))
-$$
-4. non è detto che le due notazioni abbiano costi differenti: ottimizzatore di query che analizza la query e trova il modo più efficiente di effettuare la query
-$$
-\Pi_{\$5} \left(\sigma_{\$1 = 'F1'} (\text{Forniture}) \underset{\$2 = \$1}{\bowtie} \text{Merce}\right) \quad \equiv \quad \Pi_{\$ 5} \left[\sigma_{\$1 = 'F1'} \left(\text{Forniture} \underset{\$2 = \$1}{\bowtie} \text{Merce}\right)\right] 
-$$
-5. 
-$$
-\Pi_{\$6} \left[\sigma_{\$ 2='M 2'}\left( \text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right)\right] \quad \equiv \quad \Pi_{\$6} \left[\sigma_{\$2='M 2'}\left( \text{Fornitura}\right) \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right]
-$$
-6. 
-$$
-\Pi_{\$5, \$8}\left[ \left( \text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]
-$$
-
----
 
 l'operatore $\bowtie$ deriva dal $\times$ dell'algebra
 prendere ogni coppia da una tupla a sinistra e una a destra (prodotto cartesiano $\times$) e mantenere solo quelle che soddisfano una determinata proprietà
@@ -942,3 +905,16 @@ l'unione non è esprimibile tramite altri operatori dell'algebra relazionale (co
 
 sottrazione
 *es.* p.iva dei fornitori che non sono in Fornitura (non forniscono alcuna merce)
+$$
+\Pi_{\$1}(\text{Fornitore}) - \Pi_{\$1}(\text{Fornitura})
+$$
+può essere riscritto con la join **non è vero**
+$$
+\Pi_{\$1}\left[\Pi_{\$1}(\text{Fornitore}) \underset{\$1 \neq \$1}{\bowtie} \Pi_{\$1}(\text{Fornitore})\right]
+$$
+sbagliatissimo a quanto pare non ci ho capito un cazzo
+
+join
+prolungo le tuple della prima relazione con le tuple della relazione quando esiste almeno una riga che fa matching (rispetta le condizioni)
+
+Il $-$ traduce una condizione universale $\forall$, mentre la join è solo un $\exists$
