@@ -2280,3 +2280,2809 @@ Per riutilizzare parti di pagina (header, menu, footer) esistono due modi:
 Finalità: riutilizzare contenuti JSP, HTML o testo normale e aggiornarli in un punto solo.
 
 > [!note] Direttiva o azione? Formalmente `<%@ include %>` è una **direttiva** (elaborata in traduzione), mentre `<jsp:include>` è una **azione standard** (elaborata a runtime). Le slide le raggruppano sotto "File Inclusion".
+> ## Esempi con scriptlet
+
+Gli scriptlet possono essere "spezzati": si apre un blocco Java, si chiude il tag, si scrive HTML, si riapre il tag per chiudere il blocco. L'HTML in mezzo diventa un `out.println()` **dentro** il blocco Java.
+
+### Loop.jsp
+
+```jsp
+<html>
+<head><title>Loop Example</title></head>
+<body>
+	<% for (int i = 0; i < 5; i++) { %>
+		Message.<br>
+	<% } %>
+</body>
+</html>
+```
+
+Equivale, nella servlet generata, a:
+
+```java
+for (int i = 0; i < 5; i++) {
+	out.println("Message.<br>");
+}
+```
+
+### Iteration.jsp
+
+```jsp
+<body>
+<%
+	String[] letters = new String[4];
+	letters[0] = "Alpha";
+	letters[1] = "Beta";
+	letters[2] = "Gamma";
+	letters[3] = "Delta";
+	for (int i = 0; i < letters.length; i++) { %>
+		letters[<%= i %>] = <%= letters[i] %><br>
+<%	} %>
+</body>
+```
+
+Scriptlet (dichiarazione + `for`) ed expression (`<%= i %>`) si alternano: l'expression stampa il valore corrente a ogni iterazione.
+
+### Names.jsp: JDBC dentro una JSP
+
+```jsp
+<%@ page import="java.sql.*" %>
+<html>
+<head><title>Names</title></head>
+<body>
+<OL>  <%-- lista numerata --%>
+<%
+	String driverName = "com.mysql.jdbc.Driver";
+	try { Class.forName(driverName); }
+	catch (Exception e) { out.println("Exception: " + e); }
+
+	String mysqlURL = "jdbc:mysql://localhost:3306/simpleschema";
+	String username = "root";
+	String password = "root";
+	java.sql.Connection c = null;
+	try {
+		c = DriverManager.getConnection(mysqlURL, username, password);
+		java.sql.Statement s = c.createStatement();
+		String query = "SELECT * FROM names";
+		java.sql.ResultSet rs = s.executeQuery(query);
+		while (rs.next()) { %>
+			<LI>Code: <%= rs.getInt(1) %>, name: <%= rs.getString(2) %></LI>
+<%		}
+		rs.close();
+		c.close();
+	} catch (Exception e) {
+		out.println("Exception: " + e);
+	}
+%>
+</OL>
+</body>
+</html>
+```
+
+> [!note] `Class.forName(...)` Serviva a caricare il driver JDBC a mano. Da JDBC 4.0 i driver nel classpath si registrano da soli, quindi la riga non è più necessaria (il nome attuale del driver MySQL è `com.mysql.cj.jdbc.Driver`).
+
+## Riflessioni: servlet o JSP, il problema resta
+
+Le tre funzionalità di un'applicazione web (vedi [[#Model-View-Controller (MVC)]]) sono: **logica applicativa** (controller), **dati** (model), **presentazione** (view).
+
+|Soluzione|Cosa dovrebbe fare|Cosa fa davvero|
+|---|---|---|
+|Servlet con JDBC (vedi [[#Servlet e JDBC]])|solo la **prima** funzionalità (controllo)|connessione al DB, query **e** HTML con `out.println("<li>...")`|
+|JSP con JDBC (`Names.jsp`)|solo la **terza** funzionalità (presentazione)|connessione al DB, query **e** HTML|
+
+> [!important] In entrambi i casi c'è un **mix di logica applicativa, dati e presentazione** nello stesso componente: cambia solo dove sta l'HTML (dentro stringhe Java o intorno al Java), ma la separazione delle responsabilità è violata allo stesso modo.
+
+## Migliorare l'esempio: Servlet + JSP
+
+**Miglioria**: la servlet legge i dati e li passa alla JSP con il `RequestDispatcher` (vedi [[#Dispatching]]). Il `RequestDispatcher` inoltra la request da una risorsa del server a un'altra (pagina HTML o JSP) **senza che il browser lo sappia**: l'URL non cambia.
+
+```java
+public class JDBCServletOne extends HttpServlet {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		List<String> userList = new ArrayList<>();
+		try {
+			Connection conn = DriverManager.getConnection(mysqlURL, username, password);
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT name FROM users");
+			while (rs.next()) {
+				userList.add(rs.getString("name"));
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (Exception e) { e.printStackTrace(); }
+
+		// Passa i dati alla JSP
+		req.setAttribute("userList", userList);
+		RequestDispatcher dispatcher = req.getRequestDispatcher("index.jsp");
+		dispatcher.forward(req, resp);
+	}
+}
+```
+
+`index.jsp` (ancora con scriptlet):
+
+```jsp
+<%@ page contentType="text/html; charset=UTF-8" %>
+<html>
+<body>
+<h2>Elenco utenti</h2>
+<ul>
+<%
+	java.util.List<String> users = (java.util.List<String>) request.getAttribute("userList");
+	if (users != null && !users.isEmpty()) {
+		for (String u : users) {
+			out.println("<li>" + u + "</li>");
+		}
+	} else {
+		out.println("<li>Nessun utente trovato</li>");
+	}
+%>
+</ul>
+</body>
+</html>
+```
+
+> [!success] Ci stiamo avvicinando alla filosofia MVC: abbiamo **eliminato l'HTML dalla servlet**. Sparisce il blocco `out.println("<html><body>...")` / `out.println("<li>Codice: " + ...)`.
+
+> [!attention] ...ma nella JSP mescoliamo ancora (un po' di) logica Java e presentazione HTML: cast, `if`, `for`, `out.println`. Servono altri strumenti: **EL** e **JSTL**.
+
+### Integrazione di Servlet e JSP
+
+JSP semplifica lo sviluppo e la manutenzione del contenuto HTML:
+
+- per codice dinamico **semplice** → richiamare codice servlet da espressioni di scripting
+- per casi **moderatamente complessi** → classi personalizzate richiamate da espressioni di scripting
+- per casi **più complessi** → **bean** e **tag personalizzati** (vedi [[#JavaBeans]])
+
+> [!important] Il presupposto alla base di JSP è che **una singola pagina fornisca un unico aspetto di base**. Se la stessa richiesta può dare risultati con aspetti molto diversi, la scelta va fatta altrove (nella servlet controller, che decide a quale JSP fare forward).
+
+## Expression Language (EL)
+
+> [!important] **EL** è un linguaggio di semplici espressioni `${...}` che permette di accedere in modo diretto e leggibile ai dati presenti negli **scope**, senza scrivere codice Java nella JSP. Gli scope sono cercati in quest'ordine: **page → request → session → application**.
+
+Esempio: una servlet imposta gli attributi `x` e `y` nella request e invoca la JSP.
+
+```jsp
+<%-- JSP senza EL --%>
+<html>
+<body>
+<%
+	Integer x = (Integer) request.getAttribute("x");
+	Integer y = (Integer) request.getAttribute("y");
+	int somma = x + y;
+	out.println("La somma è: " + somma);
+%>
+</body>
+</html>
+```
+
+```jsp
+<%-- JSP con EL --%>
+<html>
+<body>
+<p>La somma è: ${x + y}</p>
+</body>
+</html>
+```
+
+|Caratteristica|Scriptlet `<% ... %>`|Expression Language `${...}`|
+|---|---|---|
+|Contiene codice Java|sì|no|
+|Sicuro e leggibile|no|sì|
+|Accesso ai dati|manuale (`request.getAttribute()` + cast)|diretto (`${var}`)|
+|Uso|obsoleto|consigliato (JSTL, JSF, Spring)|
+
+> [!note] Come fa `${x}` a trovare `x`? EL cerca un attributo di nome `x` nei quattro scope, nell'ordine indicato, e usa il **primo** che trova. Se non lo trova restituisce `null`, che viene stampato come stringa vuota (niente `NullPointerException`).
+
+### Operatori EL
+
+|Categoria|Operatore|Significato|Esempio|Risultato|
+|---|---|---|---|---|
+|Aritmetici|`+` `-` `*` `/` `%`|somma, differenza, prodotto, divisione, resto|`${a + b}`|somma di a e b|
+|Relazionali|`==` `!=` `<` `>`|confronto|`${a == b}`|`true` se a = b|
+|Logici|`&&`|AND|`${a > 0 && b < 10}`|`true` se entrambe vere|
+||`\|`|OR|`${a > 0 \| b < 10}`|`true` se almeno una vera|
+||`!`|NOT|`${!empty userList}`|`true` se la lista **non** è vuota|
+|Speciali|`empty`|null o vuota|`${empty userList}`|`true` se null/vuota (lista, array, stringa, mappa)|
+||`not`|negazione|`${not empty userList}`|`true` se non è null/vuota|
+||`.`|accesso a proprietà|`${user.name}`|chiama `getName()` su `user`|
+||`[]`|accesso a lista/mappa/array|`${users[0].name}`|nome del primo elemento di `users`|
+
+> [!note] Correzioni rispetto alle slide Nella tabella delle slide la riga di `!` dice "true se userList è null o vuota" per `${!empty userList}`: è il contrario, `!empty` è `true` quando la lista **contiene** elementi. La riga dell'OR è vuota (il simbolo `||` non è stato stampato): qui è completata.
+
+Esistono anche le forme testuali degli operatori: `eq`, `ne`, `lt`, `gt`, `le`, `ge`, `and`, `or`, `not`, `div`, `mod`.
+
+> [!important] Limite di EL EL accede ai dati (oggetti, attributi, variabili) e valuta semplici espressioni, ma **non** ha strutture di controllo: niente `if`, `for`, ecc.
+> 
+> ```jsp
+> <p>Benvenuto ${utente.nome}</p>
+> ```
+> 
+> E se mi servono strutture di controllo? → **JSTL**.
+
+## JSTL (JSP Standard Tag Library)
+
+> [!important] **JSTL** è una libreria standard di tag JSP (etichette XML-like) che fornisce in modo **dichiarativo** le funzionalità comuni (condizioni, cicli, formattazione...), al posto degli scriptlet.
+
+```jsp
+<c:if test="${utente != null}">
+	<p>Ciao ${utente.nome}!</p>
+</c:if>
+```
+
+|Libreria|Prefisso|Funzione|
+|---|---|---|
+|Core|`c`|strutture di controllo e gestione delle variabili|
+|Formatting|`fmt`|formattazione dei dati e internazionalizzazione (i18n)|
+|SQL|`sql`|accesso diretto al database dalla JSP (**sconsigliato**)|
+|XML|`x`|manipolazione di documenti XML|
+|Functions|`fn`|funzioni su stringhe e collezioni, usabili dentro EL|
+
+> [!question] Perché i tag SQL sono sconsigliati? Riportano l'accesso al database nella View: è esattamente il problema di `Names.jsp`, solo scritto con i tag invece che con gli scriptlet.
+
+### Panoramica dei tag
+
+|Core|Funzione|
+|---|---|
+|`<c:if>`|struttura di selezione|
+|`<c:choose>`|struttura simile a `switch`|
+|`<c:when>`|caso di `choose`|
+|`<c:otherwise>`|caso di default|
+|`<c:forEach>`|ciclo su collezioni o intervalli|
+|`<c:set>`|assegna un valore a una variabile|
+|`<c:remove>`|rimuove una variabile|
+|`<c:out>`|stampa output|
+|`<c:redirect>`|redirect verso un'altra pagina|
+|`<c:url>`|costruisce URL|
+
+|Formatting|Funzione|
+|---|---|
+|`<fmt:formatNumber>`|formatta numeri|
+|`<fmt:formatDate>`|formatta date|
+|`<fmt:parseDate>`|converte stringhe in date|
+|`<fmt:parseNumber>`|converte stringhe in numeri|
+|`<fmt:setLocale>`|imposta la lingua|
+|`<fmt:setBundle>`|usa un file di traduzione|
+
+|XML|Funzione|
+|---|---|
+|`<x:parse>`|carica un documento XML|
+|`<x:out>`|stampa dati XML|
+|`<x:forEach>`|itera sui nodi|
+|`<x:if>`|condizione su nodi XML|
+
+### Risultato: JSP finale
+
+La `index.jsp` di prima, **eliminando completamente gli scriptlet** e usando EL e JSTL:
+
+```jsp
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<body>
+<h2>Elenco utenti</h2>
+<ul>
+	<c:forEach var="u" items="${userList}" varStatus="status">
+		<li>${u}</li>
+	</c:forEach>
+
+	<c:if test="${empty userList}">
+		<li>Nessun utente trovato</li>
+	</c:if>
+</ul>
+</body>
+</html>
+```
+
+> [!success] Codice più pulito, leggibile, con separazione tra logica e presentazione: niente cast, niente `request.getAttribute()`, niente `out.println()`.
+
+> [!note] La direttiva `taglib` Nell'immagine delle slide la direttiva non compare, ma serve sempre per usare il prefisso `c`. Con Jakarta EE 10+ (JSTL 3.0) l'URI consigliato è `jakarta.tags.core` (e `jakarta.tags.functions`, ...) invece di `http://java.sun.com/jsp/jstl/core`.
+
+### Core tags
+
+```jsp
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+```
+
+|#|Tag|Descrizione|
+|---|---|---|
+|1|`<c:out>`|come `<%= ... %>`, ma per espressioni EL|
+|2|`<c:set>`|salva il risultato di un'espressione in uno **scope**|
+|3|`<c:remove>`|rimuove una variabile di scope (da uno scope specifico, se indicato)|
+|4|`<c:catch>`|cattura qualsiasi `Throwable` lanciato nel suo corpo e, opzionalmente, lo espone|
+|5|`<c:if>`|valuta il corpo solo se la condizione è vera|
+|6|`<c:choose>`|contesto per condizioni mutuamente esclusive, con `<c:when>` e `<c:otherwise>`|
+|7|`<c:when>`|sotto-tag di `choose`: include il corpo se la condizione è `true`|
+|8|`<c:otherwise>`|sotto-tag di `choose` dopo i `when`: eseguito solo se tutte le condizioni precedenti sono `false`|
+|9|`<c:import>`|recupera un URL assoluto o relativo e ne espone il contenuto (nella pagina, in una `String` con `var` o in un `Reader` con `varReader`)|
+|10|`<c:forEach>`|il tag di iterazione di base: accetta molti tipi di collezioni|
+|11|`<c:forTokens>`|itera sui token di una stringa, separati dai delimitatori indicati|
+|12|`<c:param>`|aggiunge un parametro all'URL di un `import`/`url`|
+|13|`<c:redirect>`|redirect a un nuovo URL|
+|14|`<c:url>`|crea un URL con eventuali parametri di query|
+
+#### `<c:out>`
+
+Mostra il risultato di un'espressione, quasi come `<%= %>`, ma permette la notazione `.` per accedere alle proprietà: per `customer.address.street` si scrive
+
+```jsp
+<c:out value="${customer.address.street}"/>
+```
+
+> [!attention] Correzione rispetto alle slide Nelle slide c'è `value="customer.address.street"` senza `${}`: così verrebbe stampata la **stringa letterale**. L'espressione va racchiusa in `${...}`.
+
+> [!note] Perché usare `<c:out>` se basta `${...}`? Di default `<c:out>` fa l'**escape** dei caratteri HTML (`escapeXml="true"`): se il dato contiene `<script>` viene mostrato come testo e non eseguito. È una difesa contro l'**XSS**, lo stesso principio di [[#SQL injection]]: mai fidarsi dell'input.
+
+#### `<c:set>`
+
+Versione JSTL dell'azione `setProperty` (vedi [[#Approccio legacy jsp useBean]]): valuta un'espressione e usa il risultato per impostare una variabile, una proprietà di un JavaBean o una voce di una `java.util.Map`.
+
+|Attributo|Descrizione|Obbligatorio|Default|
+|---|---|---|---|
+|`value`|informazione da salvare|no|il corpo del tag|
+|`target`|oggetto (JavaBean o Map) la cui proprietà va modificata. Con `target` non si usa `var`|no|nessuno|
+|`property`|proprietà dell'oggetto `target` da impostare|no|nessuno|
+|`var`|nome della variabile in cui salvare|no|nessuno|
+|`scope`|scope della variabile|no|`page`|
+
+#### `<c:if>`
+
+Valuta un'espressione e mostra il corpo **solo se** è `true`.
+
+|Attributo|Descrizione|Obbligatorio|Default|
+|---|---|---|---|
+|`test`|condizione da valutare|**sì**|nessuno|
+|`var`|variabile in cui salvare il risultato della condizione|no|nessuno|
+|`scope`|scope di quella variabile|no|`page`|
+
+#### `<c:choose>`, `<c:when>`, `<c:otherwise>`
+
+Funziona come uno `switch`: i `case` sono i `<c:when>`, il `default` è `<c:otherwise>`. `<c:choose>` e `<c:otherwise>` non hanno attributi; `<c:when>` ha solo `test` (obbligatorio).
+
+```jsp
+<c:set var="salary" scope="session" value="${2000*2}"/>
+<p>Your salary is: <c:out value="${salary}"/></p>
+<c:choose>
+	<c:when test="${salary <= 0}">
+		Salary is very low to survive.
+	</c:when>
+	<c:when test="${salary > 1000}">
+		Salary is very good.
+	</c:when>
+	<c:otherwise>
+		No comment sir...
+	</c:otherwise>
+</c:choose>
+```
+
+> [!note] Differenza con lo `switch` Java I `<c:when>` sono valutati in ordine e viene eseguito **solo il primo** vero, senza "fall-through" e senza `break`. È più simile a una catena `if / else if / else`.
+
+#### `<c:forEach>` e `<c:forTokens>`
+
+Alternativa a un `for`/`while`/`do-while` in uno scriptlet. `<c:forEach>` itera su una collezione di oggetti (o su un intervallo numerico); `<c:forTokens>` spezza una stringa in token e itera su di essi.
+
+|Attributo|Descrizione|Obbligatorio|Default|
+|---|---|---|---|
+|`items`|ciò su cui iterare|no|nessuno|
+|`begin`|elemento di partenza (0 = primo, 1 = secondo, ...)|no|0|
+|`end`|elemento finale (0 = primo, 1 = secondo, ...)|no|ultimo elemento|
+|`step`|processa un elemento ogni `step`|no|1|
+|`var`|variabile che espone l'elemento corrente|no|nessuno|
+|`varStatus`|variabile che espone lo **stato del ciclo** (`index`, `count`, `first`, `last`)|no|nessuno|
+
+`<c:forTokens>` ha gli stessi attributi più `delims` (obbligatorio): i caratteri usati come delimitatori.
+
+```jsp
+<c:forEach var="i" begin="1" end="5">
+	Item <c:out value="${i}"/><p>
+</c:forEach>
+
+<c:forTokens items="Zara,nuha,roshy" delims="," var="name">
+	<c:out value="${name}"/><p>
+</c:forTokens>
+
+<c:set var="names" value="${['Alice', 'Bob', 'Charlie', 'Diana']}" />
+<ul>
+	<c:forEach var="name" items="${names}" varStatus="status">
+		<li>Index ${status.index}: ${name}</li>
+	</c:forEach>
+</ul>
+```
+
+> [!note] La sintassi `${['Alice', ...]}` per creare una lista è stata introdotta in **EL 3.0** (Java EE 7): con versioni più vecchie non funziona.
+
+#### `<c:url>` e `<c:param>`
+
+`<c:url>` formatta un URL in una stringa e la salva in una variabile (`var`), facendo **automaticamente URL rewriting** quando serve (vedi [[#URL rewriting]]). È un'alternativa a `response.encodeURL()`: il vantaggio vero è la corretta **codifica** dell'URL, compresi i parametri indicati con `<c:param>`.
+
+|Attributo|Descrizione|Obbligatorio|Default|
+|---|---|---|---|
+|`value`|URL di base|**sì**|nessuno|
+|`context`|`/` seguito dal nome di un'applicazione web locale|no|applicazione corrente|
+|`var`|variabile che espone l'URL processato|no|stampa nella pagina|
+|`scope`|scope di quella variabile|no|`page`|
+
+`<c:param>` specifica un parametro di richiesta per l'URL e ne fa la codifica: `name` (obbligatorio) è il nome, `value` è il valore (default: il corpo del tag).
+
+```jsp
+<c:url value="/index.jsp" var="myURL">
+	<c:param name="trackingId" value="1234"/>
+	<c:param name="reportType" value="summary"/>
+</c:url>
+<c:import url="${myURL}"/>  <%-- recupera e include il contenuto dell'URL --%>
+```
+
+L'URL risultante è `/index.jsp?trackingId=1234&reportType=summary`.
+
+> [!attention] Correzione rispetto alle slide Le slide scrivono `?trackingId=1234;reportType=summary`. In una query string i parametri sono separati da `&`, non da `;`. Inoltre, se `value` inizia con `/`, `<c:url>` antepone il context path (es. `/myapp/index.jsp?...`).
+
+### JSTL Functions
+
+```jsp
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+```
+
+Si usano **dentro** le espressioni EL, es. `${fn:length(userList)}`.
+
+|Funzione|Descrizione|
+|---|---|
+|`fn:contains()`|la stringa contiene la sottostringa indicata?|
+|`fn:containsIgnoreCase()`|come sopra, senza distinguere maiuscole e minuscole|
+|`fn:startsWith()` / `fn:endsWith()`|la stringa inizia / finisce con il prefisso / suffisso indicato?|
+|`fn:escapeXml()`|fa l'escape dei caratteri interpretabili come markup XML|
+|`fn:indexOf()`|indice della prima occorrenza di una sottostringa|
+|`fn:join()`|unisce gli elementi di un array in una stringa|
+|`fn:length()`|numero di elementi di una collezione o di caratteri di una stringa|
+|`fn:replace()`|sostituisce tutte le occorrenze di una stringa con un'altra|
+|`fn:split()`|divide una stringa in un array di sottostringhe|
+|`fn:substring(str, begin, end)`|sottostringa|
+|`fn:substringAfter()` / `fn:substringBefore()`|parte di stringa dopo / prima di una sottostringa|
+|`fn:toLowerCase()` / `fn:toUpperCase()`|minuscolo / maiuscolo|
+|`fn:trim()`|rimuove gli spazi a inizio e fine|
+
+# JavaBeans
+
+## La soluzione "migliore" vista finora
+
+> [!question] La versione con `RequestDispatcher` rispecchia **davvero** la piena separazione tra logica, dati e presentazione?
+
+Primo passo: i dati non sono più semplici `String`, ma oggetti `User`.
+
+```java
+// MODEL (dati)
+package com.examples;
+
+public class User implements Serializable {
+	private String name;
+
+	public User() { }   // costruttore vuoto richiesto dai bean
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
+}
+```
+
+```java
+// CONTROLLER (logica)
+@WebServlet("/hello")
+public class JDBCServletOne extends HttpServlet {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		List<User> userList = new ArrayList<>();
+		String url = "jdbc:mysql://localhost:3306/testdb";
+		String name = "root"; String pwd = "admin";
+		try {
+			Connection conn = DriverManager.getConnection(url, name, pwd);
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT name FROM users");
+			while (rs.next()) {
+				User user = new User();
+				user.setName(rs.getString("name"));
+				userList.add(user);
+			}
+			rs.close(); stmt.close(); conn.close();
+		} catch (Exception e) { e.printStackTrace(); }
+
+		req.setAttribute("userList", userList);
+		RequestDispatcher dispatcher = req.getRequestDispatcher("index.jsp");
+		dispatcher.forward(req, resp);
+	}
+}
+```
+
+```jsp
+<%-- VIEW (presentazione) --%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page import="java.util.List, com.examples.User" %>
+<html>
+<body>
+<h2>Elenco utenti</h2>
+<%
+	List<User> users = (List<User>) request.getAttribute("userList");
+	if (users != null && !users.isEmpty()) {
+%>
+	<ul>
+<%		for (User u : users) { %>
+		<li><%= u.getName() %></li>
+<%		} %>
+	</ul>
+<%	} else { %>
+	<p>Nessun utente trovato</p>
+<%	} %>
+</body>
+</html>
+```
+
+> [!note] Nelle slide la servlet chiama il parametro `req` ma poi usa `request.setAttribute(...)` e `forward(request, resp)`: così non compila. Qui è uniformato a `req`.
+
+> [!attention] Possiamo fare di meglio La View usa ancora scriptlet, e il Controller contiene ancora il codice JDBC (che andrà spostato in un **DAO**, vedi [[#Approccio moderno JavaBeans e DAO]]).
+
+## Cos'è un JavaBean
+
+> [!important] Un **JavaBean** è una classe Java riutilizzabile e incapsulata che segue convenzioni specifiche e serve per archiviare e manipolare dati nelle applicazioni Java, tra cui JSP e Servlet.
+
+Nel MVC:
+
+- il **JavaBean** contiene i dati (**model**)
+- la **JSP** li visualizza (**view**)
+- la **servlet** agisce da **controller** e passa il bean alla JSP tramite attributi della request o della sessione
+
+Vantaggi:
+
+- **chiarezza**: la JSP non conosce i dettagli del DB, legge solo i bean
+- **pulizia del codice**: logica DB nella servlet, presentazione nella JSP
+- **riutilizzabilità**: lo stesso bean si può usare in altre JSP/servlet senza duplicare codice
+
+### Convenzioni da seguire
+
+1. **Costruttore con zero argomenti**. Se non scrivi alcun costruttore, Java ne crea automaticamente uno vuoto.
+2. **Nessuna variabile di istanza pubblica**: attributi `private`.
+3. Dovrebbe implementare `java.io.Serializable` per supportare la persistenza degli oggetti (consigliato ma non obbligatorio).
+4. I valori persistenti sono accessibili tramite metodi `getXxx` e `setXxx`.
+    - se la classe ha un metodo `getTitle()` che restituisce una `String`, si dice che ha una **proprietà** `String` chiamata `title`
+    - le proprietà `boolean` usano `isXxx` invece di `getXxx`
+
+> [!question] Perché il costruttore senza argomenti? Chi crea il bean (il container, `<jsp:useBean>`, un framework come JPA) non sa quali argomenti passare: lo istanzia "vuoto" e poi lo popola con i setter. Attenzione: se scrivi **un altro** costruttore, quello vuoto implicito sparisce e va aggiunto a mano.
+
+> [!note] Proprietà ≠ attributo La proprietà è definita dai **metodi**, non dal campo: `getTitle()` definisce la proprietà `title` anche se il campo privato si chiamasse `t`. È per questo che EL con `${book.title}` chiama `getTitle()`.
+
+## Servlet: overview completa
+
+```mermaid
+flowchart LR
+    subgraph Client
+        RQ["HTTP Request"]
+        RS["HTTP Response"]
+        ER["Error Response"]
+    end
+    subgraph WS["Web Server"]
+        CK["Check Request<br>& invoke Servlet o JSP"]
+        RES["Response"]
+        ERR["Error"]
+    end
+    subgraph SC["Servlet Container"]
+        JSP["JSP"]
+        SV["Servlet"]
+        AN["Analyze Servlet Response"]
+    end
+    subgraph S["Servlet"]
+        I["init()"]
+        SE["service()"]
+        D["destroy()"]
+        G["doGet()"]
+        P["doPost()"]
+        PU["doPut()"]
+    end
+    RQ --> CK
+    CK -->|"Filter + mapping"| JSP
+    CK -->|"Filter + mapping"| SV
+    JSP -->|"tradotta in"| SV
+    SV --> I
+    SV --> SE
+    SV --> D
+    SE --> G
+    SE --> P
+    SE --> PU
+    G --> AN
+    P --> AN
+    PU --> AN
+    AN --> RES --> RS
+    AN --> ERR --> ER
+```
+
+Rispetto allo schema in [[#Architettura generale]] si aggiunge la **JSP**, che passa dallo stesso mapping e viene tradotta in una servlet.
+
+## Approccio legacy: jsp useBean
+
+> [!warning] Approccio LEGACY Le azioni `<jsp:useBean>`, `<jsp:setProperty>` e (in parte) `<jsp:getProperty>` sono **sconsigliate**: la JSP dovrebbe solo **mostrare** i dati, non crearli o elaborarli. Si studiano per capire il codice esistente.
+
+### Creare un bean nella JSP
+
+- **Formato**: `<jsp:useBean id="name" class="package.Class" />`
+- **Finalità**: istanziare classi senza sintassi Java esplicita
+
+Interpretazione semplice: `<jsp:useBean id="book1" class="cwp.Book" />` equivale allo scriptlet `<% cwp.Book book1 = new cwp.Book(); %>`.
+
+`useBean` ha però due funzionalità in più:
+
+1. semplifica l'impostazione dei campi a partire dai **parametri della richiesta**
+2. semplifica la **condivisione** dei bean (attributo `scope`)
+
+### Creazione condizionale
+
+- `<jsp:useBean>` crea un nuovo oggetto **solo se** non trova già un bean con lo stesso `id` e lo stesso `scope`. Se lo trova, associa semplicemente quello esistente alla variabile indicata da `id`.
+- Anche le proprietà si possono impostare in modo condizionale, sostituendo `<jsp:useBean ... />` con
+
+```jsp
+<jsp:useBean ...>
+	istruzioni
+</jsp:useBean>
+```
+
+Le istruzioni nel corpo (di solito `jsp:setProperty`) vengono eseguite **solo se il bean viene creato**, non se ne viene trovato uno esistente.
+
+### Leggere le proprietà
+
+- **Formato**: `<jsp:getProperty name="name" property="property" />`
+- **Finalità**: accedere alle proprietà del bean (chiamare i `getXxx`) senza codice Java esplicito
+- `<jsp:getProperty name="book1" property="title" />` equivale a `<%= book1.getTitle() %>`
+
+Va bene **in lettura** (anche se oggi si usa EL: `${book1.title}`).
+
+### Impostare le proprietà
+
+- **Formato**: `<jsp:setProperty name="name" property="property" value="value" />`
+- **Finalità**: impostare le proprietà del bean (chiamare i `setXxx`) senza codice Java esplicito
+- `<jsp:setProperty name="book1" property="title" value="Core Servlets and JSP" />` equivale a `<% book1.setTitle("Core Servlets and JSP"); %>`
+
+Sconsigliato: è la JSP che modifica i dati.
+
+### Esempio
+
+```java
+package cwp;
+
+public class StringBean {
+	private String message = "No message specified";
+
+	public String getMessage() { return message; }
+	public void setMessage(String message) { this.message = message; }
+}
+```
+
+```jsp
+<jsp:useBean id="stringBean" class="cwp.StringBean" />
+<OL>
+<LI>Initial value (getProperty):
+	<I><jsp:getProperty name="stringBean" property="message" /></I>
+
+<LI>Initial value (JSP expression):
+	<I><%= stringBean.getMessage() %></I>
+
+<LI><jsp:setProperty name="stringBean" property="message" value="Best string bean: Fortex" />
+	Value after setting property with setProperty:
+	<I><jsp:getProperty name="stringBean" property="message" /></I>
+
+<LI><% stringBean.setMessage("My favorite: Kentucky Wonder"); %>
+	Value after setting property with scriptlet:
+	<I><%= stringBean.getMessage() %></I>
+</OL>
+```
+
+Il bean **mantiene lo stato** e si può manipolare in più modi nella stessa pagina:
+
+- creazione o recupero con `<jsp:useBean>` → sconsigliato
+- lettura con `<jsp:getProperty>` o con l'expression `<%= bean.getMessage() %>`
+- modifica con `<jsp:setProperty>` o con lo scriptlet `bean.setMessage(...)` → sconsigliato
+
+### Scope del bean
+
+`<jsp:useBean id="..." class="..." scope="..."/>`: l'attributo `scope` dice **dove** il bean viene memorizzato. Permette a più servlet/JSP di condividere dati e, insieme alla creazione condizionale, di creare un oggetto nuovo solo se non ne esiste già uno.
+
+|Scope|Dove è memorizzato|Durata|Chi può accedere|Uso tipico|
+|---|---|---|---|---|
+|`page` (default)|`PageContext`|solo la JSP corrente|solo la pagina|dati temporanei di visualizzazione|
+|`request`|`HttpServletRequest`|la richiesta|tutte le JSP/servlet della richiesta (anche dopo un `forward`)|trasporto dati tra controller e view|
+|`session`|`HttpSession`|la sessione utente|tutte le servlet/JSP della sessione|login, carrello, preferenze|
+|`application`|`ServletContext`|l'applicazione|tutte le servlet/JSP della web app|configurazione, dati globali|
+
+- Nelle applicazioni MVC moderne si usano soprattutto `request` e `session`; `application` solo per dati davvero globali (vedi [[#ServletContext]]).
+- Lo scope `page` è raro, perché oggi le JSP sono solo View e i dati arrivano dal Controller.
+
+## EL e JavaBeans
+
+EL accede facilmente ai dati nei JavaBean con `${bean.property}`:
+
+- chiama **automaticamente i getter** (`${u.name}` → `u.getName()`)
+- supporta operatori logici, aritmetici e funzioni
+
+La servlet inserisce la lista nella request → la JSP la legge → EL cerca l'attributo `userList` negli scope (page, request, session, application) secondo le regole di risoluzione.
+
+```jsp
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<html>
+<body>
+<h2>Elenco utenti</h2>
+<c:choose>
+	<%-- Se la lista non è vuota --%>
+	<c:when test="${not empty userList}">
+		<ul>
+			<c:forEach var="u" items="${userList}">
+				<li>${u.name}</li>
+			</c:forEach>
+		</ul>
+	</c:when>
+	<%-- Se la lista è vuota --%>
+	<c:otherwise>
+		<p>Nessun utente trovato</p>
+	</c:otherwise>
+</c:choose>
+</body>
+</html>
+```
+
+> [!success] Ho eliminato gli scriptlet: è la versione JavaBean della [[#Risultato JSP finale]].
+
+## Wrapping up: Beans e JSP
+
+### Il bean e la servlet
+
+```java
+import java.io.Serializable;
+
+public class Utente implements Serializable {
+	private String nome;
+	private int eta;
+
+	public Utente() {}
+	public Utente(String nome, int eta) { this.nome = nome; this.eta = eta; }
+
+	public String getNome() { return nome; }
+	public void setNome(String nome) { this.nome = nome; }
+	public int getEta() { return eta; }
+	public void setEta(int eta) { this.eta = eta; }
+}
+```
+
+> [!note] Nelle slide `Utente` ha solo il costruttore vuoto, ma la servlet chiama `new Utente("Mario", 30)`: serve anche il costruttore a due argomenti (aggiunto qui). Quello vuoto resta, perché è richiesto dalle convenzioni.
+
+```java
+@WebServlet("/listaUtenti")
+public class ListaUtentiServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		List<Utente> utenti = new ArrayList<>();
+		utenti.add(new Utente("Mario", 30));
+		utenti.add(new Utente("Luca", 16));
+		utenti.add(new Utente("Anna", 25));
+		request.setAttribute("utenti", utenti);
+		request.getRequestDispatcher("/listaUtenti.jsp").forward(request, response);
+	}
+}
+```
+
+### Lettura: JSTL vs scriptlet
+
+```jsp
+<%-- con JSTL + EL: pulito, leggibile, sicuro, manutenibile --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<html>
+<body>
+<h2>Lista utenti</h2>
+<table border="1">
+	<tr><th>Nome</th><th>Età</th><th>Note</th></tr>
+	<c:forEach var="u" items="${utenti}">
+		<tr>
+			<td>${u.nome}</td>
+			<td>${u.eta}</td>
+			<td>
+				<c:choose>
+					<c:when test="${u.eta >= 18}">Maggiorenne</c:when>
+					<c:otherwise>Minorenne</c:otherwise>
+				</c:choose>
+			</td>
+		</tr>
+	</c:forEach>
+</table>
+</body>
+</html>
+```
+
+```jsp
+<%-- stessa pagina con scriptlet --%>
+<%@ page import="mypackage.Utente" %>
+<%@ page import="java.util.List" %>
+<html>
+<body>
+<h2>Lista utenti</h2>
+<table border="1">
+	<tr><th>Nome</th><th>Età</th><th>Note</th></tr>
+<%
+	List<Utente> utenti = (List<Utente>) request.getAttribute("utenti");
+	for (Utente u : utenti) {
+		out.println("<tr>");
+		out.println("<td>" + u.getNome() + "</td>");
+		out.println("<td>" + u.getEta() + "</td>");
+		if (u.getEta() >= 18) {
+			out.println("<td>Maggiorenne</td>");
+		} else {
+			out.println("<td>Minorenne</td>");
+		}
+		out.println("</tr>");
+	}
+%>
+</table>
+</body>
+</html>
+```
+
+### Scrittura: dalla JSP o dalla servlet
+
+Legacy: la JSP crea e popola il bean da sola.
+
+```jsp
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%@ page import="mypackage.Utente" %>
+
+<!-- Creo o recupero il bean -->
+<jsp:useBean id="utente" class="mypackage.Utente" scope="request" />
+
+<!-- Imposto i valori direttamente -->
+<jsp:setProperty name="utente" property="nome" value="Mario" />
+<jsp:setProperty name="utente" property="eta" value="30" />
+
+<p>Nome: <jsp:getProperty name="utente" property="nome" /></p>
+<p>Età: <jsp:getProperty name="utente" property="eta" /></p>
+```
+
+Corretto (MVC): il form invia i dati alla servlet, che crea il bean e fa forward alla JSP.
+
+```html
+<html>
+<body>
+<h2>Inserisci dati utente</h2>
+<form action="salvaUtente" method="post">
+	Nome: <input type="text" name="nome" /><br/>
+	Età: <input type="number" name="eta" /><br/>
+	<input type="submit" value="Salva" />
+</form>
+</body>
+</html>
+```
+
+```java
+@WebServlet("/salvaUtente")
+public class SalvaUtenteServlet extends HttpServlet {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// Recupero i dati dal form
+		String nome = request.getParameter("nome");
+		int eta = Integer.parseInt(request.getParameter("eta"));
+
+		// Creo e popolo il bean
+		Utente u = new Utente();
+		u.setNome(nome);
+		u.setEta(eta);
+
+		// Salvo il bean nella request (o in sessione se serve)
+		request.setAttribute("utente", u);
+
+		// Forward a una JSP di conferma
+		request.getRequestDispatcher("/confermaUtente.jsp").forward(request, response);
+	}
+}
+```
+
+La `confermaUtente.jsp` mostra semplicemente `${utente.nome}` e `${utente.eta}`.
+
+## Approccio moderno: JavaBeans e DAO
+
+> [!important] **DAO** (Data Access Object) è un pattern che **separa il codice di accesso ai dati dal resto dell'applicazione**. La servlet usa i dati ma ignora come vengono recuperati.
+
+```java
+public class Product {
+	private Long id;
+	private String name;
+	private double price;
+	// costruttore, getter, setter
+}
+```
+
+```java
+public class ProductDAO {
+	public Product findById(Long id) throws SQLException {
+		String sql = "SELECT id, name, price FROM products WHERE id = ?";
+		// JDBC...
+		return product;
+	}
+}
+```
+
+```java
+@WebServlet("/products/*")
+public class ProductServlet extends HttpServlet {
+	private ProductDAO productDAO = new ProductDAO();
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Product product = productDAO.findById(15L);
+		// utilizza il Product ma ignora come recuperare i dati
+	}
+}
+```
+
+Il `// JDBC...` delle slide, completato con un `PreparedStatement` (vedi [[#Prepared Statement]]). Questa parte non è nelle slide:
+
+```java
+public Product findById(Long id) throws SQLException {
+	String sql = "SELECT id, name, price FROM products WHERE id = ?";
+	try (Connection conn = DriverManager.getConnection(URL, USER, PWD);
+	     PreparedStatement ps = conn.prepareStatement(sql)) {
+		ps.setLong(1, id);
+		try (ResultSet rs = ps.executeQuery()) {
+			if (!rs.next()) return null;          // nessun prodotto con quell'id
+			Product p = new Product();
+			p.setId(rs.getLong("id"));
+			p.setName(rs.getString("name"));
+			p.setPrice(rs.getDouble("price"));
+			return p;
+		}
+	}
+}
+```
+
+> [!attention] Nel codice delle slide `doGet` dichiara solo `ServletException, IOException`, ma `findById` lancia `SQLException` (checked): così non compila. Va catturata e, ad esempio, rilanciata come `new ServletException("Errore DB", e)`.
+
+```mermaid
+flowchart TD
+    A["HTTP Request"] --> B["ProductServlet"]
+    B --> C["ProductDAO"]
+    C --> D["JDBC"]
+    D --> E["Database"]
+    E --> F["Product"]
+```
+
+|Componente|Responsabilità|
+|---|---|
+|`Product`|rappresenta i dati|
+|`ProductDAO`|accesso al database|
+|`ProductService`|logica applicativa|
+|`ProductServlet`|gestione HTTP|
+
+> [!note] `ProductService` compare nella tabella ma non nel codice: è lo strato intermedio in cui vanno le regole di business (es. "uno sconto si applica solo sopra i 50 €"), così la servlet resta limitata a HTTP e il DAO al database.
+
+## Servlet, Beans e JSP nel MVC
+
+```mermaid
+flowchart TD
+    A["Browser"] --> B["Servlet / Controller"]
+    B --> C["crea/recupera il Bean"]
+    C --> D["request.setAttribute(...)"]
+    D --> E["forward()"]
+    E --> F["JSP"]
+    F --> G["Expression Language ${...}"]
+```
+
+```java
+public class Product {
+	private String name;
+	private double price;
+	// getter e setter
+}
+```
+
+```java
+// nella servlet (controller)
+Product product = productDAO.findById(123);
+request.setAttribute("product", product);
+RequestDispatcher dispatcher = request.getRequestDispatcher("/product.jsp");
+dispatcher.forward(request, response);
+```
+
+```jsp
+<%-- product.jsp (view) --%>
+<h1>${product.name}</h1>
+<p>Prezzo: € ${product.price}</p>
+```
+
+> [!important] Controller (Servlet) → prepara il Model → View (JSP) → presenta i dati.
+
+## Anticipazione: CDI Bean e Spring Bean
+
+Finora il Bean è stato una classe Java semplice che contiene e rappresenta dati, creata da noi con `new`. In Jakarta EE esiste anche il **CDI Bean** (Contexts and Dependency Injection): non siamo più noi a creare e gestire l'oggetto, lo fa il **container**. Allo stesso modo in Spring ci sono gli **Spring Bean**, gestiti dal framework.
+
+- → CDI Beans in Jakarta EE
+- → Spring Beans in Spring
+
+## Mettersi alla prova: progetto in IntelliJ IDEA
+
+IntelliJ IDEA (la Community Edition è gratuita) crea un progetto web strutturato secondo lo standard Jakarta EE. Alla creazione si scelgono:
+
+- il **tipo di progetto** (Web application)
+- il **server applicativo** (es. Apache Tomcat, Eclipse GlassFish, WildFly)
+- il **sistema di build** (es. Maven o Gradle, per automatizzare le fasi di sviluppo)
+
+Struttura tipica, che separa logica applicativa e presentazione:
+
+- `src/` → codice Java (servlet, bean, DAO)
+- `web/` → pagine JSP, HTML, CSS, JavaScript
+- `WEB-INF/` → file di configurazione (es. `web.xml`) e risorse **non accessibili direttamente dal browser**
+
+> [!note] Con Maven la struttura standard ha nomi diversi: `src/main/java` per il codice e `src/main/webapp` (con dentro `WEB-INF/`) per le risorse web. Il concetto è lo stesso.
+
+> [!question] Perché mettere una JSP dentro `WEB-INF/`? Così il browser non può aprirla direttamente con un URL: ci si arriva solo tramite il `forward` di una servlet. Si obbliga ogni richiesta a passare dal Controller.
+
+Il **WAR** (Web Application Archive) è il pacchetto che l'IDE genera quando fai il deploy: contiene tutto il necessario perché l'applicazione funzioni sul server e, seguendo le specifiche Jakarta EE, la rende **portabile** tra server diversi senza ricompilare.
+
+|Tipo di archivio|Contenuto principale|Scopo|
+|---|---|---|
+|**JAR**|classi Java e librerie|eseguire applicazioni Java standalone o distribuire librerie|
+|**WAR**|classi Java, JSP, HTML, CSS, librerie|distribuire applicazioni web Java/Jakarta EE|
+
+## Ancora sui pattern
+
+Proseguono il discorso di [[#Pattern]].
+
+### Factory
+
+- **Problema**: un'applicazione deve creare oggetti di tipi diversi. Se ogni parte del programma li crea direttamente, la logica di creazione viene ripetuta e sparsa in molti punti.
+- **Idea**: una **Factory** è un componente a cui si affida la responsabilità di creare gli oggetti. Chi ha bisogno di un oggetto lo chiede alla Factory, senza conoscere i dettagli della creazione.
+- **Esempio**: in un e-commerce la Factory crea il metodo di pagamento appropriato (carta di credito, PayPal, bonifico).
+- **Vantaggio**: separare la **creazione** degli oggetti dal loro **utilizzo**. Invece di creare direttamente un oggetto, delego alla Factory.
+
+```java
+public class PaymentFactory {
+	public static Payment create(String type) {
+		if (type.equals("card"))   return new CardPayment();
+		if (type.equals("paypal")) return new PayPalPayment();
+		throw new IllegalArgumentException("Not supported");
+	}
+}
+```
+
+```java
+Payment payment = PaymentFactory.create("card");
+payment.pay();
+```
+
+`Payment` è un'interfaccia (o classe astratta) implementata da `CardPayment` e `PayPalPayment`: chi usa `payment` conosce solo il tipo `Payment`. Per aggiungere il bonifico si modifica **solo** la Factory.
+
+### Singleton
+
+- **Problema**: a volte creare più oggetti che rappresentano la stessa risorsa è inutile o problematico; serve un **unico punto di accesso condiviso**.
+- **Idea**: il **Singleton** garantisce che una classe abbia **una sola istanza** e fornisce un punto di accesso a essa.
+- **Esempio**: un e-commerce usa un unico `ProductCatalog`; home, ricerca e pagina di dettaglio accedono alla stessa istanza.
+- **Vantaggio**: evitare più istanze quando serve un unico oggetto condiviso.
+
+```java
+public class ProductCatalog {
+	private static final ProductCatalog INSTANCE = new ProductCatalog();
+
+	private ProductCatalog() { }    // nessuno può fare new da fuori
+
+	public static ProductCatalog getInstance() { return INSTANCE; }
+
+	public void showProducts() {
+		System.out.println("Elenco dei prodotti");
+	}
+}
+```
+
+```java
+ProductCatalog homeCatalog   = ProductCatalog.getInstance();
+ProductCatalog searchCatalog = ProductCatalog.getInstance();
+System.out.println(homeCatalog == searchCatalog);   // true: stesso oggetto
+```
+
+Due ingredienti: il **costruttore privato** impedisce di creare altre istanze, il campo `static final` contiene l'unica istanza (creata al caricamento della classe, quindi senza problemi di concorrenza).
+
+> [!note] Collegamento con le servlet Il container crea normalmente **una sola istanza** di ogni servlet (vedi [[#Ciclo di vita]]): un comportamento "da singleton", ma garantito dal container e non dal costruttore privato. Per questo i suoi campi sono condivisi tra thread.
+
+## Recap: Servlet, JSP e JavaBeans
+
+- **Servlet Java**
+    - **Definizione**: componente server-side, piattaforma Jakarta EE, estensione di `HttpServlet`, gestione di `HttpServletRequest` e `HttpServletResponse`
+    - **Ciclo di vita**: `init()` inizializzazione, `service()` elaborazione delle richieste, `destroy()` cleanup delle risorse, concorrenza multi-thread
+    - **Mapping**: exact match `/users`, path match `/api/*`, extension match `*.jsp`, default mapping `/`
+    - **Configurazione**: `ServletConfig` per singola servlet, `ServletContext` condiviso, file `web.xml`, annotazioni `@WebServlet` e `@WebInitParam`
+    - **HTTP e sessioni**: protocollo stateless, scope request/session/application, cookie (`maxAge`, `httpOnly`, `secure`)
+- **JavaServer Pages (JSP)**
+    - ciclo di vita JSP
+    - **Sintassi Java**: expression `<%= ... %>`, scriptlet `<% ... %>`, declaration `<%! ... %>`
+    - **Librerie e tag**: Expression Language `${...}`, JSTL Core (`c:if`, `c:forEach`), direttiva page (`contentType`, `isThreadSafe`)
+- **JavaBeans e MVC**
+    - **Pattern MVC**: Model = JavaBeans e dati, View = pagine JSP, Controller = servlet
+    - **Convenzioni JavaBeans**: costruttore senza argomenti, incapsulamento delle variabili, interfaccia `Serializable`, scope page/request/session/application
+
+# Persistenza (JPA)
+
+## Il problema: troppo lavoro manuale
+
+Finora, per salvare o leggere un prodotto nel DB, abbiamo scritto query SQL e trasformato **a mano** i risultati in oggetti Java (vedi [[#Java Database Connectivity]]):
+
+1. scrivere la query SQL
+2. creare e configurare il `PreparedStatement`
+3. eseguire la query
+4. leggere il `ResultSet`
+5. costruire l'oggetto Java
+6. copiare i valori delle colonne nei campi dell'oggetto
+7. gestire le risorse e gli eventuali errori
+
+> [!question] Possiamo delegare una parte di questo lavoro al framework?
+
+```mermaid
+flowchart TD
+    A["Browser / Client<br>richiesta HTTP: visualizzare un prodotto"] --> B["Servlet — Controller<br>riceve la richiesta e coordina l'elaborazione"]
+    B --> C["DAO / Repository — Accesso ai dati<br>chiede il prodotto tramite un'API di persistenza"]
+    C --> D["JPA + Provider ORM<br>gestisce le entità e traduce le operazioni in SQL"]
+    D --> E["Database relazionale<br>tabelle, righe, chiavi e vincoli"]
+```
+
+JPA si inserisce tra il DAO e il database: i passi 2–7 li fa il provider.
+
+## JPA
+
+> [!important] Storicamente l'acronimo indicava **Java Persistence API**; oggi il nome ufficiale della specifica è **Jakarta Persistence** → **JPA**. È una **specifica**: definisce API, annotazioni e regole che le implementazioni devono rispettare. **Non è, da sola, un prodotto** che esegue le operazioni sul database.
+
+La specifica stabilisce come **descrivere** gli oggetti persistenti, come **cercarli**, come **modificarli** e come **coordinare** le operazioni di persistenza.
+
+|Termine|Significato|
+|---|---|
+|JPA / Jakarta Persistence|specifica e API standard|
+|ORM|tecnica di mappatura tra oggetti e dati relazionali|
+|Hibernate ORM|**implementazione** della specifica Jakarta Persistence (un "provider"; un altro è EclipseLink)|
+|JDBC|API a basso livello per accedere al DB|
+
+> [!attention] JPA **non sostituisce** il DB, il linguaggio SQL o il pattern DAO. Introduce un modo **standardizzato** di gestire la persistenza attraverso oggetti Java, riducendo il codice di mapping manuale e gestendo le relazioni tra entità.
+
+> [!info] javax → jakarta Le slide usano `javax.persistence.*`: è il nome fino a JPA 2.2. Da Jakarta EE 9 (Jakarta Persistence 3.0) il package è `jakarta.persistence.*`, come per le servlet. Annotazioni e metodi sono gli stessi: negli esempi uso `jakarta`.
+
+JPA permette di gestire in modo standard la **persistenza** dei dati, cioè la memorizzazione e il recupero di **oggetti Java** da un database relazionale. Mette a disposizione:
+
+- **annotazioni** per dichiarare le entità e il mapping
+- **API** per cercare, inserire, modificare ed eliminare entità
+- **regole** per gestire il ciclo di vita delle entità e il contesto di persistenza
+- un linguaggio di query orientato agli oggetti, **JPQL**
+
+### JDBC vs JPA
+
+```mermaid
+flowchart LR
+    subgraph JDBC
+        A1["Applicazione"] -->|"SQL scritto a mano"| B1["JDBC"] --> C1[("DB")]
+    end
+    subgraph JPA
+        A2["Applicazione"] -->|"oggetti Java"| P["Provider JPA<br>(es. Hibernate)"] -->|"SQL generato"| B2["JDBC"] --> C2[("DB")]
+    end
+```
+
+- **JDBC** = parli **al database** direttamente → JDBC → DB
+- **JPA** = parli **agli oggetti Java** → il provider traduce tutto in SQL → JDBC → DB
+
+> [!note] JPA non elimina JDBC: il provider lo usa **sotto**. Cambia chi scrive l'SQL e chi copia i dati nei campi.
+
+I risultati non sono più dati primitivi o `ResultSet`, ma oggetti: **Entity** (bean "potenziati": ogni oggetto corrisponde a una riga di una tabella).
+
+|Aspetto|JDBC|JPA|
+|---|---|---|
+|Livello di astrazione|basso|alto|
+|SQL|scritto a mano|generato automaticamente (ORM/JPQL)|
+|Mapping|manuale|automatico tra oggetti e tabelle|
+|Transazioni|manuali (vedi [[#Transaction]])|`EntityManager` + JTA (dietro le quinte)|
+|Vantaggi|controllo totale sull'SQL, alte prestazioni in casi specifici, flessibile|codice più pulito, gestione automatica di relazioni e transazioni, portabile tra database|
+|Svantaggi|codice verboso e ripetitivo, mapping manuale, gestione complessa di connessioni e transazioni|leggermente più lento, minor controllo sull'SQL generato, dipendenza dal provider ORM|
+
+### Le due parti di JPA
+
+1. **Parte descrittiva: Object-Relational Mapping**
+    - le classi Java sono annotate (`@Entity`) o mappate in XML; gli attributi sono annotati (`@Column`)
+    - gli oggetti diventano **gestiti** (`EntityManager`) all'interno di un **contesto di persistenza** (Persistence Context)
+    - le relazioni sono annotate (`@OneToMany`, `@ManyToOne`, `@Embedded`, ...) per gestire **cardinalità** ed **ereditarietà**
+2. **Parte operativa: transazioni e query** (in questa lezione: le operazioni dell'`EntityManager`)
+
+## Object-Relational Mapping (ORM)
+
+|Object-Oriented|Relazionale|
+|---|---|
+|oggetti con attributi, metodi, ereditarietà|tabelle con righe e colonne|
+|riferimenti tra oggetti|chiavi esterne (FK)|
+|ereditarietà|nessun supporto diretto, join complesse|
+|stato **in memoria** (POJO)|stato **persistente** sul DB|
+
+> [!note] POJO Un **POJO** (Plain Old Java Object) è un normale oggetto Java che non dipende da alcun framework o classe speciale.
+
+> [!important] L'**ORM** fa da ponte tra questi due mondi, permettendo di mappare gli oggetti Java sulle tabelle di un database relazionale. Questa differenza strutturale si chiama anche _object-relational impedance mismatch_.
+
+## Entity
+
+> [!important] Una **Entity** è una classe Java il cui stato può essere reso persistente attraverso JPA.
+
+`Prodotto`, ad esempio, può rappresentare contemporaneamente:
+
+- una classe Java
+- il modello di un prodotto nell'applicazione
+- una **tabella** del database, attraverso il mapping
+- una singola **riga** della tabella, attraverso una sua istanza persistente
+
+> [!attention] Non significa che ogni oggetto `Prodotto` creato con `new` venga salvato automaticamente nel DB. La persistenza dipende dallo **stato** dell'oggetto e dalle **operazioni** fatte tramite JPA (vedi [[#Ciclo di vita dell'Entity]]).
+
+> [!note] Una entity non è semplicemente un JavaBean con qualche annotazione: è un oggetto inserito nel **modello di persistenza** di JPA, con un **identificativo** e un **ciclo di vita** gestito dal provider. Le entity sono note anche come **Entity Bean** (termine legacy, dagli EJB 2).
+
+## Mapping degli oggetti persistenti
+
+JPA richiede **solo due metadati** per creare una classe persistente:
+
+- `@Entity` → la classe sarà una **tabella**
+- `@Id` → la proprietà che sarà la **chiave primaria** (e non solo: decide anche il tipo di accesso, vedi sotto)
+
+Tutto il resto ha un **default**: ogni altra proprietà è mappata su una colonna con lo **stesso nome** e un tipo compatibile, e la tabella ha il nome della classe.
+
+|Aspetto|Java Bean|Entity JPA|
+|---|---|---|
+|Scopo|contenere dati|rappresentare una tabella del DB|
+|Annotazioni|no|sì (`@Entity`, `@Id`)|
+|Persistenza|no|sì|
+|Identità|no|sì (chiave primaria)|
+
+### Definire la chiave: field access e property access
+
+```java
+package com.titan.domain;
+import jakarta.persistence.*;
+
+@Entity
+public class Customer implements java.io.Serializable {
+	@Id                       // FIELD ACCESS: @Id sul campo
+	private long id;
+	private String firstName;
+	private String lastName;
+
+	public long getId() { return id; }
+	public void setId(long id) { this.id = id; }
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String firstName) { this.firstName = firstName; }
+	public String getLastName() { return lastName; }
+	public void setLastName(String lastName) { this.lastName = lastName; }
+}
+```
+
+```java
+@Entity
+public class Customer implements java.io.Serializable {
+	private long id;
+	private String firstName;
+	private String lastName;
+
+	@Id                       // PROPERTY ACCESS (stile Bean): @Id sul getter
+	public long getId() { return id; }
+	public void setId(long id) { this.id = id; }
+	// ... altri getter/setter come sopra
+}
+```
+
+In entrambi i casi la tabella generata è:
+
+```sql
+create table Customer (
+	id        long primary key not null,
+	firstName VARCHAR,
+	lastName  VARCHAR
+);
+```
+
+Dove metti `@Id` decide se JPA userà lo stile JavaBean (getter/setter) per individuare le proprietà persistenti oppure i campi, e quindi **come JPA accede ai dati** (variabili o metodi).
+
+|Aspetto|Field access|Property access|
+|---|---|---|
+|Dove metti `@Id`|sul campo|sul getter|
+|JPA legge da|variabili|metodi|
+|Usa i setter|no|sì|
+|Usa i getter|no|sì|
+|Perché usarlo|meno codice, più diretto, standard de facto|validazioni nei setter o logica nei getter; bean legacy|
+
+> [!attention] Tutte le annotazioni di mapping vanno messe **dalla stessa parte** di `@Id`: con field access sui campi, con property access sui getter. Un `@Column` sul getter in una classe a field access viene ignorato (o causa un errore, a seconda del provider).
+
+### Mapping in XML: orm.xml
+
+Alternativa alle annotazioni: il file `orm.xml` (di default in `META-INF`, oppure un altro file dichiarato nel descrittore di distribuzione). Serve a configurare le mappature **esternamente**, per personalizzare o sovrascrivere il mapping senza modificare il codice sorgente.
+
+```xml
+<entity-mappings>
+	<!-- Customer è un'entità JPA; access="PROPERTY" forza l'uso di getter/setter
+	     per tutta la classe, sovrascrivendo il comportamento di default -->
+	<entity class="com.titan.domain.Customer" access="PROPERTY">
+		<attributes>
+			<!-- id è la chiave primaria: JPA si aspetta getId() e setId() -->
+			<id name="id"/>
+		</attributes>
+	</entity>
+</entity-mappings>
+```
+
+### Basic Relational Mapping
+
+Due approcci per implementare le entity:
+
+1. si parte dal **modello a oggetti** Java e da questo si **deriva lo schema** del database
+2. si parte da uno **schema di database esistente** e da questo si deriva il modello a oggetti
+
+Nel secondo caso i nomi e i tipi delle colonne sono già decisi e vanno indicati esplicitamente.
+
+### Mapping su una tabella specifica
+
+Tabella esistente:
+
+```sql
+create table CUSTOMER_TABLE (
+	CUST_ID    integer primary key not null,
+	FIRST_NAME varchar(20) not null,
+	LAST_NAME  varchar(255) not null
+);
+```
+
+```java
+@Entity
+@Table(name = "CUSTOMER_TABLE")
+public class Customer implements java.io.Serializable {
+	private long id;
+	private String firstName;
+	private String lastName;
+
+	@Id
+	@Column(name = "CUST_ID", nullable = false, columnDefinition = "integer")
+	public long getId() { return id; }
+	public void setId(long id) { this.id = id; }
+
+	@Column(name = "FIRST_NAME", length = 20, nullable = false)
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String firstName) { this.firstName = firstName; }
+
+	@Column(name = "LAST_NAME", length = 255, nullable = false)
+	public String getLastName() { return lastName; }
+	public void setLastName(String lastName) { this.lastName = lastName; }
+}
+```
+
+> [!question] "JPA richiede solo due metadati"... e qui ne usiamo molti di più? Sì: i due metadati sono il **minimo obbligatorio**. Qui serve di più perché i nomi delle colonne (`CUST_ID`, `FIRST_NAME`) **non coincidono** con i nomi delle proprietà, quindi i default non bastano. `@Table` cambia il nome della tabella, `@Column` quello della colonna e i vincoli (`length`, `nullable`, `columnDefinition`).
+
+> [!note] Le slide dichiarano `FIRST_NAME varchar(20) not null` senza virgola finale: nello script SQL corretto ci vuole.
+
+### Chiavi primarie
+
+- `@Id` identifica **una o più** proprietà che costituiscono la chiave primaria della tabella.
+- La chiave si può generare a mano oppure lasciarla generare al provider con `@GeneratedValue`.
+- A volte la chiave è composta da più proprietà persistenti: **chiavi composite**. Si definiscono con `@IdClass` oppure con `@EmbeddedId` più una classe di appoggio.
+
+> [!important] Requisiti della classe della chiave composita (in entrambe le notazioni):
+> 
+> - deve essere **serializzabile**
+> - deve avere un **costruttore pubblico senza argomenti**
+> - deve implementare **`equals()` e `hashCode()`**
+
+> [!question] Perché `equals()` e `hashCode()`? Il persistence context identifica ogni entity tramite la sua chiave (vedi [[#Entity Manager, Persistence Context, Persistence Unit]]). Con una chiave composita, due oggetti chiave distinti con gli stessi valori devono risultare **uguali**, altrimenti JPA crederebbe che siano due righe diverse. L'`equals()` di default di `Object` confronta i riferimenti, non i valori.
+
+#### Chiavi composite con `@IdClass`
+
+I campi della chiave sono **ripetuti** nella classe dell'entity, marcati con `@Id`.
+
+```java
+public class BookLoanId implements Serializable {
+	private Long userId;
+	private Long bookId;
+
+	public BookLoanId() {}
+	public BookLoanId(Long userId, Long bookId) {
+		this.userId = userId;
+		this.bookId = bookId;
+	}
+	// get e set
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		BookLoanId that = (BookLoanId) o;
+		return Objects.equals(userId, that.userId) && Objects.equals(bookId, that.bookId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(userId, bookId);
+	}
+}
+```
+
+```java
+@Entity
+@IdClass(BookLoanId.class)
+public class BookLoan {
+	@Id private Long userId;     // incorporo i campi della chiave primaria
+	@Id private Long bookId;     // nella classe del bean
+	private LocalDate loanDate;
+	private LocalDate returnDate;
+
+	public BookLoan() {}
+	public BookLoan(Long userId, Long bookId, LocalDate loanDate, LocalDate returnDate) {
+		this.userId = userId;
+		this.bookId = bookId;
+		this.loanDate = loanDate;
+		this.returnDate = returnDate;
+	}
+	// get e set
+}
+```
+
+> [!note] Nelle slide i parametri del costruttore si chiamano `loan` e `return`, ma nel corpo si usano `loanDate` e `returnDate`; inoltre `return` è una parola riservata e non può essere un nome di variabile. Qui i nomi sono corretti.
+
+#### Chiavi composite con `@EmbeddedId`
+
+La classe della chiave viene **incorporata direttamente** come un unico campo dell'entity.
+
+```java
+@Embeddable
+public class BookLoanId implements Serializable {
+	private Long userId;
+	private Long bookId;
+
+	public BookLoanId() {}
+	public BookLoanId(Long userId, Long bookId) { this.userId = userId; this.bookId = bookId; }
+	// get e set, equals() e hashCode() come sopra
+}
+```
+
+```java
+@Entity
+public class BookLoanEmbedded {
+	@EmbeddedId
+	private BookLoanId id;        // la chiave è un oggetto
+	private LocalDate loanDate;
+	private LocalDate returnDate;
+
+	public BookLoanEmbedded() {}
+	public BookLoanEmbedded(BookLoanId id, LocalDate loanDate, LocalDate returnDate) {
+		this.id = id;
+		this.loanDate = loanDate;
+		this.returnDate = returnDate;
+	}
+	public BookLoanId getId() { return id; }
+	public void setId(BookLoanId id) { this.id = id; }
+	// altri get e set
+}
+```
+
+> [!note] Nelle slide la classe `@Embeddable` si chiama `BookLoan` ma ha costruttori `BookLoanIdEmbedded(...)` e confronta con `BookLoanId`: i nomi non coincidono e non compilerebbe. Qui ho usato un solo nome, `BookLoanId`.
+
+|`@IdClass`|`@EmbeddedId`|
+|---|---|
+|campi della chiave ripetuti nell'entity, ognuno con `@Id`|un solo campo-oggetto con `@EmbeddedId`|
+|accesso diretto: `loan.getUserId()`|accesso tramite la chiave: `loan.getId().getUserId()`|
+|classe chiave senza annotazioni|classe chiave annotata `@Embeddable`|
+
+#### Rinominare le colonne della chiave: `@AttributeOverrides`
+
+Di default, quando un oggetto `@Embeddable` è usato in un'entity, i suoi campi prendono i nomi di colonna definiti nella classe embeddable. Per cambiarli nell'entity si usa `@AttributeOverride`.
+
+```java
+@Embeddable
+public class CustomerPK implements java.io.Serializable {
+	private String lastName;
+	private long ssn;
+	public CustomerPK() {}
+	// getter, setter, equals(), hashCode()
+}
+```
+
+```java
+@Entity
+public class Customer implements java.io.Serializable {
+	private String firstName;
+	private CustomerPK pk;
+
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String firstName) { this.firstName = firstName; }
+
+	@EmbeddedId
+	@AttributeOverrides({
+		@AttributeOverride(name = "lastName", column = @Column(name = "LAST_NAME")),
+		@AttributeOverride(name = "ssn",      column = @Column(name = "SSN"))
+	})
+	public CustomerPK getPk() { return pk; }
+	public void setPk(CustomerPK pk) { this.pk = pk; }
+}
+```
+
+`name` è il nome della **proprietà** in `CustomerPK`, `column` la colonna a cui mapparla.
+
+### `@Transient`
+
+Il gestore della persistenza presuppone che **ogni proprietà non transitoria** della classe sia persistente. Le proprietà derivate (es. scorciatoie per i campi della chiave) o i valori calcolati che **non corrispondono a colonne** vanno esclusi con `@Transient`.
+
+```java
+@Entity
+public class Customer implements java.io.Serializable {
+	private String firstName;
+	private CustomerPK pk;
+	// ...
+
+	@Transient
+	public String getLastName() { return pk.getLastName(); }   // derivata dalla chiave
+
+	@Transient
+	public long getSsn() { return pk.getSsn(); }
+
+	@EmbeddedId
+	public CustomerPK getPk() { return pk; }
+	public void setPk(CustomerPK pk) { this.pk = pk; }
+}
+```
+
+> [!question] Cosa succederebbe senza `@Transient`? Con property access JPA vedrebbe `getLastName()` e cercherebbe una colonna `lastName` nella tabella `Customer`, che non esiste come colonna separata (è già dentro la chiave): errore di mapping.
+
+> [!note] `@Transient` (annotazione JPA) ≠ `transient` (parola chiave Java). La parola chiave esclude un campo dalla **serializzazione** Java; JPA ignora anche i campi `transient`, ma l'annotazione serve quando vuoi escludere qualcosa **solo** dal database.
+
+### Mapping types
+
+JPA supporta senza annotazioni esplicite i tipi di base:
+
+- tipi primitivi e relativi wrapper, `String`, `byte[]`, `Byte[]`, `char[]`, `Character[]`, `BigInteger`, `BigDecimal`, `java.sql.Date`, `Time`, `Timestamp`
+
+Per `java.util.Date` e `Calendar` si indica la precisione con `@Temporal`:
+
+- `@Temporal(TemporalType.DATE)` → solo data
+- `@Temporal(TemporalType.TIME)` → solo ora
+- `@Temporal(TemporalType.TIMESTAMP)` → data e ora
+
+> [!note] Da JPA 2.2 i tipi `java.time` (`LocalDate`, `LocalDateTime`, ...) sono supportati **direttamente**, senza `@Temporal`: è il motivo per cui gli esempi `BookLoan` usano `LocalDate` senza annotazioni. Nelle versioni recenti di Jakarta Persistence `@Temporal` è deprecata.
+
+### `@Enumerated`
+
+Mappa un tipo `enum` Java sul database, come **stringa** oppure come **numero ordinale**.
+
+```java
+public enum CustomerType {
+	UNREGISTERED, REGISTERED, BIG_SPENDAH
+}
+
+@Enumerated(EnumType.STRING)   // oppure EnumType.ORDINAL
+public CustomerType getCustomerType() { ... }
+public void setCustomerType(CustomerType type) { ... }
+```
+
+|`EnumType.STRING`|`EnumType.ORDINAL` (default)|
+|---|---|
+|salva `"REGISTERED"`|salva `1` (la posizione nell'enum, da 0)|
+|leggibile, robusto|più compatto|
+|resiste al riordino delle costanti|se aggiungi una costante **in mezzo** o le riordini, i dati già salvati cambiano significato|
+
+## Entity Inheritance
+
+_Parte descrittiva avanzata._
+
+JPA supporta l'**ereditarietà** delle entity, le relazioni **polimorfiche** e le query polimorfiche. Esempio: `Employee` estende `Customer` che estende `Person`.
+
+```mermaid
+classDiagram
+    Person <|-- Customer
+    Customer <|-- Employee
+    class Person {
+        id
+        firstName
+        lastName
+    }
+    class Customer {
+        street
+        city
+        state
+        zip
+    }
+    class Employee {
+        employeeId
+    }
+```
+
+Tre strategie per mappare una gerarchia su un DB relazionale:
+
+|Strategia|Come funziona|Pro|Contro|
+|---|---|---|---|
+|**Single Table** (s1)|una tabella per tutta la gerarchia, con tutte le proprietà|veloce (nessuna JOIN)|molti `NULL`|
+|**Table per Concrete Class** (s2)|una tabella per ogni classe concreta, con i suoi attributi **e** quelli della superclasse|nessun `NULL`|query globali (polimorfiche) difficili|
+|**Table per Subclass / Joined** (s3)|una tabella per classe con **solo** i suoi attributi, collegate con JOIN|struttura pulita, normalizzata|query più lente|
+
+### s1: Single Table per Class Hierarchy
+
+```sql
+create table PERSON_HIERARCHY (
+	id integer primary key not null,
+	firstName varchar(255),
+	lastName varchar(255),
+	street varchar(255),
+	city varchar(255),
+	state varchar(255),
+	zip varchar(255),
+	employeeId integer,
+	DISCRIMINATOR varchar(31) not null
+);
+```
+
+Il numero di colonne è determinato analizzando **l'intera gerarchia**: classe base e tutte le sottoclassi.
+
+```java
+@Entity
+@Table(name = "PERSON_HIERARCHY")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)   // strategia per la relazione di eredità
+@DiscriminatorColumn(name = "DISCRIMINATOR", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("PERSON")
+public class Person {
+	private int id;
+	private String firstName;
+	private String lastName;
+
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String first) { this.firstName = first; }
+	public String getLastName() { return lastName; }
+	public void setLastName(String last) { this.lastName = last; }
+}
+```
+
+Ogni riga di `PERSON_HIERARCHY` è un'istanza di `Person` o di una sottoclasse: la colonna **discriminatore** dice quale (`"PERSON"` per `Person`).
+
+Il resto della gerarchia è semplice: l'unico metadato specifico è il valore del discriminatore, se ne vuoi uno diverso dal default.
+
+```java
+@Entity
+@DiscriminatorValue("CUSTOMER")
+public class Customer extends Person { ... }
+
+// usa il valore di default del discriminatore
+@Entity
+public class Employee extends Customer { ... }
+```
+
+> [!note] Il valore di default del discriminatore (per `DiscriminatorType.STRING`) è il **nome dell'entity**, cioè di solito il nome della classe: `Employee` → `"Employee"`.
+
+|id|DISCRIMINATOR|firstName|lastName|street/city|employeeId|
+|---|---|---|---|---|---|
+|1|PERSON|Mario|Rossi|NULL|NULL|
+|2|CUSTOMER|Luca|Bianchi|Roma|NULL|
+|3|EMPLOYEE|Anna|Verdi|Milano|E123|
+
+> [!attention] Si vede il contro principale: le colonne delle sottoclassi sono `NULL` per le righe che non le usano. Per questo **non si possono dichiarare `NOT NULL`** le colonne specifiche delle sottoclassi. La struttura del DB è semplice, ma con molte sottoclassi la tabella diventa molto larga.
+
+### s2: Table per Concrete Class
+
+```sql
+create table Person (
+	id integer primary key not null,
+	firstName varchar(255),
+	lastName varchar(255)
+);
+create table Customer (
+	id integer primary key not null,
+	firstName varchar(255),
+	lastName varchar(255),
+	street varchar(255),
+	city varchar(255),
+	state varchar(255),
+	zip varchar(255)
+);
+create table Employee (
+	id integer primary key not null,
+	firstName varchar(255),
+	lastName varchar(255),
+	street varchar(255),
+	city varchar(255),
+	state varchar(255),
+	zip varchar(255),
+	employeeId integer
+);
+```
+
+Differenza fondamentale con SINGLE_TABLE: **non serve una colonna discriminante**. Il tipo è dato dalla tabella in cui sta la riga ("me lo dice Java").
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Person {
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	// ...
+}
+
+@Entity
+public class Customer extends Person { ... }
+
+@Entity
+public class Employee extends Customer { ... }
+```
+
+`@Inheritance` serve a dire a JPA che le entity fanno parte della **stessa gerarchia** e devono supportare polimorfismo e query comuni. JPA vede che `Employee` estende `Person` dal codice Java (`extends`), ma **il database non rappresenta direttamente l'ereditarietà**.
+
+> [!question] Perché le query globali sono difficili? Una query "tutte le `Person`" deve leggere **tre tabelle** diverse e unirle con `UNION`, perché ogni persona sta in una sola tabella a seconda del suo tipo concreto.
+
+### s3: Table per Subclass (Joined)
+
+```sql
+create table Person (
+	id integer primary key not null,
+	firstName varchar(255),
+	lastName varchar(255)
+);
+create table Customer (
+	id integer primary key not null,
+	street varchar(255),
+	city varchar(255),
+	state varchar(255),
+	zip varchar(255)
+);
+create table Employee (
+	EMP_PK integer primary key not null,
+	employeeId integer
+);
+```
+
+Ogni tabella contiene **solo** le proprietà definite in quella classe. Anche qui non serve il discriminatore (di default; JPA lo permette ma non lo richiede).
+
+```java
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Person {
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	// ...
+}
+
+@Entity
+public class Customer extends Person { ... }
+
+@Entity
+@PrimaryKeyJoinColumn(name = "EMP_PK")
+public class Employee extends Customer { ... }
+```
+
+JOINED salva ogni classe in una tabella separata, ma le collega con **chiavi esterne** sulla chiave primaria e ricostruisce l'ereditarietà con **JOIN**. `@PrimaryKeyJoinColumn(name="EMP_PK")` rinomina la colonna della chiave primaria nella tabella `Employee` da `id` a `EMP_PK`: è la colonna che fa da PK **e** da FK verso `Customer`.
+
+> [!example] Per leggere un `Employee` completo servono due JOIN:
+> 
+> ```sql
+> SELECT * FROM Employee e
+> JOIN Customer c ON e.EMP_PK = c.id
+> JOIN Person p   ON c.id = p.id
+> WHERE e.EMP_PK = 3;
+> ```
+
+### Nonentity base classes: `@MappedSuperclass`
+
+> [!important] `@MappedSuperclass` si usa per una classe base che **non è mappata su una tabella**, ma fornisce attributi e comportamenti comuni alle sottoclassi. Non è un'entity a sé stante: non ha una propria tabella, ma i suoi campi vengono **ereditati** dalle entity che la estendono.
+
+```java
+@MappedSuperclass
+public class Person {
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+	public String getFirstName() { return firstName; }
+	public void setFirstName(String first) { this.firstName = first; }
+	public String getLastName() { return lastName; }
+	public void setLastName(String last) { this.lastName = last; }
+}
+
+@Entity
+@Table(name = "CUSTOMER")
+@Inheritance(strategy = InheritanceType.JOINED)
+@AttributeOverride(name = "lastName", column = @Column(name = "SURNAME"))
+public class Customer extends Person { ... }
+
+@Entity
+@Table(name = "EMPLOYEE")
+@PrimaryKeyJoinColumn(name = "EMP_PK")
+public class Employee extends Customer { ... }
+```
+
+```sql
+create table CUSTOMER (
+	id integer primary key not null,
+	firstName varchar(255),
+	SURNAME varchar(255),
+	street varchar(255),
+	city varchar(255),
+	state varchar(255),
+	zip varchar(255)
+);
+create table EMPLOYEE (
+	EMP_PK integer primary key not null,
+	employeeId integer
+);
+```
+
+- Non esiste una tabella `PERSON`: i campi di `Person` finiscono nella tabella di `Customer`.
+- `@AttributeOverride(name="lastName", column=@Column(name="SURNAME"))` rinomina il campo `lastName` (ereditato da `Person`) in `SURNAME` nella tabella `CUSTOMER`.
+- `@PrimaryKeyJoinColumn(name="EMP_PK")` (strategia JOINED): la PK di `Employee` è unita alla tabella `Customer` (la superclasse) tramite la colonna `EMP_PK`.
+
+> [!note] Nelle slide c'è `name="lastname"` (minuscolo): `name` deve corrispondere **esattamente** al nome della proprietà, che è `lastName`. C'è anche il refuso `this.id = is`.
+
+> [!question] `@MappedSuperclass` o `@Inheritance`? Con `@MappedSuperclass` si riusa **codice** (campi comuni) ma `Person` non è un'entity: non puoi fare `em.find(Person.class, ...)` né query su `Person`. Con `@Inheritance` `Person` è un'entity vera e le query sono **polimorfiche**.
+
+## Come si configura JPA
+
+Per far funzionare il codice serve un ambiente configurato:
+
+- il **database**, che contiene le tabelle
+- il **provider JPA** (es. Hibernate ORM o EclipseLink), che implementa la specifica
+- l'**EntityManager**, l'interfaccia con cui si gestiscono le entity: cercarle, renderle persistenti, aggiornarle, rimuoverle
+- la **Persistence Unit**, che definisce la configurazione della persistenza
+
+### Le entity sono POJO
+
+- Nella specifica, le entity sono **semplici oggetti Java** (POJO): si allocano con `new` come qualsiasi altro oggetto.
+- Le istanze **non diventano persistenti** finché non vengono associate a un `EntityManager`.
+- Hanno un **ciclo di vita** proprio.
+
+### JDBC vs JPA: il ruolo dell'EntityManager
+
+Se JDBC mette a disposizione `Connection`, `Statement` e `ResultSet`, JPA mette a disposizione soprattutto l'**`EntityManager`**.
+
+|Metodo|Funzione|
+|---|---|
+|`find()`|recupera un'entity tramite identificativo|
+|`persist()`|rende persistente una **nuova** entity|
+|`merge()`|copia lo stato di un oggetto **non gestito** in un'istanza gestita|
+|`remove()`|marca un'entity gestita per la rimozione|
+|`createQuery()`|crea una query, per esempio in JPQL|
+|`flush()`|sincronizza le modifiche pendenti con il database|
+
+### Managed e unmanaged
+
+- Durante il ciclo di vita, un'istanza di entity può essere **managed** (collegata a un `EntityManager`) oppure **unmanaged** (scollegata).
+- Il **Persistence Context** è l'insieme delle istanze di entity gestite da un `EntityManager`.
+- L'`EntityManager` tiene traccia di tutte le entity del contesto per **rilevare le modifiche** e le invia al database.
+- Quando il contesto si chiude, tutte le entity gestite vengono **scollegate**: le modifiche non sono più tracciate.
+
+```mermaid
+flowchart LR
+    EM["EntityManager"] -->|"gestisce"| PC
+    subgraph PC["Persistence Context"]
+        E1["Entity"]
+        E2["Entity"]
+    end
+    PC -->|"esegue UPDATE / SQL<br>(in blocco)"| DB[("DB")]
+```
+
+### Esempio
+
+```java
+import jakarta.persistence.*;
+
+@Entity
+public class Customer {
+	private int id;
+	private String name;
+
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
+}
+```
+
+|Annotazione|Scopo|
+|---|---|
+|`@Entity`|marca la classe come entity JPA (mappata su una tabella)|
+|`@Id`|marca la chiave primaria|
+|`@GeneratedValue`|genera automaticamente i valori della chiave|
+
+```java
+Customer cust = new Customer();
+cust.setName("Bill");
+```
+
+> [!attention] Queste istruzioni creano un oggetto Java e chiamano `setName`, ma **nel database non succede nulla**. `cust` è solo un oggetto Java finché non si chiede all'`EntityManager` di creare l'entity corrispondente.
+
+> [!note] Nelle slide `getName()` non ha `public`: con property access JPA deve poter usare il getter, quindi va dichiarato `public` (o almeno `protected`).
+
+### Ciclo di vita dell'Entity
+
+Un JavaBean è "solo" un oggetto Java. Un'entity JPA può trovarsi in stati diversi **in relazione al contesto di persistenza**: **transient**, **managed**, **detached**, **removed**.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Transient: new
+    Transient --> Managed: persist()
+    Managed --> Detached: detach() / chiusura del contesto
+    Managed --> Removed: remove()
+    Detached --> Managed: merge() (restituisce una copia gestita)
+    Removed --> [*]: commit / flush (DELETE)
+```
+
+|Stato|Significato|
+|---|---|
+|**Transient** (nuova)|creata con `new`, non ancora gestita da JPA|
+|**Managed** (gestita)|l'`EntityManager` ne tiene traccia e può sincronizzarne le modifiche|
+|**Detached**|non più tracciata dal contesto (ha ancora i dati, ma le modifiche non vengono salvate)|
+|**Removed**|marcata per la cancellazione|
+
+> [!note] Le frecce `merge()` e il passaggio al DELETE non sono nello schema delle slide: le ho aggiunte perché sono descritte più avanti ([[#Merge]], [[#Flush e FlushModeType]]).
+
+## Ottenere un EntityManager: l'EntityManagerFactory
+
+In **Java SE** gli `EntityManager` si creano con una `EntityManagerFactory`:
+
+```java
+public interface EntityManagerFactory {
+	EntityManager createEntityManager();
+	EntityManager createEntityManager(java.util.Map map);
+	void close();
+	boolean isOpen();
+	// ...
+}
+```
+
+|Metodo|Descrizione|
+|---|---|
+|`createEntityManager()`|crea un nuovo `EntityManager` con le impostazioni di default|
+|`createEntityManager(Map map)`|crea un `EntityManager` con proprietà personalizzate (es. impostazioni di connessione, livello di isolamento delle transazioni)|
+|`close()`|chiude la factory e rilascia tutte le risorse associate|
+|`isOpen()`|`true` se la factory è aperta, `false` se è stata chiusa|
+
+> [!important] Collegamento ai pattern
+> 
+> - Creare un `EntityManager` non è banale (configurazione, connessione al DB, contesto di persistenza...). La **factory** gestisce tutto questo in modo efficiente e riutilizzabile, ma è **costosa**: se ne crea **una per applicazione** (uso da [[#Singleton]]).
+> - Gli `EntityManager` sono **leggeri** e vengono creati indirettamente dalla factory, che nasconde i dettagli complessi: è il pattern [[#Factory]].
+
+### Java SE: la classe Persistence
+
+La classe `Persistence` avvia una `EntityManagerFactory`:
+
+```java
+public class Persistence {
+	public static EntityManagerFactory createEntityManagerFactory(String unitName);
+	public static EntityManagerFactory createEntityManagerFactory(String unitName, java.util.Map properties);
+}
+```
+
+Le configurazioni (URL JDBC, username, password, ...) sono fornite da una **Persistence Unit** definita nel file `persistence.xml`.
+
+```java
+EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPU");
+// ...
+EntityManager em = emf.createEntityManager();
+```
+
+```mermaid
+flowchart TD
+    P["Persistence"] -->|"crea"| EMF["EntityManagerFactory"]
+    PU["Persistence Unit<br>(persistence.xml)"] -->|"configura"| EMF
+    EMF -->|"crea"| EM["EntityManager"]
+    EM -->|"gestisce"| PC["Persistence Context"]
+```
+
+### Java EE / Jakarta EE: iniezione dal container
+
+```java
+import jakarta.persistence.*;
+import jakarta.ejb.*;
+
+public class MyBean implements MyBusinessInterface {
+	@PersistenceUnit(unitName = "CRM")
+	private EntityManagerFactory factory;
+
+	private EntityManagerFactory factory2;
+
+	@PersistenceUnit(unitName = "CUSTDB")
+	public void setFactory2(EntityManagerFactory f) { this.factory2 = f; }
+}
+```
+
+```java
+public class MyStatefulBean implements MyStatefulRemote {
+	@PersistenceContext(unitName = "titan", type = PersistenceContextType.EXTENDED)
+	private EntityManager manager;
+	// ...
+}
+```
+
+A differenza di Java SE:
+
+- l'`EntityManagerFactory` viene **iniettata** (`@PersistenceUnit`) e chiusa automaticamente dal container
+- l'`EntityManager` si inietta **direttamente** in un EJB con `@PersistenceContext`
+
+> [!note] `EXTENDED` vs default Di default (`TRANSACTION`) il persistence context dura **una transazione**. Con `PersistenceContextType.EXTENDED` (per gli `EntityManager` iniettati dal container, solo negli EJB stateful) sopravvive tra più transazioni, finché vive il bean: è il caso in cui si può chiamare `persist()` fuori da una transazione (vedi [[#Persist]]).
+
+## Persistence Unit
+
+Una Persistence Unit è definita nel file `persistence.xml`, che può contenerne **una o più**. Il file sta nella directory `META-INF` di un JAR nel classpath (programma Java SE) o di un JAR in `WEB-INF/lib` di un `.war`, ecc.
+
+```xml
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+
+	<!-- Prima Persistence Unit -->
+	<persistence-unit name="db1PU">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<class>com.example.User</class>
+		<properties>
+			<property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/db1"/>
+			<property name="jakarta.persistence.jdbc.user" value="root"/>
+			<property name="jakarta.persistence.jdbc.password" value="password"/>
+		</properties>
+	</persistence-unit>
+
+	<!-- Seconda Persistence Unit -->
+	<persistence-unit name="db2PU">
+		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+		<class>com.example.Product</class>
+		<properties>
+			<property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/db2"/>
+			<property name="jakarta.persistence.jdbc.user" value="root"/>
+			<property name="jakarta.persistence.jdbc.password" value="password"/>
+		</properties>
+	</persistence-unit>
+</persistence>
+```
+
+Nella classe Java del progetto, una factory per ogni unità:
+
+```java
+// Prima persistence unit
+EntityManagerFactory emf1 = Persistence.createEntityManagerFactory("db1PU");
+EntityManager em1 = emf1.createEntityManager();
+
+// Seconda persistence unit
+EntityManagerFactory emf2 = Persistence.createEntityManagerFactory("db2PU");
+EntityManager em2 = emf2.createEntityManager();
+```
+
+> [!info] Le slide usano la versione `javax` del file: namespace `http://xmlns.jcp.org/xml/ns/persistence` con `version="2.2"` e proprietà `javax.persistence.jdbc.url`, `...user`, `...password`. Con Jakarta Persistence 3.x diventano `jakarta.persistence.jdbc.*`, come sopra.
+
+### Quali classi appartengono a una Persistence Unit
+
+- Di default appartengono alla PU **tutte le classi del JAR annotate con `@Entity`**.
+- Se ne possono aggiungere altre con gli elementi `<jar-file>` e `<class>`.
+- `<exclude-unlisted-classes/>` disabilita la scansione automatica delle classi `@Entity`: valgono solo quelle elencate.
+
+```xml
+<persistence-unit name="my-pu">
+	<jar-file>../path/to/your/external/jar-file.jar</jar-file>
+	<class>com.example.Customer</class>
+	<class>com.example.Order</class>
+</persistence-unit>
+```
+
+## Entity Manager, Persistence Context, Persistence Unit
+
+|Componente|Cos'è|Caratteristiche|
+|---|---|---|
+|**Persistence Unit (PU)**|la **configurazione** logica (nome, datasource, provider, entity)|non contiene oggetti Entity; è il "blueprint" per creare i componenti concreti|
+|**EntityManagerFactory**|creata a partire dalla PU|**thread-safe**, pesante, da riutilizzare in tutta l'applicazione; produce gli `EntityManager`|
+|**EntityManager**|l'oggetto **operativo**, quello che usi per il CRUD|gestisce il persistence context; **non thread-safe**, dura poco (spesso una transazione)|
+|**Persistence Context**|lo **stato in memoria** delle entity gestite in una transazione|controlla dirty checking, merge, remove, flush|
+
+> [!warning] Concorrenza e servlet Dato che una servlet ha **una sola istanza** condivisa tra thread (vedi [[#Ciclo di vita]]), un `EntityManager` **non** va messo in un campo di istanza della servlet: va creato per ogni richiesta. La `EntityManagerFactory`, invece, essendo thread-safe può essere condivisa (es. creata all'avvio e salvata nel [[#ServletContext]]).
+
+> [!note] Dirty checking Il persistence context ricorda lo stato delle entity gestite al momento del caricamento. Al flush confronta lo stato attuale con quello iniziale e genera un `UPDATE` **solo** per le entity effettivamente modificate ("sporche"). Per questo basta chiamare un setter (vedi [[#Update]]).
+
+# Data operations
+
+## Persistere un'entity
+
+Persistere un'entity significa **inserirla** nel database:
+
+1. si crea un'istanza dell'entity, se ne impostano le proprietà e le eventuali relazioni con altri oggetti
+2. si chiama `EntityManager.persist()`
+3. infine si eseguono le istruzioni SQL verso il DB tramite `flush()` (esplicito o automatico)
+
+```java
+Customer cust = new Customer();
+cust.setName("Bolletta");
+entityManager.persist(cust);
+```
+
+Quando viene chiamato `persist()`, l'entity manager mette in coda il `Customer` per l'inserimento e l'istanza diventa **gestita**. Verrà sincronizzata con il DB in seguito (flush).
+
+> [!important] Con `persist()` l'entity diventa **managed**, cioè gestita dal persistence context. Questo **non** significa che venga eseguito subito un `INSERT`: il provider (es. Hibernate) può rimandare l'operazione SQL a un momento successivo.
+
+> [!note] Nelle slide c'è `Custom cust = new Customer();`: il tipo è `Customer`.
+
+### Persist
+
+Il momento dell'inserimento effettivo dipende da alcune variabili:
+
+- se `persist()` viene chiamato **dentro una transazione**, l'inserimento può avvenire subito oppure al flush/commit
+- si può chiamare `persist()` **fuori da una transazione** solo se l'entity manager ha un contesto di persistenza **EXTENDED**: l'inserimento viene messo in coda e posticipato finché il contesto non viene associato a una transazione
+
+> [!example] In Java SE la transazione si gestisce a mano (non è nelle slide di questa parte):
+> 
+> ```java
+> EntityManager em = emf.createEntityManager();
+> EntityTransaction tx = em.getTransaction();
+> try {
+> 	tx.begin();
+> 	Customer cust = new Customer();
+> 	cust.setName("Bolletta");
+> 	em.persist(cust);          // managed, INSERT in coda
+> 	tx.commit();               // flush automatico → INSERT eseguito
+> } catch (RuntimeException e) {
+> 	if (tx.isActive()) tx.rollback();
+> 	throw e;
+> } finally {
+> 	em.close();                // cust diventa detached
+> }
+> ```
+> 
+> È lo stesso schema `commit`/`rollback` di [[#Transaction]], ma su oggetti invece che su `Connection`.
+
+## Trovare le entity
+
+L'entity manager offre due meccanismi:
+
+1. metodi che individuano un'entity **tramite la sua chiave primaria** (`find`, `getReference`)
+2. **query ad-hoc** (JPQL, `createQuery()`)
+
+Tutte le istanze restituite restano **gestite** finché il persistence context in cui sono state lette è attivo. Quindi ulteriori chiamate a `find()` (o simili) restituiscono **la stessa istanza** dell'oggetto.
+
+```java
+Customer a = em.find(Customer.class, 1);
+Customer b = em.find(Customer.class, 1);
+System.out.println(a == b);   // true: stesso persistence context → stessa istanza, una sola SELECT
+```
+
+### Per chiave primaria: `find()` e `getReference()`
+
+```java
+public interface EntityManager {
+	<T> T find(Class<T> entityClass, Object primaryKey);
+	<T> T getReference(Class<T> entityClass, Object primaryKey);
+}
+```
+
+**`find()`**:
+
+- carica **immediatamente** l'entity: interroga il DB e restituisce un'istanza gestita (o **`null`** se non esiste) con tutti i suoi campi
+- l'entity è completamente inizializzata: tutti i campi (tranne le relazioni caricate in modo differito) vengono letti dal DB
+- se l'entity è già nel persistence context restituisce l'istanza gestita **senza interrogare** di nuovo il DB
+
+**`getReference()`**:
+
+- restituisce un **proxy** caricato in modo differito: invece di interrogare subito il DB, restituisce un'istanza proxy (solo l'ID, senza gli altri campi)
+- la query vera è posticipata finché non si accede allo stato dell'entity; se l'entity è già gestita si comporta come `find` e restituisce l'istanza gestita
+- se l'entity non esiste, viene lanciata **`EntityNotFoundException`** quando si accede a un campo (`find` invece restituirebbe `null`)
+
+> [!important] In sintesi
+> 
+> - `find()` → voglio tutti i dati subito (**eager**)
+> - `getReference()` → voglio solo il riferimento, per relazioni o chiavi esterne (**lazy**)
+
+> [!example] Quando conviene `getReference()`? Per collegare una prenotazione a una crociera esistente basta la sua chiave, non tutti i suoi dati:
+> 
+> ```java
+> Cruise cruise = em.getReference(Cruise.class, 42);  // nessuna SELECT
+> reservation.setCruise(cruise);                      // all'INSERT serve solo CRUISE_ID = 42
+> ```
+
+### Lazy loading: entity detached e FetchType
+
+Le entity **scollegate** possono avere proprietà o relazioni **non inizializzate**:
+
+- quando un'istanza viene scollegata, il suo stato potrebbe non essere completo, perché alcune proprietà o relazioni sono marcate come caricate in modo **differito** (lazy) nei metadati di mapping
+- se si restituiscono queste entity ai client usandole come oggetti di trasferimento dati, bisogna capire bene cosa succede accedendo a relazioni non inizializzate
+
+Il problema dell'inizializzazione pigra si supera in due modi:
+
+- **navigando** le relazioni necessarie mentre l'istanza è ancora gestita da un persistence context
+- facendo il **fetch immediato** dei dati quando si interroga l'entity (da lazy a eager)
+
+> [!example] Scenario tipico nell'MVC
+> 
+> ```java
+> // servlet
+> Cruise c = em.find(Cruise.class, 1);   // reservations NON ancora caricate (lazy)
+> em.close();                            // c diventa detached
+> request.setAttribute("cruise", c);
+> // JSP: ${cruise.reservations} → la lista va caricata ora, ma il contesto è chiuso
+> ```
+> 
+> Con Hibernate questo produce una `LazyInitializationException`. Soluzione: accedere a `c.getReservations()` **prima** di `em.close()`, oppure caricarle subito (fetch eager o una query con `JOIN FETCH`).
+
+> [!note] FetchType Ogni relazione ha un attributo `fetch` (`FetchType.LAZY` o `FetchType.EAGER`). I default: `@OneToMany` e `@ManyToMany` sono **LAZY**; `@ManyToOne` e `@OneToOne` sono **EAGER**. Esempio: `@OneToMany(mappedBy = "cruise", fetch = FetchType.EAGER)`.
+
+## Update
+
+Si modifica lo stato dell'entity come si farebbe con **qualsiasi altro oggetto**. Se l'entity è **gestita**, le modifiche vengono sincronizzate automaticamente (a seconda della modalità di flush) oppure quando chiami `flush()`.
+
+```java
+public void updateBedCount(int id, int newCount) {
+	Cabin cabin = entityManager.find(Cabin.class, id);   // cabin è managed
+	cabin.setBedCount(newCount);                         // nessun metodo "update": basta il setter
+}
+```
+
+> [!question] Dove è finito l'`UPDATE`? Non serve chiamarlo: `cabin` è gestita, quindi al flush il [[#Entity Manager, Persistence Context, Persistence Unit|dirty checking]] vede che `bedCount` è cambiato e genera l'`UPDATE`.
+
+## Merge
+
+`merge()` unisce le modifiche fatte a un'entity **scollegata** nel persistence context (e quindi nel DB).
+
+```java
+// lato client: cabin è detached
+cabin.setBedCount(4);
+travelAgent.updateCabin(cabin);
+
+// lato server
+public void updateCabin(Cabin cabin) {
+	Cabin copy = entityManager.merge(cabin);
+}
+```
+
+> [!attention] `merge()` **non** rende gestito l'oggetto passato: copia il suo stato in un'istanza gestita e **restituisce quella**. Dopo la chiamata `cabin` resta detached, `copy` è managed. Le modifiche successive vanno fatte su `copy`.
+
+## Remove
+
+```java
+@PersistenceContext
+EntityManager entityManager;
+
+@TransactionAttribute(REQUIRED)
+public void removeCabin(int id) {
+	Cabin cabin = entityManager.find(Cabin.class, id);
+	entityManager.remove(cabin);
+}
+```
+
+- Dopo `remove()` l'istanza non è più gestita e verrà scollegata (per la specifica è nello stato **removed** fino al commit, quando avviene il `DELETE`).
+- Se l'entity ha relazioni con altre entity, anche queste potrebbero essere rimosse, secondo le regole di **cascade** (vedi [[#Cascading]]).
+
+> [!note] `remove()` accetta solo entity **gestite**: per questo prima si fa `find()`. Passare un'entity detached lancia `IllegalArgumentException`.
+
+`@TransactionAttribute(REQUIRED)` (EJB) indica che il metodo deve essere eseguito in una transazione: se ne esiste già una la usa, altrimenti il container ne crea una nuova.
+
+## refresh()
+
+Se temi che un'entity gestita **non sia aggiornata** rispetto al database, usa `EntityManager.refresh(Object entity)`: ricarica lo stato dell'entity dal DB, **sovrascrivendo** qualsiasi modifica fatta in memoria.
+
+## contains() e clear()
+
+- `contains(entity)` restituisce `true` se quella **particolare istanza** è attualmente gestita dal persistence context.
+- `clear()` scollega **tutte** le entity gestite dal persistence context.
+
+> [!warning] Con `clear()` tutte le modifiche non ancora sincronizzate vanno **perse**. È buona norma chiamare `flush()` prima di `clear()`.
+
+## Flush e FlushModeType
+
+Le modifiche fatte con `persist()`, `merge()` o `remove()` non vengono sincronizzate con il DB finché l'entity manager non decide di fare il **flush**.
+
+- Si può forzare la sincronizzazione in qualsiasi momento con `flush()`.
+- **Di default** il flush avviene automaticamente **prima dell'esecuzione di una query correlata** e **al commit** della transazione.
+- Eccezione: la **ricerca per chiave primaria**. Con `find()` o `getReference()` non serve il flush, perché l'oggetto viene preso dalla memoria (se già nel persistence context) o letto per la prima volta dal DB.
+
+|Modalità|Quando avviene il flush automatico|
+|---|---|
+|`FlushModeType.AUTO` (default)|prima delle query che potrebbero vedere dati modificati, e al commit|
+|`FlushModeType.COMMIT`|solo al commit|
+
+Si imposta con `entityManager.setFlushMode(FlushModeType.COMMIT)`.
+
+> [!question] Perché il flush prima di una query? Se ho fatto `persist()` di un cliente e poi eseguo una query "tutti i clienti", senza flush il nuovo cliente sarebbe ancora solo in memoria e la query (che va sul DB) non lo vedrebbe.
+
+> [!important] Non confondere
+> 
+> - `persist()`: rende una nuova entity **gestita** dal persistence context
+> - `flush()`: **sincronizza** le modifiche del persistence context con il DB, eseguendo l'SQL
+> - `commit()`: rende **definitive** le modifiche. Un flush senza commit può ancora essere annullato con un rollback.
+
+## Cascading
+
+Quando si esegue un'operazione dell'entity manager su un'entity, si può eseguire automaticamente **la stessa operazione** su tutte le sue relazioni. Esempio: salvando un nuovo cliente con un nuovo indirizzo e un nuovo numero di telefono, l'entity manager può creare tutto con **una sola** `persist()`.
+
+```java
+Customer cust = new Customer();
+cust.setAddress(new Address());
+cust.getPhoneNumbers().add(new Phone());
+// li crea tutti con una sola invocazione dell'entity manager
+entityManager.persist(cust);
+```
+
+> [!note] Nelle slide la variabile si chiama `cust` ma poi si usa `customer`: è la stessa.
+
+### L'attributo cascade()
+
+La cascade si applica a diverse operazioni: `persist()`, `merge()`, `remove()`, `refresh()`. Si abilita con l'attributo `cascade()` dell'annotazione di relazione, un **array** delle operazioni da propagare alle entity correlate.
+
+```java
+public enum CascadeType {
+	ALL, PERSIST, MERGE, REMOVE, REFRESH, DETACH
+}
+```
+
+```java
+@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+```
+
+> [!note] Le slide elencano cinque valori; da JPA 2.0 esiste anche `DETACH`, ed è per questo che più avanti `CascadeType.ALL` viene descritto come "persist, merge, remove, refresh, detach".
+
+> [!warning] `REMOVE` (e quindi `ALL`) va usato solo quando le entity correlate **appartengono** davvero al padre (es. i telefoni di un cliente). Su un `@ManyToOne` verso un'entity condivisa (es. la nave di una crociera) cancellerebbe la nave e tutte le altre crociere che la usano ne resterebbero senza.
+
+# Entity Relationships
+
+## I sette tipi di relazione
+
+|Relazione|Esempio|Navigazione|
+|---|---|---|
+|**uno a uno unidirezionale**|cliente → indirizzo|trovo l'indirizzo di un cliente, ma non il cliente di un indirizzo|
+|**uno a uno bidirezionale**|cliente ↔ carta di credito|dal cliente alla carta e dalla carta al titolare|
+|**uno a molti unidirezionale**|cliente → numeri di telefono (ufficio, casa, cellulare)|trovo i telefoni di un cliente, ma non uso un numero per trovare il cliente|
+|**uno a molti bidirezionale**|crociera ↔ prenotazioni|dalla prenotazione alla crociera e da una crociera a tutte le sue prenotazioni|
+|**molti a uno unidirezionale**|crociere → nave|trovo la nave di una crociera; molte crociere condividono la stessa nave (in periodi diversi)|
+|**molti a molti unidirezionale**|prenotazione → cabine|una prenotazione può riguardare più cabine; difficilmente serve la prenotazione di una cabina|
+|**molti a molti bidirezionale**|crociere ↔ clienti|un cliente prenota molte crociere e ogni crociera ha molti clienti; serve navigare in entrambe le direzioni|
+
+> [!note] Una relazione **bidirezionale molti-a-uno** è semplicemente un'altra prospettiva sulla **uno-a-molti bidirezionale**: per questo i tipi sono sette e non otto.
+
+Due dimensioni indipendenti:
+
+- **cardinalità** (1:1, 1:N, N:1, N:M) → come sono le **tabelle** (dove sta la FK, se serve una tabella di join)
+- **direzione** (uni/bi) → come sono le **classi Java** (quali entity hanno il riferimento all'altra). Nel DB una FK si può sempre percorrere in entrambi i versi con una JOIN.
+
+> [!important] Il lato proprietario (owner) In ogni relazione **un solo lato** "possiede" la relazione: è quello le cui modifiche vengono scritte nel DB. Lo riconosci così:
+> 
+> - ha `@JoinColumn` o `@JoinTable` → **proprietario**
+> - ha `mappedBy` → **lato inverso** (solo una vista: le sue modifiche sono ignorate dal DB)
+
+## One-to-One unidirezionale (Customer → Address)
+
+```
+Customer(ID, LAST_NAME, FIRST_NAME, HAS_GOOD_CREDIT, ADDRESS_ID)
+Address(ID, STREET, CITY, STATE, ZIP)
+```
+
+```mermaid
+classDiagram
+    direction LR
+    Customer "1" --> "1" Address
+    class Customer {
+        getAddress()
+        setAddress(Address)
+    }
+    class Address {
+        getStreet()
+        getCity()
+    }
+```
+
+Solo un'entity (`Customer`) conosce l'altra (`Address`), che non ha alcun riferimento alla prima. Nelle relazioni unidirezionali una delle entity definisce una proprietà che permette di ottenere o impostare l'altra.
+
+```java
+@Entity
+public class Customer implements java.io.Serializable {
+	// ...
+	private Address address;
+
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "ADDRESS_ID")
+	public Address getAddress() { return address; }
+	public void setAddress(Address address) { this.address = address; }
+}
+```
+
+- `@OneToOne` definisce una relazione uno a uno.
+- `cascade = {CascadeType.ALL}`: tutte le operazioni (persist, merge, remove, refresh, detach) fatte su `Customer` si applicano anche all'indirizzo.
+- `@JoinColumn` indica la colonna **chiave esterna** che collega le due tabelle (`ADDRESS_ID` in `Customer`). È `JoinColumn` a definire davvero la relazione: la sua presenza indica l'entity **proprietaria**.
+
+### Primary-key join columns
+
+Nei casi di One-to-One "forte", in cui ogni record esiste solo se esiste l'altro (es. Cittadino–Passaporto), la relazione è un 1:1 perfetto anche nel DB. Si possono usare le **chiavi primarie** delle due entity invece di una colonna di join apposita, con `@PrimaryKeyJoinColumn`.
+
+```java
+@OneToOne
+@PrimaryKeyJoinColumn
+public Passport getPassport() { ... }   // Passport ha lo stesso ID del Cittadino
+```
+
+## One-to-One bidirezionale (Customer ↔ CreditCard)
+
+```sql
+CREATE TABLE CREDIT_CARD (
+	ID INT PRIMARY KEY NOT NULL,
+	EXP_DATE DATE,
+	NUMBER CHAR(20),
+	NAME CHAR(40),
+	ORGANIZATION CHAR(20)
+);
+CREATE TABLE CUSTOMER (
+	ID INT PRIMARY KEY NOT NULL,
+	LAST_NAME CHAR(20),
+	FIRST_NAME CHAR(20),
+	ADDRESS_ID INT,
+	CREDIT_CARD_ID INT
+);
+```
+
+Entrambe le entity si conoscono.
+
+```java
+@Entity
+public class CreditCard implements Serializable {
+	private int id;
+	private Date expiration;
+	private String number;
+	private String name;
+	private String organization;
+	private Customer customer;
+	// ...
+	@OneToOne(mappedBy = "creditCard")
+	public Customer getCustomer() { ... }
+	public void setCustomer(Customer customer) { ... }
+}
+```
+
+```java
+@Entity
+public class Customer implements Serializable {
+	private CreditCard creditCard;
+	// ...
+	@OneToOne(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "CREDIT_CARD_ID")
+	public CreditCard getCreditCard() { ... }
+	public void setCreditCard(CreditCard card) { ... }
+}
+```
+
+- In `CreditCard`, `@OneToOne(mappedBy="creditCard")` definisce la relazione **inversa**: `"creditCard"` è il nome della proprietà in `Customer` che stabilisce la relazione.
+- La presenza di `mappedBy` (qualunque sia il valore) conferma che il proprietario **non** è `CreditCard`, ma l'altra parte, `Customer`.
+- Il proprietario non coincide necessariamente con la tabella che ha la colonna FK, anche se in questo caso sì.
+
+### Usage example
+
+```java
+Customer cust = new Customer();
+CreditCard card = new CreditCard();
+cust.setCreditCard(card);   // PRIMA si opera sul proprietario
+card.setCustomer(cust);
+entityManager.persist(cust);
+```
+
+> [!attention] Nel caso 1:1 bidirezionale lo sviluppatore deve **mantenere coerenti entrambi i lati**. JPA salva solo il lato **owning**; l'altro resta inconsistente in memoria se non lo aggiorni. Quando si definiscono le relazioni, è sempre necessario collegare **entrambi** i lati.
+
+> [!question] Cosa succede se scrivo solo `card.setCustomer(cust)`? Nel DB **nulla**: `card` è il lato inverso, quindi `CREDIT_CARD_ID` in `CUSTOMER` resta `NULL`. Se scrivo solo `cust.setCreditCard(card)` il DB è corretto, ma in memoria `card.getCustomer()` restituisce `null` finché non ricarico.
+
+## One-to-Many unidirezionale (Customer → Phone)
+
+```sql
+CREATE TABLE PHONE (
+	ID INT PRIMARY KEY NOT NULL,
+	NUMBER CHAR(20),
+	TYPE INT,
+	CUSTOMER_ID INT
+);
+```
+
+Un'entity è collegata a molte altre, ma serve solo la navigazione **padre → figli**.
+
+```java
+@Entity
+public class Customer implements Serializable {
+	private Collection<Phone> phoneNumbers = new ArrayList<Phone>();
+	// ...
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "CUSTOMER_ID")
+	public Collection<Phone> getPhoneNumbers() { return phoneNumbers; }
+	public void setPhoneNumbers(Collection<Phone> phones) { this.phoneNumbers = phones; }
+}
+```
+
+`@JoinColumn(name="CUSTOMER_ID")` definisce `CUSTOMER_ID` come chiave esterna che collega `PHONE` a `CUSTOMER`. Per via di `@OneToMany` la FK viene memorizzata **nella tabella `PHONE`**: dietro le quinte JPA usa una colonna `CUSTOMER_ID` "invisibile" in `Phone`. La presenza di `@JoinColumn` in `Customer` lo rende il **proprietario**.
+
+```java
+@Entity
+public class Phone implements java.io.Serializable {
+	private int id;
+	private String number;
+	private int type;
+
+	public Phone() {}
+	public Phone(String number, int type) { this.number = number; this.type = type; }
+
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+	public String getNumber() { return number; }
+	public void setNumber(String number) { this.number = number; }
+	public int getType() { return type; }
+	public void setType(int type) { this.type = type; }
+}
+```
+
+> [!note] In `Phone` **non** c'è alcun riferimento al cliente: non puoi fare `p.getCustomer()`. La colonna `CUSTOMER_ID` esiste nella tabella ma non nella classe.
+
+### Usage example
+
+```java
+Customer cust = entityManager.find(Customer.class, pk);
+Phone phone = new Phone("617-333-3333", 5);
+cust.getPhoneNumbers().add(phone);   // grazie alla cascade il telefono viene salvato
+```
+
+Per rimuovere un telefono dalla relazione, va tolto **sia dalla collezione sia dal database**:
+
+```java
+cust.getPhoneNumbers().remove(phone);
+entityManager.remove(phone);
+```
+
+> [!question] Perché due istruzioni? Togliere il telefono dalla collezione elimina solo il **collegamento** (JPA mette `CUSTOMER_ID = NULL`): la riga in `PHONE` resta, orfana. `remove()` cancella la riga. In alternativa si può usare `@OneToMany(orphanRemoval = true)`, che cancella in automatico i figli tolti dalla collezione.
+
+> [!note] Nelle slide si usa `cust.getPhones()`, ma il getter definito è `getPhoneNumbers()`: qui è uniformato.
+
+### Join table mapping
+
+Un altro approccio usa una **tabella di associazione** (join table) con due colonne di chiavi esterne, verso il cliente e verso il telefono.
+
+```sql
+create table CUSTOMER_PHONE (
+	CUSTOMER_ID int not null,
+	PHONE_ID int not null unique
+);
+```
+
+```java
+@Entity
+public class Customer implements Serializable {
+	// ...
+	private Collection<Phone> phoneNumbers;
+
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinTable(
+		name = "CUSTOMER_PHONE",
+		joinColumns = {@JoinColumn(name = "CUSTOMER_ID")},
+		inverseJoinColumns = {@JoinColumn(name = "PHONE_ID")})
+	public Collection<Phone> getPhoneNumbers() { ... }
+}
+```
+
+Invece di una colonna `CUSTOMER_ID` in `PHONE`, si crea una tabella di collegamento `CUSTOMER_PHONE`. `@JoinTable` definisce la relazione e rende `Customer` il **proprietario**.
+
+- `joinColumns` → la FK verso il **proprietario** (`Customer`)
+- `inverseJoinColumns` → la FK verso l'**altra** entity (`Phone`)
+
+> [!question] Perché `PHONE_ID` è `unique`? È ciò che rende la relazione **uno**-a-molti: ogni telefono può comparire una sola volta, quindi appartiene a un solo cliente. Senza `unique` la stessa tabella rappresenterebbe un molti-a-molti.
+
+## Many-to-One unidirezionale (Cruise →> Ship)
+
+Molte entity fanno riferimento a una singola entity, ma quella referenziata non lo sa (`CRUISE(s) ->> SHIP`). È semplicemente il **lato opposto della One-to-Many**.
+
+```sql
+CREATE TABLE SHIP (
+	ID INT PRIMARY KEY NOT NULL,
+	NAME CHAR(30),
+	TONNAGE DECIMAL(8,2)
+);
+CREATE TABLE CRUISE (
+	ID INT PRIMARY KEY NOT NULL,
+	NAME CHAR(30),
+	SHIP_ID INT
+);
+```
+
+```java
+@Entity
+public class Cruise implements java.io.Serializable {
+	private int id;
+	private String name;
+	private Ship ship;
+
+	public Cruise() {}
+	public Cruise(String name, Ship ship) { this.name = name; this.ship = ship; }
+
+	@Id @GeneratedValue
+	public int getId() { return id; }
+	public void setId(int id) { this.id = id; }
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
+
+	@ManyToOne
+	@JoinColumn(name = "SHIP_ID")
+	public Ship getShip() { return ship; }
+	public void setShip(Ship ship) { this.ship = ship; }
+}
+```
+
+## One-to-Many bidirezionale (Cruise ↔>> Reservation)
+
+```sql
+CREATE TABLE RESERVATION (
+	ID INT PRIMARY KEY NOT NULL,
+	AMOUNT_PAID DECIMAL(8,2),
+	DATE_RESERVED DATE,
+	CRUISE_ID INT
+);
+CREATE TABLE CRUISE (
+	ID INT PRIMARY KEY NOT NULL,
+	NAME CHAR(30),
+	SHIP_ID INT
+);
+```
+
+Navigazione in entrambe le direzioni. Il lato owning è **SEMPRE il lato "many"**: solo modificando l'entity con la FK il database viene cambiato.
+
+```java
+@Entity
+public class Reservation implements Serializable {
+	// ...
+	private Cruise cruise;
+
+	@ManyToOne
+	@JoinColumn(name = "CRUISE_ID")
+	public Cruise getCruise() { return cruise; }
+	public void setCruise(Cruise cruise) { this.cruise = cruise; }
+}
+```
+
+```java
+@Entity
+public class Cruise implements Serializable {
+	// ...
+	private Collection<Reservation> reservations = new ArrayList<Reservation>();
+
+	@OneToMany(mappedBy = "cruise")
+	public Collection<Reservation> getReservations() { return reservations; }
+	public void setReservations(Collection<Reservation> res) { this.reservations = res; }
+}
+```
+
+`@OneToMany(mappedBy="cruise")` stabilisce la relazione **inversa** con `Reservation`. `"cruise"` è la proprietà di `Reservation` mappata su questa `Cruise`. La presenza di `mappedBy` dice che il proprietario è l'altra estremità, `Reservation`.
+
+### Relationship owner
+
+- Java Persistence richiede che il **lato molti-a-uno sia sempre il proprietario**: qui `Reservation`.
+- Bisogna chiamare `Reservation.setCruise()` ogni volta che si aggiunge o si rimuove una prenotazione da una crociera.
+- Se non si chiama `Reservation.setCruise()`, la relazione **non viene modificata** nel database.
+
+> [!important] In generale **una sola parte gestisce il DB**, mentre l'altra è solo una **vista**.
+
+> [!example] Metodo di utilità (non nelle slide) per tenere sincronizzati i due lati in un punto solo:
+> 
+> ```java
+> // in Cruise
+> public void addReservation(Reservation r) {
+> 	reservations.add(r);   // lato inverso: coerenza in memoria
+> 	r.setCruise(this);     // lato proprietario: è questo che scrive CRUISE_ID
+> }
+> ```
+
+> [!question] Perché il lato "many" è per forza il proprietario? Per come funzionano le tabelle: la FK `CRUISE_ID` sta in `RESERVATION`, una per riga. Chi ha la colonna è la `Reservation`: è lì che JPA deve scrivere.
+
+## Many-to-Many bidirezionale (Reservation ↔ Customer)
+
+```sql
+CREATE TABLE RESERVATION_CUSTOMER (
+	RESERVATION_ID INT,
+	CUSTOMER_ID INT
+);
+```
+
+Due entity collegate molti-a-molti che si conoscono entrambe. Nel DB un N:M richiede **sempre** una tabella di join: con una sola FK si potrebbe rappresentare un solo collegamento per riga.
+
+```java
+@Entity
+public class Reservation implements Serializable {
+	// ...
+	private Set<Customer> customers = new HashSet<Customer>();
+
+	@ManyToMany
+	@JoinTable(name = "RESERVATION_CUSTOMER",
+		joinColumns = {@JoinColumn(name = "RESERVATION_ID")},
+		inverseJoinColumns = {@JoinColumn(name = "CUSTOMER_ID")})
+	public Set<Customer> getCustomers() { return customers; }
+	public void setCustomers(Set<Customer> customers) { this.customers = customers; }
+}
+```
+
+`@JoinTable` significa che `Reservation` definisce la relazione ed è il **proprietario**: è responsabile di creare e gestire la tabella di collegamento (l'altra è una semplice vista).
+
+### Reservation Entity
+
+- Come per tutte le relazioni bidirezionali, deve esserci **un lato proprietario**: qui `Reservation`.
+- Poiché `Reservation` è proprietaria, la sua classe definisce il mapping `@JoinTable`.
+- **Sempre sincronizzare entrambi i lati!**
+
+```java
+@Entity
+public class Customer implements Serializable {
+	private Collection<Reservation> reservations = new ArrayList<Reservation>();
+	// ...
+	@ManyToMany(mappedBy = "customers")
+	public Collection<Reservation> getReservations() { return reservations; }
+	public void setReservations(Collection<Reservation> reservations) { this.reservations = reservations; }
+}
+```
+
+`@ManyToMany(mappedBy="customers")`: la relazione si basa sulla proprietà `customers` di `Reservation`. La presenza di `mappedBy` indica che il proprietario è l'altra estremità (`Reservation`). `Customer` **non crea** una tabella di join.
+
+> [!note] Many-to-Many unidirezionale (Reservation → Cabin) è uguale, ma solo `Reservation` ha la collezione con `@ManyToMany` + `@JoinTable`; `Cabin` non ha alcun riferimento alle prenotazioni.
+
+### Riepilogo: chi è il proprietario
+
+|Relazione|Proprietario|Annotazione sul proprietario|Annotazione sul lato inverso|
+|---|---|---|---|
+|1:1 uni|chi ha il riferimento|`@OneToOne` + `@JoinColumn`|—|
+|1:1 bi|chi ha la FK (scelta)|`@OneToOne` + `@JoinColumn`|`@OneToOne(mappedBy=...)`|
+|1:N uni|il lato "uno"|`@OneToMany` + `@JoinColumn` o `@JoinTable`|—|
+|N:1 uni|il lato "molti"|`@ManyToOne` + `@JoinColumn`|—|
+|1:N / N:1 bi|**sempre** il lato "molti"|`@ManyToOne` + `@JoinColumn`|`@OneToMany(mappedBy=...)`|
+|N:M uni|chi ha il riferimento|`@ManyToMany` + `@JoinTable`|—|
+|N:M bi|uno dei due (scelta)|`@ManyToMany` + `@JoinTable`|`@ManyToMany(mappedBy=...)`|
+
+## Relazioni basate su collezioni
+
+Finora sono state usate `java.util.Collection` e `java.util.Set`. Altre possibilità: `java.util.List` e `java.util.Map`.
+
+> [!note] `Set` o `List`? Un `Set` non ammette duplicati (un cliente compare una sola volta in una prenotazione), ed è il motivo per cui gli elementi devono avere `equals()`/`hashCode()` coerenti. Una `List` ammette duplicati e ha un ordine.
+
+### List-based relationship
+
+- Non servono metadati speciali per usare una `List` invece di un `Set` o una `Collection`.
+- La `List` permette in più di **ordinare** la relazione restituita secondo criteri specifici, con `@OrderBy`.
+
+```java
+@Target({METHOD, FIELD})
+@Retention(RUNTIME)
+public @interface OrderBy {
+	String value() default "";
+}
+```
+
+```java
+@ManyToMany
+@OrderBy("lastName asc, firstName asc")
+@JoinTable(name = "RESERVATION_CUSTOMER",
+	joinColumns = {@JoinColumn(name = "RESERVATION_ID")},
+	inverseJoinColumns = {@JoinColumn(name = "CUSTOMER_ID")})
+public List<Customer> getCustomers() { return customers; }
+public void setCustomers(List<Customer> customers) { this.customers = customers; }
+```
+
+`@OrderBy("lastName asc, firstName asc")`: i clienti sono ordinati per cognome crescente e, a parità di cognome, per nome crescente.
+
+> [!note] Correzioni rispetto alle slide Le slide scrivono `@OrderBy('lastname asc, ...")` (apice singolo che apre e doppio che chiude: non compila) e chiudono `@JoinTable(...)` subito dopo il nome. Inoltre in `@OrderBy` si indicano i nomi delle **proprietà** Java (`lastName`), non delle colonne.
+
+> [!question] `value` vuoto? `@OrderBy` senza valore ordina per **chiave primaria** dell'entity correlata. L'ordinamento è fatto dal DB (`ORDER BY` nella query), non in memoria.
+
+### Map-based relationship
+
+`@MapKey` trasforma una `@OneToMany` in una `Map<Key, Entity>`, usando un campo dell'entity di destinazione come **chiave**. Permette l'accesso diretto tramite chiave senza iterazioni. Se si usa `java.util.Map` serve `@MapKey`.
+
+```java
+@Target({METHOD, FIELD})
+public @interface MapKey {
+	String name() default "";
+}
+```
+
+`name()` è il nome della proprietà persistente da usare come chiave della mappa. Se lo si lascia vuoto, si usa la **chiave primaria** dell'entity correlata.
+
+```java
+@Entity
+public class Customer implements java.io.Serializable {
+	// ...
+	private Map<String, Phone> phoneNumbers = new HashMap<String, Phone>();
+
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "CUSTOMER_ID")
+	@MapKey(name = "number")
+	public Map<String, Phone> getPhoneNumbers() { return phoneNumbers; }
+	public void setPhoneNumbers(Map<String, Phone> phones) { this.phoneNumbers = phones; }
+}
+```
+
+`@MapKey(name="number")` dice a JPA di usare l'attributo `number` di `Phone` come chiave: presuppone che `Phone` abbia un campo `number` (es. `private String number`).
+
+```java
+Phone p = cust.getPhoneNumbers().get("617-333-3333");   // accesso diretto, senza scorrere la lista
+```
+
+> [!attention] La chiave scelta deve essere **unica** tra gli elementi della relazione: due telefoni con lo stesso `number` nella stessa mappa si sovrascriverebbero.
+

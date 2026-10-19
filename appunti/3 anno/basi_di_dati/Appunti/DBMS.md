@@ -846,9 +846,23 @@ $$
 Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`), il secondo a `Fornitore` (`piva`).
 
 
+
+
+
+
+
 ---
 
 
+>[!important] Innestando le operazioni la complessità è una somma, non un prodotto
+
+le tuple sono in memoria secondaria per garantire persistenza -> cambia il modello di costo degli algoritmi
+
+il massimo numero di tuple che risultano da una join è $m \cdot n$
+l'arità è $m+n$
+
+
+---
 
 *es.* per casa
 1. i dati delle forniture della merce M2
@@ -858,3 +872,73 @@ Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`
 5. le città in cui è fornita la merce M2
 6. le coppie nome_merce - nome_fornitore t.c. il fornitore con quel nome fornisce la merce con quel nome (collegare 3 tabelle usa le parentesi per evitare ambiguità nella notazione posizionale)
 
+fatti
+
+1. 
+$$
+\sigma_{\$2 = 'M2'}(\text{Fornitura})
+$$
+2. 
+$$
+\Pi_{\$1}(\text{Fornitura})
+$$
+3. 
+$$
+\Pi_{\$3}(\sigma_{\$1 = 'M 2'}(\text{Merce}))
+$$
+4. non è detto che le due notazioni abbiano costi differenti: ottimizzatore di query che analizza la query e trova il modo più efficiente di effettuare la query
+$$
+\Pi_{\$5} \left(\sigma_{\$1 = 'F1'} (\text{Forniture}) \underset{\$2 = \$1}{\bowtie} \text{Merce}\right) \quad \equiv \quad \Pi_{\$ 5} \left[\sigma_{\$1 = 'F1'} \left(\text{Forniture} \underset{\$2 = \$1}{\bowtie} \text{Merce}\right)\right] 
+$$
+5. 
+$$
+\Pi_{\$6} \left[\sigma_{\$ 2='M 2'}\left( \text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right)\right] \quad \equiv \quad \Pi_{\$6} \left[\sigma_{\$2='M 2'}\left( \text{Fornitura}\right) \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right]
+$$
+6. 
+$$
+\Pi_{\$5, \$8}\left[ \left( \text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]
+$$
+
+---
+
+l'operatore $\bowtie$ deriva dal $\times$ dell'algebra
+prendere ogni coppia da una tupla a sinistra e una a destra (prodotto cartesiano $\times$) e mantenere solo quelle che soddisfano una determinata proprietà
+Nell'algebra relazionale possiamo usare anche il prodotto cartesiano
+
+*es.* 6
+$$
+\Pi_{\$5, \$8} \left\{\sigma_{\$2 = \$7}\left\{\left[\sigma_{\$1 = \$ 4}\left( \text{Fornitura} \times \text{Fornitore} \right) \right] \times \text{Merce} \right\} \right\}
+$$
+
+prendi tutte le coppie e preserva solo quelle in cui c'è concatenazione
+
+le join è equivalente alla selezione di un prodotto cartesiano
+$$
+\bowtie \quad \equiv \quad \sigma(\dots \ \times \ \dots)
+$$
+l'unica differenza con il prodotto cartesiano dell'algebra insiemistica
+dati $A$ e $P$ due insiemi
+$A \times P$ restituisce tutte le coppie composte da un elemento di $A$ e un elemento di $P$
+ciascun elemento dell'insieme risultante è una **coppia**
+invece nel prodotto cartesiano in algebra relazionale otteniamo un insieme di tuple (otteniamo un arancione ✨), non una coppia di tuple, altrimenti non sarebbe rientrante.
+
+coppie di nomi formate dai nomi di fornitore
+$$
+\Pi_{\$2, \$5}(\text{Fornitore} \times \text{Fornitore})
+$$
+l'algebra relazionale è una estensione dell'algebra insiemistica
+
+esistono quindi anche gli operatori di unione, intersezione e sottrazione
+anche queste sono rientranti -> posso effettuare l'unione di relazioni solo se hanno lo stesso schema di relazione
+>[!important] I due operandi devono avere lo stesso schema, devono essere **compatibili**
+
+*es.* p.iva dei fornitori che forniscono RC o che forniscono M2
+$$
+\Pi_{\$1}[\sigma_{\ = 'RC'} (\text{Fornitore})] \cup  \Pi_{$1} [\sigma_{\$2 = 'M 2'}(\text{Fornitura})]
+$$
+alcuni interpreti potrebbero dare errore in quanto gli attributi (seppur semanticamente uguali) hanno nomi diversi $\to$ operatore renaming.
+Per convenzione li useremo senza.
+l'unione non è esprimibile tramite altri operatori dell'algebra relazionale (contrariamente all'intersezione).
+
+sottrazione
+*es.* p.iva dei fornitori che non sono in Fornitura (non forniscono alcuna merce)
