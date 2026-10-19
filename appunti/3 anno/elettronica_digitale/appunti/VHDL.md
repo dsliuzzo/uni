@@ -693,13 +693,7 @@ end myCLA
 
 
 ---
-
-utilizzeremo il pacchetto vivado
-path senza spazi
-
-create a new project -> project name -> project type (RTL project) -> add sources (altri file) -> add constrains (impostazioni predefinite *es.* frequenza di funzionamento) -> default part (family: zynq 7000, chip: xc7z020clg400-3) -> finish
-
-add sources -> add or create design sources -> create file (File name = nome della entity) -> finish
+xc7z020clg400-3
 
 ``` vhdl
 entity FA is
@@ -834,3 +828,85 @@ begin
 end Struct;
 ```
 
+
+---
+
+[...] recupera il generic
+
+``` vhdl
+library IEEE; -- senior member
+use IEEE.std_logic_1164.all;
+
+entity RCA_CLA is
+	port(
+		A,B: in std_logic_vector(3 downto 0);
+		cin: in std_logic;
+		ORCA, OCLA: out std_vector(4 downto 0)
+	)
+end RCA_CLA;
+
+architecture Esx of RCA_CLA is
+
+signal p, g: std_logic_vector(4 downto 0);
+signal c: std_logic_vector(5 downto 0);
+
+signal pp, gg: std_logic_vector(4 downto 0);
+signal cc: std_logic_vector(5 downto 0);
+
+begin
+	p(3 downto 0) <= A xor B;
+	p(4) <= p(3); -- estendere gli operandi con segno
+	g(3 downto 0) <= A and B;
+	g(4) <= g(3);
+	c(5 downto 1) <= g or (p and c(4 downto 0));
+	ORCA <= p xor c(4 downto 0);
+	
+	pp <= A xor B;
+	gg <= A and B;
+	pp(4) <= pp(3);
+	gg(4) <= gg(3);
+	cc(0) <= cin;
+	cc(1) <= gg(0) or (pp(0) and c(0));
+	cc(2) <= gg(1) or (pp(1) and gg(0) or pp(1) and pp(0) and cc(0));
+	cc(3) <= gg(2) or (pp(2) and gg(1)) or (pp(2) and pp(1) and gg(0)) or (pp(2) and pp(1) and pp(0) and c(0));
+	cc(4) <= gg(3) or (pp(3) and gg(2)) or (pp(3) and pp(2) and gg(1)) or (pp(3) and pp(2) and pp(1) and gg(0)) or (pp(3) and pp(2) and pp(1) and pp(0) and cc(0));
+	OCLA <= pp xor cc(4 downto 0)
+end Esx;
+```
+
+``` vhdl
+library IEEE; -- senior member
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_arith.all;
+
+entity test is
+end test;
+
+architecture Sim of test is
+
+component RCA_CLA
+	port(
+		A,B: in std_logic_vector(3 downto 0);
+		cin: in std_logic;
+		ORCA, OCLA: out std_logic_vector(4 downto 0)
+	);
+end component;
+signal IA, IB: std_logic_vector(3 downto 0);
+signal Icin: std_logic;
+signal SRCA, SCLA: std_logic_vector(4 downto 0);
+
+begin
+	CUT: RCA_CLA port map(IA,IB,Icin,SRCA,SCLA);
+	process begin
+		Icin <= 0;
+		IA <= (others => '0');
+		IB <= (others => '1');
+		for i in -8 to 7 loop
+			IA <= conv_std_logic_vector(i, 4);
+			for j in -8 to 7 loop
+				IB <= conv_std_logic_vector(j, 4);
+				wait for 10 ns;
+			end loop;	
+		end loop;
+end Sim;
+```
