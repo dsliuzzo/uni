@@ -1,3 +1,28 @@
+# Istanza usata negli esempi
+**Fornitore**
+
+| piva | nome | città |
+| ---- | ---- | ----- |
+| F1   | A    | CS    |
+| F2   | B    | RC    |
+| F3   | C    | CS    |
+
+**Merce**
+
+| cod | nome | marca    |
+| --- | ---- | -------- |
+| M1  | x    | $\alpha$ |
+| M2  | y    | $\beta$  |
+
+**Fornitura**
+
+| fornitore | merce | prezzo |
+| --------- | ----- | ------ |
+| F1        | M1    | 10     |
+| F1        | M2    | 5      |
+| F2        | M1    | 8      |
+
+
 # 1
 *es.* per casa
 1. i dati delle forniture della merce M2
@@ -7,7 +32,7 @@
 5. le città in cui è fornita la merce M2
 6. le coppie nome_merce - nome_fornitore t.c. il fornitore con quel nome fornisce la merce con quel nome (collegare 3 tabelle usa le parentesi per evitare ambiguità nella notazione posizionale)
 
-fatti
+**fatti**
 
 1. 
 $$
@@ -42,4 +67,42 @@ $$
 5. merci che non sono fornite da F1
 6. nomi delle merci che non sono fornite a RC
 
----
+**fatti**
+1. 
+$$
+\Pi_{\$3}[\sigma_{\$1 = 'F 1'\ \wedge \  \$2 = 'M 2'}(\text{Fornitura})]
+$$
+2. 
+$$
+\Pi_{\$9}\left\{\sigma_{\$6 = 'CS'}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}
+$$
+3. 
+$$
+\Pi_{\$3}\left[\sigma_{\$2 = 'y'}(\text{Merce})\right]\cup \Pi_{\$9}\left\{\sigma_{\$5 = 'B'}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}
+$$
+4. 
+$$
+\Pi_{\$8}\left\{\sigma_{\$6 = 'RC' \ \wedge \ \$3 < 10}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}
+$$
+5. 
+$$
+\Pi_{\$1}(\text{Merce}) - \Pi_{\$2}\left[\sigma_{\$1 = 'F 1'}(\text{Fornitura})\right]
+$$
+6. 
+$$
+\Pi_{\$2}(\text{Merce}) - \Pi_{\$8}\left\{\sigma_{\$6 = 'RC'}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}
+$$
+giusto ma fragile
+scomposizione in sotto problemi
+cod delle merci fornite a RC
+$$
+\Pi_{\$7}\left\{\sigma_{\$6 = 'RC'}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}
+$$
+cod delle merci non fornite a RC
+$$
+\Pi_{\$1}(\text{Merce})-\Pi_{\$7}\left\{\sigma_{\$6 = 'RC'}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}
+$$
+nome delle merci non fornite a RC
+$$
+\Pi_{\$3}\left[\left(\Pi_{\$1}(\text{Merce})-\Pi_{\$7}\left\{\sigma_{\$6 = 'RC'}\left[ \left( \text{Fornitura}\underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right]\right\}\right)\underset{\$1 = \$1}{\bowtie} \text{Merce}\right]
+$$
