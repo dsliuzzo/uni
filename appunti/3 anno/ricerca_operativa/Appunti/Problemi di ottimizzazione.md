@@ -1110,7 +1110,7 @@ $$
 & x_B, x_N \geq 0
 \end{cases}
 $$
-dove $\hat{c}^T = c_N^T - c_B^TB^{-1}N$
+dove $\hat{c}^\top_{N} = c_N^T - c_B^TB^{-1}N$
 di conseguenza $\hat{c}_B^T = c_B^T - c_B^T B^{-1}B = c_B^T - c_B^T I = c_B^T - c_B^T = 0^T$ (rivedi perché arriviamo a $0^T$)
 
 dobbiamo capire se $\hat{c}_N^T$ è ammissibile
