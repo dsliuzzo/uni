@@ -1,3 +1,4 @@
+#web #appunti 
 Con la nascita del web internet è diventato un luogo di compravendita di **servizi**.
 
 I primi servizi erano **monoliti**, ma nel corso del tempo si è pensato di utilizzare delle astrazioni che potessero semplificare il tutto e implementare pagine dinamiche.
@@ -4261,7 +4262,7 @@ flowchart TD
 ```
 
 ### Java EE / Jakarta EE: iniezione dal container
-
+Programmazione per convenzioni: molto codice viene sostituito da semplici annotazioni `@`
 ```java
 import jakarta.persistence.*;
 import jakarta.ejb.*;
@@ -4390,7 +4391,6 @@ Quando viene chiamato `persist()`, l'entity manager mette in coda il `Customer` 
 > [!note] Nelle slide c'è `Custom cust = new Customer();`: il tipo è `Customer`.
 
 ### Persist
-
 Il momento dell'inserimento effettivo dipende da alcune variabili:
 
 - se `persist()` viene chiamato **dentro una transazione**, l'inserimento può avvenire subito oppure al flush/commit
@@ -5086,4 +5086,3 @@ Phone p = cust.getPhoneNumbers().get("617-333-3333");   // accesso diretto, senz
 ```
 
 > [!attention] La chiave scelta deve essere **unica** tra gli elementi della relazione: due telefoni con lo stesso `number` nella stessa mappa si sovrascriverebbero.
-
