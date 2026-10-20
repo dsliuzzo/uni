@@ -2262,10 +2262,9 @@ Le direttive `<%@ ... %>` forniscono **metadati** e configurazioni sulla pagina 
 Altri attributi utili: `pageEncoding` (encoding della pagina), `session="false"` (non crea la sessione), `errorPage` / `isErrorPage` (gestione degli errori).
 
 ### Inclusione di file
-
 Per riutilizzare parti di pagina (header, menu, footer) esistono due modi:
 
-```jsp
+``` jsp
 <jsp:include page="Relative URL" flush="true" />
 <%@ include file="Relative URL" %>
 ```
@@ -2280,8 +2279,8 @@ Per riutilizzare parti di pagina (header, menu, footer) esistono due modi:
 Finalità: riutilizzare contenuti JSP, HTML o testo normale e aggiornarli in un punto solo.
 
 > [!note] Direttiva o azione? Formalmente `<%@ include %>` è una **direttiva** (elaborata in traduzione), mentre `<jsp:include>` è una **azione standard** (elaborata a runtime). Le slide le raggruppano sotto "File Inclusion".
-> ## Esempi con scriptlet
 
+## Esempi con scriptlet
 Gli scriptlet possono essere "spezzati": si apre un blocco Java, si chiude il tag, si scrive HTML, si riapre il tag per chiudere il blocco. L'HTML in mezzo diventa un `out.println()` **dentro** il blocco Java.
 
 ### Loop.jsp
@@ -2328,34 +2327,36 @@ Scriptlet (dichiarazione + `for`) ed expression (`<%= i %>`) si alternano: l'exp
 ```jsp
 <%@ page import="java.sql.*" %>
 <html>
-<head><title>Names</title></head>
-<body>
-<OL>  <%-- lista numerata --%>
-<%
-	String driverName = "com.mysql.jdbc.Driver";
-	try { Class.forName(driverName); }
-	catch (Exception e) { out.println("Exception: " + e); }
-
-	String mysqlURL = "jdbc:mysql://localhost:3306/simpleschema";
-	String username = "root";
-	String password = "root";
-	java.sql.Connection c = null;
-	try {
-		c = DriverManager.getConnection(mysqlURL, username, password);
-		java.sql.Statement s = c.createStatement();
-		String query = "SELECT * FROM names";
-		java.sql.ResultSet rs = s.executeQuery(query);
-		while (rs.next()) { %>
-			<LI>Code: <%= rs.getInt(1) %>, name: <%= rs.getString(2) %></LI>
-<%		}
-		rs.close();
-		c.close();
-	} catch (Exception e) {
-		out.println("Exception: " + e);
-	}
-%>
-</OL>
-</body>
+	<head>
+		<title>Names</title>
+	</head>
+	<body>
+		<OL>  <%-- lista numerata --%>
+		<%
+			String driverName = "com.mysql.jdbc.Driver";
+			try { Class.forName(driverName); }
+			catch (Exception e) { out.println("Exception: " + e); }
+		
+			String mysqlURL = "jdbc:mysql://localhost:3306/simpleschema";
+			String username = "root";
+			String password = "root";
+			java.sql.Connection c = null;
+			try {
+				c = DriverManager.getConnection(mysqlURL, username, password);
+				java.sql.Statement s = c.createStatement();
+				String query = "SELECT * FROM names";
+				java.sql.ResultSet rs = s.executeQuery(query);
+				while (rs.next()) { %>
+					<LI>Code: <%= rs.getInt(1) %>, name: <%= rs.getString(2) %></LI>
+		<%		}
+				rs.close();
+				c.close();
+			} catch (Exception e) {
+				out.println("Exception: " + e);
+			}
+		%>
+		</OL>
+	</body>
 </html>
 ```
 
@@ -2373,7 +2374,6 @@ Le tre funzionalità di un'applicazione web (vedi [[#Model-View-Controller (MVC)
 > [!important] In entrambi i casi c'è un **mix di logica applicativa, dati e presentazione** nello stesso componente: cambia solo dove sta l'HTML (dentro stringhe Java o intorno al Java), ma la separazione delle responsabilità è violata allo stesso modo.
 
 ## Migliorare l'esempio: Servlet + JSP
-
 **Miglioria**: la servlet legge i dati e li passa alla JSP con il `RequestDispatcher` (vedi [[#Dispatching]]). Il `RequestDispatcher` inoltra la request da una risorsa del server a un'altra (pagina HTML o JSP) **senza che il browser lo sappia**: l'URL non cambia.
 
 ```java
@@ -2429,9 +2429,7 @@ public class JDBCServletOne extends HttpServlet {
 > [!attention] ...ma nella JSP mescoliamo ancora (un po' di) logica Java e presentazione HTML: cast, `if`, `for`, `out.println`. Servono altri strumenti: **EL** e **JSTL**.
 
 ### Integrazione di Servlet e JSP
-
 JSP semplifica lo sviluppo e la manutenzione del contenuto HTML:
-
 - per codice dinamico **semplice** → richiamare codice servlet da espressioni di scripting
 - per casi **moderatamente complessi** → classi personalizzate richiamate da espressioni di scripting
 - per casi **più complessi** → **bean** e **tag personalizzati** (vedi [[#JavaBeans]])
@@ -2439,7 +2437,6 @@ JSP semplifica lo sviluppo e la manutenzione del contenuto HTML:
 > [!important] Il presupposto alla base di JSP è che **una singola pagina fornisca un unico aspetto di base**. Se la stessa richiesta può dare risultati con aspetti molto diversi, la scelta va fatta altrove (nella servlet controller, che decide a quale JSP fare forward).
 
 ## Expression Language (EL)
-
 > [!important] **EL** è un linguaggio di semplici espressioni `${...}` che permette di accedere in modo diretto e leggibile ai dati presenti negli **scope**, senza scrivere codice Java nella JSP. Gli scope sono cercati in quest'ordine: **page → request → session → application**.
 
 Esempio: una servlet imposta gli attributi `x` e `y` nella request e invoca la JSP.
@@ -2447,23 +2444,23 @@ Esempio: una servlet imposta gli attributi `x` e `y` nella request e invoca la J
 ```jsp
 <%-- JSP senza EL --%>
 <html>
-<body>
-<%
-	Integer x = (Integer) request.getAttribute("x");
-	Integer y = (Integer) request.getAttribute("y");
-	int somma = x + y;
-	out.println("La somma è: " + somma);
-%>
-</body>
+	<body>
+		<%
+			Integer x = (Integer) request.getAttribute("x");
+			Integer y = (Integer) request.getAttribute("y");
+			int somma = x + y;
+			out.println("La somma è: " + somma);
+		%>
+	</body>
 </html>
 ```
 
 ```jsp
 <%-- JSP con EL --%>
 <html>
-<body>
-<p>La somma è: ${x + y}</p>
-</body>
+	<body>
+		<p>La somma è: ${x + y}</p>
+	</body>
 </html>
 ```
 
@@ -3397,9 +3394,7 @@ Due ingredienti: il **costruttore privato** impedisce di creare altre istanze, i
     - **Convenzioni JavaBeans**: costruttore senza argomenti, incapsulamento delle variabili, interfaccia `Serializable`, scope page/request/session/application
 
 # Persistenza (JPA)
-
 ## Il problema: troppo lavoro manuale
-
 Finora, per salvare o leggere un prodotto nel DB, abbiamo scritto query SQL e trasformato **a mano** i risultati in oggetti Java (vedi [[#Java Database Connectivity]]):
 
 1. scrivere la query SQL
@@ -3437,7 +3432,8 @@ La specifica stabilisce come **descrivere** gli oggetti persistenti, come **cerc
 
 > [!attention] JPA **non sostituisce** il DB, il linguaggio SQL o il pattern DAO. Introduce un modo **standardizzato** di gestire la persistenza attraverso oggetti Java, riducendo il codice di mapping manuale e gestendo le relazioni tra entità.
 
-> [!info] javax → jakarta Le slide usano `javax.persistence.*`: è il nome fino a JPA 2.2. Da Jakarta EE 9 (Jakarta Persistence 3.0) il package è `jakarta.persistence.*`, come per le servlet. Annotazioni e metodi sono gli stessi: negli esempi uso `jakarta`.
+> [!info] javax → jakarta
+>  Le slide usano `javax.persistence.*`: è il nome fino a JPA 2.2. Da Jakarta EE 9 (Jakarta Persistence 3.0) il package è `jakarta.persistence.*`, come per le servlet. Annotazioni e metodi sono gli stessi: negli esempi uso `jakarta`.
 
 JPA permette di gestire in modo standard la **persistenza** dei dati, cioè la memorizzazione e il recupero di **oggetti Java** da un database relazionale. Mette a disposizione:
 
@@ -3491,7 +3487,8 @@ I risultati non sono più dati primitivi o `ResultSet`, ma oggetti: **Entity** (
 |ereditarietà|nessun supporto diretto, join complesse|
 |stato **in memoria** (POJO)|stato **persistente** sul DB|
 
-> [!note] POJO Un **POJO** (Plain Old Java Object) è un normale oggetto Java che non dipende da alcun framework o classe speciale.
+> [!note] POJO
+>  Un **POJO** (Plain Old Java Object) è un normale oggetto Java che non dipende da alcun framework o classe speciale.
 
 > [!important] L'**ORM** fa da ponte tra questi due mondi, permettendo di mappare gli oggetti Java sulle tabelle di un database relazionale. Questa differenza strutturale si chiama anche _object-relational impedance mismatch_.
 
@@ -3820,7 +3817,8 @@ public class Customer implements java.io.Serializable {
 
 > [!question] Cosa succederebbe senza `@Transient`? Con property access JPA vedrebbe `getLastName()` e cercherebbe una colonna `lastName` nella tabella `Customer`, che non esiste come colonna separata (è già dentro la chiave): errore di mapping.
 
-> [!note] `@Transient` (annotazione JPA) ≠ `transient` (parola chiave Java). La parola chiave esclude un campo dalla **serializzazione** Java; JPA ignora anche i campi `transient`, ma l'annotazione serve quando vuoi escludere qualcosa **solo** dal database.
+> [!note] `@Transient` (annotazione JPA) ≠ `transient` (parola chiave Java).
+> La parola chiave esclude un campo dalla **serializzazione** Java; JPA ignora anche i campi `transient`, ma l'annotazione serve quando vuoi escludere qualcosa **solo** dal database.
 
 ### Mapping types
 
@@ -4126,14 +4124,14 @@ Per far funzionare il codice serve un ambiente configurato:
 
 Se JDBC mette a disposizione `Connection`, `Statement` e `ResultSet`, JPA mette a disposizione soprattutto l'**`EntityManager`**.
 
-|Metodo|Funzione|
-|---|---|
-|`find()`|recupera un'entity tramite identificativo|
-|`persist()`|rende persistente una **nuova** entity|
-|`merge()`|copia lo stato di un oggetto **non gestito** in un'istanza gestita|
-|`remove()`|marca un'entity gestita per la rimozione|
-|`createQuery()`|crea una query, per esempio in JPQL|
-|`flush()`|sincronizza le modifiche pendenti con il database|
+| Metodo          | Funzione                                                           |
+| --------------- | ------------------------------------------------------------------ |
+| `find()`        | recupera un'entity tramite identificativo                          |
+| `persist()`     | rende persistente una **nuova** entity                             |
+| `merge()`       | copia lo stato di un oggetto **non gestito** in un'istanza gestita |
+| `remove()`      | marca un'entity gestita per la rimozione                           |
+| `createQuery()` | crea una query, per esempio in JPQL                                |
+| `flush()`       | sincronizza le modifiche pendenti con il database                  |
 
 ### Managed e unmanaged
 
@@ -4292,7 +4290,8 @@ A differenza di Java SE:
 - l'`EntityManagerFactory` viene **iniettata** (`@PersistenceUnit`) e chiusa automaticamente dal container
 - l'`EntityManager` si inietta **direttamente** in un EJB con `@PersistenceContext`
 
-> [!note] `EXTENDED` vs default Di default (`TRANSACTION`) il persistence context dura **una transazione**. Con `PersistenceContextType.EXTENDED` (per gli `EntityManager` iniettati dal container, solo negli EJB stateful) sopravvive tra più transazioni, finché vive il bean: è il caso in cui si può chiamare `persist()` fuori da una transazione (vedi [[#Persist]]).
+> [!note] `EXTENDED` vs default Di default (`TRANSACTION`)
+> il persistence context dura **una transazione**. Con `PersistenceContextType.EXTENDED` (per gli `EntityManager` iniettati dal container, solo negli EJB stateful) sopravvive tra più transazioni, finché vive il bean: è il caso in cui si può chiamare `persist()` fuori da una transazione (vedi [[#Persist]]).
 
 ## Persistence Unit
 
@@ -4362,9 +4361,11 @@ EntityManager em2 = emf2.createEntityManager();
 |**EntityManager**|l'oggetto **operativo**, quello che usi per il CRUD|gestisce il persistence context; **non thread-safe**, dura poco (spesso una transazione)|
 |**Persistence Context**|lo **stato in memoria** delle entity gestite in una transazione|controlla dirty checking, merge, remove, flush|
 
-> [!warning] Concorrenza e servlet Dato che una servlet ha **una sola istanza** condivisa tra thread (vedi [[#Ciclo di vita]]), un `EntityManager` **non** va messo in un campo di istanza della servlet: va creato per ogni richiesta. La `EntityManagerFactory`, invece, essendo thread-safe può essere condivisa (es. creata all'avvio e salvata nel [[#ServletContext]]).
+>[!warning] Concorrenza e servlet
+>Dato che una servlet ha **una sola istanza** condivisa tra thread (vedi [[#Ciclo di vita]]), un `EntityManager` **non** va messo in un campo di istanza della servlet: va creato per ogni richiesta. La `EntityManagerFactory`, invece, essendo thread-safe può essere condivisa (es. creata all'avvio e salvata nel [[#ServletContext]]).
 
-> [!note] Dirty checking Il persistence context ricorda lo stato delle entity gestite al momento del caricamento. Al flush confronta lo stato attuale con quello iniziale e genera un `UPDATE` **solo** per le entity effettivamente modificate ("sporche"). Per questo basta chiamare un setter (vedi [[#Update]]).
+>[!note] Dirty checking 
+>Il persistence context ricorda lo stato delle entity gestite al momento del caricamento. Al flush confronta lo stato attuale con quello iniziale e genera un `UPDATE` **solo** per le entity effettivamente modificate ("sporche"). Per questo basta chiamare un setter (vedi [[#Update]]).
 
 # Data operations
 
