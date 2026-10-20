@@ -837,12 +837,12 @@ Quindi non tutte le intersezioni hanno lo stesso contenuto informativo. Un algor
 Schema di algoritmo
 $$
 \begin{array}{rl}
-1:&\text{if} \Omega(P) \neq \emptyset \text{then} \\
+1:&\text{if} \ \Omega(P) \neq \emptyset \ \text{then} \\
 2:&\hspace{4ex} \text{calcola una soluzione di base ammissibile }\overline{x} \text{ di } \Omega (P) \\
 3:&\text{else} \\
 4:&\hspace{4ex} \text{exit} \\
-5:&\text{end if} \\ \hline
-6:&\text{if }\overline{x}\text{ è soluzione ottima per }(P) \text{ then} \\
+5:&\text{end if} \\ \hdashline
+6:&\text{if} \ \overline{x}\text{ è soluzione ottima per }(P) \text{ then} \\
 7:&\hspace{4ex} x^* := \overline{x}, z^*:= c^T\overline{x} \\
 8:&\hspace{4ex} \text{exit} \\
 9:&\text{end if} \\
@@ -933,7 +933,7 @@ qualunque soluzione del sistema lineare associata alla stessa base
 $$
 x = \binom{B^{-1}b-B^{-1}Nx_N}{x_N}
 $$
-Determiniamo l’espressione della funzione obiettivo per $x$ sostituendo $x_B$ calcolata:
+Determiniamo l’espressione della funzione obiettivo per $x$ sostituendo $x_B$ calcolata e partizionando anche il vettore $c^T$:
 $$
 \begin{align*}
 c^T \overline{x} & = (c_B^T  c_N^T) \binom{x_B}{x_N} = (c_B^T c_N^T)\binom{B^{-1}b-B^{-1}Nx_N}{x_N} \\
@@ -1013,7 +1013,7 @@ $$
 \end{cases}
 $$
 equivalente a $(P)$ a patto di conoscere la base.
-#### Esercizio 4
+#### Esercizio 3
 $$
 A = \left(\begin{array}{cccccc}
 1 & 2 & 3 & 1 & 0 & 0 \\
@@ -1062,6 +1062,7 @@ $$
 $$
 è ottima ed è unica (sono tutti maggiori di 0)
 ## Cambio della soluzione di base ammissibile
+### Forma canonica
 Se non è soddisfatta la [[#Condizione sufficiente di ottimalità|condizione sufficiente di ottimalità]] di una soluzione, allora è possibile effettuare delle operazioni di **cambio di base**.
 Sia $\bar{x}$ una soluzione ammissibile di base per $(P)$:
 $$
@@ -1075,20 +1076,13 @@ $$
 & x_B, x_N \geq 0
 \end{cases}
 $$
-Si noti che i vincoli sul segno garantiscono l'ammissibilità della soluzione di base, tuttavia, in questo caso, l'ammissibilità non dipende solo da $x_N$ (variabili decisionali) poiché al suo variare cambia anche $x_B$.
+>[!important] Si noti che i vincoli sul segno garantiscono l'ammissibilità della soluzione di base, tuttavia, in questo caso, l'ammissibilità non dipende solo da $x_N$ (variabili decisionali) poiché al suo variare cambia anche $x_B$.
 
 Nella minimizzazione del problema si possono eliminare le costanti $\implies$ elimino $\bar{z}$.
 
 
 
-
-
-
-
-
-
-
-
+---
 
 [...] da riprendere
 - trovare vettori linearmente indipendenti
@@ -1096,3 +1090,195 @@ Nella minimizzazione del problema si possono eliminare le costanti $\implies$ el
 - prodotto righe per colonna
 - calcolo det (laplace - sarrus)
 - prodotto matriciale
+
+
+---
+
+
+tecnica del cambio di soluzione
+riprendendo la forma canonica
+$$
+\min c^T\overline{x} + \hat{c}^T x_N \ = \ c^T \overline{x} + \min \hat{c}^T_N x_N 
+$$
+$$
+Ax = b \implies B x_B + N x_N = b \implies B^{-1}B x_B + B^{-1} N x_N = B^{-1}b \implies I x_B + B^{-1} N x_N = B^{-1}b
+$$
+$$
+\begin{cases}
+\min & 0^T x_B + \hat{c}_N^T x_N \\
+\text{s.t.} & I \cdot x_B + B^{-1}Nx_N = B^{-1}b\\
+& x_B, x_N \geq 0
+\end{cases}
+$$
+dove $\hat{c}^T = c_N^T - c_B^TB^{-1}N$
+di conseguenza $\hat{c}_B^T = c_B^T - c_B^T B^{-1}B = c_B^T - c_B^T I = c_B^T - c_B^T = 0^T$ (rivedi perché arriviamo a $0^T$)
+
+dobbiamo capire se $\hat{c}_N^T$ è ammissibile
+non lo è se esiste almeno una che è strettamente negativa
+$\hat{c}_{N(j)} < 0$
+la funzione obbiettivo della forma canonica misura di quanto varia la funzione obbiettivo originale in un nuovo punto
+se c'è un coefficiente strettamente negativo:
+$$
+\hat{c}_N^T x_N
+$$
+perturbiamo $x_N$ come un vettore con n-m componenti, che sicuramente soddisfa i vincoli sul segno, e in corrispondenza della $j$esima componente vale $\delta$
+$$
+x_N = \left(\begin{array}{c} 0 \\ \vdots \\ \delta \\ \vdots \\ 0 \end{array}\right)_{n-m} \quad \delta > 0
+$$
+il prodotto scalare $\hat{c}_N^T x_N = \hat{c}_{N(j)} \cdot \delta <0$
+è negativo in quanto $\delta$ è positivo e $\hat{c}_{N(j)}$ è negativo
+il prodotto scalare rappresenta quanto varia la funzione obbiettivo e varia di un valore negativo
+-> $c^Tx < c^T \bar{x}$.
+Ci converrebbe scegliere $\delta$ il più grande possibile, ma dobbiamo fare attenzione che certe soluzioni non diventino negative
+
+riscriviamo $x_N$
+$$
+x_N = \left(\begin{array}{c} 0 \\ \vdots \\ 1 \\ \vdots \\ 0 \end{array}\right) \delta = e_j \cdot \delta
+$$
+dove $e_j$ vettore nullo fatta eccezione per la $j$esima componente pari a 1.
+La colonna $j$esima sarà la colonna $k$esima della matrice originale
+$$
+A_{N(j)} = A_k
+$$
+
+concentriamoci su $x_B + B^{-1} N x_N \geq 0$
+sostituiamo $x_N = e_j \cdot \delta$
+$$
+x_B + B^{-1}N(e_j \delta) \geq 0
+$$
+essendo $\delta$ uno scalare
+$$
+x_B + \delta B^{-1}N e_j \geq 0
+$$
+il prodotto $N e_j$ seleziona solo la $j$esima colonna di $N$ che non è altro che $A_{N(j)} = A_k$
+$$
+\displaylines{
+x_B + \delta B^{-1} A_{N(j)} \geq 0 \\
+x_B + \delta \underbrace{B^{-1} A_k}_{d} \geq 0
+}
+$$
+chiamiamo $d = B^{-1}A_k$ e otteniamo un sistema di diseguaglianze
+$$
+x_B + \delta d \geq 0
+$$
+stiamo perturbando $x_B$ di una quantità $\delta$ lungo la direzione $d$
+$d = B^{-1} A_k$ in quanto $Bd = A_k$ dove $B$ è una base e $A_k$ è una colonna fuori base, facendo $B\bowtie A_k$ sono colonne linearmente dipendenti
+aumentando $\delta$ la soluzione non è di base, sto "inglobando" la colonna $A_k$, creando una soluzione non di base
+struttura simile al teorema fondamentale
+
+$$
+\displaylines{
+x_B + \delta d = \underbrace{B^{-1} b}_{\overline{x}_B} \\
+x_B = \overline{x}_B - \delta d
+}
+$$
+imponiamo $x_B \geq 0$
+$$
+\overline{x}_B - \delta d \geq 0
+$$
+scegliamo $\delta$ per scegliere l'altro estremo del segmento (contrariamente al teorema fondamentale in cui $\varepsilon$ serviva a trovare l'estremo)
+$$
+\begin{cases}
+\overline{x}_{B(1)} - \delta d_1 \geq 0 \\
+\vdots \\
+\overline{x}_{B(m)} - \delta d_m \geq 0
+\end{cases}
+$$
+risolviamo la $i$esima
+$$
+\overline{x}_{B(i)} - \delta d_i \geq 0
+$$
+analizziamo i casi possibili
+se $d_i \leq 0$
+è valida $\forall \ \delta \geq 0$
+
+se $d_i > 0$
+è valida $\forall \ \delta \leq \frac{\overline{x}_{B(i)}}{d_i}$
+
+risolvendole tutte in simultanea
+l'uguaglianza è soddisfatta
+$$
+\forall \ \delta \leq \bar{ \delta}
+$$
+dove
+$$
+\bar{\delta} = \min \begin{cases}
+\frac{\bar{x}_{B(i)}}{d_i} \ : \ d_i > 0
+\end{cases}
+$$
+
+
+
+
+se non ci sono $d_i > 0$ significa che per ciascuna disuguaglianza non possiamo definire $\bar{\delta}$, quindi abbiamo solo $\delta\geq 0$
+a noi interessava avere $\delta$ il più grande possibile e non abbiamo un limite superiore
+$$
+\therefore \ \delta \to \infty
+$$
+e il prodotto scalare va a $-\infty$
+**condizione di arresto per problema illimitato**
+
+Se $\nexists \ i \ : \ d_i > 0 \implies (P)$ è illimitato inferiormente
+
+abbiamo trovato una semiretta lungo la quale ci possiamo spostare ed è una semiretta di punti ammissibili:
+$$
+\bar{x}_B - \delta d
+$$
+
+nel caso in cui $\exists \ \bar{ \delta}$ noi vogliamo comunque un $\delta$ il più grande possibile $\implies \delta = \bar{\delta}$
+in questo caso in corrispondenza di una qualche $i$
+$$
+\delta = \frac{\bar{x}_{B(i)}}{d_i}
+$$
+chiamiamo $i^*$
+$$
+i^* = \arg \min \begin{cases}
+\frac{\bar{x}_{B(i)}}{d_i} \ : \ d_i > 0
+\end{cases}
+$$
+sto prendendo l'indice in corrispondenza del quale
+$$
+\delta = \frac{\bar{x}_{B(i^*)}}{d_{i^*}}
+$$
+prendiamo dal sistema di disequazioni quella di indice $i^*$
+$$
+\underbrace{\bar{x}_{B(i^*)}- \delta d_{i^*}}_{x_{B(i^*)}} \geq 0
+$$
+$$
+x_{B(i^*)} = \bar{x}_{B(i^*)}- \delta d_{i^*}
+$$
+abbiamo scelto $\delta = \bar{ \delta}$
+$$
+\begin{align*}
+x_{B(i^*)} & = \bar{x}_{B(i^*)}- \bar{\delta} d_{i^*} \\ 
+ & = \bar{x}_{B(i^*)}- \frac{\bar{x}_{B(i^*)}}{d_{i^*}} d_{i^*} = 0
+\end{align*}
+$$
+sostituendo il $\delta$ si è generata una nuova componente che vale 0
+l'insieme $m$ indici iniziali [[#Condizioni di ottimalità]]
+$$
+\beta' = \{\beta(1),\dots,\beta(m)\} \setminus \beta(i^*) \cup N(j)
+$$
+questo nuovo insieme è un nuovo insieme di colonne di base
+abbiamo aggiunto la $j$esima colonna alle colonne di base e abbiamo eliminato la colonna $i^*$
+perturbando siamo sicuri che arriviamo ad una nuova base (nel teorema fondamentale non siamo sicuri di trovare una base).
+
+$$
+\begin{aligned}
+1:&\ \text{Calcola } \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N \\
+2:&\ \textbf{if } \hat{c}_N^\top \geq 0 \textbf{ then} \qquad \triangleright\ \text{test di ottimalità} \\
+3:&\ \quad x^* := \bar{x},\ z^* := \bar{z},\ \textcolor{red}{\textbf{exit}} \qquad \triangleright\ x^* \text{ è la soluzione ottima} \\
+4:&\ \textbf{end if} \\
+5:&\ \text{Scegli } j^* \in \{ j \in \{1,\dots,n-m\} : \hat{c}_{\mathcal{N}(j)} < 0 \} \\
+6:&\ \text{Poni } k = \mathcal{N}(j^*) \text{ e calcola } d = B^{-1} A_k \qquad \triangleright\ x_k \text{ entra in base} \\
+7:&\ \textbf{if } d \nleq 0 \textbf{ then} \qquad \triangleright\ \text{esiste una sba } x \text{ adiacente con } c^\top x \leq c^\top \bar{x} \\
+8:&\ \quad \text{Calcola } \bar{\delta} = \min\{ \bar{x}_{\mathcal{B}(i)} / d_i : d_i > 0 \} \\
+9:&\ \quad \text{Scegli } i^* \in \{ i \in \{1,\dots,m\} : \bar{\delta} = \bar{x}_{\mathcal{B}(i)} / d_i \} \\
+10:&\ \quad \text{Poni } h = \mathcal{B}(i^*) \qquad \triangleright\ x_h \text{ esce dalla base} \\
+11:&\ \quad \text{Poni } x = \begin{pmatrix} \bar{x}_B - \bar{\delta} d \\ \bar{\delta} \hat{e}_j \end{pmatrix},\quad z = c^\top \bar{x} + \hat{c}_k \cdot \bar{\delta} \\
+12:&\ \quad \mathcal{B} := \mathcal{B} \setminus \{h\} \cup \{k\},\ \mathcal{N} := \mathcal{N} \setminus \{k\} \cup \{h\},\ \bar{x} := x,\ \bar{z} := z,\ \textbf{go to } 1 \\
+13:&\ \textbf{else} \\
+14:&\ \quad \textcolor{red}{\textbf{exit}} \qquad \triangleright\ (P) \text{ è inferiormente illimitato.} \\
+15:&\ \textbf{end if}
+\end{aligned}
+$$
