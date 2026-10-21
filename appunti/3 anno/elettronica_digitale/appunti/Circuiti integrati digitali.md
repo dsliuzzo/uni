@@ -104,24 +104,19 @@ L'uscita si trova sempre tra:
 Le due reti devono avere gli stessi ingressi. 
 ![[Circuiti integrati digitali-1792505820342.webp|center|338]]
 ## Inverter
-[...]
+>[!multi-column]
+>
+>>[!blank]
+>>| In       | tipo 0 | tipo 1 | Out      |
+>>| -------- | ------ | ------ | -------- |
+>>| 0V       | ON     | OFF    | $V_{DD}$ |
+>>| $V_{DD}$ | OFF    | ON     | 0V       |
+>
+>>[!blank]
+>>![[Circuiti integrati digitali-1792569310274.webp|center|200]]
+
+![[Circuiti integrati digitali-1792569064632.webp|center|300]]
 ## NAND
-[...]
-
-**NOT**
-[...]
-**Tabella degli stati**
-
-| In       | tipo 0 | tipo 1 | Out      |
-| -------- | ------ | ------ | -------- |
-| 0V       | ON     | OFF    | $V_{DD}$ |
-| $V_{DD}$ | OFF    | ON     | 0V       |
-
-
-**NAND**
-[...]
-**Tabella degli stati**
-
 | A        | B        | $Z_1$ | $Z_2$ | $U_{1}$ | $U_{2}$ | Out      |
 | -------- | -------- | ----- | ----- | ------- | ------- | -------- |
 | 0V       | 0V       | ON    | ON    | OFF     | OFF     | $V_{DD}$ |
@@ -129,3 +124,4 @@ Le due reti devono avere gli stessi ingressi.
 | $V_{DD}$ | 0V       | OFF   | ON    | ON      | OFF     | $V_{DD}$ |
 | $V_{DD}$ | $V_{DD}$ | OFF   | OFF   | ON      | ON      | 0V       |
 
+![[Circuiti integrati digitali-1792569428894.webp|center|300]]

@@ -119,10 +119,10 @@ A = \left[\begin{array}{cccc}a_{11} & a_{12} & \dots & a_{1n} \\
 a_{21} & a_{22} & \dots & a_{2n} \\
 \vdots \\
 a_{m1} & a_{m2} & \dots & a_{mn}\end{array}\right] = \left(A_{1}|A_{2}|\dots|A_n\right) = \left(\begin{array}{c}
-a_1^T \\ a_2^T \\ \vdots \\ a_m^T
+a_1^\top  \\ a_2^\top  \\ \vdots \\ a_m^\top 
 \end{array}\right)
 $$
-Dove $A_i^T = (a_{1 1}, a_{2 1},\dots,a_{m1})$ sono i vettori colonna della matrice $A$ e $a_i^T = \left(a_{11},a_{12},\dots,a_{1 n}\right)$ sono i vettori riga della matrice $A$
+Dove $A_i^\top  = (a_{1 1}, a_{2 1},\dots,a_{m1})$ sono i vettori colonna della matrice $A$ e $a_i^\top  = \left(a_{11},a_{12},\dots,a_{1 n}\right)$ sono i vettori riga della matrice $A$
 >[!question] Osservazione
 >Per convenzione nel momento in cui creiamo un nuovo vettore in ricerca operativa, questo è un vettore colonna ed è proprio ciò che succede quando creiamo il vettore $a_i$ composto dagli elementi della riga $i$ della matrice $A$. Per questo nel momento in cui vogliamo rappresentare l'intera matrice dobbiamo effettuare l'operazione di trasposto sul vettore $a_i$, per renderlo nuovamente un vettore riga che può essere utilizzato all'interno del vettore colonna che rappresenta l'intera matrice 
 
@@ -143,14 +143,14 @@ Il prodotto $Ax$ può essere utilizzato per ridefinire le disuguaglianze (vincol
 $$
 Ax \geq b
 $$
-Per quanto riguarda invece la funzione obiettivo, sia il vettore $c$ che il vettore $x$ sono vettori colonna: non possiamo effettuare il prodotto riga per colonna, di conseguenza utilizziamo la trasposta $c^T$
+Per quanto riguarda invece la funzione obiettivo, sia il vettore $c$ che il vettore $x$ sono vettori colonna: non possiamo effettuare il prodotto riga per colonna, di conseguenza utilizziamo la trasposta $c^\top$
 $$
-c^T x = (c_{1},c_{2},\dots,c_n) \left(\begin{array}{l}x_{1} \\  x_{2} \\  \vdots \\  x_n\end{array}\right) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n
+c^\top  x = (c_{1},c_{2},\dots,c_n) \left(\begin{array}{l}x_{1} \\  x_{2} \\  \vdots \\  x_n\end{array}\right) = c_{1}x_{1} + c_{2}x_{2} + \dots + c_nx_n
 $$
 Ne concludiamo che un problema di programmazione matematica può essere espresso in forma compatta come
 $$
 \begin{cases}
-\min & c^Tx \\
+\min & c^\top x \\
 \text{s.t.} & Ax \geq b
 \end{cases}
 $$
@@ -158,7 +158,7 @@ $$
 Finché il problema ha solo due variabili decisionali è possibile risolverlo graficamente:
 - I vincoli rappresentano dei semipiani
 - Il sistema di vincoli sarà quindi l'intersezione di questi semipiani (regione ammissibile)
-- Il vettore dei coefficienti $c = (c_{1},c_{2})^T$ rappresenta il gradiente della funzione obiettivo (direzione di crescita)
+- Il vettore dei coefficienti $c = (c_{1},c_{2})^\top$ rappresenta il gradiente della funzione obiettivo (direzione di crescita)
 - La funzione obiettivo è un fascio di rette (curva di livello) - andando in direzione del gradiente stiamo massimizzando la funzione - andando in direzione opposta la stiamo minimizzando
 Quindi, se il problema è di minimo la direzione opposta a $c$ identifica la direzione di riduzione della funzione obiettivo.
 
@@ -181,7 +181,7 @@ x^* = \left(\begin{array}{c}6 \\ 2\end{array}\right)
 $$
 Valore ottimo:
 $$
-c^T x^* = -4
+c^\top  x^* = -4
 $$
 ### Es. 2
 >[!multi-column]
@@ -224,7 +224,7 @@ x^{(1)} = \left(\begin{array}{c}2 \\ 1\end{array}\right) \hspace{8ex} x^{(2)} = 
 $$
 Valore ottimo:
 $$
-c^T x^{(1)} = c^T x^{(2)} = 2.5
+c^\top  x^{(1)} = c^\top  x^{(2)} = 2.5
 $$
 
 # Geometria della programmazione lineare
@@ -232,11 +232,11 @@ $$
 >[!multi-column]
 >
 >>[!Important] Semispazio
->>Sia $w \in \mathbb{R}^n$ un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^Tx \geq w_0\}$$
+>>Sia $w \in \mathbb{R}^n$ un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^\top x \geq w_0\}$$
 >>si chiama **semispazio** (generalizzazione a $n$ dimensioni del semispazio).
 >
 >>[!important] Iperpiani
->>Sia $w \in \mathbb{R}^n$  un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^T x = w_0\}$$
+>>Sia $w \in \mathbb{R}^n$  un vettore $n$-dimensionale e $w_0$ uno scalare, l'insieme $$\{x \in \mathbb{R}^n:w^\top  x = w_0\}$$
 >>si chiama **iperpiano** e rappresenta la frontiera di un iperspazio. Il vettore $w$ è ortogonale all'iperpiano.
 >
 >>[!important] Poliedri
@@ -263,7 +263,7 @@ $$
 >>Consideriamo un poliedro $P$. Un vettore $x \in P$ si dice **punto estremo** di $P$ se non esistono coppie di punti $x^{(1)},x^{(2)} \in P$, entrambi diversi da $x$, e uno scalare $\lambda \in [0,1]$ tali che$$x = \lambda x^{(1)}+(1-\lambda)x^{(2)}$$
 >
 >>[!important] Vertici
->>Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^T\overline{x} < c^Tx \forall x \in P, x \neq \overline{x}$$
+>>Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^\top \overline{x} < c^\top x \forall x \in P, x \neq \overline{x}$$
 ## Teorema sulle convessità delle soluzioni
 Date le seguenti considerazioni (che non contraddicono le precedenti definizioni):
 - l'intersezione di insiemi convessi è a sua volta convessa
@@ -273,10 +273,10 @@ Date le seguenti considerazioni (che non contraddicono le precedenti definizioni
 - l'involucro convesso di un numero finito di vettori è un insieme convesso
 
 >[!info] Teorema sulla convessità delle soluzioni
->Consideriamo un problema $(P)$ di programmazione lineare che ammetta un ottimo finito e indichiamo con $x^{(1)}$ una soluzione ottima. Supponiamo che esista una soluzione ammissibile $x^{(2)} \neq x^{(1)}$ tale che:$$c^Tx^{(1)} = c^Tx^{(2)}$$
+>Consideriamo un problema $(P)$ di programmazione lineare che ammetta un ottimo finito e indichiamo con $x^{(1)}$ una soluzione ottima. Supponiamo che esista una soluzione ammissibile $x^{(2)} \neq x^{(1)}$ tale che:$$c^\top x^{(1)} = c^\top x^{(2)}$$
 >I due vettori sono diversi, ma hanno lo stesso valore obiettivo, quindi entrambe sono soluzioni ottime di $(P)$.
 >Consideriamo i vettori $x(\lambda) = \lambda x^{(1)} + (1-\lambda)x^{(2)}$ che sono combinazione convesse di $x^{(1)}$ e $x^{(2)}$. Il teorema precedente garantisce l'ammissibilità di $x(\lambda) \forall \lambda \in [0,1]$.
->Inoltre$$c^T x(\lambda) = \lambda c^T x^{(1)} + (1-\lambda)c^T x^{(2)} = c^Tx^{(2)} = c^T x^{(1)}$$
+>Inoltre$$c^\top  x(\lambda) = \lambda c^\top  x^{(1)} + (1-\lambda)c^\top  x^{(2)} = c^\top x^{(2)} = c^\top  x^{(1)}$$
 >Quindi ogni combinazione convessa di soluzioni ottime di $(P)$ è una soluzione ottima, e l'insieme delle soluzioni ottime di $(P)$ è convesso.
 
 ## Problemi di PL in forma standard
@@ -300,7 +300,7 @@ e rispetta le seguenti proprietà:
 Anche in questo caso possiamo utilizzare la forma compatta
 $$
 \begin{cases}
-\min & c^Tx \\
+\min & c^\top x \\
 s.t. & Ax = b \\
 & x\geq 0
 \end{cases}
@@ -332,32 +332,32 @@ utili a garantire infinite soluzioni
 Tutti i problemi di programmazione lineare possono essere ricondotti alla forma standard equivalente.
 #### Vincoli di diseguaglianza $\leq$
 $$
-a_i^Tx \leq b_i
+a_i^\top x \leq b_i
 $$
 Definiamo una variabile ausiliaria (**variabile di slack**)
 $$
-s_i = b_i - a_i^T x \geq 0
+s_i = b_i - a_i^\top  x \geq 0
 $$
 in questo modo stiamo dando un nome allo scarto $s_i$ che diventa a sua volta una variabile decisionale
 $$
 \begin{cases}
-s_i = b_i- a_i^T x \\
+s_i = b_i- a_i^\top  x \\
 s_i \geq 0
 \end{cases}
 $$
 questo passaggio però è "costato" l'aggiunta di una variabile ausiliaria.
 #### Vincolo di diseguaglianza $\geq$
 $$
-a_i^T x \geq b_i
+a_i^\top  x \geq b_i
 $$
 Definiamo una variabile ausiliare (**variabile di surplus**)
 $$
-s_i = a_i^T x -b_i \geq 0
+s_i = a_i^\top  x -b_i \geq 0
 $$
 La nuova variabile diventa a sua volta una variabile decisionale
 $$
 \begin{cases}
-s_i = a_i^T x-b_i\\
+s_i = a_i^\top  x-b_i\\
 s_i \geq 0
 \end{cases}
 $$
@@ -378,7 +378,7 @@ In questo caso però dobbiamo modificare anche la funzione obiettivo.
 Nei vincoli:
 $$
 \begin{array}{c}
-a_i^T x = b_i  \\
+a_i^\top  x = b_i  \\
 a_{j 1} x_1 + \dots + a_{ij} x_j + \dots + a_{i n} x_n = b_i \\
 a_{i 1}x_1 + \dots + a_{ij} x_j^+ - a_{ij} x_j^- + \dots + a_{in} x_n = b_i
 \end{array}
@@ -397,7 +397,7 @@ c_{1}x_{1} + \dots + c_j x_j^+ - c_j x_j^- + \dots c_n x_n
 $$
 quindi cambia anche
 $$
-c^T = (c_{1},\dots,c_j,- c_j,..,c_n)
+c^\top  = (c_{1},\dots,c_j,- c_j,..,c_n)
 $$
 
 
@@ -405,12 +405,12 @@ $$
 >Per le nuove variabili aggiunte:
 >consideriamo un punto $\overline{x}$ che soddisfa il vincolo
 >$$
->a_i^T \overline{x} \leq b_i
+>a_i^\top  \overline{x} \leq b_i
 >$$
 >che può essere riscritto come
 >$$
 >\begin{cases}
->a_i^T \overline{x} + s_i = b_i \\
+>a_i^\top  \overline{x} + s_i = b_i \\
 >s_i \geq 0
 >\end{cases}
 >$$
@@ -425,7 +425,7 @@ Per cercare la soluzione ottima sui vertici di un poliedro aritmeticamente dobbi
 Considerando un problema di programmazione lineare in forma standard:
 $$
 \begin{cases}
-\min & c^Tx \\
+\min & c^\top x \\
 \text{s.t.} & Ax = b \\
 & x \geq 0
 \end{cases}
@@ -528,13 +528,13 @@ $\implies$ discende dalla definizione
 $\Longleftarrow$ va dimostrata separatamente
 permutiamo, senza perdere generalità, le colonne della matrice $A$ e le variabili di $x$ in modo da mettere in testa al vettore tutte le componenti diverse da 0
 $$
-x^T = (x_{1},x_{2},\dots,x_p,0,\dots,0)
+x^\top  = (x_{1},x_{2},\dots,x_p,0,\dots,0)
 $$
 indicando con $p \leq n$ il numero di componenti non nulle.
 
 Per ipotesi le colonne $A_{1},\dots,A_p$ sono linearmente indipendenti, di conseguenza $p \leq m$ (in quanto $m$ è il massimo numero di colonne linearmente indipendenti).
 
-1. se $p = m$ allora$$x^T = (\underbrace{x_{1},x_{2},\dots,x_m}_{B^{-1}b},0,\dots,0) \hspace{8ex} A_{1},\dots,A_m = B$$questa non è altro che la definizione di **soluzione di base non degenere**
+1. se $p = m$ allora$$x^\top  = (\underbrace{x_{1},x_{2},\dots,x_m}_{B^{-1}b},0,\dots,0) \hspace{8ex} A_{1},\dots,A_m = B$$questa non è altro che la definizione di **soluzione di base non degenere**
 2. se $p < m$ allora
    essendo $\text{rango}(A) = m$ (dentro $A$ esistono $m$ colonne linearmente indipendenti), esistono in $A$ $m-p$ colonne $A_{p+1},\dots,A_{m}$ associate a componenti nulle, che unite a $A_{1},\dots,A_p$ formano un insieme di $m$ colonne linearmente indipendenti. Perciò si può porre $$B = [A_{1},\dots,A_p,A_{p+1},\dots,A_m]$$e $x$ è una **soluzione degenere**.
    Se non esistessero $m-p$ colonne linearmente indipendenti allora $\text{rango}(A)$ non potrebbe essere pari a $m$, oppure $p=m$: abbiamo trovato una contraddizione.
@@ -572,7 +572,7 @@ Algoritmicamente è fattoriale nel caso peggiore -> problemi enormi.
 $\exists$ soluzione ammissibile $\overline{x}$ $\implies \exists$ SBA
 Sia $\overline{x} \in \Omega(P)$ e sia $p\leq n$ il numero delle sue componenti positive, si può scrivere:
 $$
-\overline{x} = (\overline{x}_1,\dots, \overline{x}_p, 0,\dots, 0)^T
+\overline{x} = (\overline{x}_1,\dots, \overline{x}_p, 0,\dots, 0)^\top 
 $$
 a questo vettore sono associate le colonne corrispondenti della matrice $A$
 $$
@@ -600,7 +600,7 @@ A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon 
 $$
 ciò che non compare in questa sommatoria sono degli 0
 Definendo un vettore:
-$$d=(d_{1},\dots,d_p,\underbrace{0,\dots,0}_{n-p})^T \in \mathbb{R}^n$$
+$$d=(d_{1},\dots,d_p,\underbrace{0,\dots,0}_{n-p})^\top  \in \mathbb{R}^n$$
 Possiamo scrivere in forma compatta
 $$
 A(\overline{x} - \epsilon d) = b \hspace{4ex} \forall \epsilon \in \mathbb{R}
@@ -676,7 +676,7 @@ Nel peggiore dei casi, usciremo dal loop avremo una componente positiva e una co
 Se esiste una soluzione ottima $x^* \in \Omega(P)$, allora esiste una soluzione ottima di base per $(P)$.
 Essendo ottima è anche ammissibile
 $$
-x^* = (x_{1}^*,\dots,x_p^*,0,\dots,0)^T \hspace{4ex} p \leq n
+x^* = (x_{1}^*,\dots,x_p^*,0,\dots,0)^\top  \hspace{4ex} p \leq n
 $$
 Se le $p$ colonne di $A$ associate alle $p$ componenti $\neq 0$ di $x^*$ sono linearmente indipendenti allora $x^*$ è soluzione ottima di base.
 
@@ -690,16 +690,16 @@ traslando il vettore $x^*$ lungo il vettore $d$ di una quantità $\epsilon$.
 Per il primo enunciato sappiamo che l'ammissibilità è mantenuta, dobbiamo quindi dimostrare che manteniamo anche l'ottimalità.
 Sapendo che la nostra funzione obbiettivo vale
 $$
-c^T x^*
+c^\top  x^*
 $$
 per non perdere l'ottimalità dobbiamo osservare
 $$
 \begin{array}{c}
-c^T x & = c^T (x^*- \epsilon d) \\
-& = c^T x^* - \epsilon c^T d
+c^\top  x & = c^\top  (x^*- \epsilon d) \\
+& = c^\top  x^* - \epsilon c^\top  d
 \end{array}
 $$
-Dobbiamo dimostrare che $c^T d=0$
+Dobbiamo dimostrare che $c^\top  d=0$
 
 Per assurdo vediamo i casi possibili:
 $$
@@ -734,7 +734,7 @@ $\overline{x} \in \Omega(P)$ è una soluzione di base ammissibile per $(P)$ se e
 >2. Se il problema $(P)$ ammette ottimo finito, allora uno dei punti estremi di $\Omega(P)$ è soluzione ottima
 
 >[!important] Vertice
->Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^T \overline{x} < c^T x \forall x \in P \ : \ x \neq \overline{x}$$
+>Consideriamo un poliedro $P$. Un vettore $\overline{x} \in P$ si dice **vertice** di $P$ se esiste $c \in \mathbb{R}^n$ tale che$$c^\top  \overline{x} < c^\top  x \forall x \in P \ : \ x \neq \overline{x}$$
 
 #### Caratterizzazione algebrica
 Consideriamo un poliedro P. Un vettore $\overline{x} \in P$ è un **vertice** di $P$ se e solo se in $\overline{x}$ sono attivi $n$ vincoli definiti da vettori di coefficienti che sono linearmente indipendenti (vincoli linearmente indipendenti).
@@ -830,7 +830,7 @@ $$ \begin{aligned} B_A &= {3,4,5} \\ B_B &= {2,3,5} \\ B_D &= {1,4,5} \end{align
 ### Soluzione degenere
 Il punto $x_C$ ha **tre** componenti nulle invece di due: è una soluzione di base **degenere**, e corrisponde al vertice $C$ identificato dall'intersezione di 3 rette ($x_3 = x_4 = x_5 = 0$), quando per individuarlo ne bastano 2. Le basi $B_1 = {1,2,3}$, $B_2 = {1,2,4}$ e $B_3 = {1,2,5}$ sono tra loro adiacenti, ma identificano tutte la stessa soluzione di base ammissibile:
 
-$$ C = (3,3) \to x_C = (3,3,0,0,0)^\top $$
+$$ C = (3,3) \to x_C = (3,3,0,0,0)^\top$$
 
 Quindi non tutte le intersezioni hanno lo stesso contenuto informativo. Un algoritmo che lavora su basi adiacenti, in presenza di soluzioni degeneri, può cambiare base senza generare un nuovo punto: rimane nello stesso vertice $C$. L'algoritmo deve essere scritto tenendone conto.
 # Algoritmo del simplesso
@@ -843,10 +843,10 @@ $$
 4:&\hspace{4ex} \text{exit} \\
 5:&\text{end if} \\ \hdashline
 6:&\text{if} \ \overline{x}\text{ è soluzione ottima per }(P) \text{ then} \\
-7:&\hspace{4ex} x^* := \overline{x}, z^*:= c^T\overline{x} \\
+7:&\hspace{4ex} x^* := \overline{x}, z^*:= c^\top \overline{x} \\
 8:&\hspace{4ex} \text{exit} \\
 9:&\text{end if} \\
-10:&\text{if esiste una sba }x \text{ adiacente a }\overline{x}\text{ con }c^Tx \leq c^T \overline{x} \text{ then} \\
+10:&\text{if esiste una sba }x \text{ adiacente a }\overline{x}\text{ con }c^\top x \leq c^\top  \overline{x} \text{ then} \\
 11:&\hspace{4ex} \overline{x}:= x, \text{go to 6} \\
 12:&\text{else} \\
 13:&\hspace{4ex} \text{exit} \\
@@ -908,9 +908,9 @@ $$
 con valore di funzione obbiettivo
 $$
 \begin{align*}
-\bar{z}=c^T \overline{x} &= (c_B^T \ , \ c_N^T) \binom{\overline{x}_B}{\overline{x}_N} \\
-& = c^T_B \overline{x}_B + \underbrace{c_N^T \overline{x}_N}_{=0} \\
-& = c_B^T B^{-1}b
+\bar{z}=c^\top  \overline{x} &= (c_B^\top  \ , \ c_N^\top ) \binom{\overline{x}_B}{\overline{x}_N} \\
+& = c^\top _B \overline{x}_B + \underbrace{c_N^\top  \overline{x}_N}_{=0} \\
+& = c_B^\top  B^{-1}b
 \end{align*}
 $$
 ### Espressione della funzione obbiettivo e costi ridotti
@@ -933,29 +933,29 @@ qualunque soluzione del sistema lineare associata alla stessa base
 $$
 x = \binom{B^{-1}b-B^{-1}Nx_N}{x_N}
 $$
-Determiniamo l’espressione della funzione obiettivo per $x$ sostituendo $x_B$ calcolata e partizionando anche il vettore $c^T$:
+Determiniamo l’espressione della funzione obiettivo per $x$ sostituendo $x_B$ calcolata e partizionando anche il vettore $c^\top$:
 $$
 \begin{align*}
-c^T \overline{x} & = (c_B^T  c_N^T) \binom{x_B}{x_N} = (c_B^T c_N^T)\binom{B^{-1}b-B^{-1}Nx_N}{x_N} \\
-c^Tx& = c_B^T (B^{-1}b - B^{-1} N x_N) + c_N^T x_N \\
-c^Tx& = c_B^T B^{-1}b -c_B^T B^{-1} N x_N + c_N^T x_N \\
+c^\top  \overline{x} & = (c_B^\top   c_N^\top ) \binom{x_B}{x_N} = (c_B^\top  c_N^\top )\binom{B^{-1}b-B^{-1}Nx_N}{x_N} \\
+c^\top x& = c_B^\top  (B^{-1}b - B^{-1} N x_N) + c_N^\top  x_N \\
+c^\top x& = c_B^\top  B^{-1}b -c_B^\top  B^{-1} N x_N + c_N^\top  x_N \\
 \end{align*}
 $$
 Se $x\neq 0$ si hanno $n − m$ gradi di libertà per ricavare nuove basi. In particolare, modificare $x_N$ modifica anche il valore di $x_B$ non garantendo l’ammissibilità della soluzione.
 Sapendo che la funzione obiettivo nel punto fornito vale:
 $$
-\hat{c}_N^T := c_N^T - c_B^T B^{-1}N
+\hat{c}_N^\top  := c_N^\top  - c_B^\top  B^{-1}N
 $$
-dove $\hat{c}_N^T$ prende il nome di **vettore dei coefficienti di costo ridotto delle variabili fuori base**.
+dove $\hat{c}_N^\top$ prende il nome di **vettore dei coefficienti di costo ridotto delle variabili fuori base**.
 Riscriviamo l’equazione precedente e raggruppiamo rispetto a $x_N$ (**hp**. contiene valori positivi):
 $$
-c^Tx = c^T \overline{x} + \overbrace{(c_N^T-c_B^TB^{-1}N)}^{\hat{c}_N^T} x_N \hspace{8ex} \forall x \in \Omega(P)
+c^\top x = c^\top  \overline{x} + \overbrace{(c_N^\top -c_B^\top B^{-1}N)}^{\hat{c}_N^\top } x_N \hspace{8ex} \forall x \in \Omega(P)
 $$
 ottenendo l’espressione della funzione obiettivo del problema $(P)$ come funzione delle sole
 variabili $x_N \in \mathbb{R}^{n-m}$
 Ponendo quindi
 $$
-c^Tx - c^T \bar{x} = \hat{c}_N^T x_N
+c^\top x - c^\top  \bar{x} = \hat{c}_N^\top  x_N
 $$
 è possibile ricavare **condizione sufficiente di ottimalità**
 
@@ -965,15 +965,15 @@ $$
 >Se genero una qualsiasi soluzione il mio studio si può concentrare sulle variabili $x_N$ e sul vettore dei coefficienti (che è noto).
 
 ### Condizione sufficiente di ottimalità
-Osserviamo che per $x_N = 0$ si ha $c^Tx = c^T \bar{x} = \bar{z}$. Per ogni altro punto ammissibile $x \in \Omega(P)$ dovrà valere
+Osserviamo che per $x_N = 0$ si ha $c^\top x = c^\top  \bar{x} = \bar{z}$. Per ogni altro punto ammissibile $x \in \Omega(P)$ dovrà valere
 $x_N \geq 0$ ($x_N \neq 0$). Pertanto:
 $$
-\text{(Hp): } \underbrace{\hat{c}_N \ge 0}_{\text{garantisce ammissibilità}} \;\Rightarrow\; \hat{c}_N^\top x_N \ge 0 \;\Rightarrow\; \underbrace{c^Tx \geq c^T \overline{x}}_{\text{def. di ottimo}} \qquad \forall x \in \Omega(P)
+\text{(Hp): } \underbrace{\hat{c}_N \ge 0}_{\text{garantisce ammissibilità}} \;\Rightarrow\; \hat{c}_N^\top x_N \ge 0 \;\Rightarrow\; \underbrace{c^\top x \geq c^\top  \overline{x}}_{\text{def. di ottimo}} \qquad \forall x \in \Omega(P)
 $$
 >[!info] Teorema
 >Data una base ammissibile $B$ della matrice $A$ del problema $(P)$ in forma standard, se il vettore dei costi ridotti è non negativo
 >$$
->\hat{c}_N^T = c_N^T - c_B^T B^{-1}N \geq 0
+>\hat{c}_N^\top  = c_N^\top  - c_B^\top  B^{-1}N \geq 0
 >$$
 >allora la soluzione di base ammissibile associata alla base $B$ è ottima per $(P)$
 
@@ -990,11 +990,11 @@ $$
 ### Approfondimenti
 Fornita una base riusciamo a descrivere qualunque soluzione ammissibile del problema. Infatti, trasformando la funzione obiettivo originale del problema $(P)$
 $$
-z(x) = c^T x :\mathbb{R}^n \to \mathbb{R}
+z(x) = c^\top  x :\mathbb{R}^n \to \mathbb{R}
 $$
 nella funzione ridotta alla sola dipendenza delle variabili fuori base ($n-m$ variabili decisionali) definita come:
 $$
-\hat{z}(x_N) = \bar{z} + \hat{c}_N^Tx_N: \mathbb{R}^{n-m} \to \mathbb{R}
+\hat{z}(x_N) = \bar{z} + \hat{c}_N^\top x_N: \mathbb{R}^{n-m} \to \mathbb{R}
 $$
 Per effetto di tale trasformazione la funzione obbiettivo (dipende solo dalle variabili fuori base)
 ($\mathbb{R}^n \to \mathbb{R}^{n-m}$), il problema originale
@@ -1007,7 +1007,7 @@ $$
 diventa il seguente **problema ridotto**
 $$
 (\hat{P}) \begin{cases}
-\min & \hat{z}(x_N) = \bar{z} + \hat{c}_N^T x_N \\
+\min & \hat{z}(x_N) = \bar{z} + \hat{c}_N^\top  x_N \\
 \text{s.t.} & B^{-1}b - B^{-1} Nx_N \geq 0 \\
 & x_N \geq 0
 \end{cases}
@@ -1036,10 +1036,10 @@ N = \{2,5,6\} = \left(\begin{array}{cccccc}
 $$
 $$
 \displaylines{
-\overline{x}_B^T = (\overline{x}_1, \overline{x}_3, \overline{x}_4) \\
-c_B^T = (1,1,1) \\
-\overline{x}_N^T = (\overline{x}_2, \overline{x}_5, \overline{x}_6) \\
-c_N^T = (2,1,1)
+\overline{x}_B^\top  = (\overline{x}_1, \overline{x}_3, \overline{x}_4) \\
+c_B^\top  = (1,1,1) \\
+\overline{x}_N^\top  = (\overline{x}_2, \overline{x}_5, \overline{x}_6) \\
+c_N^\top  = (2,1,1)
 }
 $$
 $$
@@ -1050,15 +1050,15 @@ B^{-1} = \frac{1}{3}\left(\begin{array}{ccc}
 \end{array}\right)
 $$
 $$
-\overline{x}_B = B^{-1}b = (1,0,2)^T \hspace{8ex} \overline{x}_N = (0,0,0)
+\overline{x}_B = B^{-1}b = (1,0,2)^\top  \hspace{8ex} \overline{x}_N = (0,0,0)
 $$
 $$
-\overline{x} = (1,0,0,2,0,0)^T
+\overline{x} = (1,0,0,2,0,0)^\top 
 $$
 è ammissibile.
 Calcoliamo i coefficienti di costo ridotto
 $$
-\hat{c}_N^T = C_N^T - c_B^T B^{-1} N = \left( \frac{10}{3}, \frac{1}{3}, \frac{7}{3} \right)^T
+\hat{c}_N^\top  = C_N^\top  - c_B^\top  B^{-1} N = \left( \frac{10}{3}, \frac{1}{3}, \frac{7}{3} \right)^\top 
 $$
 è ottima ed è unica (sono tutti maggiori di 0)
 ## Cambio della soluzione di base ammissibile
@@ -1071,7 +1071,7 @@ $$
 Possiamo esprimere il problema $(P)$ come **forma canonica** rispetto a $B$
 $$
 \begin{cases}
-\min & 0^T x_B + \hat{c}_N^T x_N \\
+\min & 0^\top  x_B + \hat{c}_N^\top  x_N \\
 \text{s.t.} & I \cdot x_B + B^{-1}Nx_N = B^{-1}b \leftarrow \text{modo }\neq\text{ di scrivere }Ax = b \\
 & x_B, x_N \geq 0
 \end{cases}
@@ -1079,56 +1079,66 @@ $$
 >[!important] Si noti che i vincoli sul segno garantiscono l'ammissibilità della soluzione di base, tuttavia, in questo caso, l'ammissibilità non dipende solo da $x_N$ (variabili decisionali) poiché al suo variare cambia anche $x_B$.
 
 Nella minimizzazione del problema si possono eliminare le costanti $\implies$ elimino $\bar{z}$.
+#### Vincoli
+$$
+\begin{align*}
+Ax & = b \\
+B x_B + Nx_N & = b \\
+B^{-1}B x_B + B^{-1} N x_N & = B^{-1}b \\
+I x_B + B^{-1} N x_N & = B^{-1}b
+\end{align*}
+$$
+#### Funzione obiettivo
+$$
+\begin{align*}
+\min c^\top x & = \min c^\top  \overline{x} + (c_N^\top -c_B^\top B^{-1}N) \\
+& = \min c^\top \bar{x} + \hat{c}^\top x \\
+& = \min c^\top \bar{x} + \hat{c}_B^\top x_B + \hat{c}_N^\top x_N
+\end{align*}
+$$
+---
+
+
+dove $\hat{c}^\top_{N} = c_N^\top  - c_B^\top B^{-1}N$
+di conseguenza $\hat{c}_B^\top  = c_B^\top  - c_B^\top  B^{-1}B = c_B^\top  - c_B^\top  I = c_B^\top  - c_B^\top  = 0^\top$ (rivedi perché arriviamo a $0^\top$)
+
+
+
 
 
 
 ---
 
-[...] da riprendere
-- trovare vettori linearmente indipendenti
-- trovare matrice inversa (controlla se lo fa la calc)
-- prodotto righe per colonna
-- calcolo det (laplace - sarrus)
-- prodotto matriciale
-
-
----
-
-
-tecnica del cambio di soluzione
 riprendendo la forma canonica
 $$
-\min c^T\overline{x} + \hat{c}^T x_N \ = \ c^T \overline{x} + \min \hat{c}^T_N x_N 
+\min c^\top\overline{x} + \hat{c}^\top x_N \ = \ c^\top \overline{x} + \min \hat{c}^\top _N x_N 
 $$
-$$
-Ax = b \implies B x_B + N x_N = b \implies B^{-1}B x_B + B^{-1} N x_N = B^{-1}b \implies I x_B + B^{-1} N x_N = B^{-1}b
-$$
+
+
 $$
 \begin{cases}
-\min & 0^T x_B + \hat{c}_N^T x_N \\
+\min & 0^\top  x_B + \hat{c}_N^\top  x_N \\
 \text{s.t.} & I \cdot x_B + B^{-1}Nx_N = B^{-1}b\\
 & x_B, x_N \geq 0
 \end{cases}
 $$
-dove $\hat{c}^\top_{N} = c_N^T - c_B^TB^{-1}N$
-di conseguenza $\hat{c}_B^T = c_B^T - c_B^T B^{-1}B = c_B^T - c_B^T I = c_B^T - c_B^T = 0^T$ (rivedi perché arriviamo a $0^T$)
 
-dobbiamo capire se $\hat{c}_N^T$ è ammissibile
+dobbiamo capire se $\hat{c}_N^\top$ è ammissibile
 non lo è se esiste almeno una che è strettamente negativa
 $\hat{c}_{N(j)} < 0$
 la funzione obbiettivo della forma canonica misura di quanto varia la funzione obbiettivo originale in un nuovo punto
 se c'è un coefficiente strettamente negativo:
 $$
-\hat{c}_N^T x_N
+\hat{c}_N^\top  x_N
 $$
 perturbiamo $x_N$ come un vettore con n-m componenti, che sicuramente soddisfa i vincoli sul segno, e in corrispondenza della $j$esima componente vale $\delta$
 $$
 x_N = \left(\begin{array}{c} 0 \\ \vdots \\ \delta \\ \vdots \\ 0 \end{array}\right)_{n-m} \quad \delta > 0
 $$
-il prodotto scalare $\hat{c}_N^T x_N = \hat{c}_{N(j)} \cdot \delta <0$
+il prodotto scalare $\hat{c}_N^\top  x_N = \hat{c}_{N(j)} \cdot \delta <0$
 è negativo in quanto $\delta$ è positivo e $\hat{c}_{N(j)}$ è negativo
 il prodotto scalare rappresenta quanto varia la funzione obbiettivo e varia di un valore negativo
--> $c^Tx < c^T \bar{x}$.
+-> $c^\top x < c^\top  \bar{x}$.
 Ci converrebbe scegliere $\delta$ il più grande possibile, ma dobbiamo fare attenzione che certe soluzioni non diventino negative
 
 riscriviamo $x_N$
@@ -1282,3 +1292,17 @@ $$
 15:&\ \textbf{end if}
 \end{aligned}
 $$
+
+
+
+---
+
+[...] da riprendere
+- trovare vettori linearmente indipendenti
+- trovare matrice inversa (controlla se lo fa la calc)
+- prodotto righe per colonna
+- calcolo det (laplace - sarrus)
+- prodotto matriciale
+
+
+---

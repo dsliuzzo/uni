@@ -1,6 +1,9 @@
 #materia 
 #elettronica_digitale
 # Appunti
+[[Circuiti integrati digitali]]
+[[Porte logiche]]
+[[VHDL]]
 ## Discretizzazione del segnale
 ![[Elettronica digitale-1790023683012.webp|center|378]]
 Per rendere discreto un segnale analogico dobbiamo effettuare due operazioni:
@@ -19,3 +22,8 @@ Per rendere discreto un segnale analogico dobbiamo effettuare due operazioni:
 
 # Esame
 Esame scritto, 2 esercizi, uno di progettazione ad alto livello ed una a basso livello. Si passa almeno con 18, poi ci sono al massimo 3 punti dati dai progetti durante l'anno, che verranno fatti ogni fine capitolo.
+
+## Progetto 1
+Progettare un sommatore carry select che lavora su numeri in binario naturale a 16 bit (simulazioni: spezzettare le possibili combinazioni in intervallo - 4 pacchetti da 256 combinazioni)
+prepariamo alla fine dei test una relazione da inviare per email s.perri@unical.it in formato pdf con elenco nominativi
+entro il 27 ottobre
