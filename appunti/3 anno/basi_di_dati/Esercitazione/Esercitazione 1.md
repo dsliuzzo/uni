@@ -14,3 +14,5 @@
 ## Esercizio 1
 ### A
 ![[prova esame 04.02.2020 es 1]]
+
+# Prova esame 6 settembre 2016

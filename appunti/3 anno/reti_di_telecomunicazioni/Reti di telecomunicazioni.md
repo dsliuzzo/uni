@@ -33,7 +33,6 @@ L'informazione viene suddivisa in pacchetti, che prendono dei percorsi indipende
 L'ordine di arrivo non è necessariamente quello di invio, viene ricostruito all'arrivo.
 Il principale vantaggio è che se un nodo della rete non funziona correttamente, contrariamente alla commutazione di circuito, non è necessario ristabilire la connessione da 0 (fault tolerance - paradigma dinamico per motivi bellici).
 Ogni pacchetto contiene informazioni aggiuntive per garantire la dinamicità della rete.
-[...] <-- *fai schema con pacchetti che prendono direzioni diverse*
 
 I canali che i pacchetti attraversano non sono dedicati in modo univoco ad un determinato flusso di informazione, ma possono essere messi in condivisione con chiunque altro abbia bisogno di una connessione. Questo è un grande vantaggio da un punto di vista economico: molti utenti utilizzano la stessa infrastruttura di rete.
 
@@ -349,3 +348,97 @@ I sistemi intermedi non necessitano di tutti i livelli di progettazione, ma per 
 mentre il modello ISO/OSI venne standardizzato dall'ente ISO e ha impiegato nel tempo per essere descritto nella sua interezza e per specificare le funzionalità di ogni livello, il modello TCP/IP nasce dall'utilizzo di protocolli progettati prescindendo da una logica di standardizzazione in modo da fornire servizi.
 Sono quindi stati uniti più protocolli già presenti, si è dimostrato che funzionavano e solo dopo si è cominciato a preoccuparsi di standardizzare questi protocolli.
 La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più pratico, per ogni livello vengono associati determinati protocolli e di conseguenza un modo di gestire una informazione più pratico. Il modello ISO/OSI è quindi più astratto.
+
+
+
+
+
+
+
+
+
+---
+
+
+
+[...] aggiungi dicitura protocolli di accesso al mezzo
+tassonomia e **classificazione** (centralizzati - distribuiti)
+
+l'intervallo di propagazione è associato al tempo di propagazione $\tau$.
+tutte le tecniche CSMA devono avere almeno $2\tau$: tempo necessario affinché tutte le stazioni ricevano un segnale
+aggiungi grafico di slide 127
+![[Reti di telecomunicazioni-1792596709655.webp|center|313]]
+
+tempo di rilevazione di una collisione - aggiungi tempi della slide 132
+dimensione minima
+
+grafico prestazioni CSMA CD e CSMA
+**Prestazioni** del CSMA CD
+
+$$
+ S = \frac{G e^{-aG}}{G(1+2a) + e^{-aG} - G(1-\delta)(1-e^{-aG})} 
+$$
+dove $\delta$ tempo per accorgersi della collisione
+riduciamo la quantità di dati che hanno collisione tramite il jamming (dal - in poi)
+tempo necessario per rilevare / T
+se il tempo di detection è proporzionale a T non abbiamo una convenienza
+questo risparmio dipende dalle caratteristiche dell'hardware che ci permette di rilevare la collisione
+
+mezzi trasmissivi (slide 31)
+grafico dell'attenuazione
+multiplexaggio su frequenze diverse, ma sulla stessa banda, in modo da avere una bassa attenuazione
+wide band division multiplexing
+
+---
+
+![[Reti di telecomunicazioni-1792600205867.webp|382]]
+rivedi divisione dei ruoli
+
+indirizzo fisico
+logical link control 802.2 - sottolivello superiore al livello 2
+per il sottolivello inferiore esistono più tipi di livello MAC (dipende molto dal mezzo fisico scelto)
+
+802.4 distribuito ma non ad accesso casuale, ma controllato, tramite l'utilizzo di un token, solo i possessori del frame possono trasmettere sul bus
+anche 802.5 ma usa una configurazione ad anello
+
+il wifi è IEEE 802.11 che utilizza un protocollo CSMA/CA
+
+grafico slide 9 che fa capire gerarchia
+da capire se fare suddivisione in gerarchia o semantica
+
+i limiti geografici sono dettati dal tipo di protocollo che non risulta più conveniente
+
+indirizzi di vario tipo
+- rete
+- logici
+- fisico
+
+l'indirizzo fisico serve a discriminare
+è associato alla scheda di rete utilizzata (a livello firmware) - sono memorizzate nella ROM dell'adattatore della scheda
+composto da 48 bit 6 coppie esadecimali
+suddiviso in due parti principali (3-3)
+primi 3 OUI organization unit identify - produttore
+ultimi 3 numero specifico progressivo decisa dal costruttore che identifica la scheda
+
+possono essere di tipo sorgente o destinazione
+
+comunicazione di 3 tipi
+- individuale
+- di gruppo
+- broadcast
+  se devo inviare un pacchetto in modalità broadcast sul bus devo utilizzare il mio MAC in modalità sorgente broadcast
+
+è grazie al MAC che in broadcast i sistemi che non sono destinazioni scartano il pacchetto
+
+I sap di livello 2 contengono i riferimenti ai mac fisici di destinazione e sorgente
+
+| MAC-DSAP | MAC-SSAP | Payload | FCS |
+| -------- | -------- | ------- | --- |
+
+
+com'è strutturata trama l'ethernet
+
+è importante che la destinazione sia prima della sorgente -> il ricevente può controllare meno bit
+preambolo permette la sincronizzazione
+il tipo indica il protocollo di livello superiore
+il livello 2 si deve occupare anche di inviare il dato al livello superiore, per capire a quale processo (protocollo) indirizzare il payload viene utilizzato il campo type

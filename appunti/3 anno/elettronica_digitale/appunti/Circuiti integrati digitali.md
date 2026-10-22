@@ -151,25 +151,16 @@ Le due reti devono avere gli stessi ingressi.
 [[1. Reti logiche#Tabella di verità|AND (reti logiche)]]
 Dividendo i tipi di interruttori tra pull up e pull down non è possibile creare un AND di soli interruttori.
 Possiamo quindi usare una NAND e poi negare il risultato con un inverter.
-[...] disegno
+![[Circuiti integrati digitali-1792585148832.webp|center|300]]
 
 ## OR
 [[1. Reti logiche#Tabella di verità|OR (reti logiche)]]
 Dualmente alla AND dobbiamo creare un NOR e negare l'uscita
-[...] disegno
+![[Circuiti integrati digitali-1792585602586.webp|center|300]]
 
 ## XOR
 [[1. Reti logiche#Operatore XOR|XOR (reti logiche)]]
-
-
----
-
-zucchero filato -> affettatrice -> fettine -> wafer -> affettatura
-
-Viene utilizzato il silicio non solo perché è molto presente nel mondo, ma anche e soprattutto perché a partire dal silicio, tramite manipolazioni, possiamo ricavare un materiale isolante, semiconduttore e conduttore, garantendo omogeneità nel materiale.
-
-
-
+![[Circuiti integrati digitali-1792585626485.webp|center|450]]
 # Regole di progettazione
 Utilizzando formule in *prima forma canonica* (or di and - (·) + (·)), se in $f$ è presente l'operatore:
 1. $f=a \cdot b$ -`and`:
@@ -178,11 +169,5 @@ Utilizzando formule in *prima forma canonica* (or di and - (·) + (·)), se in $
 2. $f = c + d$ - `or`:
 	- **Pull-up**: interruttori z in *serie*
 	- **Pull-down**: interruttori u in *parallelo*
-[...] aggiungi e capisci 3 e 4
-
-
-
-*es.*
-$$
-f = a \cdot \bar{b} + \bar{a} \cdot b
-$$
+3. **diretta** (AND, OR) in uscita inserisco un *inverter*
+4. **negata** ($f = \overline{a \cdot b} \vee f = \overline{a + b}$ - NAND, NOR) in uscita ho direttamente `out`
