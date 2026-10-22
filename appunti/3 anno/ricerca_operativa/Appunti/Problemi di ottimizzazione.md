@@ -1303,27 +1303,6 @@ Geometricamente, abbiamo trovato una semiretta interamente $\in \Omega(P)$ lungo
 >d_i \le 0 \ \ \forall i = 1, \dots, m \implies (P) \text{ è inferiormente illimitato}
 >$$
 
-## Seconda fase dell'algoritmo del simplesso
-$$
-\begin{aligned}
-1:&\ \text{Calcola } \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N \\
-2:&\ \textbf{if } \hat{c}_N^\top \geq 0 \textbf{ then} \qquad \triangleright\ \text{test di ottimalità} \\
-3:&\ \quad x^* := \bar{x},\ z^* := \bar{z},\ \textcolor{red}{\textbf{exit}} \qquad \triangleright\ x^* \text{ è la soluzione ottima} \\
-4:&\ \textbf{end if} \\
-5:&\ \text{Scegli } j^* \in \{ j \in \{1,\dots,n-m\} : \hat{c}_{\mathcal{N}(j)} < 0 \} \\
-6:&\ \text{Poni } k = \mathcal{N}(j^*) \text{ e calcola } d = B^{-1} A_k \qquad \triangleright\ x_k \text{ entra in base} \\
-7:&\ \textbf{if } d \nleq 0 \textbf{ then} \qquad \triangleright\ \text{esiste una sba } x \text{ adiacente con } c^\top x \leq c^\top \bar{x} \\
-8:&\ \quad \text{Calcola } \bar{\delta} = \min\{ \bar{x}_{\mathcal{B}(i)} / d_i : d_i > 0 \} \\
-9:&\ \quad \text{Scegli } i^* \in \{ i \in \{1,\dots,m\} : \bar{\delta} = \bar{x}_{\mathcal{B}(i)} / d_i \} \\
-10:&\ \quad \text{Poni } h = \mathcal{B}(i^*) \qquad \triangleright\ x_h \text{ esce dalla base} \\
-11:&\ \quad \text{Poni } x = \begin{pmatrix} \bar{x}_B - \bar{\delta} d \\ \bar{\delta} \hat{e}_j \end{pmatrix},\quad z = c^\top \bar{x} + \hat{c}_k \cdot \bar{\delta} \\
-12:&\ \quad \mathcal{B} := \mathcal{B} \setminus \{h\} \cup \{k\},\ \mathcal{N} := \mathcal{N} \setminus \{k\} \cup \{h\},\ \bar{x} := x,\ \bar{z} := z,\ \textbf{go to } 1 \\
-13:&\ \textbf{else} \\
-14:&\ \quad \textcolor{red}{\textbf{exit}} \qquad \triangleright\ (P) \text{ è inferiormente illimitato.} \\
-15:&\ \textbf{end if}
-\end{aligned}
-$$
-[...]
 ## Soluzioni di base ammissibili degeneri
 Se il valore $\bar{\delta}$ viene raggiunto in corrispondenza di più diseguaglianze, altrettante componenti con indice in $\mathcal{B}$ della nuova soluzione $x$ assumeranno valore nullo, ma solo una di esse potrà essere considerata variabile uscente dalla base.
 Di conseguenza la nuova soluzione ammissibile di base $\bar{x}- \bar{\delta} d$ sarà certamente **degenere**.
@@ -1350,12 +1329,233 @@ Si effettua così quello che viene chiamato un **cambio di base degenere**.
 >[!info] Teorema
 >Sia $\bar{x}$ una soluzione ammissibile di base non degenere per il problema $(P)$. Se $\bar{x}$ è soluzione ottima per $(P)$ allora i coefficienti di costo ridotto $\hat{c}_N$ sono non negativi.
 
-[...]
-## Indeterminazioni e regola di blend
-[...]
+Sia $\bar{x}$ soluzione ottima di base non degenere per $(P)$.
+Per assurdo sia
+$$
+\hat{c}_N \not\geq 0
+$$
+Scelto un coefficiente di costo ridotto negativo e facendo entrare in base la corrispondente variabile con valore $\bar{\delta}>0$, è possibile costruire una nuova soluzione ammissibile di base $x$ con valore di funzione obiettivo $c^\top x < c^\top \bar{x}$ contraddicendo l'ottimalità di $\bar{x}$.
+## Indeterminazioni e regola di Bland
+### Scelta della variabile entrante in base
+Esistono più coefficienti di costo ridotto negativi, e quindi più variabili fuori base il cui incremento promette un decremento della funzione obbiettivo.
+Scegliere la variabile entrante in base equivale a scegliere la direzione di spostamento sulla frontiera della regione ammissibile, ovvero il vertice adiacente verso il quale muoversi, e la sequenza di tali scelte individua l'itinerario da seguire per raggiungere il vertice ottimo: perciò è importante per l'efficienza dell'algoritmo.
+>[!important] Criterio del massimo decremento atteso
+>la nuova soluzione dipende da $\delta$ e dal coefficiente di costo ridotto, se prendo il più negativo di tutti a parità di $\delta$ garantisce la soluzione migliore
+>$$|\hat{c}_k| = \max \{|\hat{c}_l \ : \ l \in \mathcal{N}, \ \hat{c}_l < 0\}$$
+>È una scelta molto efficiente nella pratica computazionale, ma non garantisce la terminazione finita dell'algoritmo se esistono soluzioni di base ammissibili degeneri.
 
+### Scelta della variabile uscente dalla base
+Può esserci indeterminazione solo nel caso in cui il valore di $\bar{\delta}$ sia raggiunto in corrispondenza di più indici, ovvero quando il nuovo vertice ottenuto dalla corrente iterazione è degenere.
 
+### Regola di Bland
+>[!important] Regola di Bland
+>Scelta della variabile entrante in base:
+>$$j^* = \min \{j \in \{1,\dots,n-m\} : \hat{c}_{\mathcal{N}(j)}<0\}$$
+>Scelta della variabile uscente di base
+>$$i^* = \min \left\{i \in \{1,\dots,m\}:\bar{\delta} = \frac{\bar{x}_{\mathcal{B}(i)}}{d_i}\right\}$$
 
+## Seconda fase dell'algoritmo del simplesso
+$$
+\begin{aligned}
+1:&\ \text{Calcola } \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N \\
+2:&\ \textbf{if } \hat{c}_N^\top \geq 0 \textbf{ then} \qquad \triangleright\ \text{test di ottimalità} \\
+3:&\ \quad x^* := \bar{x},\ z^* := \bar{z},\ \textcolor{red}{\textbf{exit}} \qquad \triangleright\ x^* \text{ è la soluzione ottima} \\
+4:&\ \textbf{end if} \\
+5:&\ \text{Scegli } j^* \in \{ j \in \{1,\dots,n-m\} : \hat{c}_{\mathcal{N}(j)} < 0 \} \\
+6:&\ \text{Poni } k = \mathcal{N}(j^*) \text{ e calcola } d = B^{-1} A_k \qquad \triangleright\ x_k \text{ entra in base} \\
+7:&\ \textbf{if } d \nleq 0 \textbf{ then} \qquad \triangleright\ \text{esiste una sba } x \text{ adiacente con } c^\top x \leq c^\top \bar{x} \\
+8:&\ \quad \text{Calcola } \bar{\delta} = \min\{ \bar{x}_{\mathcal{B}(i)} / d_i : d_i > 0 \} \\
+9:&\ \quad \text{Scegli } i^* \in \{ i \in \{1,\dots,m\} : \bar{\delta} = \bar{x}_{\mathcal{B}(i)} / d_i \} \\
+10:&\ \quad \text{Poni } h = \mathcal{B}(i^*) \qquad \triangleright\ x_h \text{ esce dalla base} \\
+11:&\ \quad \text{Poni } x = \begin{pmatrix} \bar{x}_B - \bar{\delta} d \\ \bar{\delta} \hat{e}_j \end{pmatrix},\quad z = c^\top \bar{x} + \hat{c}_k \cdot \bar{\delta} \\
+12:&\ \quad \mathcal{B} := \mathcal{B} \setminus \{h\} \cup \{k\},\ \mathcal{N} := \mathcal{N} \setminus \{k\} \cup \{h\},\ \bar{x} := x,\ \bar{z} := z,\ \textbf{go to } 1 \\
+13:&\ \textbf{else} \\
+14:&\ \quad \textcolor{red}{\textbf{exit}} \qquad \triangleright\ (P) \text{ è inferiormente illimitato.} \\
+15:&\ \textbf{end if}
+\end{aligned}
+$$
+- **Passi 1–4:** il test di ottimalità è la condizione sufficiente vista in precedenza ($\hat{c}_N \ge 0$).
+- **Passi 5–6:** se il test fallisce c'è almeno una variabile fuori base con costo ridotto negativo, che può entrare in base per diminuire $z$.
+- **Passi 7 e 13–14:** se $d \le 0$ non c'è nessun limite alla crescita di $x_k$: il problema è illimitato.
+- **Passi 8–10:** il test del rapporto individua la variabile uscente.
+
+>[!check] Esercizio
+> Consideriamo il problema
+> $$
+> \begin{cases}
+> \min & -x_1 + 2x_2 \\
+> \text{s.t.} & -x_1 + x_2 \le 1 \\
+>             & x_1 + 2x_2 \le 8 \\
+>             & x_1 + x_2 \le 6 \\
+>             & x \ge 0
+> \end{cases}
+> \qquad \longrightarrow \qquad
+> \begin{cases}
+> \min & -x_1 + 2x_2 \\
+> \text{s.t.} & -x_1 + x_2 + x_3 = 1 \\
+>             & x_1 + 2x_2 + x_4 = 8 \\
+>             & x_1 + x_2 + x_5 = 6 \\
+>             & x \ge 0
+> \end{cases}
+> $$
+>
+>![[Problemi di ottimizzazione-1792661401022.webp|center|500]]
+>
+> **Iterazione 1:** Partiamo dalla soluzione ammissibile di base $\bar{x} = (2, 3, 0, 0, 1)^\top$, con $\bar{z} = 4$. Rispetto agli indici $\mathcal{B} = \{1, 2, 5\}$ e $\mathcal{N} = \{3, 4\}$ abbiamo
+> $$
+> B = \begin{pmatrix} -1 & 1 & 0 \\ 1 & 2 & 0 \\ 1 & 1 & 1 \end{pmatrix}
+> \qquad
+> N = \begin{pmatrix} 1 & 0 \\ 0 & 1 \\ 0 & 0 \end{pmatrix}
+> $$
+> Quindi
+> $$
+> c_B = (-1, 2, 0)^\top \qquad c_N = (0, 0)^\top \qquad
+> B^{-1} = -\frac{1}{3} \begin{pmatrix} 2 & -1 & 0 \\ -1 & -1 & 0 \\ -1 & 2 & -3 \end{pmatrix}
+> $$
+> e la corrispondente soluzione di base
+> $$
+> \bar{x}_B = B^{-1} b = (2, 3, 1)^\top \qquad \bar{x}_N = (0, 0)^\top
+> $$
+> cioè $\bar{x} = (2, 3, 0, 0, 1)^\top$ è ammissibile.
+>
+> Determiniamo la matrice
+> $$
+> B^{-1} N = -\frac{1}{3} \begin{pmatrix} 2 & -1 & 0 \\ -1 & -1 & 0 \\ -1 & 2 & -3 \end{pmatrix}
+> \begin{pmatrix} 1 & 0 \\ 0 & 1 \\ 0 & 0 \end{pmatrix}
+> = \begin{pmatrix} -2/3 & 1/3 \\ 1/3 & 1/3 \\ 1/3 & -2/3 \end{pmatrix}
+> $$
+> Calcoliamo i coefficienti di costo ridotto
+> $$
+> \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N = (0, 0) - (-1, 2, 0)
+> \begin{pmatrix} -2/3 & 1/3 \\ 1/3 & 1/3 \\ 1/3 & -2/3 \end{pmatrix}
+> = \left( -\tfrac{4}{3}, -\tfrac{1}{3} \right)
+> $$
+> Esiste almeno una componente negativa, quindi il criterio di arresto per ottimalità non è soddisfatto (la soluzione corrente non è ottima, poiché è non degenere) e l'algoritmo prosegue alla ricerca di una nuova soluzione.
+>
+> **Scelta della variabile entrante in base:**
+> $$
+> j^* = \min \{ j \in \{1, 2\} : \hat{c}_{\mathcal{N}(j)} < 0 \} = 1
+> $$
+> Quindi fissiamo $k = \mathcal{N}(1) = 3$ e calcoliamo la direzione
+> $$
+> d = B^{-1} A_3 = -\frac{1}{3} \begin{pmatrix} 2 & -1 & 0 \\ -1 & -1 & 0 \\ -1 & 2 & -3 \end{pmatrix}
+> \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix}
+> = \begin{pmatrix} -2/3 \\ 1/3 \\ 1/3 \end{pmatrix}
+> $$
+> Esistono componenti di $d$ positive, quindi non entra in azione il criterio di illimitatezza. Calcoliamo la nuova soluzione $x_B = \bar{x}_B - \delta \cdot d \ge 0$: nel piano $(x_1, x_2)$ ci spostiamo lungo la frontiera $x_4 = 0$ dal vertice $(2,3)$ verso $(4,2)$.
+>
+> **Calcolo del massimo passo ammissibile lungo $d$:**
+> $$
+> \bar{\delta} = \min \left\{ \frac{\bar{x}_{\mathcal{B}(i)}}{d_i} : d_i > 0 \right\}
+> = \min \left\{ \frac{\bar{x}_{\mathcal{B}(2)}}{d_2}, \frac{\bar{x}_{\mathcal{B}(3)}}{d_3} \right\}
+> = \min \left\{ \frac{3}{1/3}, \frac{1}{1/3} \right\} = \min\{9, 3\} = 3
+> $$
+> **Scelta della variabile uscente dalla base:**
+> $$
+> i^* = \min \left\{ i \in \{1, 2, 3\} : d_i > 0, \ \bar{\delta} = \frac{\bar{x}_{\mathcal{B}(i)}}{d_i} \right\} = 3
+> $$
+> Quindi poniamo $h = \mathcal{B}(3) = 5$ e calcoliamo la nuova soluzione
+> $$
+> x_B = \bar{x}_B - \bar{\delta} d = \begin{pmatrix} 2 \\ 3 \\ 1 \end{pmatrix} - 3 \begin{pmatrix} -2/3 \\ 1/3 \\ 1/3 \end{pmatrix} = \begin{pmatrix} 4 \\ 2 \\ 0 \end{pmatrix}
+> \qquad
+> x_N = \bar{\delta} \hat{e}_1 = \bar{\delta} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 3 \\ 0 \end{pmatrix}
+> $$
+> Nuova soluzione: $\bar{x} = (4, 2, 3, 0, 0)^\top$, con $z = 4 + \left(-\tfrac{4}{3}\right) \cdot 3 = 0$. Aggiorniamo gli indici: $x_3$ prende il posto di $x_5$ in $\mathcal{B}$ e viceversa in $\mathcal{N}$, quindi $\mathcal{B} = \{1, 2, 3\}$, $\mathcal{N} = \{5, 4\}$.
+>
+> **Iterazione 2:** Rispetto agli indici $\mathcal{B} = \{1, 2, 3\}$ e $\mathcal{N} = \{5, 4\}$ abbiamo
+> $$
+> B = \begin{pmatrix} -1 & 1 & 1 \\ 1 & 2 & 0 \\ 1 & 1 & 0 \end{pmatrix}
+> \qquad
+> N = \begin{pmatrix} 0 & 0 \\ 0 & 1 \\ 1 & 0 \end{pmatrix}
+> $$
+> Quindi
+> $$
+> c_B = (-1, 2, 0)^\top \qquad c_N = (0, 0)^\top \qquad
+> B^{-1} = \begin{pmatrix} 0 & -1 & 2 \\ 0 & 1 & -1 \\ 1 & -2 & 3 \end{pmatrix}
+> $$
+> e la corrispondente soluzione di base
+> $$
+> \bar{x}_B = B^{-1} b = (4, 2, 3)^\top \qquad \bar{x}_N = (0, 0)^\top
+> $$
+> cioè $\bar{x} = (4, 2, 3, 0, 0)^\top$ è ammissibile.
+>
+> Determiniamo la matrice
+> $$
+> B^{-1} N = \begin{pmatrix} 0 & -1 & 2 \\ 0 & 1 & -1 \\ 1 & -2 & 3 \end{pmatrix}
+> \begin{pmatrix} 0 & 0 \\ 0 & 1 \\ 1 & 0 \end{pmatrix}
+> = \begin{pmatrix} 2 & -1 \\ -1 & 1 \\ 3 & -2 \end{pmatrix}
+> $$
+> Calcoliamo i coefficienti di costo ridotto
+> $$
+> \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N = (0, 0) - (-1, 2, 0)
+> \begin{pmatrix} 2 & -1 \\ -1 & 1 \\ 3 & -2 \end{pmatrix}
+> = (4, -3)
+> $$
+> Esiste almeno una componente negativa, quindi la condizione di arresto non è soddisfatta (inoltre la soluzione corrente non è ottima perché non degenere) e l'algoritmo prosegue alla ricerca di una nuova soluzione.
+>
+> **Scelta della variabile entrante in base:**
+> $$
+> j^* = \min \{ j \in \{1, 2\} : \hat{c}_{\mathcal{N}(j)} < 0 \} = 2
+> $$
+> Quindi fissiamo $k = \mathcal{N}(2) = 4$ e calcoliamo la direzione
+> $$
+> d = B^{-1} A_4 = \begin{pmatrix} 0 & -1 & 2 \\ 0 & 1 & -1 \\ 1 & -2 & 3 \end{pmatrix}
+> \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix}
+> = \begin{pmatrix} -1 \\ 1 \\ -2 \end{pmatrix}
+> $$
+> Esistono componenti di $d$ positive, quindi non entra in azione il criterio di illimitatezza. Calcoliamo la nuova soluzione $x_B = \bar{x}_B - \delta \cdot d \ge 0$: nel piano $(x_1, x_2)$ ci spostiamo lungo $x_5 = 0$ dal vertice $(4,2)$ verso $(6,0)$.
+>
+> **Calcolo del massimo passo ammissibile lungo $d$:**
+> $$
+> \bar{\delta} = \min \left\{ \frac{\bar{x}_{\mathcal{B}(i)}}{d_i} : d_i > 0 \right\}
+> = \min \left\{ \frac{\bar{x}_{\mathcal{B}(2)}}{d_2} \right\}
+> = \min \left\{ \frac{2}{1} \right\} = 2
+> $$
+> **Scelta della variabile uscente dalla base:**
+> $$
+> i^* = \min \left\{ i \in \{1, 2, 3\} : d_i > 0, \ \bar{\delta} = \frac{\bar{x}_{\mathcal{B}(i)}}{d_i} \right\} = 2
+> $$
+> Quindi poniamo $h = \mathcal{B}(2) = 2$ e calcoliamo la nuova soluzione
+> $$
+> x_B = \bar{x}_B - \bar{\delta} d = \begin{pmatrix} 4 \\ 2 \\ 3 \end{pmatrix} - 2 \begin{pmatrix} -1 \\ 1 \\ -2 \end{pmatrix} = \begin{pmatrix} 6 \\ 0 \\ 7 \end{pmatrix}
+> \qquad
+> x_N = \bar{\delta} \hat{e}_2 = \bar{\delta} \begin{pmatrix} 0 \\ 1 \end{pmatrix} = \begin{pmatrix} 0 \\ 2 \end{pmatrix}
+> $$
+> Nuova soluzione: $\bar{x} = (6, 0, 7, 2, 0)^\top$, con $z = 0 + (-3) \cdot 2 = -6$. Aggiorniamo gli indici: $\mathcal{B} = \{1, 4, 3\}$, $\mathcal{N} = \{5, 2\}$.
+>
+> **Iterazione 3:** Rispetto agli indici $\mathcal{B} = \{1, 4, 3\}$ e $\mathcal{N} = \{5, 2\}$ abbiamo
+> $$
+> B = \begin{pmatrix} -1 & 0 & 1 \\ 1 & 1 & 0 \\ 1 & 0 & 0 \end{pmatrix}
+> \qquad
+> N = \begin{pmatrix} 0 & 1 \\ 0 & 2 \\ 1 & 1 \end{pmatrix}
+> $$
+> Quindi
+> $$
+> c_B = (-1, 0, 0)^\top \qquad c_N = (0, 2)^\top \qquad
+> B^{-1} = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & -1 \\ 1 & 0 & 1 \end{pmatrix}
+> $$
+> e la corrispondente soluzione di base
+> $$
+> \bar{x}_B = B^{-1} b = (6, 2, 7)^\top \qquad \bar{x}_N = (0, 0)^\top
+> $$
+> cioè $\bar{x} = (6, 0, 7, 2, 0)^\top$ è ammissibile.
+>
+> Determiniamo la matrice
+> $$
+> B^{-1} N = \begin{pmatrix} 0 & 0 & 1 \\ 0 & 1 & -1 \\ 1 & 0 & 1 \end{pmatrix}
+> \begin{pmatrix} 0 & 1 \\ 0 & 2 \\ 1 & 1 \end{pmatrix}
+> = \begin{pmatrix} 1 & 1 \\ -1 & 1 \\ 1 & 2 \end{pmatrix}
+> $$
+> Calcoliamo i coefficienti di costo ridotto
+> $$
+> \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N = (0, 2) - (-1, 0, 0)
+> \begin{pmatrix} 1 & 1 \\ -1 & 1 \\ 1 & 2 \end{pmatrix}
+> = (1, 3)
+> $$
+> Le componenti sono tutte positive, quindi la soluzione corrente è l'**unica** soluzione ottima e l'algoritmo si arresta:
+> $$
+> x^* = (6, 0, 7, 2, 0)^\top \qquad z^* = c^\top x^* = -6
+> $$
 
 
 
