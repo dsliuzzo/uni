@@ -704,8 +704,6 @@ Nel CSMA le stazioni coinvolte in una collisione continuano a trasmettere la tra
 > 4. si riprova ad accedere dopo un intervallo di tempo casuale $\Delta T$
 > 
 > Per ridurre l'aumento di traffico dovuto alle ritrasmissioni, $\Delta T$ cresce **esponenzialmente** con il numero di collisioni consecutive: è il [[#Aloha a slot|backoff esponenziale]] già visto.
-#### CSMA-CA
-[...]
 # Livello rete (livello 3)
 Fornisce i mezzi funzionali e procedurali per lo scambio di informazioni tra entità di livello di trasporto.
 Fornisce i mezzi per instaurare, mantenere e abbattere le connessioni di rete tra entità di livello trasporto.
