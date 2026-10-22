@@ -103,7 +103,13 @@ L'uscita si trova sempre tra:
 - **Rete di pull-down**: insieme di interruttori di tipo 1 che assicura che la rete raggiunga potenziale nullo
 Le due reti devono avere gli stessi ingressi. 
 ![[Circuiti integrati digitali-1792505820342.webp|center|338]]
+
+>[!bug] Mutua esclusione
+>in caso di mancata mutua esclusione tra rete di pull up e pull down non sappiamo quale sarebbe il reale output, per questo vengono usati interruttori di tipo diverso tra le due reti collegate.
+>Stiamo inviando in ingresso segnali a componenti che sono complementari tra di loro.
+>>[!important] Qualsiasi ingresso deve arrivare sia ad un interruttore di tipo 0 che ad un interruttore di tipo 1
 ## Inverter
+[[1. Reti logiche#Tabella di verità|NOT (reti logiche)]]
 >[!multi-column]
 >
 >>[!blank]
@@ -117,6 +123,8 @@ Le due reti devono avere gli stessi ingressi.
 
 ![[Circuiti integrati digitali-1792569064632.webp|center|300]]
 ## NAND
+[[1. Reti logiche#Operatori NAND E NOR|NAND (reti logiche)]]
+
 | A        | B        | $Z_1$ | $Z_2$ | $U_{1}$ | $U_{2}$ | Out      |
 | -------- | -------- | ----- | ----- | ------- | ------- | -------- |
 | 0V       | 0V       | ON    | ON    | OFF     | OFF     | $V_{DD}$ |
@@ -125,3 +133,56 @@ Le due reti devono avere gli stessi ingressi.
 | $V_{DD}$ | $V_{DD}$ | OFF   | OFF   | ON      | ON      | 0V       |
 
 ![[Circuiti integrati digitali-1792569428894.webp|center|300]]
+## NOR
+[[1. Reti logiche#Operatori NAND E NOR|NOR (reti logiche)]]
+>[!multi-column]
+>
+>>[!blank]
+>>| A        | B        | $Z_{1}$ | $Z_{2}$ | $U_{1}$ | $U_{2}$ | out      |
+>>| -------- | -------- | ------- | ------- | ------- | ------- | -------- |
+>>| 0V       | 0V       | ON      | ON      | OFF     | OFF     | $V_{DD}$ |
+>>| 0V       | $V_{DD}$ | ON      | OFF     | OFF     | ON      | 0V       |
+>>| $V_{DD}$ | 0V       | OFF        | ON        | ON        | OFF        | 0V          |
+>>| $V_{DD}$ | $V_{DD}$ | OFF        | OFF        | ON        | ON        | 0V         |
+>
+>>[!blank]
+>>![[Circuiti integrati digitali-1792574826079.webp|175]]
+## AND
+[[1. Reti logiche#Tabella di verità|AND (reti logiche)]]
+Dividendo i tipi di interruttori tra pull up e pull down non è possibile creare un AND di soli interruttori.
+Possiamo quindi usare una NAND e poi negare il risultato con un inverter.
+[...] disegno
+
+## OR
+[[1. Reti logiche#Tabella di verità|OR (reti logiche)]]
+Dualmente alla AND dobbiamo creare un NOR e negare l'uscita
+[...] disegno
+
+## XOR
+[[1. Reti logiche#Operatore XOR|XOR (reti logiche)]]
+
+
+---
+
+zucchero filato -> affettatrice -> fettine -> wafer -> affettatura
+
+Viene utilizzato il silicio non solo perché è molto presente nel mondo, ma anche e soprattutto perché a partire dal silicio, tramite manipolazioni, possiamo ricavare un materiale isolante, semiconduttore e conduttore, garantendo omogeneità nel materiale.
+
+
+
+# Regole di progettazione
+Utilizzando formule in *prima forma canonica* (or di and - (·) + (·)), se in $f$ è presente l'operatore:
+1. $f=a \cdot b$ -`and`:
+	- **Pull-up**: interruttori z in *parallelo*
+	- **Pull-down**: interruttori u in *serie*
+2. $f = c + d$ - `or`:
+	- **Pull-up**: interruttori z in *serie*
+	- **Pull-down**: interruttori u in *parallelo*
+[...] aggiungi e capisci 3 e 4
+
+
+
+*es.*
+$$
+f = a \cdot \bar{b} + \bar{a} \cdot b
+$$
