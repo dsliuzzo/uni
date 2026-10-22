@@ -1325,8 +1325,31 @@ $$
 $$
 [...]
 ## Soluzioni di base ammissibili degeneri
-[...]
+Se il valore $\bar{\delta}$ viene raggiunto in corrispondenza di più diseguaglianze, altrettante componenti con indice in $\mathcal{B}$ della nuova soluzione $x$ assumeranno valore nullo, ma solo una di esse potrà essere considerata variabile uscente dalla base.
+Di conseguenza la nuova soluzione ammissibile di base $\bar{x}- \bar{\delta} d$ sarà certamente **degenere**.
+La scelta della variabile uscente di base in questo caso **non è univoca**.
+
+Inoltre è possibile che si abbia $\bar{\delta} = 0$ quando
+$$
+\exists i \in \{1,\dots,m\} \ : \ \bar{x}_{\mathcal{B}(i)} = 0, \ d_i > 0
+$$
+cioè quando $\bar{x}$ è degenere.
+In questo case, sebbene $\hat{c}_{\mathcal{N}(j)} < 0$ incremento ammissibile è nullo, quindi
+$$
+x = \bar{x}, \ \Delta z = 0
+$$
+il miglioramento è nullo, ma la base cambia.
+Geometricamente stiamo rappresentando in modo diverso lo stesso punto.
+
+La variabile di indice $k = \mathcal{N}(j)$ entra in base con valore nullo, quella di indice $h = \mathcal{B}(i^*)$, che era in base con valore nullo, esce di base.
+Si effettua così quello che viene chiamato un **cambio di base degenere**.
+
+>[!bug] Rischio di loop
+>C'è il rischio di entrare in un loop, poiché l'algoritmo potrebbe continuare ad iterare ciclicamente cambiando base, senza mai riuscire a spostarsi dal punto $\bar{x}$.
 ## Condizione necessaria di ottimalità
+>[!info] Teorema
+>Sia $\bar{x}$ una soluzione ammissibile di base non degenere per il problema $(P)$. Se $\bar{x}$ è soluzione ottima per $(P)$ allora i coefficienti di costo ridotto $\hat{c}_N$ sono non negativi.
+
 [...]
 ## Indeterminazioni e regola di blend
 [...]
