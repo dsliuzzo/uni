@@ -22,8 +22,7 @@ Le sue principali funzioni sono:
 - **servizio senza connessione**
   il livello fornisce un servizio di strato senza connessione. I dati (datagrammi) vengono inviati nella rete senza stabilire preventivamente un canale dedicato.
 
->[!protocollo] IP
->Il protocollo utilizzato è l'Internet Protocol (IP), il quale provvede a instradare i dati attraverso reti multiple collegate in cascata. In pratica, si assicura di trovare il percorso giusto per trasferire informazioni tra sistemi terminali che appartengono a reti diverse.
+Protocollo: [[Protocolli#IP]]
 
 # Livello di trasporto (livello 3)
 [[#Livello trasporto (livello 4)]]
@@ -35,11 +34,9 @@ Trasferimento dati host-host.
 >Il ricevitore calcola la checksum del segmento ricevuto. Considera se la checksum calcolata è uguale al valore del campo checksum.
 
 
->[!protocollo] TCP
->Protocollo di trasporto orientato alla connessione
+Protocollo: [[Protocolli#TCP]]
 
->[!protocollo] UDP
->Protocollo di trasporto non orientato alla connessione
+Protocollo: [[Protocolli#UDP]]
 
 
 # Livello applicazione (livello 4)
