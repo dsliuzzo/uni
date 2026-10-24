@@ -1,5 +1,6 @@
-#materia 
+#materia
 #matematica1
+
 # Appunti
 [[1. Insiemistica]]
 [[2. Studio di funzione]]
@@ -9,6 +10,7 @@
 [[6. Serie numeriche]]
 
 ---
+
 # Libri
 [[analisi 1.pdf]]
 [[Analisi matematica 1 [ Bramanti - Pagani - Salsa ].pdf]]

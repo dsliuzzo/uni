@@ -131,7 +131,7 @@ m[0].length = 2
 m[1].length = 5
 ```
 ## Casting
-Il [[C#Conversione di tipo type_casting|casting]] in Java non è implicito, ma può avvenire con una sintassi simile a quella di [[Python#Type casting esplicito|python]] esplicitamente (utilizzando `(int)`), questo solo se passiamo da una variabile che occupa meno ad una che occupa di più, per evitare errori di troncamento.
+Il [[C#Conversione di tipo type casting|casting]] in Java non è implicito, ma può avvenire con una sintassi simile a quella di [[Python#Type casting esplicito|python]] esplicitamente (utilizzando `(int)`), questo solo se passiamo da una variabile che occupa meno ad una che occupa di più, per evitare errori di troncamento.
 *es.*
 
 | int -> long | ✅   |
