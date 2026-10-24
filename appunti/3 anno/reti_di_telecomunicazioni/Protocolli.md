@@ -642,9 +642,9 @@ L'indirizzo MAC è associato alla scheda di rete utilizzata (a livello firmware,
 La [[Reti di telecomunicazioni#Informazioni utente e di controllo, PDU, SAP|PDU]] del MAC ha degli elementi comuni a tutti i sottolivelli:
 ![[Protocolli-1792853380174.webp|center|667]]
 - **MAC-DSAP**
-  indirizzo MAC del nodo mittente
-- **MAC-SSAP**
   indirizzo MAC del nodo destinatario
+- **MAC-SSAP**
+  indirizzo MAC del nodo mittente
 - **LLC-PDU**
   campo info
 - **FCS**
@@ -657,19 +657,41 @@ Gli indirizzi MAC possono essere di tipo:
 - di gruppo
 - broadcast
 ### Standard IEEE 802.3
-Lo standard IEEE 802.3 la rete ethernet, una delle LAN più diffuse al mondo.
-Utilizza il protocollo [[#CSMA-CD]] e può essere di vario tipo:
+Lo standard IEEE 802.3 specifica il livello MAC e il livello fisico della rete ethernet, una delle LAN più diffuse al mondo.
+Le caratteristiche principali sono:
+- topologia a bus (cablaggio a bus o a stella)
+- arbitraggio del canale tramite contesa con il protocollo [[#CSMA-CD]]: accesso **casuale** e **distribuito**, con tempo di attesa non limitato superiormente
+- velocità di $10 \ \text{Mbit/s}$ nella versione originale, con throughput massimo utile di circa $5-7 \ \text{Mbit/s}$
+- **IEEE 802.3u**: versione a $100 \ \text{Mbit/s}$; **IEEE 802.3z**: versione a $1 \ \text{Gbit/s}$
+
+**Sottolivelli del livello fisico**
+Dall'alto verso il basso: LLC, MAC, poi
+- **PLS** (Physical Signaling)
+- **AUI** (Attachment Unit Interface), interfaccia tra PLS e PMA
+- **PMA** (Physical Medium Attachment)
+- **MDI** (Medium Dependent Interface), interfaccia verso il mezzo fisico
+
+Il livello fisico comprende PLS, AUI, PMA e MDI; l'802.3 comprende MAC e livello fisico.
+
+**Parametri del CSMA/CD in 802.3**
+- **carrier sensing** 1-persistente: se il canale è occupato si attende che si liberi e poi si trasmette
+- dimensione minima di un pacchetto **64 byte**: è il tempo necessario perché tutte le stazioni possano rilevare un'eventuale collisione
+- alla collisione la trasmissione viene abortita, ma solo dopo altri **32-48 bit** di rumore (**sequenza di jamming**)
+- [[#Aloha a slot|backoff esponenziale]] con 1 slot $= 2\tau +$ margine di sicurezza. Nel 10Base5, $2\tau$ corrisponde a 450 tempi di bit e 1 slot è di **512 bit**, cioè 64 byte (dimensione minima del frame)
+- $X$ è scelto a caso fra $0$ e $2^{\min(K,10)}-1$, con $K \le 16$ numero di collisioni consecutive: sono consentiti fino a **16 tentativi**, dopo i quali la trama viene eliminata dal buffer del livello MAC, che notifica l'evento al livello superiore. In Ethernet quindi una trama può non essere trasmessa a causa della congestione sul canale
+
+Le varianti del livello fisico si indicano così:
 $$
 x \ B \ y
 $$
-dove $x$ rappresenta i $\text{Mbit/s}$ in grado di tramettere, $y$ rappresenta l'estensione massima possibile e $B$ rappresenta il tipo di banda.
+dove $x$ rappresenta i $\text{Mbit/s}$ in grado di tramettere, $y$ rappresenta l'estensione massima possibile (o il tipo di mezzo fisico) e $B$ rappresenta il tipo di banda: **base** per la banda base (digitale), **broad** per la banda traslata (analogica, es. 10Broad36).
 *es.*
 $$
 10 \ \text{base} \ 5
 $$
 è un tipo di LAN che consente la trasmissione in $10\ \text{Mbit/s}$ in banda base per un massimo di $500 \ m$.
 Fa utilizzo di [[Modello ISO OSI#Mezzi trasmissivi|cavi coassiali thick]].
-I segmenti di lunghezza massima 500 m possono essere estesi facendo uso di **ripetitori** (semplice decodifica e reinvio) per estendere l'ampiezza della rete, per un massimo di 4 ripetitori a cascata (2500 m). Ogni segmento contente a 100 nodi di far parte della rete.
+I segmenti di lunghezza massima 500 m possono essere estesi facendo uso di **ripetitori** (semplice decodifica e reinvio) per estendere l'ampiezza della rete, per un massimo di 4 ripetitori a cascata (2500 m). Ogni segmento consente a 100 nodi di far parte della rete (1000 in totale su 5 segmenti).
 
 *es.*
 $$
@@ -685,28 +707,65 @@ fa utilizzo di [[Modello ISO OSI#Mezzi trasmissivi|twister pair]] e permette qui
 #### MAC frame
 ![[Protocolli-1792856560970.webp|center|1007]]
 - **Preamble**
-  7 ottetti che permettono alle stazioni riceventi di sincronizzarsi con meccanismi di aggancio di fase sul clock di trasmissione del nodo mittente di ciascun pacchetto
+  7 ottetti `10101010` che permettono alle stazioni riceventi di sincronizzarsi con meccanismi di aggancio di fase (PLL) sul clock di trasmissione del nodo mittente di ciascun pacchetto
 - **SFD**
-  delimitatore di inizio della trama
+  (Start Frame Delimiter) 1 ottetto `10101011`, delimitatore di inizio della trama
 - **Destination address**
-  indirizzo MAC 48 bit
+  indirizzo MAC, 48 bit (può essere anche di 2 ottetti)
 - **Source address**
-  indirizzo MAC 48 bit
+  indirizzo MAC, 48 bit (può essere anche di 2 ottetti)
 - **Length PDU**
   2 byte che descrivono la lunghezza del campo dati
 - **Data**
-  Payload
+  Payload: la [[#PDU dell'LLC in 802.3|PDU dell'LLC]], da 0 a 1500 ottetti
 - **PAD**
-  bit di padding che permettono il raggiungimento della [[#CSMA-CD|lunghezza minima]] della trama
+  bit di padding (da 0 a 46 ottetti) che permettono il raggiungimento della [[#CSMA-CD|lunghezza minima]] della trama, 64 byte
 - **FCS**
-  controllo di errori
+  4 ottetti per il controllo di errori; **non** protegge né il preambolo né l'SFD (se questi sono corrotti la trama è scartata in partenza)
+
+La lunghezza della trama va da **64 a 1518 ottetti**. L'**overhead** (informazioni aggiuntive oltre al payload) è di 26 byte.
+Il servizio offerto è **senza connessione**.
 
 >[!bug] In caso di rilevamento di errori il frame viene completamente scartato, il reinvio viene demandato agli altri livelli
 
-La minima lunghezza della trama è 512 bit.
-La velocità di propagazione media è di $2 * 10^8\ \text{m/s}$.
-Ne segue una distanza massima teorica di $5 \ km$, ma per evitare problemi relativi ai ritardi dei router è fissata una distanza massima a $2,5 \ km$.
-due trame consecutive vengono sempre distanziate di un tempo minimo detto Inter Frame Gap.
+**PDU dell'LLC in 802.3**
+Nel campo dati c'è la PDU dell'LLC (payload del livello MAC), con i campi:
+- **DSAP** e **SSAP** (*Destination/Source Service Access Point*): indirizzamento verso il livello superiore. Nel DSAP il primo bit indica indirizzo individuale (0) o di gruppo (1); nell'SSAP indica comando (0) o risposta (1)
+- **Control**: stesso formato di [[#HDLC]]. Può essere **I-frame** (`0`, N(S), P/F, N(R)), **S-frame** (`10`, codice, P/F, N(R)) o **U-frame** (`11`, codice, P/F, codice)
+- **Information**
+
+**Dimensione minima e lunghezza massima della rete**
+Per il CSMA/CD originale su bus a $10 \ \text{Mbit/s}$:
+- la minima lunghezza della trama è **512 bit** (uno slot), pari a $51,2 \ \mu s$
+- la velocità di propagazione media è di $2 * 10^8\ \text{m/s}$ ($5 \ \mu s/km$), e dipende dal mezzo (qui coassiale thick)
+- ne segue una distanza massima teorica di $5 \ km$: $51,2 \ \mu s = 2\tau$, quindi $\tau = 25,6 \ \mu s$, circa $5 \ km$
+- per evitare problemi relativi ai ritardi dei ripetitori è fissata una distanza massima a $2,5 \ km$
+- due trame consecutive vengono sempre distanziate di un tempo minimo detto **Inter Frame Gap** (IFG, $9,6 \ \mu s$ a $10 \ \text{Mbit/s}$), che permette alle stazioni in ascolto di distinguere la fine di una trama dall'inizio della successiva. L'IFG sostituisce il delimitatore di fine trama, che in 802.3 non c'è
+#### 802.3 vs Ethernet
+>[!important] 802.3 ed Ethernet non sono la stessa cosa
+>- **802.3** usa un livello LLC (802.2) sopra il MAC
+>- **Ethernet** colloquia direttamente con il livello di rete (es. IP sta direttamente sopra Ethernet)
+
+**Trama Ethernet**
+L'adattatore che trasmette incapsula il datagramma IP (o il pacchetto di un altro protocollo di livello rete, il *payload* di livello 3) in una trama Ethernet:
+- **Preambolo**
+  7 byte `10101010` seguiti da un byte `10101011` (SFD); serve a sincronizzare i clock di ricevitore e trasmettitore sui dati
+- **Address**
+  6 byte. Il frame è ricevuto da tutti gli adattatori della LAN e scartato se l'indirizzo non corrisponde. L'indirizzo di destinazione viene **prima** di quello di sorgente: la stazione controlla subito se è la destinataria e solo dopo legge il resto
+- **Type**
+  indica il protocollo di livello superiore (livello 3: IP, Novell IPX, AppleTalk); serve a sapere a quale processo consegnare il dato letto
+- **CRC**
+  controllato dal ricevitore; se c'è un errore la trama è semplicemente scartata
+
+**Come si distinguono**
+In molte LAN le due trame convivono e si distinguono dal valore del campo da 2 byte dopo gli indirizzi:
+
+| **Standard** | **Campo da 2 byte**                                  | **Valori**         |
+| ------------ | ---------------------------------------------------- | ------------------ |
+| IEEE 802.3   | **Length**: lunghezza del campo dati                 | da 0 a 1500        |
+| Ethernet     | **Protocol type**: protocollo di livello superiore   | maggiori di 1500   |
+
+Il campo *protocol* di Ethernet serve a indirizzare il SAP verso il livello di rete: permette di multiplare più architetture di protocolli sullo stesso MAC, ad esempio `0600` XNS, `0800` IP, `6000`-`6009` DEC.
 # Livello rete (livello 3)
 Equivalente TCP/IP: [[Modello TCP IP#Livello di rete (livello 2)|livello di rete]]
 Teoria del livello: [[Modello ISO OSI#Livello rete (livello 3)]]
