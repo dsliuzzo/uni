@@ -1560,7 +1560,211 @@ $$
 > x^* = (6, 0, 7, 2, 0)^\top \qquad z^* = c^\top x^* = -6
 > $$
 
+## Tableau del simplesso
+Per l'esecuzione dell'algoritmo del simplesso a mano è possibile fare uso del **tableau del simplesso**, una forma compatta utile ad evitare di effettuare calcoli ridondanti.
+Per prima cosa partiamo dalla definizione di problema di ottimizzazione in [[#Forma canonica]]
+$$
+\begin{cases}
+c_B^\top B^{-1}b & + & \min & 0^\top x_B & + & \hat{c}^\top_N x_N  \\
+&& \text{s.t.} & I \cdot x_B & + & B^{-1} N x_N & = & B^{-1}b \\
+&& & x_B & , & x_N & \geq & 0
+\end{cases}
+$$
+da cui possiamo estrarre tutto il contenuto informativo complessivo per l'esecuzione della singola iterazione del simplesso:
+- Le variabili di base $\bar{x}_B = B^{-1}b$
+- Il valore della funzione obbiettivo $c_B^\top B^{-1} b$
+- I coefficienti di costo ridotto $$\hat{c}_j = \begin{cases}0 & \text{se }j \in \mathcal{B} \\ c_j-c_B^\top B^{-1} N_j & \text{se }j \in \mathcal{N}\end{cases}$$
+- Le colonne $B^{-1}N_j$ per ogni $j \in \mathcal{N}$
 
+Possiamo quindi rappresentare la forma canonica (rispetto ad una base) di un problema di PL (in forma standard) può essere rappresentata mediante una tabella con $m+1$ righe ed $n+1$ colonne
+$$
+T = \begin{array}{|cc|c|}
+\hline \\
 
----
+I_{m \times m} & B^{-1}N & B^{-1}b \\
+ \\
+\hline
+0^\top_{1 \times m} & \hat{c}_N^\top & -c_B^\top B^{-1} b \\
+\hline
+\end{array}
+$$
 
+Le celle in alto rappresentano i vincoli di uguaglianza trasformata in forma matriciale.
+La cella in basso a sinistra rappresentano la funzione obiettivo, il cui valore (cambiato di segno) nel punto corrente è rappresentato nella cella in basso a destra.
+
+Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (esce una variabile ed entra un'altra) dovremmo **riorganizzare tutta la tabella**. Per evitarlo, nel tableau le colonne restano nell'**ordine naturale** ($x_1, \dots, x_n$, cioè la colonna $j$ è associata a $x_j$): le colonne dell'identità risultano così **permutate**, e le righe sono ordinate secondo gli indici della base.
+
+>[!check] Esempio con tableau
+> Consideriamo il problema
+> $$
+> \begin{cases}
+> \min & -x_1 + 2x_2 \\
+> \text{s.t.} & -x_1 + x_2 \le 1 \\
+>             & x_1 + 2x_2 \le 8 \\
+>             & x_1 + x_2 \le 6 \\
+>             & x_1, x_2 \ge 0
+> \end{cases}
+> $$
+> La forma standard di un problema con soli vincoli di $\le$ è in forma canonica rispetto alla base costituita dalle colonne delle variabili di slack:
+> $$
+> \begin{cases}
+> \min & -x_1 + 2x_2 \\
+> \text{s.t.} & -x_1 + x_2 + x_3 = 1 \\
+>             & x_1 + 2x_2 + x_4 = 8 \\
+>             & x_1 + x_2 + x_5 = 6 \\
+>             & x_1, x_2, x_3, x_4, x_5 \ge 0
+> \end{cases}
+> $$
+>
+> Costruiamo il tableau rispetto alla base $\mathcal{B} = \{3, 4, 5\}$
+> $$
+> T = \begin{array}{|ccccc|c|}
+> \hline
+> -1 & 1 & 1 & 0 & 0 & 1 \\
+> 1 & 2 & 0 & 1 & 0 & 8 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> -1 & 2 & 0 & 0 & 0 & 0 \\
+> \hline
+> \end{array}
+> $$
+> L'ultima riga rappresenta i coefficienti di costo ridotto $\hat{c}^\top_N = c_N^\top - c_B^\top B^{-1} N$, ma dato che $c_B^\top = 0$ allora $\hat{c}_N^\top = c_N^\top$ i coefficienti di costo ridotto delle variabili fuori base coincide con i coefficienti delle variabili fuori base iniziali
+>
+> **Test di ottimalità**
+> Notiamo che esiste almeno una componente negativa tra i coefficienti di costo ridotto delle variabili fuori base, quindi la condizione di arresto non è soddisfatta (inoltre la soluzione corrente non è ottima perché non degenere) e l'algoritmo prosegue alla ricerca di una nuova soluzione.
+>
+> **Scelta della variabile entrante in base:** ([[#Regola di Bland]])
+> $$
+> j^* = \min \{ j \in \{1, 2\} : \hat{c}_{\mathcal{N}(j)} < 0 \} = 1
+> $$
+> Quindi fissiamo $k = \mathcal{N}(1) = 1$ e definiamo la direzione $d = B^{-1} A_k$.
+> $$
+> T = \begin{array}{|ccccc|c|}
+> \hline
+> -1 & 1 & 1 & 0 & 0 & 1 \\
+> 1 & 2 & 0 & 1 & 0 & 8 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> \textcolor{red}{-1} & 2 & 0 & 0 & 0 & 0 \\
+> \hline
+> \end{array}
+> $$
+> c'è un $-1$: l'algoritmo non si arresta.
+> A livello teorico la sba è non degenere $\to$ la condizione di ottimo è anche necessaria $\to$ essendoci una componente negativa la soluzione non è ottima $\to$ l'algoritmo deve proseguire.
+>
+> **Calcolo della direzione:**
+> $$
+> d = B^{-1} A_1 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}
+> \begin{pmatrix} -1 \\ 1 \\ 1 \end{pmatrix}
+> = \begin{pmatrix} -1 \\ 1 \\ 1 \end{pmatrix}
+> $$
+> Osserviamo che esistono componenti di $d$ che sono positive, quindi non entra in azione il criterio di illimitatezza. Nel tableau la direzione $d$ è la colonna della variabile entrante:
+> $$
+> T = \begin{array}{|ccccc|c|}
+> \hline
+> \textcolor{red}{-1} & 1 & 1 & 0 & 0 & 1 \\
+> \textcolor{red}{1} & 2 & 0 & 1 & 0 & 8 \\
+> \textcolor{red}{1} & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> -1 & 2 & 0 & 0 & 0 & 0 \\
+> \hline
+> \end{array}
+> $$
+>
+> **Calcolo della nuova soluzione:**
+> $$
+> x_B = \bar{x}_B - \delta \cdot d \ge 0
+> $$
+> **Calcolo del massimo passo ammissibile lungo $d$:**
+> $$
+> \bar{\delta} = \min \left\{ \frac{\bar{x}_{\mathcal{B}(i)}}{d_i} : d_i > 0 \right\}
+> = \min \left\{ \frac{\bar{x}_{\mathcal{B}(2)}}{d_2}, \frac{\bar{x}_{\mathcal{B}(3)}}{d_3} \right\}
+> = \min \left\{ \frac{8}{1}, \frac{6}{1} \right\} = 6
+> $$
+> **Scelta della variabile uscente dalla base:**
+> $$
+> i^* = \min \left\{ i \in \{1, 2, 3\} : \bar{\delta} = \frac{\bar{x}_{\mathcal{B}(i)}}{d_i} \right\} = 3
+> $$
+> Quindi poniamo $h = \mathcal{B}(3) = 5$ e calcoliamo la nuova soluzione
+> $$
+> x_B = \bar{x}_B - \bar{\delta} d = \begin{pmatrix} 1 \\ 8 \\ 6 \end{pmatrix} - 6 \begin{pmatrix} -1 \\ 1 \\ 1 \end{pmatrix} = \begin{pmatrix} 7 \\ 2 \\ 0 \end{pmatrix}
+> \qquad
+> x_N = \bar{\delta} \hat{e}_1 = \bar{\delta} \begin{pmatrix} 1 \\ 0 \end{pmatrix} = \begin{pmatrix} 6 \\ 0 \end{pmatrix}
+> $$
+> Aggiorniamo gli indici: $\mathcal{B} = \{3, 4, 1\}$, $\mathcal{N} = \{5, 2\}$.
+>
+> Rispetto agli indici $\mathcal{B} = \{3, 4, 1\}$ e $\mathcal{N} = \{5, 2\}$ abbiamo
+> $$
+> B = \begin{pmatrix} 1 & 0 & -1 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{pmatrix}
+> \qquad
+> N = \begin{pmatrix} 0 & 1 \\ 0 & 2 \\ 1 & 1 \end{pmatrix}
+> $$
+> Quindi
+> $$
+> c_B = (0, 0, -1)^\top \qquad c_N = (0, 2)^\top \qquad
+> B^{-1} = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & -1 \\ 0 & 0 & 1 \end{pmatrix}
+> $$
+> e la corrispondente soluzione di base
+> $$
+> \bar{x}_B = B^{-1} b = (7, 2, 6)^\top \qquad \bar{x}_N = (0, 0)^\top
+> $$
+> cioè
+> $$
+> \bar{x} = (6, 0, 7, 2, 0)^\top
+> $$
+> è ammissibile.
+>
+> Determiniamo la matrice
+> $$
+> B^{-1} N = \begin{pmatrix} 1 & 0 & 1 \\ 0 & 1 & -1 \\ 0 & 0 & 1 \end{pmatrix}
+> \begin{pmatrix} 0 & 1 \\ 0 & 2 \\ 1 & 1 \end{pmatrix}
+> = \begin{pmatrix} 1 & 2 \\ -1 & 1 \\ 1 & 1 \end{pmatrix}
+> $$
+> Calcoliamo i coefficienti di costo ridotto
+> $$
+> \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N = (0, 2) - (0, 0, -1)
+> \begin{pmatrix} 1 & 2 \\ -1 & 1 \\ 1 & 1 \end{pmatrix}
+> = (1, 3)
+> $$
+> e notiamo che le componenti sono tutte positive, quindi la soluzione corrente è l'**unica** soluzione ottima e l'algoritmo si arresta:
+> $$
+> x^* = (6, 0, 7, 2, 0)^\top \qquad z^* = c^\top x^* = -6
+> $$
+>
+> Costruiamo il tableau rispetto alla base $\mathcal{B} = \{3, 4, 1\}$:
+> $$
+> T^{(1)} = \begin{array}{|ccccc|c|}
+> \hline
+> 0 & 2 & 1 & 0 & 1 & 7 \\
+> 0 & 1 & 0 & 1 & -1 & 2 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> 0 & 3 & 0 & 0 & 1 & 6 \\
+> \hline
+> \end{array}
+> $$
+> Le colonne di $x_2$ e $x_5$ sono le colonne di $B^{-1}N$ calcolate sopra, l'ultima riga contiene i costi ridotti $(\hat{c}_2, \hat{c}_5) = (3, 1)$ e l'angolo in basso a destra vale $6 = -z^*$.
+>
+> L'iterazione eseguita facendo entrare $x_1$ in base e facendo uscire $x_5$ dalla base ci ha quindi portato dal tableau $T^{(0)}$ al tableau $T^{(1)}$:
+> $$
+> T^{(0)} = \begin{array}{|ccccc|c|}
+> \hline
+> -1 & 1 & 1 & 0 & 0 & 1 \\
+> 1 & 2 & 0 & 1 & 0 & 8 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> -1 & 2 & 0 & 0 & 0 & 0 \\
+> \hline
+> \end{array}
+> \qquad \longrightarrow \qquad
+> T^{(1)} = \begin{array}{|ccccc|c|}
+> \hline
+> 0 & 2 & 1 & 0 & 1 & 7 \\
+> 0 & 1 & 0 & 1 & -1 & 2 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> 0 & 3 & 0 & 0 & 1 & 6 \\
+> \hline
+> \end{array}
+> $$
+> Rispetto all'esempio precedente si arriva allo stesso ottimo $x^* = (6, 0, 7, 2, 0)^\top$, ma con un percorso diverso: partendo dall'origine $(0,0)$ si passa direttamente al vertice $(6,0)$ in una sola iterazione.
