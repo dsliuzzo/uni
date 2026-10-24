@@ -1,103 +1,111 @@
-#appunti 
-#fondamenti1 
+#appunti
+#fondamenti1
+
 Questi algoritmi prendono in input un array e la sua dimensione, restituendo lo stesso array ordinato.
 
-Questo è possibile perché inserendo un array come parametro la funzione non copierà effettivamente i valori contenuti, ma prenderà solamente l’indirizzo dello stack in cui l’array è contenuto. In tal modo ogni modifica che avviene all’interno dell’array avrà validità anche al di fuori della funzione, contrariamente a quanto avviene con delle semplici funzioni che prendono come parametro delle variabili.
+Questo è possibile perché inserendo un array come parametro la funzione non copierà effettivamente i valori contenuti, ma prenderà solamente l'indirizzo dello stack in cui l'array è contenuto. In tal modo ogni modifica che avviene all'interno dell'array avrà validità anche al di fuori della funzione, contrariamente a quanto avviene con delle semplici funzioni che prendono come parametro delle variabili.
 
 Nella pratica infatti non restituirà nessun elemento, quindi dichiareremo queste funzioni con `void`.
 
 Per confrontare la complessità degli algoritmi opero il limite per $n \to \infty$ di una complessità fratto l'altra:
-*es.*
-Selection sort $O(n^2)$
-Merge sort $O(n\log_2 n)$
-$$
-\lim_{ n \to \infty } \frac{n^2}{n \log_2n} = \infty
-$$
+
+>[!check] Esempio
+>Selection sort $O(n^2)$
+>Merge sort $O(n\log_2 n)$
+>$$
+>\lim_{ n \to \infty } \frac{n^2}{n \log_2n} = \infty
+>$$
+
 Essendo il risultato $\infty$ è più conveniente utilizzare il merge sort se andiamo a considerare solo l'ottimizzazione di essa.
 
 # Selection sort
 
-Questo algoritmo consiste nel riordinare un array identificando per prima cosa il minimo tra tutti i valori che compongono l’array; una volta identificato questo valore verrà scambiato con il primo elemento e si ripartirà dall’elemento successivo. Questo processo viene ripetuto fino al riordinamento completo.
+>[!important] Selection sort
+>Questo algoritmo consiste nel riordinare un array identificando per prima cosa il minimo tra tutti i valori che compongono l'array; una volta identificato questo valore verrà scambiato con il primo elemento e si ripartirà dall'elemento successivo. Questo processo viene ripetuto fino al riordinamento completo.
 
-- **COMPLESSITÀ**
-$$\sum_{i=1}^{n-1}=\frac{n*(n+1)}{2}=\frac{n^2}{2}+\frac{n}{2} \in O(n^2)$$ 
-- **CODE**
-    
-    ```C
-    void SelectionSort(int arr[], int size){
-        int min, buffer, i, j;
-        //imposto min=i, confronto arr[min] con arr[j], se arr[j] è più piccolo allora min=j, finchè j<size, a quel punto faccio swap tra arr[min] e arr[i]
-        for(i=0; i<size; i++){
-            min=i;
-            for(j=i+1; j<size; j++){
-                if(arr[j]<arr[min]){
-                    min=j;
-                }
+**Complessità**
+$$\sum_{i=1}^{n-1}=\frac{n*(n+1)}{2}=\frac{n^2}{2}+\frac{n}{2} \in O(n^2)$$
+**Codice**
+
+```C
+void SelectionSort(int arr[], int size){
+    int min, buffer, i, j;
+    //imposto min=i, confronto arr[min] con arr[j], se arr[j] è più piccolo allora min=j, finchè j<size, a quel punto faccio swap tra arr[min] e arr[i]
+    for(i=0; i<size; i++){
+        min=i;
+        for(j=i+1; j<size; j++){
+            if(arr[j]<arr[min]){
+                min=j;
             }
-            buffer=arr[i];
-            arr[i]=arr[min];
-            arr[min]=buffer;
         }
+        buffer=arr[i];
+        arr[i]=arr[min];
+        arr[min]=buffer;
     }
-    ```
-    
-
+}
+```
 [![](https://upload.wikimedia.org/wikipedia/commons/3/3e/Sorting_selection_sort_anim.gif)](https://upload.wikimedia.org/wikipedia/commons/3/3e/Sorting_selection_sort_anim.gif)
 
 # Bubble sort
-Questo algoritmo di riordinamento consiste nel confrontare coppie di valori contigui; il valore corrente con il successivo e scambiarli nel caso in cui il corrente è minore del successivo. Ripetendo questo processo fino a quando l’intero array sarà completamente riordinato.
-- **COMPLESSITÀ**
+
+>[!important] Bubble sort
+>Questo algoritmo di riordinamento consiste nel confrontare coppie di valori contigui; il valore corrente con il successivo e scambiarli nel caso in cui il corrente è minore del successivo. Ripetendo questo processo fino a quando l'intero array sarà completamente riordinato.
+
+**Complessità**
 $$\sum_{i=1}^{n-1}=\frac{n*(n-1)}{2}=\frac{n^2}{2}-\frac{n}{2} \in O(n^2)$$
-- **CODE**
-    ```C
-    void BubbleSort(int arr[], int size){
-        int i, j, buffer;
-        for(i=0; i<size; i++){
-            for(j=0; j<(size-i); j++){
-                if(arr[j] > arr[j+1]){
-                    buffer = arr[j];
-                    arr[j]=arr[j+1];
-                    arr[j+1]=buffer;
-                }
+**Codice**
+```C
+void BubbleSort(int arr[], int size){
+    int i, j, buffer;
+    for(i=0; i<size; i++){
+        for(j=0; j<(size-i); j++){
+            if(arr[j] > arr[j+1]){
+                buffer = arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=buffer;
             }
         }
     }
-    ```
+}
+```
 [![](https://upload.wikimedia.org/wikipedia/commons/5/54/Sorting_bubblesort_anim.gif)](https://upload.wikimedia.org/wikipedia/commons/5/54/Sorting_bubblesort_anim.gif)
 
 # Insertion sort
 
-Iniziando dal secondo valore viene confrontato con quello precedente e spostato se minore, fino a che non sarà più possibile spostarlo, a quel punto si potrà passare all’elemento successivo, fino a quando si arriverà all’ultimo elemento.
+>[!important] Insertion sort
+>Iniziando dal secondo valore viene confrontato con quello precedente e spostato se minore, fino a che non sarà più possibile spostarlo, a quel punto si potrà passare all'elemento successivo, fino a quando si arriverà all'ultimo elemento.
 
-- **COMPLESSITÀ**
+**Complessità**
 $$\sum_{i=1}^{n-1}=\frac{n*(n-1)}{2}=\frac{n^2}{2}-\frac{n}{2} \in O(n^2)$$
-- **CODE**
-    ```C
-    void InsertionSort(int arr[], int size){
-        int i, j, buffer;
-        for(i=0; i<size; i++){
-            j=i+1;
-            while(j>0 && arr[j]<arr[j-1]){
-                buffer=arr[j-1];
-                arr[j-1]=arr[j];
-                arr[j]=buffer;
-                j--;
-            }
+**Codice**
+```C
+void InsertionSort(int arr[], int size){
+    int i, j, buffer;
+    for(i=0; i<size; i++){
+        j=i+1;
+        while(j>0 && arr[j]<arr[j-1]){
+            buffer=arr[j-1];
+            arr[j-1]=arr[j];
+            arr[j]=buffer;
+            j--;
         }
     }
-    ```
+}
+```
 [![](https://upload.wikimedia.org/wikipedia/commons/2/24/Sorting_insertion_sort_anim.gif)](https://upload.wikimedia.org/wikipedia/commons/2/24/Sorting_insertion_sort_anim.gif)
 
 # Merge sort
-Per prima cosa divido l’array in ingresso per 2, fino all’ottenimento di soli due elementi, che confronterò e swapperò se necessario.
 
-Gli elementi verranno inseriti nell’ordine corretto all’interno di array progressivamente più grandi, fino al raggiungimento del risultato desiderato.
+>[!important] Merge sort
+>Per prima cosa divido l'array in ingresso per 2, fino all'ottenimento di soli due elementi, che confronterò e swapperò se necessario.
+>
+>Gli elementi verranno inseriti nell'ordine corretto all'interno di array progressivamente più grandi, fino al raggiungimento del risultato desiderato.
 
-- **COMPLESSITÀ**
-  [[Complessità algoritmi#Merge sort]]
-  Data la creazione di un "albero" sempre bilanciato di $\log_2 n$ livelli. Nello stack verranno allocate $\log_2 n$ locazioni per le chiamate a `merge_sort()`. A questo valore dobbiamo moltiplicare il numero di chiamate a `merge()` che effettuerà un numero di confronti uguale ad $n$, il numero di celle da confrontare per ogni livello. Di conseguenza la complessità del merge sort è $n \log_2 n$. Definiamo questa complessità per gli algoritmi di ordinamento come ottima, in quanto non è possibile migliorare ancora di più questa complessità. Il problema del merge sort sta nello spazio occupato sulla ram per le numerose allocazioni necessarie.
+**Complessità**
+[[Complessità algoritmi#Merge sort]]
+Data la creazione di un "albero" sempre bilanciato di $\log_2 n$ livelli. Nello stack verranno allocate $\log_2 n$ locazioni per le chiamate a `merge_sort()`. A questo valore dobbiamo moltiplicare il numero di chiamate a `merge()` che effettuerà un numero di confronti uguale ad $n$, il numero di celle da confrontare per ogni livello. Di conseguenza la complessità del merge sort è $n \log_2 n$. Definiamo questa complessità per gli algoritmi di ordinamento come ottima, in quanto non è possibile migliorare ancora di più questa complessità. Il problema del merge sort sta nello spazio occupato sulla ram per le numerose allocazioni necessarie.
 $$O(n\log_2 n)$$
-- **CODE**
+**Codice**
 ``` python
 	def merge_sort(lista):
     n = len(lista)
@@ -134,20 +142,22 @@ def merge(lista1, lista2):
     return ret
 ```
 [![](https://upload.wikimedia.org/wikipedia/commons/c/c5/Merge_sort_animation2.gif)](https://upload.wikimedia.org/wikipedia/commons/c/c5/Merge_sort_animation2.gif)
+
 ## Natural merge sort
 ![[Natural merge sort]]
 
 # Quick sort
 
-Questo algoritmo di riordinamento è ricorsivo.
+>[!important] Quick sort
+>Questo algoritmo di riordinamento è ricorsivo.
+>
+>Per prima cosa viene stabilito un elemento pivot, che verrà spostato alla fine dell'array, procederemo poi con il posizionare tutti gli elementi maggiori del pivot alla destra, mentre tutti i minori a sinistra. Questo verrà fatto confrontando gli elementi dell'array, stabilendo l'elemento da sinistra più grande del pivot e l'elemento da destra più piccolo dell'array; questi due elementi verranno scambiati, fino a quando l'index dell'elemento da sinistra sarà maggiore di quello da destra; ora invertiamo l'elemento più grande da sinistra con il nostro pivot.
+>Il pivot ora è nella posizione corretta.
+>
+>A questo punto verrà stabilito un nuovo pivot tra gli elementi rimanenti e il processo si ripeterà, fino al riordinamento totale.
 
-Per prima cosa viene stabilito un elemento pivot, che verrà spostato alla fine dell’array, procederemo poi con il posizionare tutti gli elementi maggiori del pivot alla destra, mentre tutti i minori a sinistra. Questo verrà fatto confrontando gli elementi dell’array, stabilendo l’elemento da sinistra più grande del pivot e l’elemento da destra più piccolo dell’array; questi due elementi verranno scambiati, fino a quando l’index dell’elemento da sinistra sarà maggiore di quello da destra; ora invertiamo l’elemento più grande da sinistra con il nostro pivot.
-Il pivot ora è nella posizione corretta.
-
-A questo punto verrà stabilito un nuovo pivot tra gli elementi rimanenti e il processo si ripeterà, fino al riordinamento totale.
-
-- **COMPLESSITÀ**
-  [[Complessità algoritmi#Quick sort]]
+**Complessità**
+[[Complessità algoritmi#Quick sort]]
 $O(n\log_2 n)$ nel caso medio, $O(n^2)$ nel caso peggiore
 
 [![](https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif)](https://upload.wikimedia.org/wikipedia/commons/6/6a/Sorting_quicksort_anim.gif)
@@ -173,6 +183,7 @@ array ordinato✨✨
 
 La sua complessità spaziale sarà data semplicemente dall'array di input.
 La complessità temporale sarà data dalla complessità della creazione dell'heap, $n\log_2n$ logaritmica per ogni elemento, sommata alla complessità dell'estrazione anch'essa logaritmica moltiplicata per ogni elemento $n \log_2 n$, ottenendo quindi asintoticamente una complessità temporale di $n \log_2 n$
+
 # Counting sort
 Il counting sort è un algoritmo di ordinamento di interi.
 Dato un vettore $v$ in ingresso di dimensione $n$ creo un vettore di supporto $w$ di dimensione $m$, con $m=\min(v) - \max(v)+1$ inizializzato a $0$.
@@ -193,7 +204,7 @@ for i in w:
 ```
 Il costo di questo passaggio è pari agli elementi di $m$ (per il for) sommato agli elementi di $n$ (per il while), otteniamo quindi una complessità $\Theta(n+m)$.
 
-**COMPLESSITÀ**
+**Complessità**
 L'ultimo passaggio asintoticamente è dominante, quindi abbiamo complessità temporale pari a $$\Theta(n+m)$$
 Risultando quindi anche più complesso di algoritmi di ordinamento logaritmici nel caso in cui abbiamo un range di valori possibili molto ampio.
 
@@ -203,11 +214,12 @@ $$
 $$
 Un altro svantaggio compromettente è il fatto di dover conoscere minimo e massimo a priori, che, se non noti, implicano una ulteriore ricerca di complessità lineare.
 
->[!bug] Motivi per non usare il counting sort
+>[!warning] Motivi per non usare il counting sort
 >- complessità spaziale
 >- necessità di conoscere massimo e minimo
 >- troppo variabile sul range di elementi
 >- funziona solo su interi (o almeno un dominio mappabile su interi)
+
 # Radix sort
 Partendo dal counting sort possiamo perfezionarlo per ricavarne un algoritmo di ordinamento effettivamente utilizzabile: il **radix sort**.
 Questo sarà un algoritmo della famiglia degli **algoritmi di ordinamento con code di priorità** proprio come l'heap sort.
@@ -216,12 +228,12 @@ Usiamo [[Strutture dati#Code di priorità fissa|code con livelli di priorità fi
 Dopo aver creato la struttura di supporto quindi scorriamo gli elementi dell'array di input una volta per ogni cifra a partire dalla cifra meno significativa: effettuiamo l'inserimento degli elementi nella struttura di supporto, utilizzando la singola cifra come livello di significatività.
 ![[Ordinamento-1776286435963.webp|center|900]]
 
->[!attention] È importante partire dalla cifra meno significativa
+>[!warning] È importante partire dalla cifra meno significativa
 >altrimenti otterrei uno spostamento indesiderato contraddicendo l'ordinamento
 
 Il radix sort è un ordinamento **lessicografico** che quindi può essere applicato a qualsiasi tipo di elemento che può essere ordinabile e per cui possiamo stabilire un livello di priorità finito.
 
-**COMPLESSITÀ**
+**Complessità**
 per ogni cifra effettuo un inserimento e una rimozione (in coda con livelli di complessità costanti)
 $$
 \Theta(n \cdot m)
@@ -229,7 +241,7 @@ $$
 con $n$ numero di elementi ed $m$ numero di cifre.
 Rimane il problema della complessità spaziale per cui devo allocare una seconda struttura dati della stessa dimensione dell'input.
 
->[!quote] Tip
+>[!question] Tip
 >È un algoritmo poco utilizzato a causa della complessità spaziale.
 >Non conviene sprecare così tanta memoria se non per rare eccezioni.
 >Viene usato per esempio per ordinare carte da gioco, essendo molto semplice da implementare e l'input in questo caso è limitato.

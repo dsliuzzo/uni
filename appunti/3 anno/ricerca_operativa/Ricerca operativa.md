@@ -12,6 +12,8 @@ Giovanni Giallombardo
 - Per i messaggi personali il contatto preferibile è l’email
 
 # Appunti
+- [[ripasso AL]]
+
 È una disciplina della matematica applicata che ha come oggetto la definizione di modelli e la messa a punto di metodi per la soluzione di **problemi decisionali** (decision-making) che si manifestano in diversi
 ambiti della vita reale:
 - [[Problemi di ottimizzazione]] (Programmazione Matematica)

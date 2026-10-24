@@ -12,7 +12,7 @@ non c'è il `free()`, ma c'è il **garbage collector**, un processo che verifica
 in python nello stack ci sono solo indirizzi a variabili create nell'heap, se svolgiamo un calcolo, non cambia il valore della cella puntata, ma viene creato un nuovo valore all'interno dell'heap e nello stack verrà modificato il puntatore, che ora punterà alla nuova variabile. Implicitamente tutte le variabili sono puntatori.
 python per numeri interi fino a un tot in realtà se ha già quel valore calcolato nell'heap non ne crea un altro, ma punta allo stesso numero. Questo è possibile perché gli interi sono immutabili, quindi per ottimizzazione python ha questa possibilità, senza il rischio che i valori contenuti vengano modificati per sbaglio.
 ## Type casting esplicito
-[[C#Conversione di tipo type_casting]]
+[[C#Conversione di tipo type casting]]
 casting va per troncamento
 string to int funziona solo per numeri interi -> per fare questo bisogna fare string to float e float to int
 
