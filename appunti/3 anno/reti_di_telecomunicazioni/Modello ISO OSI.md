@@ -1,3 +1,4 @@
+#appunti #telecomunicazioni
 Il comitato di standardizzazione ISO (International standard organization) ha definito un modello di riferimento OSI (Open system Interconnection), che viene oggi universalmente accettato.
 
 È definito su 7 livelli
@@ -19,6 +20,21 @@ Le unità dati sono bit o simboli.
 ![[Reti di telecomunicazioni-1791127089354.webp|center|514]]
 
 
+## Mezzi trasmissivi
+- **Cavo coassiale**: tipico delle reti a bus, dominante fino agli anni '90, con buon rapporto segnale/rumore. Il cavo **thick** (grosso) ha buone prestazioni e maggiore affidabilità (il cavo non è accessibile all'utente) ma costa di più, in materiale e in posa, e richiede un **transceiver** esterno. Il cavo **thin** (sottile) ha una maggiore attenuazione, costa meno ed è più facile da posare, ma è meno affidabile perché accessibile all'utente. La trasmissione è sbilanciata: un conduttore per il segnale e uno di riferimento (la schermatura), quindi è molto sensibile ai disturbi;
+  
+- **Coppia simmetrica** (twisted pair): prestazioni inferiori al coassiale, ma bit rate elevati ($>100$ Mbit/s) su brevi distanze (circa 100 m); basso costo, facile da posare, adatta al cablaggio strutturato; enorme diffusione dagli anni '90. Varianti: UTP (non schermato), FTP (un solo schermo per tutto il cavo), STP (schermato coppia per coppia);
+  
+- **Fibra ottica**: tassi di errore più bassi, adatta alla topologia a stella; in base alla direzione di propagazione dell'onda esistono fibre multimodali (riflessione rispetto all'angolo di Brewster - minima rifrazione → massima riflessione) e fibre monomodali (direzione lungo il cavo - non si riflette mai → poco manegevole).
+
+### Finestre di trasmissione
+  ![[Modello ISO OSI-1792671362997.webp|center|375]]
+
+Le tre bande a $0{,}85$, $1{,}30$ e $1{,}55\,\mu\text{m}$ sono le finestre del grafico dell'attenuazione, cioè gli intervalli di
+lunghezza d'onda in cui l'attenuazione (in dB/km) è bassa.
+- In queste bande il segnale percorre distanze maggiori prima di degradarsi troppo.
+- La scelta dipende anche dalle sorgenti e dai rilevatori disponibili: la prima finestra, ad esempio, era legata ai primi laser/LED.
+- L'attenuazione migliora passando da $0{,}85$ a $1{,}30$ a $1{,}55\,\mu\text{m}$, che è la finestra con l'attenuazione minima.
 # Livello collegamento (livello 2)
 Fornisce i mezzi funzionali e procedurali per il trasferimento delle unità dati tra entità di livello rete e per fronteggiare malfunzionamenti del livello fisico.
 

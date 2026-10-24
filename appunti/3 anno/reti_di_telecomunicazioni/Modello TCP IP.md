@@ -1,3 +1,4 @@
+#appunti #telecomunicazioni 
 ![[Reti di telecomunicazioni-1791128904735.webp|center|274]]
 
 In realtà collegamento-fisico sono un unico livello di accesso alla rete.

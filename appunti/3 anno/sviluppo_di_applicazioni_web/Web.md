@@ -1,9 +1,7 @@
-#web #appunti 
-Con la nascita del web internet è diventato un luogo di compravendita di **servizi**.
-
-I primi servizi erano **monoliti**, ma nel corso del tempo si è pensato di utilizzare delle astrazioni che potessero semplificare il tutto e implementare pagine dinamiche.
-Nasce la necessità di rendere disponibili applicazioni distribuite sul web con una grossa scalabilità e capace di gestire una grande mole di richieste contemporaneamente, servizi pensati per le aziende: **enterprise computing** (sviluppo di applicazioni per le aziende).
-# Enterprise computing
+L'introduzione del WEB fa si che internet passi da piattaforma **accademica** a piattaforma che offre **servizi**, ovvero un contratto che lega due entità (fornitore - utilizzatore).
+I primi servizi erano **monoliti**, ma nel corso del tempo si è pensato di utilizzare delle astrazioni che potessero semplificare il tutto e implementare pagine dinamiche. Questo avviene in quanto nasce la necessità di rendere disponibili applicazioni distribuite sul web con una grossa scalabilità e capace di gestire una grande mole di richieste contemporaneamente le aziende: **enterprise computing** (sviluppo di applicazioni per le aziende).
+# Enterprise Computing
+Si occupa di rispettare i requisiti funzionali e non su scala **industriale**:
 ## Requisiti
 >[!multi-column]
 >
@@ -13,40 +11,28 @@ Nasce la necessità di rendere disponibili applicazioni distribuite sul web con 
 >>[!important] Requisiti non funzionali
 >>come il servizio deve fornire quella funzionalità
 
-Requisiti fondamentali, ma non funzionali:
-- **Portabilità**
-  capacità del software di essere eseguito su macchine eterogenee
-- **Interoperabilità**
-  capacità di scambiare dati ed utilizzarli
-- **Integrazione**
-  vediamo il sistema come un'unica entità e non ci rendiamo conto dei componenti che interagiscono al suo interno
-- **Interoperabilità con sistemi legacy**
-  integrazioni con sistemi pre esistenti, anche se obsoleti (retrocompatibilità)
-- **Supporto e gestione a runtime**
-  sistema monitorabile anche se in esecuzione
-- **Scalabilità**
-  verticale (aggiungere risorse alla macchina) - orizzontale (acquisto di una nuova macchina)
-- **Efficienza**
-  buona efficacia spendendo di meno
-- **Affidabilità**
-  bassa probabilità di fallire
-- **Tolleranza ai guasti**
-  continuare ad operare anche se si presenta un guasto
-- **Qualità**
-  insieme di attributi non funzionali
-- **Time to market**
-  strumenti che ci permettano di sviluppare l'applicazione velocemente
+------
+Un esempio di requisiti fondamentali non funzionali sono:
+- **Portabilità**:  capacità SW di essere eseguito su macchine diverse
+- **Interoperabilità**: capacità di scambiare dati e cooperare con altri sistemi
+- **Integrazione**: capacità di comporre moduli e servizi (se uno non funziona non si rompe tutto)
+- **Interoperabilità tra ambienti**: integrazione con sistema già esistente (pagamento) spesso obsoleto -> retrocompatibilità
+- **Supporto**: gestione del sistema in esecuzione (monitoraggio, update) -> creo strumenti per questa funzione
+- **Scalabilità**: capacità di adattare la macchina nel caso di upgrade
+	- verticale: aggiungo risorse per rendere macchina più potente
+	- orizzontale (mantengo vecchia macchina e ne aggiungo altre
+- **Efficienza**: uso ottimale delle risorse
+- **Affidabilità**: bassa probabilità di failure
+- **Tolleranza ai guasti**: capacità di continuare anche a seguito di guasto
+- **Qualità**: insieme di attributi non funzionali
+- **Time to market**: strumenti che permettono di incorporare funzionalità già esistenti
 
 ## Paradigma a tre livelli
-Il paradigma a tre livelli è diventato lo standard e si basa su:
-- **Livello di presentazione**
-  come appare
-- **Business logic**
-  come funziona
-- **Dati**
-  come gestire i dati
-- **Servizi di sistema**
-  su quali macchine
+Gli elementi costitutivi di ogni applicazione enterprise si sviluppa su più **livelli** per lo sviluppo di tali caratteristiche:
+- **presentation** **logic**: design dell'applicazione - come appare
+- **business** **logic**: verifica prodotti - come funziona
+- **data access logic**: fatture, spedizioni - come gestire i dati
+- **servizi di sistema**: verifica del corretto funzionamento interno logico del sistema - su quali macchine far girare sistema
 
 ### Single tier
 Inizialmente veniva installato tutto su una singola macchina [[0. Intro sistemi operativi#Sistema mainframe|mainframe]].
@@ -78,17 +64,12 @@ Oggi viene quindi utilizzato uno stile architetturale a tre livelli:
 In questo modo la distribuzione del carico è ottimale. Inoltre un livello può essere aggiornato senza creare problemi agli altri livelli.
 
 Ogni richiesta però deve attraversare obbligatoriamente tutti i livelli.
-Se non ben sviluppato l'application server potrebbe soffrire di ridondanza.
+Se non ben sviluppato l'application server potrebbe soffrire di ridondanza, poichè alcuni servizi potrebbero essere gli stessi per applicazioni diverse.
 
 Per evitare questo problema implementiamo all'interno dell'application server un **container**.
 >[!important] Modello componente-container (non docker)
->Tutte le funzionalità comuni a basso livello vengono delegate a dei container, in modo da potersi concentrare sulla business logic (*es.* concorrenza, sicurezza, ...).
->Per l'implementazione dei container possono essere utilizzate applicazioni open source come **Jakarta** (Java enterprise)
-
-[[Jakarta]]
-
-[[Spring Boot]]
-
+>Tutte le funzionalità comuni a basso livello vengono delegate a dei container, in modo da potersi concentrare sulla business logic (*es.* concorrenza, sicurezza, ...). Questo modello permette di automatizzare servizi e metterli in comune. 
+>Per l'implementazione dei container possono essere utilizzate applicazioni open source come **Jakarta** (Java enterprise), per permettere facilmente il cambio, effettuando una *migrazione* quasi immediata.
 # Risorse
 Con il termine risorsa intendiamo qualunque entità abbia una identità: un documento, un'immagine, un servizio, una collezione di altre risorse.
 Gli **URI** (Uniform resource identifier) forniscono un meccanismo semplice ed estensibile per identificare una risorsa, per garantire interoperabilità
@@ -164,17 +145,17 @@ le sezioni che compongono l'URL sono identiche a quelle dell'URI, tranne per la 
 - `<query>`: stringa per passare al server uno o più parametri, di solito nel formato `parametro1=valore1&parametro2=valore2…`
 
 ### URN vs URL
-| Caratteristica                  | URL (Locator)               | URN (Name)                       |
-| ------------------------------- | --------------------------- | -------------------------------- |
-| Tipo                            | Sottoinsieme di URI         | Sottoinsieme di URI              |
-| Scopo                           | Localizzare una risorsa     | Identificare una risorsa per nome |
-| Indica dove si trova?           | Sì                          | No                               |
-| Indica come accedervi?          | Sì (es. HTTP, FTP)          | No                               |
-| Dipende dalla posizione?        | Sì                          | No                               |
-| Usato direttamente in HTTP?     | Sì                          | No                               |
-| Esempio                         | `https://example.com/index.html` | `urn:isbn:9780134685991`    |
-| Cambia se la risorsa cambia server? | Sì                      | No                               |
-| In breve                        | *pratico ma fragile*        | *stabile ma astratto*            |
+| Caratteristica                      | URL (Locator)                    | URN (Name)                        |
+| ----------------------------------- | -------------------------------- | --------------------------------- |
+| Tipo                                | Sottoinsieme di URI              | Sottoinsieme di URI               |
+| Scopo                               | Localizzare una risorsa          | Identificare una risorsa per nome |
+| Indica dove si trova?               | Sì                               | No                                |
+| Indica come accedervi?              | Sì (es. HTTP, FTP)               | No                                |
+| Dipende dalla posizione?            | Sì                               | No                                |
+| Usato direttamente in HTTP?         | Sì                               | No                                |
+| Esempio                             | `https://example.com/index.html` | `urn:isbn:9780134685991`          |
+| Cambia se la risorsa cambia server? | Sì                               | No                                |
+| In breve                            | *pratico ma fragile*             | *stabile ma astratto*             |
 
 
 # HTTP
@@ -192,7 +173,7 @@ Protocollo generico e stateless, tramite cui client e server comunicano: richied
 - **stateless**
   ogni operazione non tiene memoria delle precedenti, il server non è tenuto a mantenere informazioni tra una connessione e la successiva su natura, identità e richieste precedenti di un client. È il client che deve ricreare il contesto per effettuare ogni richiesta
 - **progettato per sistemi distribuiti complessi**
-  tra client e server possono esserci vari intermediari e componenti con ruoli diversi
+  l'approccio **stateless** è essenziale per gestire le **comunicazioni intermedie**: in un sistema distribuito con multipli Proxy o Gateway, non sarebbe scalabile o efficiente obbligare i nodi di rete a memorizzare lo stato di ogni singola connessione client.
 
 Non serve solo per scambiare documenti ipertestuali, ma per una moltitudine di applicazioni (name server, sistemi object-oriented distribuiti).
 
@@ -233,7 +214,7 @@ Ruoli delle applicazioni HTTP:
 
 ## Semantica dei messaggi HTTP
 >[!important] Idempotenti
->Se invoco lo stesso metodo più volte dopo l'invocazione non ho nuovi effetti
+>Se invoco lo stesso metodo più volte dopo l'invocazione non ho nuovi effetti.
 >Più formalmente: un metodo è idempotente se può essere chiamato più volte con lo stesso input senza cambiare lo stato del server (non viene creato, modificato o cancellato nulla; la risposta potrebbe variare) oltre il primo effetto
 
 | Metodo     | Dove invia i dati                    | Risposta del server        | Uso tipico                                  | Supporto in `<form>` | Idempotente |
@@ -243,6 +224,68 @@ Ruoli delle applicazioni HTTP:
 | **PUT**    | Body della richiesta                 | Headers + Body             | Aggiornamento **completo** di una risorsa (API REST) | No (serve JS/AJAX) | Sì   |
 | **HEAD**   | Nessun dato (o query string opzionale) | Solo Headers (no Body)   | Controllo risorse, validità link, metadata  | No (serve JS/AJAX)   | Sì          |
 | **DELETE** | URL (identifica la risorsa)          | Headers + Body (opzionale) | Eliminazione di una risorsa (API REST)      | No (serve JS/AJAX)   | Sì          |
+
+### JDBC connectivity
+>[!blank|float-right]
+>```mermaid
+>flowchart TB
+>    id1(Java application) --> id2(Loading driver)
+>    id2 --> id3(Creating connection)
+>    id3 --> id4(Creating statement)
+>    id4 --> id5(Executing statement)
+>    id5 --> id6(Processing ResultSet)
+>    id6 --> id7(Closing connection)
+>```
+
+JDBC opera attraverso una serie di fasi per l'utilizzo dei database:
+1. **Creating Connection**:
+	- stabilisce una connessione con il database: spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **polling** per riutilizzare connessioni già aperte
+	- fase strutturale $\to$ permette di creare politiche
+2. **Statement**
+   creazione dell'oggetto che consente passaggio dal livello applicativo $\to$ livello logico: consente di inviare query SQL $\to$ restituisce result set (iterabile)
+3. **Result set**
+   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java (contiene ciò che viene fornito dal database come oggetto di java)
+4. **Closing Connection**
+   chiusura della connessione
+
+>[!multi-column]
+>
+>>[!done] Vantaggi
+>>Permette di rendere il codice più modulare, portabile ed evitare problemi di performance, creando una vera e propria **pipeline**.
+>>
+>
+>>[!bug] Svantaggi
+>>Bisogna gestire oggetti che non sono nativi di Java
+
+
+>[!attention] Per l'esame
+>Le scelte prese in fase di progettazione devono essere dettate da cosa è necessario: se sto facendo operazioni in **lettura** non ho bisogno di appesantire troppo la query con livelli di *sicurezza innecessari*
+``` java
+import java.sql.*;
+public class PrimoTestJDBC {
+	public static void main(String[] args) {
+		String url = "jdbc:mysql://localhost:3306/testdb";
+		String user = "root"; String password = "admin";
+		try {
+		    Connection conn = DriverManager.getConnection(url, user, password);
+		    Statement stmt = conn.createStatement();
+		    ResultSet rs = stmt.executeQuery("SELECT id, name FROM users");
+		    while (rs.next()) {
+		        System.out.println(rs.getInt("id") + " - " + rs.getString("name"));
+		    }
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		} finally {
+		    rs.close();
+		    stmt.close();
+		    conn.close();
+		}
+	}
+}
+
+```
+
+>[!question] Tramite java possiamo anche ricavare dei metadati da parte del database
 
 ### GET
 Recupera dati dal server. I dati (parametri) viaggiano nella query string dell'URL.
@@ -296,6 +339,7 @@ Host: example.com
 ## Fasi di scambio client/server
 La connessione HTTP è composta da una serie di richieste e corrispondenti risposte.
 
+
 | Versione | Connessione                | Richieste multiple    | Header         | Limiti principali                      |
 | -------- | -------------------------- | --------------------- | -------------- | -------------------------------------- |
 | 0.9      | 1 richiesta per connessione | No                   | No             | Molto semplice, non scalabile          |
@@ -317,7 +361,6 @@ pipeline (possibilità di mettere in coda più richieste, senza necessariamente 
 - le risposte devono essere date **nello stesso ordine** delle richieste, perché HTTP non specifica un metodo esplicito di associazione/riordinamento
 - se la prima richiesta è lenta, tutte le altre devono aspettare: **Head-of-Line (HOL) blocking**
 
-3 way handshake (protocollo di conoscenza `syn --> syn + ack <-- ack -->`)
 Ogni nuova connessione comporta il costo del **TCP three-way handshake**:
 ``` mermaid
 sequenceDiagram
@@ -342,11 +385,11 @@ Per risolvere questo problema è stato inventato **HTTP/2** (2015) che effettua 
 
 Con **HTTP/3** (2022) viene sostituito TCP con **QUIC** e UDP, permettendo di implementare **connection migration**: il cambio rete è trasparente (es. Wi-Fi → 4G). Mantiene il modello HTTP ma ottiene un trasporto più efficiente e resiliente.
 
-| HTTP/2                                         | HTTP/3                                            |
-| ---------------------------------------------- | ------------------------------------------------- |
-| Utilizza TCP                                   | Utilizza QUIC su UDP                              |
-| Multiplexing di più stream                     | Multiplexing di più stream                        |
-| TCP + TLS                                      | QUIC + TLS 1.3 integrati                          |
+| HTTP/2                                                 | HTTP/3                                         |
+| ------------------------------------------------------ | ---------------------------------------------- |
+| Utilizza TCP                                           | Utilizza QUIC su UDP                           |
+| Multiplexing di più stream                             | Multiplexing di più stream                     |
+| TCP + TLS                                              | QUIC + TLS 1.3 integrati                       |
 | Connessione legata a TCP (cambio rete → riconnessione) | Connection Migration (cambio rete trasparente) |
 
 ## Una richiesta
@@ -684,14 +727,15 @@ Destination anchors (link interni al documento):
 	- `width`, `height = length`: dimensioni (pixels o percentuale)
 	- `rowspan`, `colspan = n`: su quante righe/colonne si estende la cella
 
-### Form
-Sezione del documento HTML che contiene elementi di controllo con cui l'utente può inserire dati o in generale interagire.
+#### Form
+Sezione del documento HTML che contiene elementi di controllo con cui l'utente può inserire dati o in generale **interagire**.
 - i dati inseriti possono essere poi inoltrati ad un agente che può processarli
 - gli elementi di controllo sono accessibili da script client-side
 - sono caratterizzati da un valore iniziale e da un valore corrente
 - possono essere: bottoni, checkbox (switch on/off), radio buttons (switch mutuamente esclusi), menu di selezione (lista di opzioni), inserimento di testo, oggetti nascosti (elementi di controllo valorizzati ma invisibili)
 
-**Tag `<form>`**: racchiude tutti gli elementi della form. Attributi:
+**Tag `<form>`**: racchiude tutti gli elementi della form. 
+Attributi:
 - `action = uri`: URI dell'agente che riceverà i dati
 - `name = text`: nome della form
 - `method = get / post`: modo in cui i dati vengono inviati
@@ -701,14 +745,16 @@ Sezione del documento HTML che contiene elementi di controllo con cui l'utente p
 </form>
 ```
 
-| Metodo | Scopo HTTP      | Form HTML                      | Dove vanno i dati    | Stato server |
-| ------ | --------------- | ------------------------------ | -------------------- | ------------ |
-| GET    | Richiedere dati | Ricerca, filtri                | URL (query string)   | Non cambia   |
-| POST   | Fornire dati    | Login, registrazione, acquisti | Body della richiesta | Può cambiare |
+| Metodo | Scopo HTTP     | Form HTML                     | Dove vanno i dati   | Stato server  |
+| -------- | -------------- | ----------------------------- | ------------------- | ------------- |
+| GET       | Richiedere dati | Ricerca, filtri              | URL (query string)  | Non cambia    |
+| POST   | Fornire dati   | Login, registrazione, acquisti | Body della richiesta | Può cambiare |
+>[!question] Osservazione
+>La `post`, così come la `get`, è una funzione che permette anche di ricevere dati a seguito di una richiesta un cui sono forniti dei dati
 
 Esempio GET (i dati finiscono nell'**URL**):
 ```
-GET /SomeProgram?firstName=Joe&lastName=Hacker HTTP/1.0
+GET /SomeProgram?firstName=Joe&lastName=Hacker HTTP/1.0 <- mandati in chiaro i dati
 Referer: http://localhost/GetForm.html
 Connection: Keep-Alive
 User-Agent: Mozilla/4.7 [en] (Win98; U)
@@ -723,11 +769,8 @@ Referer: http://localhost/PostForm.html
 Content-type: application/x-www-form-urlencoded
 Content-length: 29
 
-firstName=Joe&lastName=Hacker
+firstName=Joe&lastName=Hacker <- stessi dati **nascosti** nel body
 ```
-
->[!attention] Non è il put di java
->La post potrebbe essere usata per inviare dati e riceverne degli altri come conseguenza
 
 **Text input**
 ```html
@@ -795,7 +838,12 @@ Strumento che consente di presentare i documenti mediante viste multiple.
 </html>
 ```
 Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Frame 3 nella colonna destra (80%).
-# Principi di progettazione
+
+---
+
+# Framework
+## Requisiti non funzionali
+### Principi di progettazione
 
 >[!multi-column]
 >
@@ -815,20 +863,31 @@ Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Fram
 >>Evitare che un componente dipenda da implementazioni concrete
 >
 
-# Java database connectivity
-JDBC (Java Database Connectivity) è un’API di Java che permette di connettere applicazioni Java a database relazionali. Fornisce un’interfaccia standard per eseguire query SQL, aggiornare dati e gestire connessioni a database come MySQL, PostgreSQL, Oracle e altri.
-![[Web-1791201912266.webp|center|610]]
+
+## Java Database Connectivity
+JDC è un'API di Java che permette la connessione di applicazioni Java con database relazionali. Infatti, fornisce un'interfaccia standard per eseguire query `SQL`, aggiornare dati e gestire connessioni a DBMS. Si può utilizzare in qualunque applicazione.
+![[Appunti-1791280412263.webp|center|541]]
+
+
 
 >[!multi-column]
 >
 >>[!blank]
->>Ogni applicazione java, per l'uso dei database, si interfaccia con il JDBC driver manager che a sua volta comunica con i vari driver degli specifici dbms.
+>>Ogni applicazione java, per l'uso dei database, si interfaccia con il **JDBC driver manager** che a sua volta comunica con i vari driver degli specifici DBMS.
 >
 >>[!blank]
->>![[Web-1791202158637.webp|center|200]]
+>>![[Appunti-1791280654639.webp | center|180]]
 
-JDBC è principalmente orientato dai [[DBMS|database relazionali]], ma può anche essere utilizzato per NoSql.
-## JDBC data types
+>[!question] Osservazione
+>Esiste una differenza tra i DB **relazionali** e **non-relazionali**.
+> - **Relazionali**: dati (omogenei) organizzati in tabelle la cui modifica dello schema è altamente sconsigliata(alta probabilità di errore)
+> - **Non-relazionali**: dati (eterogenei) contenuti in documenti o grafi 
+> L'approccio relazionale in alcuni contesti non è adattabile: se bisogna salvare contenuti multimediali non posso inserirli in tabella, soprattutto se cambiano molto spesso nel tempo.
+> I due tipi di DB sono complementari: se uno non è scalabile (r), l'altro permette dinamicamente modifiche.
+> 
+
+JDBC è principalmente orientato ai database relazionali, ma può anche essere utilizzato per `NoSql`.
+### JDBC data types
 
 | JDBC Type                        | Java Type                  |
 | -------------------------------- | -------------------------- |
@@ -852,7 +911,9 @@ JDBC è principalmente orientato dai [[DBMS|database relazionali]], ma può anch
 | REF                              | Ref                        |
 | JAVA_OBJECT                      | underlying Java class      |
 
-## Query
+### Query
+JDBC fornisce un'interfaccia per tutte le query di SQL
+
 |Tipo SQL|Metodo JDBC|Output|Uso principale|
 |---|---|---|---|
 |SELECT|`executeQuery()`|`ResultSet`|Lettura dati|
@@ -860,72 +921,19 @@ JDBC è principalmente orientato dai [[DBMS|database relazionali]], ma può anch
 |CREATE / ALTER / DROP|`executeUpdate()`|`0` o `int`|Definizione struttura|
 |Qualsiasi tipo|`execute()`|`boolean` + `getResultSet()` / `getUpdateCount()`|Generico / dinamico|
 
-Su `execute()`: restituisce `true` se il risultato è un `ResultSet` (allora lo recuperi con `getResultSet()`), `false` se è un conteggio di righe (allora usi `getUpdateCount()`). Serve quando non sai a priori che tipo di query stai eseguendo.
-## JDBC connectivity
->[!blank|float-right]
->```mermaid
->flowchart TB
->    id1(Java application) --> id2(Loading driver)
->    id2 --> id3(Creating connection)
->    id3 --> id4(Creating statement)
->    id4 --> id5(Executing statement)
->    id5 --> id6(Processing ResultSet)
->    id6 --> id7(Closing connection)
->```
+`execute()`serve quando non sai a priori che tipo di query stai eseguendo. Infatti, restituisce:
+- `true` se il risultato è un `ResultSet` $\to$ recupero con `getResultSet()`)
+- `false` se è un conteggio di righe (allora usi `getUpdateCount()`). 
+### Utilizzo di JDBC
 
-JDBC opera attraverso una serie di fasi per l'utilizzo dei database:
-1. **Connection**
-   stabilisce una connessione con il database - spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **polling** per riutilizzare le connessioni già aperte. È una fase strutturale, permette di creare politiche.
-2. **Statement**
-   creazione dell'oggetto che consente il passaggio dal livello applicativo al livello logico - consente di inviare query SQL. Restituisce il result set
-3. **Result set**
-   contiene i risultati di una query di selezione - rappresenta un ponte tra il modello relazionale e il modello a oggetti di java (contiene ciò che viene fornito dal database come oggetto di java iterabile)
-4. **Connection**
-   chiusura della connessione
-Questa suddivisione permette di rendere il codice più modulare, portabile ed evitare problemi di performance, creando una vera e propria **pipeline**.
-
->[!bug] Aumenta la complessità
->Dobbiamo gestire oggetti che non sono nativi di java
-
->[!attention] Per l'esame
->Le scelte prese in fase di progettazione devono essere dettate da cosa è necessario: se sto facendo operazioni in lettura non ho bisogno di appesantire troppo la query con livelli di sicurezza innecessari
-
-``` java
-import java.sql.*;
-public class PrimoTestJDBC {
-	public static void main(String[] args) {
-		String url = "jdbc:mysql://localhost:3306/testdb";
-		String user = "root"; String password = "admin";
-		try {
-		    Connection conn = DriverManager.getConnection(url, user, password);
-		    Statement stmt = conn.createStatement();
-		    ResultSet rs = stmt.executeQuery("SELECT id, name FROM users");
-		    while (rs.next()) {
-		        System.out.println(rs.getInt("id") + " - " + rs.getString("name"));
-		    }
-		} catch (SQLException e) {
-		    e.printStackTrace();
-		} finally {
-		    rs.close();
-		    stmt.close();
-		    conn.close();
-		}
-	}
-}
-```
-
->[!question] Tramite java possiamo anche ricavare dei metadati da parte del database
-
-## Utilizzo di JDBC
-
-|Metodo|Classe|Cosa fa|
-|---|---|---|
-|`getConnection(url, user, password)`|`DriverManager`|Sceglie il driver dal prefisso dell'URL e apre la connessione. Lancia `SQLException` se le credenziali sono errate o il DB non è raggiungibile.|
-|`createStatement()`|`Connection`|Crea l'oggetto `Statement` per inviare SQL al DB.|
-|`executeQuery(sql)`|`Statement`|Esegue una `SELECT` e restituisce un `ResultSet`.|
-|`next()`|`ResultSet`|Sposta il cursore alla riga successiva. Restituisce `false` quando le righe sono finite. All'inizio il cursore sta _prima_ della prima riga, quindi `next()` va chiamato prima di leggere.|
-|`getInt("id")`, `getString("name")`|`ResultSet`|Leggono il valore di una colonna della riga corrente, convertendolo nel tipo Java (vedi la tabella dei tipi).|
-|`close()`|`ResultSet`, `Statement`, `Connection`|Rilascia le risorse. Si chiude in ordine inverso rispetto all'apertura: `rs`, poi `stmt`, poi `conn`.|
+| Metodo                               | Classe                                 | Cosa fa                                                                                                                                                                                    |
+| ------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `getConnection(url, user, password)` | `DriverManager`                        | Sceglie il driver dal prefisso dell'URL e apre la connessione. Lancia `SQLException`se le credenziali sono errate o il DB non è raggiungibile.                                             |
+| `createStatement()`                  | `Connection`                           | Crea l'oggetto `Statement` per inviare SQL al DB.                                                                                                                                          |
+| `executeQuery(sql)`                  | `Statement`                            | Esegue una `SELECT` e restituisce un `ResultSet`.                                                                                                                                          |
+| `next()`                             | `ResultSet`                            | Sposta il cursore alla riga successiva. Restituisce `false` quando le righe sono finite. All'inizio il cursore sta _prima_ della prima riga, quindi `next()` va chiamato prima di leggere. |
+| `getInt("id")`, `getString("name")`  | `ResultSet`                            | Leggono il valore di una colonna della riga corrente, convertendolo nel tipo Java (vedi la tabella dei tipi).                                                                              |
+| `close()`                            | `ResultSet`, `Statement`, `Connection` | Rilascia le risorse. Si chiude in ordine inverso rispetto all'apertura: `rs`, poi `stmt`, poi `conn`.                                                                                      |
 ### Execute Update
 Si usa per tutto ciò che **non** è una `SELECT`: modifica dati (DML) e struttura (DDL).
 
@@ -961,12 +969,15 @@ int rowsInserted = statement.executeUpdate();
 3. `setString(1, ...)` assegna il valore al primo `?` (indici da **1**). Esistono `setInt`, `setDouble`, `setDate`, ecc., che seguono la tabella dei tipi JDBC.
 4. `executeUpdate()` o `executeQuery()` vanno chiamati **senza argomenti**, perché la query è già stata passata prima.
 
-**Vantaggi:**
-- **Sicurezza**: i valori sono sempre trattati come dati, mai come SQL.
-- **Prestazioni**: se esegui la stessa query più volte con valori diversi (ad esempio in un ciclo), il DB la compila una volta sola.
-- **Comodità**: niente apici e concatenazioni, e il driver gestisce da solo la formattazione di date e caratteri speciali.
-
-**Limite:** il `?` sostituisce solo **valori**, non nomi di tabelle o colonne.
+>[!multi-column]
+>
+>>[!done] Vantaggi
+>>- **Sicurezza**: i valori sono sempre trattati come dati, mai come SQL.
+>>- **Prestazioni**: se esegui la stessa query più volte con valori diversi (ad esempio in un ciclo), il DB la compila una volta sola.
+>>- **Comodità**: niente apici e concatenazioni, e il driver gestisce da solo la formattazione di date e caratteri speciali.
+>
+>>[!bug] Limite
+>> Il `?` sostituisce solo **valori**, non nomi di tabelle o colonne.
 
 `Statement` solo per query fisse senza input esterno, `PreparedStatement` appena c'è un valore che arriva dall'utente o la query si ripete.
 
@@ -1015,33 +1026,49 @@ END;
 - **Sicurezza**: l'app chiama la procedura con dei parametri, quindi non c'è SQL costruito per concatenazione (niente injection, se i parametri sono gestiti correttamente). Inoltre puoi dare all'utente il permesso di eseguire la procedura senza dargli accesso diretto alle tabelle.
 
 ### Transaction
-Di default JDBC è in **auto-commit**: ogni istruzione viene salvata subito e per sempre. Per un bonifico (togli 100 ad A, aggiungi 100 a B) è pericoloso: se si rompe tutto dopo la prima istruzione, hai tolto i soldi ad A e non li hai dati a B.
+![[Appunti-1791288091197.webp|340]]
+In JDBC è attivo l'**auto-commit**:  interrogazioni scritte vengono eseguite automaticamente come transazioni. Tuttavia, garantire transazionalità vuol dire garantire delle proprietà che aumentano l'overhead computazionale: per questo motivo si potrebbe non volere rendere transazionale un'operazione (di lettura ad es.).
+Quindi tramite il comando `connection.setAutoCommit(false);` si disabilita questa funzione, rendendo le modifiche effettuate **provvisorie**. 
+Se, invece un'operazione richiede transazionalità effettuiamo all'interno di un `try () catch`:
 ``` java
+Connection connection = DriverManager.getConnection(url, username,passwd);
 connection.setAutoCommit(false);
 try {
-    statement.executeUpdate(...);   // operazione 1
-    statement.executeUpdate(...);   // operazione 2
+	statement.executeUpdate(...); //op 1
+	statement.executeUpdate(...); //op 2
+	[...]
 } catch (Exception e) {
-    connection.rollback();          // qualcosa è andato storto: annulla tutto
+	try {
+		connection.rollback();   //prima del commit si può tornare indietro
+	} catch (SQLException sqle) {
+	// report problem
+	}
 } finally {
-    connection.commit();            // conferma
-    connection.close();
+	try {
+		// sezione in cui si richiede la transazionalità dell'operazione
+		connection.commit(); //conferma
+		connection.close();
+	} catch (SQLException sqle) { … }
+	
 }
 ```
 - `setAutoCommit(false)` fa sì che le modifiche restino **provvisorie**, visibili solo a te.
 - `commit()` le rende definitive.
 - `rollback()` le butta via e riporta il DB a com'era prima.
+#### Inconsistenze
+In JDBC, ogni transaction può avere livello di isolamento che definisce come le operazioni **concorrenti** sul DB si vedono tra loro. Questo è un aspetto fondamentale : quando più transaction accedono allo stesso set di dati contemporaneamente bisogna controllare le **inconsistenze**.
 
-![[Web-1791288838030.webp|center|580]]
+| **Fenomeno**          | **Cosa succede**                                                                                                                                                    | **Esempio**                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `dirty read`          | una transazione legge dati **modificati ma non ancora**<br>**confermati** (_committed_) da un'altra transazione                                                     | utente visualizza prezzo modificato da un admin, ma la modifica viene annullata                              |
+| `non-repeatable read` | La stessa riga, letta **due volte nella stessa transazione**, restituisce valori diversi perché un'altra transazione l'ha modificata e confermata nel frattempo.    | durante modifica di un ordine, prezzo del prodotto modificato durante due letture                            |
+| `phantom read`        | La stessa query eseguita **due volte** restituisce un insieme di righe diverso perché un'altra transazione ha inserito o eliminato righe che soddisfano il criterio | durante generazione di un report dati inseriti o eliminati, due query uguali restituiscono risultati diversi |
 
->[!bug] Inconsistenze
->In JDBC, ogni transaction può avere un livello di isolamento che definisce come le operazioni concorrenti sul database si “vedono” tra loro. Questo è cruciale quando più transaction accedono allo stesso set di dati contemporaneamente, perché senza controllo si rischiano inconsistenze, quali:
->- **Dirty Read** – leggere dati modificati da un’altra transaction non ancora confermata.
->- **Non-Repeatable Read** – leggere due volte la stessa riga e ottenere valori diversi perché un’altra transaction l’ha modificata e confermata nel frattempo.
->- **Phantom Read** – eseguire query con lo stesso filtro e ottenere righe diverse perché un’altra transaction ha inserito nuove righe che soddisfano il filtro.
-#### Transaction isolation
-**Principio di parsimonia** - coperta corta - trade off.
-Per evitare inconsistenze possiamo decidere il **livello di isolamento** delle transaction per trovare un bilanciamento tra consistenza e prestazioni: un livello maggiore di isolamento riduce la **concorrenza** e le **prestazioni**.
+>[!attention] Esame
+>Durante l'esame sono oggetto di discussione le modalità di controllo della concorrenza e i livelli di isolamento.
+
+#### Transaction Isolation
+Per evitare inconsistenze è possibile scegliere il **livello di isolamento** della singola transaction:
 
 | Livello JDBC                   | Descrizione                                                       | Problemi evitati                       |
 | ------------------------------ | ----------------------------------------------------------------- | -------------------------------------- |
@@ -1049,415 +1076,592 @@ Per evitare inconsistenze possiamo decidere il **livello di isolamento** delle t
 | `TRANSACTION_READ_COMMITTED`   | Legge solo dati confermati                                        | evita il dirty read                    |
 | `TRANSACTION_REPEATABLE_READ`  | Garantisce che righe già lette non cambino durante la transaction | evita dirty read e non repeatable read |
 | `TRANSACTION_SERIALIZABLE`     | Massima protezione: esecuzione seriale della transaction          | evita tutte le inconsistenze           |
-Nelle transaction ad alto isolamento, il database blocca righe o tabelle, impedendo ad altre transaction di modificarle contemporaneamente. Più righe vengono bloccate e più a lungo restano bloccate, maggiore è il tempo di attesa per le altre transaction. Controlli aggiuntivi possono anche richiedere CPU, memoria e I/O extra.
+
+>[!important] Buon ingegnere
+>  i **livelli di isolamento** permettono di bilanciare **consistenza** e **prestazioni** .
+
+Quindi, per ogni funzione è importante scegliere il tipo di livello di isolamento in base alle necessità pratiche. Infatti, nelle transaction ad alto isolamento (`serializable`) il DB blocca la modifica di tabelle impedendo la modifica di altre transaction, mettendo in attesa un processo che occupa memoria, I/O e colpi di clock aggiuntivi. Si consiglia quindi di utilizzare questi flag solo per operazioni molto delicate (pagamenti, aggiornamenti di informazioni del sistema).
+
 # Servlet
->[!important] Una Servlet è un componente Java server-side, gestito da un Servlet Container, che riceve richieste (tipicamente) HTTP e produce risposte (tipicamente) HTTP.
 
-Una Servlet è un programma Java che viene eseguito su un server e gestisce le richieste dei client web (solitamente browser).
-Fa parte della piattaforma Jakarta e viene utilizzata principalmente per creare applicazioni web dinamiche.
-È importante soprattutto perché molte tecnologie di livello superiore (Spring, REST API, …) si appoggiano direttamente o indirettamente al modello Servlet.
-Caratteristiche principali di una Servlet:
-- È un componente **server-side**: elabora le richieste HTTP e genera risposte in modo dinamico.
-- **Ciclo di vita** gestito dal server: il container servlet gestisce la parte infrastrutturale (inizializzazione, gestione richieste, mapping, distruzione).
-- Estende **HttpServlet**: la maggior parte delle servlet estende HttpServlet e sovrascrive metodi come `doGet()` o `doPost()`.
-- Gestisce **richieste** e **risposte**: interagisce con i client tramite HttpServletRequest (input) e HttpServletResponse (output).
-![[Web-1791380291194.webp|center|820]]
-https://docs.oracle.com/javaee/7/api/javax/servlet/http/HttpServlet.html
-Va usata `import jakarta.servlet.*`
-`import javax.*` è deprecated
-## Ciclo di vita di una servlet
->[!blank|float-right]
->![[Web-1791380598308.webp|center|150]]
+Una **servlet** è un componente Java _server-side_ che riceve richieste (tipicamente HTTP) e produce risposte (tipicamente HTTP). Non gira da sola: vive dentro un **servlet container** (es. Tomcat), che ne gestisce l'intero ciclo di vita. Il client è di solito un browser, ma può essere anche un'altra macchina (app, servizio che interroga un'API).
 
-Il metodo init() in una servlet viene richiamato una sola volta quando la servlet viene caricata per la prima volta in memoria dal contenitore. Questo avviene prima che la servlet inizi a gestire le richieste. Può essere richiamata in **lazy loading** (predefinito), viene richiamato `init()` alla prima richiesta, oppure **eager loading**, la servlet viene caricata all'avvio del server.
+Perché studiarle: framework come Spring o le REST API in Java si appoggiano, direttamente o indirettamente, al modello Servlet. Capire le servlet = capire cosa succede "sotto" quei framework.
 
-### Parametri di inizializzazione
-Possono essere passati dei parametri di inizializzazione tramite un file `web.xml` all'interno della quale potevano essere definiti dei valori costanti da recuperare durante l'esecuzione, con la classe `ServletConfig` (approccio iniziale), non sono messe nel codice per basso accoppiamento.
+> [!info] javax → jakarta Con Jakarta EE 9 i package sono stati rinominati da `javax.servlet.*` a `jakarta.servlet.*`. Le versioni recenti di Tomcat (10+) usano `jakarta`: negli esempi useremo sempre quello.
 
-I parametri sono **statici**: li definisce il programmatore/amministratore del server e non cambiano a ogni richiesta. `init()` li legge una sola volta e li memorizza in variabili, poi usate nelle risposte.
+## Architettura generale
+
+```mermaid
+flowchart LR
+    C[Client] -->|HTTP Request| WS[Web Server]
+    WS --> F[Filter]
+    F -->|mapping URL| SC[Servlet Container]
+    SC --> S["Servlet<br/>init / service / destroy"]
+    S -->|doGet / doPost / doPut| R[Risposta]
+    R -->|HTTP Response o Error| C
+```
+
+> [!important] Filter
+> Un **filter** intercetta la richiesta _prima_ che arrivi alla servlet ed esegue operazioni preliminari (es. controlli di sicurezza, autenticazione, logging). Se la richiesta non supera i controlli viene bloccata lì, e la servlet non la riceve nemmeno. Se li supera, tramite il **mapping** il container capisce a quale servlet consegnarla.
+
+### Gerarchia delle classi
+
+- `Servlet` è un'**interfaccia** (definisce `init()`, `service()`, `destroy()`).
+- `GenericServlet` la implementa in modo indipendente dal protocollo.
+- `HttpServlet` estende `GenericServlet` e la rende **specifica per HTTP**: il suo `service()` guarda il metodo HTTP della richiesta e la smista a `doGet()`, `doPost()`, `doPut()`…
+
+Noi estendiamo `HttpServlet` e sovrascriviamo solo i `doXxx()` che ci servono.
+
+I due oggetti che ricevi in ogni `doXxx()`:
+
+- `HttpServletRequest` → **input**: da qui leggi parametri, header, cookie, sessione.
+- `HttpServletResponse` → **output**: qui costruisci la risposta (contenuto, content type, status code, cookie).
+
+## Ciclo di vita
+
+Le servlet non sono istanziate né chiamate dal programmatore: è il **container** a creare l'oggetto e a invocare i metodi nelle varie fasi.
+
+|Fase|Metodo|Quando|
+|---|---|---|
+|Inizializzazione|`init()`|**Una sola volta** per istanza, prima di gestire qualsiasi richiesta|
+|Elaborazione|`service()` → `doGet()`/`doPost()`/…|**A ogni richiesta**|
+|Cleanup|`destroy()`|Quando la servlet viene rimossa (es. arresto del server): rilascia le risorse|
+
+La servlet resta in memoria tra una richiesta e l'altra, finché il server non viene fermato o la servlet rimossa. Se il container si riavvia, `init()` viene richiamato.
+
+> [!important] Quando viene chiamato `init()`
+> 
+> - **Lazy loading** (default): alla **prima richiesta** diretta a quella servlet. Avvio del server più leggero, ma il primo utente aspetta un po' di più.
+> - **Eager loading**: all'**avvio del server**, anche senza richieste. Si configura con `<load-on-startup>` in `web.xml` (o con `loadOnStartup` in `@WebServlet`). Più reattivo alla prima richiesta.
+
+> [!warning] Concorrenza 
+> Normalmente il container crea **una sola istanza** della servlet e la usa per **tutte** le richieste, ognuna servita da un **thread diverso**. Quindi più thread eseguono `doGet()` _sulla stessa istanza contemporaneamente_.
+> 
+> - **Variabili locali** (dentro `doGet`) → sicure: ogni thread ha le sue.
+> - **Attributi d'istanza** → condivisi tra tutti i thread: vanno progettati per l'accesso concorrente.
+> 
+> ```java
+> public class MyServlet extends HttpServlet {
+>    private String username;   // CONDIVISO tra tutti i thread!
+> 
+>    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+>        // Thread A: username = "X"
+>        // Thread B: username = "Y"  → A potrebbe leggere "Y"
+>    }
+> }
+> ```
+
+## Contenuto statico vs dinamico
+
+La servlet può produrre risposte di complessità crescente. L'idea chiave: il contenuto è **statico** se è sempre uguale, **dinamico** se dipende dalla richiesta (parametri, utente, dati del DB…).
+
+### 1. Testo semplice (statico)
+
+```java
+import java.io.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+
+@WebServlet("/hello")
+public class HelloWorld extends HttpServlet {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        PrintWriter out = response.getWriter();   // canale di scrittura verso il client
+        out.println("Hello World");
+    }
+}
+```
+
+`doGet()` viene invocato **automaticamente dal container** quando arriva `GET /myapp/hello HTTP/1.1`.
+
+> [!question] Cos'è `hello`? Prendi l'URL `http://localhost:8080/myapp/hello`:
+> 
+> - `localhost:8080` → host e porta del server
+> - `/myapp` → **context path**: identifica l'applicazione web deployata sul server
+> - `/hello` → **URL pattern** della servlet, quello scritto in `@WebServlet("/hello")`
+> 
+> Quindi `hello` è il "nome" con cui la servlet è raggiungibile _dentro_ l'applicazione.
+
+### 2. Pagina HTML (statica)
+
+Stessa logica, ma restituisce una pagina HTML vera e propria. Va dichiarato il **content type**, così il browser sa che deve renderizzarla come HTML e non mostrarla come testo.
+
+```java
+public class HelloWWW extends HttpServlet {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");   // prima di scrivere il corpo
+        PrintWriter out = response.getWriter();
+        out.println("<HTML>\n" +
+                    "<HEAD><TITLE>Hello WWW</TITLE></HEAD>\n" +
+                    "<BODY>\n" +
+                    "<H1>Hello WWW</H1>\n" +
+                    "</BODY></HTML>");
+    }
+}
+```
+
+È ancora **statica**: ogni richiesta riceve esattamente la stessa pagina.
+
+### 3. Testo dinamico (dipende dalla richiesta)
+
+Qui la risposta cambia in base ai **parametri** inviati dal client, per esempio nella query string: `http://localhost:8080/miaServlet?nome=Mario&eta=25`
+
+```java
+public class HelloWorld extends HttpServlet {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String nome   = request.getParameter("nome");  // "Mario"
+        String etaStr = request.getParameter("eta");   // "25"  ← è una String!
+        int eta = Integer.parseInt(etaStr);            // 25
+
+        PrintWriter out = response.getWriter();
+        out.println("Hello " + nome + " " + eta);
+    }
+}
+```
+
+> [!note] Cast o conversione? 
+> Tutto ciò che arriva via HTTP è **testo**, quindi `getParameter()` restituisce sempre una `String` (o `null` se il parametro manca). Per ottenere un `int` non basta un cast: serve una **conversione** (`parsing`) con `Integer.parseInt()`, che lancia `NumberFormatException` se la stringa è `null` o non è un numero.
+
+Un altro esempio, con più parametri:
+
+```java
+public class ThreeParams extends HttpServlet {
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("param1: " + request.getParameter("param1") + "<br>" +
+                    "param2: " + request.getParameter("param2") + "<br>" +
+                    "param3: " + request.getParameter("param3"));
+    }
+}
+```
+
+### Parametri di inizializzazione vs parametri di richiesta
+
+Ci sono due tipi di "parametri" da non confondere:
+
+| Init parameters  | Request parameters                         |                                   |
+| ---------------- | ------------------------------------------ | --------------------------------- |
+| Chi li definisce | Programmatore/amministratore               | Client (browser, app)             |
+| Dove             | `web.xml` o annotazioni                    | Query string (GET) o corpo (POST) |
+| Quando cambiano  | Mai a runtime: **statici**                 | A ogni richiesta: **dinamici**    |
+| Come si leggono  | `getServletConfig().getInitParameter(...)` | `request.getParameter(...)`       |
+
+## Parametri di inizializzazione
+
+Servono a configurare la servlet **senza toccare il codice**: se cambia un valore modifichi la configurazione, non la classe. Si leggono tipicamente in `init()`, una volta sola.
+
+### Versione con `web.xml` (vecchio approccio)
 
 ```xml
 <servlet>
-	<servlet-name>ShowMessage</servlet-name>
-	<servlet-class>ShowMessage</servlet-class>
-	<init-param>
-		<param-name>message</param-name>
-		<param-value>Hello, Servlet!</param-value>
-	</init-param>
-	<init-param>
-		<param-name>repeats</param-name>
-		<param-value>3</param-value>
-	</init-param>
+    <servlet-name>ShowMessage</servlet-name>
+    <servlet-class>ShowMessage</servlet-class>
+    <init-param>
+        <param-name>message</param-name>
+        <param-value>Hello, Servlet!</param-value>
+    </init-param>
+    <init-param>
+        <param-name>repeats</param-name>
+        <param-value>3</param-value>
+    </init-param>
 </servlet>
 ```
 
-``` java
+### Versione con annotazioni
+
+```java
+@WebServlet(
+    urlPatterns = {"/showMessage"},
+    initParams = {
+        @WebInitParam(name = "message", value = "Hello from annotation!"),
+        @WebInitParam(name = "repeats", value = "3")
+    }
+)
 public class ShowMessage extends HttpServlet {
-	private String message;
-	private String defaultMessage = "No message.";
-	private int repeats = 1;
 
-	public void init() throws ServletException {
-		ServletConfig config = getServletConfig();
-		message = config.getInitParameter("message"); // da web.xml
-		if (message == null) {
-			message = defaultMessage;
-		}
-		try {
-			String repeatString = config.getInitParameter("repeats");
-			repeats = Integer.parseInt(repeatString);
-		} catch (NumberFormatException nfe) {}
-	}
+    private String message;
+    private String defaultMessage = "No message.";
+    private int repeats = 1;
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/html");
-		// <head-title>
-		for (int i = 0; i < repeats; i++) {
-			out.println(message + " ");
-		}
-		// <closing HTML tags>
-	}
+    @Override
+    public void init() throws ServletException {
+        ServletConfig config = getServletConfig();
+
+        message = config.getInitParameter("message");
+        if (message == null) {
+            message = defaultMessage;          // valore di riserva
+        }
+        try {
+            repeats = Integer.parseInt(config.getInitParameter("repeats"));
+        } catch (NumberFormatException nfe) {
+            // parametro assente o non numerico: resta repeats = 1
+        }
+    }
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html><head><title>Messaggio</title></head><body>");
+        for (int i = 0; i < repeats; i++) {
+            out.println(message + " ");
+        }
+        out.println("</body></html>");
+    }
 }
 ```
-Nel `doGet()` generiamo la pagina HTML che mostra il `message` definito in `init()`, ripetuto `repeats` volte.
 
-Un metodo più moderno consiste nell'utilizzo delle annotazioni di java `@annotation`: `@WebServlet` e `@WebInitParam` al posto di `web.xml`.
-``` java
-@WebServlet(urlPatterns = {"/showMessage"},
-	initParams = {
-		@WebInitParam(name = "message", value = "Hello from annotation!"),
-		@WebInitParam(name = "repeats", value = "3")
-	})
-public class ShowMessage extends HttpServlet {...}
-```
+Flusso: `init()` legge `message` e `repeats` una volta → li salva in attributi d'istanza → ogni `doGet()` li usa per costruire la pagina. Qui gli attributi d'istanza non creano problemi di concorrenza perché vengono **solo letti** dopo `init()`.
 
 ## Mapping
-`@WebServlet()` serve ad accoppiare le singole richieste alla corretta servlet **mapping**: il container sa quale servlet associare a quale URL tramite l'annotazione. In precedenza si usava il file `web.xml`, denominato **deployment descriptor**.
-Servlet based webserver
 
-``` java
-@WebServlet("/hello")
-public class HelloWorld extends HttpServlet {
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		PrintWriter out = response.getWriter();
-		out.println("Hello World");
-	}
-}
-```
-Il metodo viene invocato automaticamente dal container quando arriva una richiesta del tipo `GET /myapp/hello HTTP/1.1`, dove `/hello` è l'URL associato alla servlet.
+Il **mapping** è l'associazione tra un URL e la servlet che lo gestisce. Il container lo conosce grazie all'annotazione `@WebServlet` (in passato tramite `web.xml`, detto _deployment descriptor_).
 
-Una singola servlet può essere associata a **più URL**:
-``` java
+### Più URL, una servlet
+
+Una servlet può essere associata a più URL: utile quando più percorsi espongono **la stessa funzionalità** senza dover duplicare la servlet (es. il carrello raggiungibile da più pagine).
+
+```java
 @WebServlet({"/users", "/customers", "/hello"})
-```
-Il container mantiene una relazione tra gli URL ricevuti e la stessa istanza della servlet. Utile quando voglio più URL che espongono esattamente la stessa funzionalità, **senza duplicare la servlet** (es. carrello raggiungibile da più pagine).
+public class HelloWorld extends HttpServlet {
 
-Se più richieste/percorsi devono arrivare/puntare alla stessa servlet possiamo utilizzare all'interno del `doGet()` il metodo (recuperando l'URL dalla `HttpServletRequest`)
-``` java
-String uri = request.getRequestURI();
-if (uri.endsWith("/users")) {
-	// gestione users
-} else if (uri.endsWith("/customers")) {
-	// gestione customers
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String uri = request.getRequestURI();   // quale URL ha generato la richiesta?
+
+        if (uri.endsWith("/users")) {
+            // gestione users
+        } else if (uri.endsWith("/customers")) {
+            // gestione customers
+        }
+    }
 }
 ```
 
-per il mapping possiamo anche usare le regex ☠️ - però sono regex chill
-Jakarta Servlet prevede quattro modalità di mapping:
+Il container fa puntare tutti questi URL alla **stessa istanza**; dentro `doGet()` si distingue il caso con `getRequestURI()`.
 
-| Tipo      | Esempio   | Cosa intercetta                               |
-| --------- | --------- | --------------------------------------------- |
-| Exact     | `/users`  | solo `/users`                                 |
-| Path      | `/api/*`  | tutto ciò che inizia con `/api/`              |
-| Extension | `*.jsp`   | URL che terminano con `.jsp`                  |
-| Default   | `/`       | richieste non intercettate da mapping più specifici |
+### Modalità di mapping
 
->[!important] Regola di precedenza
->Se due servlet fanno match si considera, in ordine: **1.** exact match → **2.** longest path match → **3.** extension match → **4.** default mapping.
+Non sono regex: sono **pattern URL** con regole fisse. Jakarta Servlet ne prevede quattro:
 
-``` java
+|Tipo|Esempio|Cosa intercetta|
+|---|---|---|
+|Exact|`/users`|solo `/users`|
+|Path|`/api/*`|tutto ciò che inizia con `/api/`|
+|Extension|`*.jsp`|URL che terminano con `.jsp`|
+|Default|`/`|tutto ciò che non è catturato da mapping più specifici|
+
+> [!important] Regola di precedenza
+> Se più servlet fanno match con lo stesso URL, si controlla in quest'ordine e vince la prima che corrisponde:
+> 1. Exact match
+> 2. Longest path match (il prefisso più lungo)
+> 3. Extension match
+> 4. Default mapping
+
+Esempio:
+
+```java
 @WebServlet("/users")
-class UsersServlet extends HttpServlet {}
+class UsersServlet extends HttpServlet { }
 
 @WebServlet("/users/*")
-class UserDetailsServlet extends HttpServlet {}
+class UserDetailsServlet extends HttpServlet { }
 ```
-- `/users` → `UsersServlet`
-- `/users/123` → `UserDetailsServlet`
 
-Quando le regole di routing diventano numerose, i framework introducono un livello di astrazione superiore per gestirle in modo più **dichiarativo**.
+- `/users` → `UsersServlet` (exact match)
+- `/users/123` → `UserDetailsServlet` (path match)
 
-## Concorrenza
-Problema enorme la concorrenza
-Il container crea una sola istanza della servlet che viene condivisa da più richieste: richieste alla stessa servlet possono essere elaborate **contemporaneamente da thread differenti**.
+Quando le regole di routing diventano tante, i framework (es. Spring) introducono un livello di astrazione superiore per gestirle in modo **dichiarativo**.
 
->[!question] Ogni servlet è un thread?
->No: una sola istanza, condivisa da più thread (uno per richiesta). Dobbiamo garantire **thread safety**.
+## GET, POST e la richiesta HTTP
 
-``` java
-public class MyServlet extends HttpServlet {
-	private String username;
-	protected void doGet(...) {
-		...
-	}
-}
-```
-- le **variabili locali** della richiesta sono normalmente sicure
-- gli **attributi di istanza** condivisi devono essere progettati considerando l'accesso concorrente
-- esempio: Thread A → `username = "X"`, Thread B → `username = "Y"`
+In entrambi i casi i parametri si leggono con `request.getParameter(...)`. La differenza **non** è nell'API Java, ma in:
 
-non siamo noi da user che gestiamo i container, ma nasce per automatizzare degli aspetti: il ciclo di vita non è gestita da noi.
+- **come i dati viaggiano**: GET → nella query string dell'URL; POST → nel corpo della richiesta;
+- **la semantica HTTP**: GET serve a _leggere_ una risorsa, POST a _inviare dati_ che modificano lo stato (es. creare un utente).
 
-## Richieste e risposte HTTP
-gestire invocazioni HTTP e generare risposte HTTP
-
-Una servlet può generare **HTML** invece di testo semplice: basta impostare il content type e scrivere il markup sul `PrintWriter`.
-``` java
-response.setContentType("text/html");
-PrintWriter out = response.getWriter();
-out.println("<HTML>\n" +
-	"<HEAD><TITLE>Hello WWW</TITLE></HEAD>\n" +
-	"<BODY>\n" +
-	"<H1>Hello WWW</H1>\n" +
-	"</BODY></HTML>");
-```
-Risponde sempre a una GET, ma restituisce una pagina HTML vera e propria, con titolo e intestazione `<H1>` "Hello WWW".
-
-### Parametri dinamici
-la `request` può avere anche dei parametri chiave/valore, che possono essere recuperate tramite i metodi `request.getParameter("<chiave>")`
-Sono i parametri inviati dal client (browser, app, ecc.) con una richiesta HTTP (GET o POST). Possono cambiare a ogni richiesta: sono **dinamici**, cioè non specificati nel file di configurazione (a differenza degli init parameter).
-
-``` java
-String nome = request.getParameter("nome");   // "Mario"
-String etaStr = request.getParameter("eta");  // "25"
-int eta = Integer.parseInt(etaStr);           // 25
-out.println("Hello " + nome + eta);
-```
-invocata da una GET tipo `http://localhost:8080/miaServlet?nome=Mario&eta=25`, in cui i dati arrivano nell'URL sotto forma di **query string**.
-occhio al cast che esonda
-
-### GET e POST
-In entrambi i casi `request.getParameter(...)` può essere utilizzato per leggere i parametri.
-
->[!important] La differenza fondamentale non è "GET usa getParameter, POST usa qualcos'altro"
->È il modo in cui i dati sono trasportati nella richiesta HTTP e soprattutto la **semantica HTTP** dell'operazione.
-
-- **GET**: parametri nella query string → `GET /users?id=15` → `request.getParameter("id")`
-- **POST**: ad esempio un form → `doPost()` legge i campi con `getParameter("name")`, `getParameter("email")`
-
-``` html
+```html
 <form method="post" action="/users">
-	<input name="name">
-	<input name="email">
-	<button type="submit">Save</button>
+    <input name="name">
+    <input name="email">
+    <button type="submit">Save</button>
 </form>
 ```
 
-Inoltre la servlet può:
-- leggere gli **HTTP headers**: `String userAgent = request.getHeader("User-Agent");`
-- impostare un **codice di risposta**: `response.setStatus(HttpServletResponse.SC_OK);`
-- ordinare al browser una **nuova richiesta** (soon…)
-
-### Header
-Gli HTTP header sono metadati inviati insieme a una richiesta o risposta HTTP. Deprecati in stampa perché possono contenere informazioni sensibili.
-
-| Tipo di header | Scopo                                                         |
-| -------------- | ------------------------------------------------------------- |
-| Generali       | Informazioni generali sulla comunicazione                     |
-| Richiesta      | Informazioni sulle preferenze del client o sull'autenticazione |
-| Entità         | Descrivere il corpo del messaggio                             |
-
-``` java
-out.println("Request Method:" + request.getMethod());      // GET
-out.println("Request URI:" + request.getRequestURI());     // /showMessage
-out.println("Request Protocol:" + request.getProtocol());  // HTTP/1.1
-
-Enumeration headerNames = request.getHeaderNames();
-while (headerNames.hasMoreElements()) {
-	String headerName = (String) headerNames.nextElement();
-	out.println(headerName + "=" + request.getHeader(headerName) + " ");
-}
-
-public void doPost(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
-	doGet(request, response);
+```java
+@Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+    String name  = request.getParameter("name");
+    String email = request.getParameter("email");
 }
 ```
-Stampiamo tutti gli header della richiesta HTTP in una pagina HTML, gestendo sia richieste GET che POST in modo identico (`doPost()` richiama `doGet()`). Tra gli header compaiono `Host`, `Connection`, `User-Agent`, `Accept-Language`, `Cookie`, ...
 
-## Servlet e database
-come risposta ad una get interazione con db
-Servlet in ascolto su `http://localhost:8080/MyWebApp/hello`, dove `MyWebApp` è l'applicazione che contiene le servlet (`HelloServlet`, `LoginServlet`, `ProductServlet`, `OrderServlet`).
+Oltre ai parametri, la servlet può:
 
-``` java
+- leggere gli **header**: `request.getHeader("User-Agent")`
+- impostare lo **status code**: `response.setStatus(HttpServletResponse.SC_OK)`
+- ordinare al browser di fare una **nuova richiesta** verso un altro URL (redirect, lo vedremo più avanti)
+
+### Header HTTP
+
+Gli header sono **metadati** che accompagnano richiesta e risposta:
+
+|Tipo|Scopo|
+|---|---|
+|Generali|Informazioni sulla comunicazione in sé|
+|Di richiesta|Preferenze del client, autenticazione|
+|Di entità|Descrivono il corpo del messaggio|
+
+Esempio: servlet che stampa metodo, URI, protocollo e tutti gli header, gestendo GET e POST **allo stesso modo** (`doPost` delega a `doGet`):
+
+```java
+public class ShowRequestHeaders extends HttpServlet {
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html><head><title>Request Headers</title></head><body>");
+
+        out.println("Request Method: "   + request.getMethod()     + "<br>"); // GET
+        out.println("Request URI: "      + request.getRequestURI() + "<br>"); // /showMessage
+        out.println("Request Protocol: " + request.getProtocol()   + "<br>"); // HTTP/1.1
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            out.println(headerName + " = " + request.getHeader(headerName) + "<br>");
+        }
+        out.println("</body></html>");
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+}
+```
+
+> [!warning] Stampare gli header in una pagina è utile per studio/debug, ma è sconsigliato in produzione: possono contenere informazioni sensibili (es. l'header `Cookie` con l'ID di sessione).
+
+---
+
+## Servlet e JDBC
+
+La servlet può accedere a un database e restituire i dati in una pagina HTML. Esempio in ascolto su `http://localhost:8080/MyWebApp/hello`:
+
+```java
 @WebServlet("/hello")
 public class HelloServlet extends HttpServlet {
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		resp.setContentType("text/html;charset=UTF-8");
-		String mysqlURL = "jdbc:mysql://localhost:3306/testdb";
-		String us = "root";
-		String pwd = "admin";
-		try {
-			PrintWriter out = resp.getWriter();
-			out.println("<html><body><h2>Elenco Nomi:</h2><ul>");
-			Connection conn = DriverManager.getConnection(mysqlURL, us, pwd);
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT id, name FROM users");
-			while (rs.next()) {
-				out.println("<li>Codice: " + rs.getInt(1) + ", Nome: " + rs.getString(2) + "</li>");
-			}
-			out.println("</ul></body></html>");
-			rs.close();
-			stmt.close();
-			conn.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ServletException("Errore JDBC", e);
-		}
-	}
-}
-```
-Il risultato è una pagina con l'elenco `Codice: 1, Nome: Alice`, ... Le eccezioni vengono rilanciate come `ServletException`.
 
-Lo stesso vale con una **stored procedure**, chiamata con `CallableStatement`:
-``` java
-@WebServlet("/userStats")
-public class UserStatsServlet extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		try {
-			Connection conn = DriverManager.getConnection(mysqlURL, us, pwd);
-			CallableStatement stmt = conn.prepareCall("{call getUserStats(?, ?)}");
-			stmt.registerOutParameter(1, java.sql.Types.INTEGER); // totalUsers
-			stmt.registerOutParameter(2, java.sql.Types.DOUBLE);  // averageAge
-			stmt.execute();
-			int totalUsers = stmt.getInt(1);
-			double averageAge = stmt.getDouble(2);
-			response.getWriter().println("<h1>User Statistics</h1>");
-			response.getWriter().println("<p>Total Users: " + totalUsers + "</p>");
-			response.getWriter().println("<p>Average Age: " + averageAge + "</p>");
-		} catch (SQLException e) { e.printStackTrace(); }
-	}
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        resp.setContentType("text/html;charset=UTF-8");
+        String mysqlURL = "jdbc:mysql://localhost:3306/testdb";
+        String us = "root";
+        String pwd = "admin";
+
+        PrintWriter out = resp.getWriter();
+        out.println("<html><body><h2>Elenco Nomi:</h2><ul>");
+
+        // try-with-resources: chiude rs, stmt e conn automaticamente
+        try (Connection conn = DriverManager.getConnection(mysqlURL, us, pwd);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT id, name FROM users")) {
+
+            while (rs.next()) {
+                out.println("<li>Codice: " + rs.getInt(1) +
+                            ", Nome: " + rs.getString(2) + "</li>");
+            }
+        } catch (SQLException e) {
+            throw new ServletException("Errore JDBC", e);
+        }
+        out.println("</ul></body></html>");
+    }
 }
 ```
-``` sql
+
+Con una **stored procedure** si usa `CallableStatement`, registrando i parametri di output:
+
+```sql
 CREATE PROCEDURE getUserStats(OUT totalUsers INT, OUT averageAge DOUBLE)
 BEGIN
-	SELECT COUNT(*) INTO totalUsers FROM Users;
-	SELECT AVG(age) INTO averageAge FROM Users;
+    SELECT COUNT(*) INTO totalUsers FROM Users;
+    SELECT AVG(age)  INTO averageAge FROM Users;
 END;
 ```
 
->[!bug] wrappando il db con la servlet sto violando il SoC (separation of concerns): mi occupo di tutto all'interno dello stesso codice (gestione richiesta - visualizzazione - gestione dei dati è tutto insieme).
+```java
+@WebServlet("/userStats")
+public class UserStatsServlet extends HttpServlet {
 
-## Stato
-HTTP di base è stateless: ogni richiesta è indipendente -> possiamo mascherare questa cosa tramite meccanismi che permettono di aggirare la natura stateless di HTTP -> possono essere gestite tramite servlet memorizzando diverse informazioni tramite diversi **scope** (attributi memorizzati nelle Servlet API)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try (Connection conn = DriverManager.getConnection(mysqlURL, us, pwd);
+             CallableStatement stmt = conn.prepareCall("{call getUserStats(?, ?)}")) {
 
-| Scope       | Durata                | Condivisione                                 |
-| ----------- | --------------------- | -------------------------------------------- |
-| Request     | singola richiesta     | componenti coinvolti nella request           |
-| Session     | sessione utente       | richieste dello stesso client/sessione       |
-| Application | applicazione web      | servlet/componenti dell'applicazione         |
+            stmt.registerOutParameter(1, java.sql.Types.INTEGER);  // totalUsers
+            stmt.registerOutParameter(2, java.sql.Types.DOUBLE);   // averageAge
+            stmt.execute();
 
-### Stato nella servlet
-``` java
-public class GetCounter extends HttpServlet {
-	private int getNum;
+            int totalUsers    = stmt.getInt(1);
+            double averageAge = stmt.getDouble(2);
 
-	public void init(ServletConfig config) throws ServletException {
-		getNum = 0;
-	}
-
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		getNum++;
-		resp.getWriter().println("GETs=" + getNum);
-	}
+            PrintWriter out = response.getWriter();
+            out.println("<h1>User Statistics</h1>");
+            out.println("<p>Total Users: " + totalUsers + "</p>");
+            out.println("<p>Average Age: " + averageAge + "</p>");
+        } catch (SQLException e) {
+            throw new ServletException("Errore JDBC", e);
+        }
+    }
 }
 ```
-`getNum` è una variabile **di istanza** della servlet, condivisa tra tutte le richieste e tutti i client:
-- contatore globale della servlet, tutti i client "vedono" lo stesso valore
-- non si azzera finché la servlet rimane in memoria
 
->[!bug] Limite
->Non è thread-safe (più richieste simultanee → rischio conteggio errato), serve una variabile per-client.
+> [!bug] Violazione della Separation of Concerns
+>  In entrambi gli esempi un solo metodo (`doGet`) fa **tutto**: gestisce la richiesta, apre la connessione, interroga il DB e costruisce l'HTML. Accesso ai dati, logica e presentazione sono mescolati → codice difficile da mantenere, testare e riusare. (In più, le credenziali sono scritte nel codice.) È esattamente il problema che pattern come MVC/DAO risolvono separando i livelli.
 
-### Cookie
-piccoli file testuali memorizzati sul client che contengono informazioni (chiave/valore) che vengono inviate al server per personalizzare l'esperienza utente in base a cosa contiene.
-Un cookie è un piccolo file di dati memorizzato nel **browser**, in genere utilizzato per il monitoraggio delle sessioni o delle preferenze dell'utente.
-1. la servlet crea e invia un cookie al browser
-2. il browser memorizza il cookie
-3. alla richiesta successiva, il browser invia il cookie al server
+## Stato in HTTP
 
-Possono contenere solo **stringhe** e hanno limiti di dimensione (~4KB).
+HTTP è **stateless**: ogni richiesta è indipendente e il server, di base, non "ricorda" nulla delle precedenti. Le Servlet API permettono però di memorizzare **attributi** con visibilità e durata diverse (**scope**):
 
-classe `Cookie`
-nella response possiamo inviare il cookie tramite `response.addCookie(c)`
-``` java
+|Scope|Oggetto|Durata|Condiviso tra|
+|---|---|---|---|
+|Request|`HttpServletRequest`|una singola richiesta|componenti che gestiscono quella richiesta|
+|Session|`HttpSession`|la sessione dell'utente|richieste dello stesso client|
+|Application|`ServletContext`|tutta la vita dell'applicazione|tutte le servlet e tutti i client|
+
+Tutti e tre usano la stessa coppia di metodi `setAttribute(nome, valore)` / `getAttribute(nome)`.
+
+### Lo stato "sbagliato": attributo d'istanza
+
+```java
+public class GetCounter extends HttpServlet {
+
+    private int getNum;   // di ISTANZA → condiviso da tutti i client
+
+    @Override
+    public void init() throws ServletException {
+        getNum = 0;
+    }
+
+    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        getNum++;
+        resp.getWriter().println("GETs=" + getNum);
+    }
+}
+```
+
+- È un **contatore globale**: tutti i client vedono e incrementano lo stesso valore.
+- Non si azzera finché la servlet resta in memoria.
+- **Non è thread-safe**: `getNum++` non è atomico (leggi → somma → scrivi), quindi due richieste simultanee possono perdere un incremento. Servirebbe `synchronized` o un `AtomicInteger`.
+- Se vuoi un valore **per ogni utente**, non è la strada giusta → servono **cookie** o **sessioni**.
+
+> [!note] Nella slide `init` è sovrascritto nella forma `init(ServletConfig config)`. In quel caso bisogna chiamare `super.init(config)`, altrimenti `getServletConfig()` restituirà `null`. Più semplice sovrascrivere `init()` senza argomenti, come sopra.
+
+
+## Cookie
+
+Un **cookie** è un piccolo dato testuale (coppia nome-valore) memorizzato **nel browser**, usato per tracciare sessioni o preferenze dell'utente.
+
+Funzionamento:
+
+1. la servlet crea un cookie e lo aggiunge alla risposta;
+2. il browser lo memorizza;
+3. a ogni richiesta successiva verso quel sito, il browser lo **rimanda automaticamente** al server.
+
+Limiti: contiene **solo stringhe** e al massimo circa **4 KB**. Poiché sta sul client, l'utente può leggerlo e modificarlo → **mai** metterci dati sensibili.
+
+### Creare un cookie
+
+```java
 Cookie c = new Cookie("name", "value");
-c.setMaxAge(...);       // il cookie persiste su disco
-c.setHttpOnly(true);    // non accessibile da JavaScript (sicurezza)
-c.setSecure(true);      // invio solo su HTTPS
+c.setMaxAge(60 * 60);      // durata in secondi → il cookie persiste su disco
+c.setHttpOnly(true);       // non accessibile da JavaScript (protegge da furti via XSS)
+c.setSecure(true);         // inviato solo su HTTPS
 response.addCookie(c);
 ```
-sono plain text, possono essere dei punti di vulnerabilità
-possono essere implementati tramite json oppure fare riferimento ad un altro oggetto sessione:
-- **Opzione 1**: serializzazione e codifica
-``` java
-Map<String,String> info = new HashMap<>();
+
+> [!info] Significato di `setMaxAge`
+> 
+> - valore **positivo** → il cookie dura quei secondi, anche dopo la chiusura del browser;
+> - **-1** (default) → _cookie di sessione_: sparisce alla chiusura del browser;
+> - **0** → il browser cancella subito il cookie.
+
+Cookie "a lunga durata" tramite una sottoclasse:
+
+```java
+public class LongLivedCookie extends Cookie {
+    public static final int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
+
+    public LongLivedCookie(String name, String value) {
+        super(name, value);
+        setMaxAge(SECONDS_PER_YEAR);
+    }
+}
+```
+
+### Cosa mettere nel cookie: due strategie
+
+**Opzione 1 – serializzazione e codifica.** Dati piccoli trasformati in stringa (es. JSON) e codificati per l'URL, perché alcuni caratteri non sono ammessi in un cookie:
+
+```java
+Map<String, String> info = new HashMap<>();
 info.put("user", "Mario");
 info.put("role", "admin");
-String json = new Gson().toJson(info); // libreria Gson
+
+String json = new Gson().toJson(info);   // libreria Gson
 Cookie c = new Cookie("userInfo", URLEncoder.encode(json, "UTF-8"));
 response.addCookie(c);
 ```
-- **Opzione 2**: riferimento a sessione
-``` java
+
+⚠️ Sta tutto sul client: un utente potrebbe modificare `role` in `admin`. Per questo i dati importanti non vanno qui.
+
+**Opzione 2 – riferimento a una sessione.** Il cookie contiene solo un **identificativo**; i dati veri (anche oggetti Java grandi) restano sul server, che usa l'ID per ritrovarli. Più sicuro.
+
+```java
 Cookie c = new Cookie("sessionId", session.getId());
 response.addCookie(c);
 ```
 
-Per un cookie persistente si può estendere `Cookie`:
-``` java
-public class LongLivedCookie extends Cookie {
-	public static final int SECONDS_PER_YEAR = 60*60*24*365;
-	public LongLivedCookie(String name, String value) {
-		super(name, value);
-		setMaxAge(SECONDS_PER_YEAR);
-	}
-}
-```
+In pratica non serve farlo a mano: è esattamente ciò che il container fa da solo con le sessioni (cookie `JSESSIONID`, vedi sotto).
 
-**Leggere** i cookie:
-``` java
-Cookie[] cookies = request.getCookies();
+### Leggere i cookie
+
+```java
+Cookie[] cookies = request.getCookies();   // null se il client non ne ha inviati
 if (cookies != null) {
-	for (int i = 0; i < cookies.length; i++) {
-		Cookie c = cookies[i];
-		if (c.getName().equals("someName")) {
-			// do something with c
-			break;
-		}
-	}
+    for (Cookie c : cookies) {
+        if (c.getName().equals("someName")) {
+            // usa c.getValue()
+            break;
+        }
+    }
 }
 ```
 
-| Proprietà / Funzione | Metodi                                | Descrizione                                                |
-| -------------------- | ------------------------------------- | ---------------------------------------------------------- |
-| Nome                 | `getName()`                           | Restituisce il nome del cookie (immutabile)                |
-| Valore               | `getValue()` / `setValue(String)`     | Legge o modifica il valore                                 |
-| Durata               | `getMaxAge()` / `setMaxAge(int)`      | Legge o imposta la durata in secondi (-1 = sessione)       |
-| Percorso             | `getPath()` / `setPath(String)`       | Legge o imposta il percorso URL per cui il cookie è valido |
-| Sicurezza HTTPS      | `getSecure()` / `setSecure(boolean)`  | Legge o imposta se il cookie va inviato solo su HTTPS      |
-| Commento             | `getComment()` / `setComment(String)` | Legge o imposta un commento descrittivo                    |
-| Versione protocollo  | `getVersion()` / `setVersion(int)`    | Legge o imposta la versione del protocollo cookie          |
-| Copia                | `clone()`                             | Crea una copia del cookie                                  |
+Metodi principali di `Cookie`:
 
-### Sessioni
+|Metodo|Descrizione|
+|---|---|
+|`getName()`|nome (immutabile dopo la creazione)|
+|`getValue()` / `setValue()`|valore|
+|`getMaxAge()` / `setMaxAge()`|durata in secondi|
+|`getPath()` / `setPath()`|percorso URL per cui il cookie viene inviato|
+|`getSecure()` / `setSecure()`|invio solo su HTTPS|
+|`clone()`|copia del cookie|
+
+(`setComment`/`setVersion` compaiono nelle slide ma sono deprecati nelle versioni recenti di Jakarta Servlet.)
+
+## Sessioni
 `HttpSession` è un contenitore dati per singolo client (utente/browser). Ogni client ha la sua sessione unica, identificata da un cookie `JSESSIONID`.
 ``` java
 HttpSession session = request.getSession(true); // crea una nuova sessione se non esiste; con false restituisce null
@@ -1468,7 +1672,7 @@ if (cart == null) { // nessun carrello nella sessione
 }
 // do something with cart
 ```
-Comportamento: il contatore è individuale per client e si mantiene finché dura la sessione (timeout o chiusura del browser, a seconda della configurazione).
+**Comportamento**: il contatore è individuale per client e si mantiene finché dura la sessione (timeout o chiusura del browser, a seconda della configurazione).
 
 | Metodo                                                | Descrizione                                                                              |
 | ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
@@ -1483,11 +1687,10 @@ Comportamento: il contatore è individuale per client e si mantiene finché dura
 | `getMaxInactiveInterval`, `setMaxInactiveInterval`    | Ottiene o imposta il tempo di inattività dopo cui la sessione viene invalidata           |
 | `invalidate`                                          | Invalida la sessione e disassocia tutti gli oggetti ad essa associati                    |
 
-Servlet che conta quante volte uno specifico utente ha visitato la pagina nella stessa sessione:
+Di seguito una Servlet che conta quante volte uno specifico utente ha visitato la pagina nella stessa sessione:
 ``` java
 public class SessionCounter extends HttpServlet {
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/html");
 		PrintWriter out = resp.getWriter();
 		HttpSession session = req.getSession(true);
@@ -1562,13 +1765,15 @@ flowchart TD
     C --> O["OrderServlet<br>(ServletConfig)"]
 ```
 
-|Oggetto|Cosa rappresenta|Ambito|
-|---|---|---|
-|`ServletConfig`|configurazione di **1 servlet**|una sola servlet|
-|`ServletContext`|contesto **condiviso dalla web application**|tutte le servlet|
-|`HttpSession`|stato **associato a 1 utente**|richieste dello stesso client|
+| Oggetto          | Cosa rappresenta                             | Ambito                        |
+| ---------------- | -------------------------------------------- | ----------------------------- |
+| `ServletConfig`  | configurazione di **1 servlet**              | una sola servlet              |
+| `ServletContext` | contesto **condiviso dalla web application** | tutte le servlet              |
+| `HttpSession`    | stato **associato a 1 utente**               | richieste dello stesso client |
+|                  |                                              |                               |
 
-> [!note] Collegamento con gli scope Il ServletContext è lo scope **Application** della tabella vista in [[#Stato]]: gli attributi vivono finché vive l'applicazione.
+> [!note] Collegamento con gli scope
+> Il ServletContext è lo scope **Application** della tabella vista in [[#Stato in HTTP| Stato]]: gli attributi vivono finché vive l'applicazione.
 
 Esempi d'uso:
 
@@ -1595,7 +1800,8 @@ Integer n = (Integer) context.getAttribute("numberOfUsers");
 
 3. **Navigare nelle risorse** della web application (vedi [[#Dispatching]]). Si può anche accedere ai file dell'applicazione, es. `context.getResourceAsStream("/WEB-INF/config.txt")`.
 
-> [!bug] Concorrenza Il contesto è condiviso da **tutti i thread** di **tutti gli utenti**: come per gli attributi di istanza della servlet, un `setAttribute` + `getAttribute` non è atomico. Per contatori e strutture condivise usare classi thread-safe (`AtomicInteger`, `ConcurrentHashMap`) o `synchronized`.
+> [!bug] Concorrenza
+>  Il contesto è condiviso da **tutti i thread** di **tutti gli utenti**: come per gli attributi di istanza della servlet, un `setAttribute` + `getAttribute` non è atomico. Per contatori e strutture condivise usare classi thread-safe (`AtomicInteger`, `ConcurrentHashMap`) o `synchronized`.
 
 ## Dispatching
 
@@ -1609,7 +1815,8 @@ String url = "/presentations/presentation1.html";
 RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
 ```
 
-> [!note] Alternativa Anche `request.getRequestDispatcher(path)` restituisce un dispatcher, ma accetta anche percorsi **relativi** alla richiesta corrente (ad es. `"index.jsp"`).
+> [!note] Alternativa
+> Anche `request.getRequestDispatcher(path)` restituisce un dispatcher, ma accetta anche percorsi **relativi** alla richiesta corrente (ad es. `"index.jsp"`).
 
 ### Forward o include?
 
@@ -1644,25 +1851,24 @@ Entrambi delegano l'elaborazione a un'altra risorsa, ma in modo diverso:
 > >    S1-->>B: 4. risposta finale (S1 + S2)
 > > ```
 
-|Aspetto|`forward()`|`include()`|
-|---|---|---|
-|Chi risponde al client|la risorsa a cui si inoltra|la servlet chiamante (con dentro il contenuto incluso)|
-|Dopo la chiamata|il controllo **non torna** alla servlet chiamante|il controllo **torna** alla servlet chiamante|
-|Uso tipico|passare a una vista (JSP), cambiare "pagina"|comporre la pagina (header, menu, footer)|
+| Aspetto                | `forward()`                                       | `include()`                                            |
+| ---------------------- | ------------------------------------------------- | ------------------------------------------------------ |
+| Chi risponde al client | la risorsa a cui si inoltra                       | la servlet chiamante (con dentro il contenuto incluso) |
+| Dopo la chiamata       | il controllo **non torna** alla servlet chiamante | il controllo **torna** alla servlet chiamante          |
+| Uso tipico             | passare a una vista (JSP), cambiare "pagina"      | comporre la pagina (header, menu, footer)              |
 
-> [!attention] Forward ≠ redirect Il forward avviene **dentro il server**: il browser non lo sa, l'**URL non cambia** e la richiesta è **una sola** (request e response sono le stesse, quindi gli attributi della request restano disponibili). `response.sendRedirect()` invece dice al browser di fare una **nuova richiesta** (2 richieste, URL che cambia, attributi della request persi). Inoltre con `forward()` la risposta non deve essere già stata inviata (_committed_), altrimenti `IllegalStateException`.
+> [!attention] Forward ≠ redirect 
+> Il forward avviene **dentro il server**: il browser non lo sa, l'**URL non cambia** e la richiesta è **una sola** (request e response sono le stesse, quindi gli attributi della request restano disponibili). `response.sendRedirect()` invece dice al browser di fare una **nuova richiesta** (2 richieste, URL che cambia, attributi della request persi). Inoltre con `forward()` la risposta non deve essere già stata inviata (_committed_), altrimenti `IllegalStateException`.
 
 Esempio: la servlet sceglie la pagina in base al parametro `operation`
 
 ```java
-private void gotoPage(String address, HttpServletRequest request,
-		HttpServletResponse response) throws ServletException, IOException {
+private void gotoPage(String address, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(address);
 	dispatcher.forward(request, response);
 }
 
-public void doGet(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
+public void doGet(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
 	String operation = request.getParameter("operation");
 	if (operation == null)
 		operation = "unknown";
@@ -1731,9 +1937,11 @@ Un Filter è una classe Java che implementa l'interfaccia `jakarta.servlet.Filte
 |`doFilter(ServletRequest, ServletResponse, FilterChain)`|**per ogni richiesta** che passa dal filtro: può modificare request/response o passare il controllo al filtro/servlet successivo con `chain.doFilter(request, response)`|
 |`destroy()`|**una sola volta**, quando il filtro viene rimosso dal container e le risorse vengono liberate|
 
-> [!note] `init` e `destroy` Dalla Servlet 4.0 `init()` e `destroy()` hanno un'implementazione di default: l'unico metodo davvero obbligatorio è `doFilter()`.
+> [!note] `init` e `destroy` 
+> Dalla Servlet 4.0 `init()` e `destroy()` hanno un'implementazione di default: l'unico metodo davvero obbligatorio è `doFilter()`.
 
-> [!important] Il ruolo di `chain.doFilter()` Se un filtro **non** chiama `chain.doFilter()` la richiesta si ferma lì: è così che un filtro può **bloccare** una richiesta (es. utente non autenticato).
+> [!important] Il ruolo di `chain.doFilter()` 
+> Se un filtro **non** chiama `chain.doFilter()` la richiesta si ferma lì: è così che un filtro può **bloccare** una richiesta (es. utente non autenticato).
 
 **Registrazione**: nel `web.xml` oppure con l'annotazione `@WebFilter`. Quando il container avvia l'applicazione crea **un'istanza** di ciascun filtro dichiarato (quindi, come per le servlet, serve attenzione alla concorrenza).
 
@@ -1760,8 +1968,7 @@ public class LoggingFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		long start = System.currentTimeMillis();
 		chain.doFilter(req, res); // passa il controllo al prossimo elemento
 		long elapsed = System.currentTimeMillis() - start;
@@ -1775,15 +1982,15 @@ public class LoggingFilter implements Filter {
 
 I filtri vengono eseguiti **nell'ordine in cui sono dichiarati** nel `web.xml`.
 
-> [!attention] Ordine con le annotazioni Con `@WebFilter` l'ordine di esecuzione **non è specificato** dallo standard: se l'ordine conta (es. prima l'encoding, poi l'autenticazione) conviene dichiararlo nel `web.xml`.
+> [!attention] Ordine con le annotazioni
+>  Con `@WebFilter` l'ordine di esecuzione **non è specificato** dallo standard: se l'ordine conta (es. prima l'encoding, poi l'autenticazione) conviene dichiararlo nel `web.xml`.
 
 Esempio: filtro di autenticazione che blocca chi non ha fatto login
 
 ```java
 @WebFilter("/private/*")
 public class AuthFilter implements Filter {
-	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-			throws IOException, ServletException {
+	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 		HttpSession session = request.getSession(false); // non crea una nuova sessione
@@ -1812,7 +2019,8 @@ flowchart TD
     V --> B2["Browser"]
 ```
 
-> [!note] Front Controller Una servlet unica che riceve **tutte** le richieste e le smista ai controller specifici. È un pattern (vedi [[#Pattern]]): in Spring è la `DispatcherServlet`.
+> [!note] Front Controller
+>  Una servlet unica che riceve **tutte** le richieste e le smista ai controller specifici. È un pattern (vedi [[#Pattern]]): in Spring è la `DispatcherServlet`.
 
 Esempio completo di navigazione (login → home → ordini) che usa filtri, sessioni, cookie e `include`:
 
@@ -1842,7 +2050,7 @@ flowchart TD
 
 > [!important] I **Listener** sono componenti che reagiscono **automaticamente** a determinati **eventi** del ciclo di vita dell'applicazione web, delle sessioni HTTP e delle richieste.
 
-- la **Servlet** gestisce _esplicitamente_ una richiesta
+- la **Servlet** gestisce _esplicitamente_ una richiesta HTTP
 - il **Listener** reagisce a un _evento_ che si verifica nel container: non è il client a chiamarlo direttamente
 
 Senza listener bisognerebbe controllare manualmente ogni evento in ogni servlet: con i listener è il container a **notificare** automaticamente gli oggetti interessati.
@@ -1896,7 +2104,8 @@ public class SessionCountListener implements HttpSessionListener {
 
 Così il numero di utenti con una sessione attiva viene tenuto aggiornato **senza** scrivere codice in nessuna servlet (`AtomicInteger` perché il contesto è condiviso tra thread).
 
-> [!important] Filter vs Listener Il **Filter** partecipa **attivamente** alla pipeline della richiesta (può modificarla o bloccarla). Il **Listener** **osserva** eventi del container.
+> [!important] Filter vs Listener
+>  Il **Filter** partecipa **attivamente** alla pipeline della richiesta (può modificarla o bloccarla). Il **Listener** **osserva** eventi del container.
 
 ## Riepilogo annotazioni
 
@@ -1917,8 +2126,7 @@ Per ricevere file caricati da un form HTML (`method="post"` e `enctype="multipar
 @MultipartConfig
 public class UploadServlet extends HttpServlet {
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Part file = request.getPart("file"); // "file" = name del campo del form
 		String fileName = file.getSubmittedFileName();
 		file.write("/tmp/" + fileName);
@@ -1928,7 +2136,8 @@ public class UploadServlet extends HttpServlet {
 
 Parametri opzionali: `location`, `maxFileSize`, `maxRequestSize`, `fileSizeThreshold`.
 
-> [!attention] Cosa significa "multipart" La slide lo descrive come tecnica che divide un file grande in blocchi caricati in parallelo e ricomposti alla fine. In ambito servlet indica invece la **codifica `multipart/form-data`** del form: il corpo della POST è diviso in **parti** (`Part`), una per ogni campo del form (anche più file), e viaggia in **una sola richiesta**.
+> [!attention] Cosa significa "multipart"
+>  La slide lo descrive come tecnica che divide un file grande in blocchi caricati in parallelo e ricomposti alla fine. In ambito servlet indica invece la **codifica `multipart/form-data`** del form: il corpo della POST è diviso in **parti** (`Part`), una per ogni campo del form (anche più file), e viaggia in **una sola richiesta**.
 
 > [!bug] Sicurezza `getSubmittedFileName()` è deciso dal client: usarlo così com'è per costruire un percorso permette di scrivere file dove non si dovrebbe (_path traversal_). Va sempre validato/sostituito, come per l'input delle query (vedi [[#SQL injection]]).
 
@@ -1979,7 +2188,8 @@ public class ShippingServlet extends HttpServlet {
 }
 ```
 
-> [!attention] Non rende il lavoro più veloce L'elaborazione dura quanto prima: si **libera il thread del container** per altre richieste (scalabilità), non si accorcia l'attesa del singolo utente. Tutti i filtri e le servlet della catena devono avere `asyncSupported = true`.
+> [!attention] Non rende il lavoro più veloce
+>  L'elaborazione dura quanto prima: si **libera il thread del container** per altre richieste (scalabilità), non si accorcia l'attesa del singolo utente. Tutti i filtri e le servlet della catena devono avere `asyncSupported = true`.
 
 # Pattern
 
@@ -2012,7 +2222,8 @@ La parola pattern rimane la stessa, ma cambia l'oggetto a cui applichiamo lo sch
 |Data-access pattern|organizzare l'accesso e la gestione dei dati|DAO, Repository, Unit of Work|
 |Security pattern|problemi ricorrenti di sicurezza|Authentication, Authorization, Secure Session|
 
-> [!note] Pattern ≠ espressione regolare Una **regex** è un linguaggio formale per descrivere un pattern _testuale_. Es. pattern: "un numero di telefono italiano" → regex: `^\+39\s?[0-9]{9,10}$`
+> [!note] Pattern ≠ espressione regolare
+>  Una **regex** è un linguaggio formale per descrivere un pattern _testuale_. Es. pattern: "un numero di telefono italiano" → regex: `^\+39\s?[0-9]{9,10}$`
 
 ## Model-View-Controller (MVC)
 
@@ -2051,7 +2262,8 @@ sequenceDiagram
     J-->>B: HTML formattato
 ```
 
-> [!note] In breve Servlet → legge DB → popola lista di JavaBean → mette la lista nella Request → JSP legge la lista e visualizza.
+> [!note] In breve 
+> Servlet → legge DB → popola lista di JavaBean → mette la lista nella Request → JSP legge la lista e visualizza.
 
 Un **JavaBean** è una classe Java semplice: attributi privati, getter/setter, costruttore senza argomenti, (di solito) `Serializable`.
 
@@ -2068,7 +2280,8 @@ public class User implements Serializable {
 }
 ```
 
-> [!question] Perché MVC? Risolve il problema visto in [[#Servlet e database]]: la servlet che gestiva richiesta, dati e HTML insieme violava la SoC. Con MVC ogni parte ha una sola responsabilità.
+> [!question] Perché MVC? 
+> Risolve il problema visto in [[#Servlet e database]]: la servlet che gestiva richiesta, dati e HTML insieme violava la SoC. Con MVC ogni parte ha una sola responsabilità.
 
 # JSP
 
@@ -2078,7 +2291,8 @@ public class User implements Serializable {
 
 La pagina JSP, ospitata in un server web, viene **tradotta automaticamente in una servlet** dal container (**una volta**). La servlet risultante è ciò che viene effettivamente invocato a ogni richiesta.
 
-> [!question] Perché serve se esistono già le servlet? Nella servlet l'HTML è dentro stringhe Java (`out.println("<li>...")`): scomodo da scrivere e da mantenere. La JSP **inverte** il rapporto: HTML con un po' di Java dentro. Per questo è adatta come **View** in MVC.
+> [!question] Perché serve se esistono già le servlet? 
+> Nella servlet, l'HTML è dentro stringhe Java (`out.println("<li>...")`): scomodo da scrivere e da mantenere. La JSP **inverte** il rapporto: HTML con un po' di Java dentro. Per questo è adatta come **View** in MVC.
 
 Esempio: `firstJSPage.jsp`
 
@@ -2148,7 +2362,7 @@ La servlet generata implementa `HttpJspPage` (derivata da `Servlet`): è quindi 
 |Declaration|`<%! ... %>`|definire variabili/metodi|`<%! int y = 0; %>`|
 
 > [!attention] Uso moderno
-> Scriptlet, Expression e Declaration **non sono più raccomandati** nei progetti Java EE moderni (ora Jakarta EE): si usano **JSTL** (JSP Standard Tag Library) ed **EL** (Expression Language), che vedremo dopo. Lo studio resta utile per capire l'evoluzione delle tecnologie web Java e per mantenere **applicazioni legacy**.
+>  Scriptlet, Expression e Declaration **non sono più raccomandati** nei progetti Java EE moderni (ora Jakarta EE): si usano **JSTL** (JSP Standard Tag Library) ed **EL** (Expression Language), che vedremo dopo. Lo studio resta utile per capire l'evoluzione delle tecnologie web Java e per mantenere **applicazioni legacy**.
 
 ### JSP Expressions
 
@@ -2164,8 +2378,7 @@ Corrispondenza JSP → servlet:
 ```
 
 ```java
-public void _jspService(HttpServletRequest request, HttpServletResponse response)
-		throws ServletException, IOException {
+public void _jspService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	response.setContentType("text/html");
 	HttpSession session = request.getSession(true);
 	JspWriter out = ...; // ottenuto dal pageContext
@@ -2176,7 +2389,8 @@ public void _jspService(HttpServletRequest request, HttpServletResponse response
 
 Il metodo `_jspService()` è **generato automaticamente** dal motore JSP quando la pagina viene compilata in servlet: gestisce la richiesta HTTP e genera la risposta. `JspWriter` è simile a `PrintWriter` ma pensato per il meccanismo di buffering delle JSP.
 
-> [!note] Schema semplificato Nelle slide il codice generato è semplificato: nel codice reale il content type si imposta sulla `response` e `out` è un `JspWriter` ricavato dal `pageContext`. Il concetto da ricordare: l'HTML statico e le expression diventano chiamate a `out.println()` dentro `_jspService()`.
+> [!note] Schema semplificato
+>  Nelle slide il codice generato è semplificato: nel codice reale il content type si imposta sulla `response` e `out` è un `JspWriter` ricavato dal `pageContext`. Il concetto da ricordare: l'HTML statico e le expression diventano chiamate a `out.println()` dentro `_jspService()`.
 
 ### JSP Scriptlets
 
@@ -2238,10 +2452,10 @@ public class [..] implements HttpJspPage {
 ```
 
 > [!bug] Concorrenza
-> `accessCount` è un campo della servlet generata: è **condiviso da tutte le richieste e da tutti gli utenti** e `++accessCount` non è atomico (stesso problema di `getNum` in [[#Stato nella servlet]]). Si azzera al riavvio del server.
+>  `accessCount` è un campo della servlet generata: è **condiviso da tutte le richieste e da tutti gli utenti** e `++accessCount` non è atomico (stesso problema di `getNum` in [[#Stato nella servlet]]). Si azzera al riavvio del server.
 
-> [!note] jspInit() e jspDestroy()
->  Poiché le declaration finiscono nella classe, è possibile **ridefinire** `jspInit()` e `jspDestroy()` dentro un `<%! ... %>`.
+> [!note] jspInit() e jspDestroy() 
+> Poiché le declaration finiscono nella classe, è possibile **ridefinire** `jspInit()` e `jspDestroy()` dentro un `<%! ... %>`.
 
 ## Direttive
 
@@ -2258,14 +2472,15 @@ Le direttive `<%@ ... %>` forniscono **metadati** e configurazioni sulla pagina 
 |`isThreadSafe`|`<%@ page isThreadSafe="true" %>` (default) / `"false"`|comunica al sistema se il codice è thread-safe, così può impedire l'accesso simultaneo|
 
 > [!attention] isThreadSafe
-> Il default è `true`: il sistema presuppone che gli aggiornamenti a campi e dati condivisi siano già **sincronizzati** da noi. `false` impedisce l'accesso concorrente ma **peggiora le prestazioni**: meglio scrivere codice thread-safe.
+>  Il default è `true`: il sistema presuppone che gli aggiornamenti a campi e dati condivisi siano già **sincronizzati** da noi. `false` impedisce l'accesso concorrente ma **peggiora le prestazioni**: meglio scrivere codice thread-safe.
 
 Altri attributi utili: `pageEncoding` (encoding della pagina), `session="false"` (non crea la sessione), `errorPage` / `isErrorPage` (gestione degli errori).
 
 ### Inclusione di file
+
 Per riutilizzare parti di pagina (header, menu, footer) esistono due modi:
 
-``` jsp
+```jsp
 <jsp:include page="Relative URL" flush="true" />
 <%@ include file="Relative URL" %>
 ```
@@ -2279,9 +2494,11 @@ Per riutilizzare parti di pagina (header, menu, footer) esistono due modi:
 
 Finalità: riutilizzare contenuti JSP, HTML o testo normale e aggiornarli in un punto solo.
 
-> [!note] Direttiva o azione? Formalmente `<%@ include %>` è una **direttiva** (elaborata in traduzione), mentre `<jsp:include>` è una **azione standard** (elaborata a runtime). Le slide le raggruppano sotto "File Inclusion".
+> [!note] Direttiva o azione? 
+> Formalmente `<%@ include %>` è una **direttiva** (elaborata in traduzione), mentre `<jsp:include>` è una **azione standard** (elaborata a runtime). 
 
 ## Esempi con scriptlet
+
 Gli scriptlet possono essere "spezzati": si apre un blocco Java, si chiude il tag, si scrive HTML, si riapre il tag per chiudere il blocco. L'HTML in mezzo diventa un `out.println()` **dentro** il blocco Java.
 
 ### Loop.jsp
@@ -2361,7 +2578,8 @@ Scriptlet (dichiarazione + `for`) ed expression (`<%= i %>`) si alternano: l'exp
 </html>
 ```
 
-> [!note] `Class.forName(...)` Serviva a caricare il driver JDBC a mano. Da JDBC 4.0 i driver nel classpath si registrano da soli, quindi la riga non è più necessaria (il nome attuale del driver MySQL è `com.mysql.cj.jdbc.Driver`).
+> [!note] `Class.forName(...)`
+>  Serviva a caricare il driver JDBC a mano. Da JDBC 4.0 i driver nel classpath si registrano da soli, quindi la riga non è più necessaria (il nome attuale del driver MySQL è `com.mysql.cj.jdbc.Driver`).
 
 ## Riflessioni: servlet o JSP, il problema resta
 
@@ -2375,12 +2593,12 @@ Le tre funzionalità di un'applicazione web (vedi [[#Model-View-Controller (MVC)
 > [!important] In entrambi i casi c'è un **mix di logica applicativa, dati e presentazione** nello stesso componente: cambia solo dove sta l'HTML (dentro stringhe Java o intorno al Java), ma la separazione delle responsabilità è violata allo stesso modo.
 
 ## Migliorare l'esempio: Servlet + JSP
+
 **Miglioria**: la servlet legge i dati e li passa alla JSP con il `RequestDispatcher` (vedi [[#Dispatching]]). Il `RequestDispatcher` inoltra la request da una risorsa del server a un'altra (pagina HTML o JSP) **senza che il browser lo sappia**: l'URL non cambia.
 
 ```java
 public class JDBCServletOne extends HttpServlet {
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<String> userList = new ArrayList<>();
 		try {
 			Connection conn = DriverManager.getConnection(mysqlURL, username, password);
@@ -2430,7 +2648,9 @@ public class JDBCServletOne extends HttpServlet {
 > [!attention] ...ma nella JSP mescoliamo ancora (un po' di) logica Java e presentazione HTML: cast, `if`, `for`, `out.println`. Servono altri strumenti: **EL** e **JSTL**.
 
 ### Integrazione di Servlet e JSP
+
 JSP semplifica lo sviluppo e la manutenzione del contenuto HTML:
+
 - per codice dinamico **semplice** → richiamare codice servlet da espressioni di scripting
 - per casi **moderatamente complessi** → classi personalizzate richiamate da espressioni di scripting
 - per casi **più complessi** → **bean** e **tag personalizzati** (vedi [[#JavaBeans]])
@@ -2438,7 +2658,11 @@ JSP semplifica lo sviluppo e la manutenzione del contenuto HTML:
 > [!important] Il presupposto alla base di JSP è che **una singola pagina fornisca un unico aspetto di base**. Se la stessa richiesta può dare risultati con aspetti molto diversi, la scelta va fatta altrove (nella servlet controller, che decide a quale JSP fare forward).
 
 ## Expression Language (EL)
-> [!important] **EL** è un linguaggio di semplici espressioni `${...}` che permette di accedere in modo diretto e leggibile ai dati presenti negli **scope**, senza scrivere codice Java nella JSP. Gli scope sono cercati in quest'ordine: **page → request → session → application**.
+
+> [!important] **EL** è un linguaggio di semplici espressioni `${...}` che permette di accedere in modo diretto e leggibile ai dati presenti negli **scope**, senza scrivere codice Java nella JSP. 
+>
+
+Gli scope sono cercati in quest'ordine: **page → request → session → application**.
 
 Esempio: una servlet imposta gli attributi `x` e `y` nella request e invoca la JSP.
 
@@ -2446,12 +2670,12 @@ Esempio: una servlet imposta gli attributi `x` e `y` nella request e invoca la J
 <%-- JSP senza EL --%>
 <html>
 	<body>
-		<%
-			Integer x = (Integer) request.getAttribute("x");
-			Integer y = (Integer) request.getAttribute("y");
-			int somma = x + y;
-			out.println("La somma è: " + somma);
-		%>
+	<%
+		Integer x = (Integer) request.getAttribute("x");
+		Integer y = (Integer) request.getAttribute("y");
+		int somma = x + y;
+		out.println("La somma è: " + somma);
+	%>
 	</body>
 </html>
 ```
@@ -2472,23 +2696,25 @@ Esempio: una servlet imposta gli attributi `x` e `y` nella request e invoca la J
 |Accesso ai dati|manuale (`request.getAttribute()` + cast)|diretto (`${var}`)|
 |Uso|obsoleto|consigliato (JSTL, JSF, Spring)|
 
-> [!note] Come fa `${x}` a trovare `x`? EL cerca un attributo di nome `x` nei quattro scope, nell'ordine indicato, e usa il **primo** che trova. Se non lo trova restituisce `null`, che viene stampato come stringa vuota (niente `NullPointerException`).
+> [!note] Come fa `${x}` a trovare `x`?
+>  EL cerca un attributo di nome `x` nei quattro scope, nell'ordine indicato, e usa il **primo** che trova. Se non lo trova restituisce `null`, che viene stampato come stringa vuota (niente `NullPointerException`).
 
 ### Operatori EL
 
-|Categoria|Operatore|Significato|Esempio|Risultato|
-|---|---|---|---|---|
-|Aritmetici|`+` `-` `*` `/` `%`|somma, differenza, prodotto, divisione, resto|`${a + b}`|somma di a e b|
-|Relazionali|`==` `!=` `<` `>`|confronto|`${a == b}`|`true` se a = b|
-|Logici|`&&`|AND|`${a > 0 && b < 10}`|`true` se entrambe vere|
-||`\|`|OR|`${a > 0 \| b < 10}`|`true` se almeno una vera|
-||`!`|NOT|`${!empty userList}`|`true` se la lista **non** è vuota|
-|Speciali|`empty`|null o vuota|`${empty userList}`|`true` se null/vuota (lista, array, stringa, mappa)|
-||`not`|negazione|`${not empty userList}`|`true` se non è null/vuota|
-||`.`|accesso a proprietà|`${user.name}`|chiama `getName()` su `user`|
-||`[]`|accesso a lista/mappa/array|`${users[0].name}`|nome del primo elemento di `users`|
+| Categoria   | Operatore           | Significato                                   | Esempio                 | Risultato                                           |
+| ----------- | ------------------- | --------------------------------------------- | ----------------------- | --------------------------------------------------- |
+| Aritmetici  | `+` `-` `*` `/` `%` | somma, differenza, prodotto, divisione, resto | `${a + b}`              | somma di a e b                                      |
+| Relazionali | `==` `!=` `<` `>`   | confronto                                     | `${a == b}`             | `true` se a = b                                     |
+| Logici      | `&&`                | AND                                           | `${a > 0 && b < 10}`    | `true` se entrambe vere                             |
+|             | `\|`                | OR                                            | `${a > 0 \| b < 10}`    | `true` se almeno una vera                           |
+|             | `!`                 | NOT                                           | `${!empty userList}`    | `true` se la lista **non** è vuota                  |
+| Speciali    | `empty`             | null o vuota                                  | `${empty userList}`     | `true` se null/vuota (lista, array, stringa, mappa) |
+|             | `not`               | negazione                                     | `${not empty userList}` | `true` se non è null/vuota                          |
+|             | `.`                 | accesso a proprietà                           | `${user.name}`          | chiama `getName()` su `user`                        |
+|             | `[]`                | accesso a lista/mappa/array                   | `${users[0].name}`      | nome del primo elemento di `users`                  |
 
-> [!note] Correzioni rispetto alle slide Nella tabella delle slide la riga di `!` dice "true se userList è null o vuota" per `${!empty userList}`: è il contrario, `!empty` è `true` quando la lista **contiene** elementi. La riga dell'OR è vuota (il simbolo `||` non è stato stampato): qui è completata.
+> [!note] Correzioni rispetto alle slide
+>  Nella tabella delle slide la riga di `!` dice "true se userList è null o vuota" per `${!empty userList}`: è il contrario, `!empty` è `true` quando la lista **contiene** elementi. La riga dell'OR è vuota (il simbolo `||` non è stato stampato): qui è completata.
 
 Esistono anche le forme testuali degli operatori: `eq`, `ne`, `lt`, `gt`, `le`, `ge`, `and`, `or`, `not`, `div`, `mod`.
 
@@ -2518,7 +2744,8 @@ Esistono anche le forme testuali degli operatori: `eq`, `ne`, `lt`, `gt`, `le`, 
 |XML|`x`|manipolazione di documenti XML|
 |Functions|`fn`|funzioni su stringhe e collezioni, usabili dentro EL|
 
-> [!question] Perché i tag SQL sono sconsigliati? Riportano l'accesso al database nella View: è esattamente il problema di `Names.jsp`, solo scritto con i tag invece che con gli scriptlet.
+> [!question] Perché i tag SQL sono sconsigliati? 
+> Riportano l'accesso al database nella View: è esattamente il problema di `Names.jsp`, solo scritto con i tag invece che con gli scriptlet.
 
 ### Panoramica dei tag
 
@@ -2576,7 +2803,8 @@ La `index.jsp` di prima, **eliminando completamente gli scriptlet** e usando EL 
 
 > [!success] Codice più pulito, leggibile, con separazione tra logica e presentazione: niente cast, niente `request.getAttribute()`, niente `out.println()`.
 
-> [!note] La direttiva `taglib` Nell'immagine delle slide la direttiva non compare, ma serve sempre per usare il prefisso `c`. Con Jakarta EE 10+ (JSTL 3.0) l'URI consigliato è `jakarta.tags.core` (e `jakarta.tags.functions`, ...) invece di `http://java.sun.com/jsp/jstl/core`.
+> [!note] La direttiva `taglib`
+>  Nell'immagine delle slide la direttiva non compare, ma serve sempre per usare il prefisso `c`. Con Jakarta EE 10+ (JSTL 3.0) l'URI consigliato è `jakarta.tags.core` (e `jakarta.tags.functions`, ...) invece di `http://java.sun.com/jsp/jstl/core`.
 
 ### Core tags
 
@@ -2609,9 +2837,11 @@ Mostra il risultato di un'espressione, quasi come `<%= %>`, ma permette la notaz
 <c:out value="${customer.address.street}"/>
 ```
 
-> [!attention] Correzione rispetto alle slide Nelle slide c'è `value="customer.address.street"` senza `${}`: così verrebbe stampata la **stringa letterale**. L'espressione va racchiusa in `${...}`.
+> [!attention] Correzione rispetto alle slide
+>  Nelle slide c'è `value="customer.address.street"` senza `${}`: così verrebbe stampata la **stringa letterale**. L'espressione va racchiusa in `${...}`.
 
-> [!note] Perché usare `<c:out>` se basta `${...}`? Di default `<c:out>` fa l'**escape** dei caratteri HTML (`escapeXml="true"`): se il dato contiene `<script>` viene mostrato come testo e non eseguito. È una difesa contro l'**XSS**, lo stesso principio di [[#SQL injection]]: mai fidarsi dell'input.
+> [!note] Perché usare `<c:out>` se basta `${...}`? 
+> Di default `<c:out>` fa l'**escape** dei caratteri HTML (`escapeXml="true"`): se il dato contiene `<script>` viene mostrato come testo e non eseguito. È una difesa contro l'**XSS**, lo stesso principio di [[#SQL injection]]: mai fidarsi dell'input.
 
 #### `<c:set>`
 
@@ -2655,7 +2885,8 @@ Funziona come uno `switch`: i `case` sono i `<c:when>`, il `default` è `<c:othe
 </c:choose>
 ```
 
-> [!note] Differenza con lo `switch` Java I `<c:when>` sono valutati in ordine e viene eseguito **solo il primo** vero, senza "fall-through" e senza `break`. È più simile a una catena `if / else if / else`.
+> [!note] Differenza con lo `switch` Java 
+> I `<c:when>` sono valutati in ordine e viene eseguito **solo il primo** vero, senza "fall-through" e senza `break`. È più simile a una catena `if / else if / else`.
 
 #### `<c:forEach>` e `<c:forTokens>`
 
@@ -2714,7 +2945,8 @@ Alternativa a un `for`/`while`/`do-while` in uno scriptlet. `<c:forEach>` itera 
 
 L'URL risultante è `/index.jsp?trackingId=1234&reportType=summary`.
 
-> [!attention] Correzione rispetto alle slide Le slide scrivono `?trackingId=1234;reportType=summary`. In una query string i parametri sono separati da `&`, non da `;`. Inoltre, se `value` inizia con `/`, `<c:url>` antepone il context path (es. `/myapp/index.jsp?...`).
+> [!attention] Correzione rispetto alle slide
+>  Le slide scrivono `?trackingId=1234;reportType=summary`. In una query string i parametri sono separati da `&`, non da `;`. Inoltre, se `value` inizia con `/`, `<c:url>` antepone il context path (es. `/myapp/index.jsp?...`).
 
 ### JSTL Functions
 
@@ -2765,8 +2997,7 @@ public class User implements Serializable {
 // CONTROLLER (logica)
 @WebServlet("/hello")
 public class JDBCServletOne extends HttpServlet {
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<User> userList = new ArrayList<>();
 		String url = "jdbc:mysql://localhost:3306/testdb";
 		String name = "root"; String pwd = "admin";
@@ -2812,9 +3043,8 @@ public class JDBCServletOne extends HttpServlet {
 </html>
 ```
 
-> [!note] Nelle slide la servlet chiama il parametro `req` ma poi usa `request.setAttribute(...)` e `forward(request, resp)`: così non compila. Qui è uniformato a `req`.
-
-> [!attention] Possiamo fare di meglio La View usa ancora scriptlet, e il Controller contiene ancora il codice JDBC (che andrà spostato in un **DAO**, vedi [[#Approccio moderno JavaBeans e DAO]]).
+> [!attention] Possiamo fare di meglio 
+> La View usa ancora scriptlet, e il Controller contiene ancora il codice JDBC (che andrà spostato in un **DAO**, vedi [[#Approccio moderno JavaBeans e DAO]]).
 
 ## Cos'è un JavaBean
 
@@ -2841,9 +3071,11 @@ Vantaggi:
     - se la classe ha un metodo `getTitle()` che restituisce una `String`, si dice che ha una **proprietà** `String` chiamata `title`
     - le proprietà `boolean` usano `isXxx` invece di `getXxx`
 
-> [!question] Perché il costruttore senza argomenti? Chi crea il bean (il container, `<jsp:useBean>`, un framework come JPA) non sa quali argomenti passare: lo istanzia "vuoto" e poi lo popola con i setter. Attenzione: se scrivi **un altro** costruttore, quello vuoto implicito sparisce e va aggiunto a mano.
+> [!question] Perché il costruttore senza argomenti? 
+> Chi crea il bean (il container, `<jsp:useBean>`, un framework come JPA) non sa quali argomenti passare: lo istanzia "vuoto" e poi lo popola con i setter. Attenzione: se scrivi **un altro** costruttore, quello vuoto implicito sparisce e va aggiunto a mano.
 
-> [!note] Proprietà ≠ attributo La proprietà è definita dai **metodi**, non dal campo: `getTitle()` definisce la proprietà `title` anche se il campo privato si chiamasse `t`. È per questo che EL con `${book.title}` chiama `getTitle()`.
+> [!note] Proprietà ≠ attributo
+>  La proprietà è definita dai **metodi**, non dal campo: `getTitle()` definisce la proprietà `title` anche se il campo privato si chiamasse `t`. È per questo che EL con `${book.title}` chiama `getTitle()`.
 
 ## Servlet: overview completa
 
@@ -2893,7 +3125,8 @@ Rispetto allo schema in [[#Architettura generale]] si aggiunge la **JSP**, che p
 
 ## Approccio legacy: jsp useBean
 
-> [!warning] Approccio LEGACY Le azioni `<jsp:useBean>`, `<jsp:setProperty>` e (in parte) `<jsp:getProperty>` sono **sconsigliate**: la JSP dovrebbe solo **mostrare** i dati, non crearli o elaborarli. Si studiano per capire il codice esistente.
+> [!warning] Approccio LEGACY
+>  Le azioni `<jsp:useBean>`, `<jsp:setProperty>` e (in parte) `<jsp:getProperty>` sono **sconsigliate**: la JSP dovrebbe solo **mostrare** i dati, non crearli o elaborarli. Si studiano per capire il codice esistente.
 
 ### Creare un bean nella JSP
 
@@ -3044,13 +3277,11 @@ public class Utente implements Serializable {
 }
 ```
 
-> [!note] Nelle slide `Utente` ha solo il costruttore vuoto, ma la servlet chiama `new Utente("Mario", 30)`: serve anche il costruttore a due argomenti (aggiunto qui). Quello vuoto resta, perché è richiesto dalle convenzioni.
 
 ```java
 @WebServlet("/listaUtenti")
 public class ListaUtentiServlet extends HttpServlet {
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Utente> utenti = new ArrayList<>();
 		utenti.add(new Utente("Mario", 30));
 		utenti.add(new Utente("Luca", 16));
@@ -3149,12 +3380,11 @@ Corretto (MVC): il form invia i dati alla servlet, che crea il bean e fa forward
 </body>
 </html>
 ```
-
+⭐️⭐️⭐️⭐️⭐️: codice top
 ```java
 @WebServlet("/salvaUtente")
 public class SalvaUtenteServlet extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Recupero i dati dal form
 		String nome = request.getParameter("nome");
 		int eta = Integer.parseInt(request.getParameter("eta"));
@@ -3198,20 +3428,7 @@ public class ProductDAO {
 }
 ```
 
-```java
-@WebServlet("/products/*")
-public class ProductServlet extends HttpServlet {
-	private ProductDAO productDAO = new ProductDAO();
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		Product product = productDAO.findById(15L);
-		// utilizza il Product ma ignora come recuperare i dati
-	}
-}
-```
-
-Il `// JDBC...` delle slide, completato con un `PreparedStatement` (vedi [[#Prepared Statement]]). Questa parte non è nelle slide:
+Il `// JDBC...` delle slide, completato con un `PreparedStatement` (vedi [[#Prepared Statement]]).
 
 ```java
 public Product findById(Long id) throws SQLException {
@@ -3227,6 +3444,18 @@ public Product findById(Long id) throws SQLException {
 			p.setPrice(rs.getDouble("price"));
 			return p;
 		}
+	}
+}
+```
+
+```java
+@WebServlet("/products/*")
+public class ProductServlet extends HttpServlet {
+	private ProductDAO productDAO = new ProductDAO();
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Product product = productDAO.findById(15L);
+		// utilizza il Product ma ignora come recuperare i dati
 	}
 }
 ```
@@ -3310,7 +3539,8 @@ Struttura tipica, che separa logica applicativa e presentazione:
 
 > [!note] Con Maven la struttura standard ha nomi diversi: `src/main/java` per il codice e `src/main/webapp` (con dentro `WEB-INF/`) per le risorse web. Il concetto è lo stesso.
 
-> [!question] Perché mettere una JSP dentro `WEB-INF/`? Così il browser non può aprirla direttamente con un URL: ci si arriva solo tramite il `forward` di una servlet. Si obbliga ogni richiesta a passare dal Controller.
+> [!question] Perché mettere una JSP dentro `WEB-INF/`?
+>  Così il browser non può aprirla direttamente con un URL: ci si arriva solo tramite il `forward` di una servlet. Si obbliga ogni richiesta a passare dal Controller.
 
 Il **WAR** (Web Application Archive) è il pacchetto che l'IDE genera quando fai il deploy: contiene tutto il necessario perché l'applicazione funzioni sul server e, seguendo le specifiche Jakarta EE, la rende **portabile** tra server diversi senza ricompilare.
 
@@ -3376,7 +3606,8 @@ System.out.println(homeCatalog == searchCatalog);   // true: stesso oggetto
 
 Due ingredienti: il **costruttore privato** impedisce di creare altre istanze, il campo `static final` contiene l'unica istanza (creata al caricamento della classe, quindi senza problemi di concorrenza).
 
-> [!note] Collegamento con le servlet Il container crea normalmente **una sola istanza** di ogni servlet (vedi [[#Ciclo di vita]]): un comportamento "da singleton", ma garantito dal container e non dal costruttore privato. Per questo i suoi campi sono condivisi tra thread.
+> [!note] Collegamento con le servlet
+>  Il container crea normalmente **una sola istanza** di ogni servlet (vedi [[#Ciclo di vita]]): un comportamento "da singleton", ma garantito dal container e non dal costruttore privato. Per questo i suoi campi sono condivisi tra thread.
 
 ## Recap: Servlet, JSP e JavaBeans
 
@@ -3395,7 +3626,9 @@ Due ingredienti: il **costruttore privato** impedisce di creare altre istanze, i
     - **Convenzioni JavaBeans**: costruttore senza argomenti, incapsulamento delle variabili, interfaccia `Serializable`, scope page/request/session/application
 
 # Persistenza (JPA)
+
 ## Il problema: troppo lavoro manuale
+
 Finora, per salvare o leggere un prodotto nel DB, abbiamo scritto query SQL e trasformato **a mano** i risultati in oggetti Java (vedi [[#Java Database Connectivity]]):
 
 1. scrivere la query SQL
@@ -3433,8 +3666,7 @@ La specifica stabilisce come **descrivere** gli oggetti persistenti, come **cerc
 
 > [!attention] JPA **non sostituisce** il DB, il linguaggio SQL o il pattern DAO. Introduce un modo **standardizzato** di gestire la persistenza attraverso oggetti Java, riducendo il codice di mapping manuale e gestendo le relazioni tra entità.
 
-> [!info] javax → jakarta
->  Le slide usano `javax.persistence.*`: è il nome fino a JPA 2.2. Da Jakarta EE 9 (Jakarta Persistence 3.0) il package è `jakarta.persistence.*`, come per le servlet. Annotazioni e metodi sono gli stessi: negli esempi uso `jakarta`.
+> [!info] javax → jakarta Le slide usano `javax.persistence.*`: è il nome fino a JPA 2.2. Da Jakarta EE 9 (Jakarta Persistence 3.0) il package è `jakarta.persistence.*`, come per le servlet. Annotazioni e metodi sono gli stessi: negli esempi uso `jakarta`.
 
 JPA permette di gestire in modo standard la **persistenza** dei dati, cioè la memorizzazione e il recupero di **oggetti Java** da un database relazionale. Mette a disposizione:
 
@@ -3488,8 +3720,7 @@ I risultati non sono più dati primitivi o `ResultSet`, ma oggetti: **Entity** (
 |ereditarietà|nessun supporto diretto, join complesse|
 |stato **in memoria** (POJO)|stato **persistente** sul DB|
 
-> [!note] POJO
->  Un **POJO** (Plain Old Java Object) è un normale oggetto Java che non dipende da alcun framework o classe speciale.
+> [!note] POJO Un **POJO** (Plain Old Java Object) è un normale oggetto Java che non dipende da alcun framework o classe speciale.
 
 > [!important] L'**ORM** fa da ponte tra questi due mondi, permettendo di mappare gli oggetti Java sulle tabelle di un database relazionale. Questa differenza strutturale si chiama anche _object-relational impedance mismatch_.
 
@@ -3611,7 +3842,7 @@ Nel secondo caso i nomi e i tipi delle colonne sono già decisi e vanno indicati
 ### Mapping su una tabella specifica
 
 Tabella esistente:
-
+⭐⭐⭐
 ```sql
 create table CUSTOMER_TABLE (
 	CUST_ID    integer primary key not null,
@@ -3659,7 +3890,8 @@ public class Customer implements java.io.Serializable {
 > - deve avere un **costruttore pubblico senza argomenti**
 > - deve implementare **`equals()` e `hashCode()`**
 
-> [!question] Perché `equals()` e `hashCode()`? Il persistence context identifica ogni entity tramite la sua chiave (vedi [[#Entity Manager, Persistence Context, Persistence Unit]]). Con una chiave composita, due oggetti chiave distinti con gli stessi valori devono risultare **uguali**, altrimenti JPA crederebbe che siano due righe diverse. L'`equals()` di default di `Object` confronta i riferimenti, non i valori.
+> [!question] Perché `equals()` e `hashCode()`?
+>  Il persistence context identifica ogni entity tramite la sua chiave (vedi [[#Entity Manager, Persistence Context, Persistence Unit]]). Con una chiave composita, due oggetti chiave distinti con gli stessi valori devono risultare **uguali**, altrimenti JPA crederebbe che siano due righe diverse. L'`equals()` di default di `Object` confronta i riferimenti, non i valori.
 
 #### Chiavi composite con `@IdClass`
 
@@ -3712,8 +3944,6 @@ public class BookLoan {
 }
 ```
 
-> [!note] Nelle slide i parametri del costruttore si chiamano `loan` e `return`, ma nel corpo si usano `loanDate` e `returnDate`; inoltre `return` è una parola riservata e non può essere un nome di variabile. Qui i nomi sono corretti.
-
 #### Chiavi composite con `@EmbeddedId`
 
 La classe della chiave viene **incorporata direttamente** come un unico campo dell'entity.
@@ -3750,7 +3980,7 @@ public class BookLoanEmbedded {
 }
 ```
 
-> [!note] Nelle slide la classe `@Embeddable` si chiama `BookLoan` ma ha costruttori `BookLoanIdEmbedded(...)` e confronta con `BookLoanId`: i nomi non coincidono e non compilerebbe. Qui ho usato un solo nome, `BookLoanId`.
+
 
 |`@IdClass`|`@EmbeddedId`|
 |---|---|
@@ -3816,9 +4046,10 @@ public class Customer implements java.io.Serializable {
 }
 ```
 
-> [!question] Cosa succederebbe senza `@Transient`? Con property access JPA vedrebbe `getLastName()` e cercherebbe una colonna `lastName` nella tabella `Customer`, che non esiste come colonna separata (è già dentro la chiave): errore di mapping.
+> [!question] Cosa succederebbe senza `@Transient`? 
+> Con property access JPA vedrebbe `getLastName()` e cercherebbe una colonna `lastName` nella tabella `Customer`, che non esiste come colonna separata (è già dentro la chiave): errore di mapping.
 
-> [!note] `@Transient` (annotazione JPA) ≠ `transient` (parola chiave Java).
+> [!note] `@Transient` (annotazione JPA) ≠ `transient` (parola chiave Java). 
 > La parola chiave esclude un campo dalla **serializzazione** Java; JPA ignora anche i campi `transient`, ma l'annotazione serve quando vuoi escludere qualcosa **solo** dal database.
 
 ### Mapping types
@@ -3856,9 +4087,6 @@ public void setCustomerType(CustomerType type) { ... }
 |resiste al riordino delle costanti|se aggiungi una costante **in mezzo** o le riordini, i dati già salvati cambiano significato|
 
 ## Entity Inheritance
-
-_Parte descrittiva avanzata._
-
 JPA supporta l'**ereditarietà** delle entity, le relazioni **polimorfiche** e le query polimorfiche. Esempio: `Employee` estende `Customer` che estende `Person`.
 
 ```mermaid
@@ -3918,7 +4146,7 @@ public class Person {
 	private String firstName;
 	private String lastName;
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue // Generated value: assegnato al salvataggio
 	public int getId() { return id; }
 	public void setId(int id) { this.id = id; }
 	public String getFirstName() { return firstName; }
@@ -3944,11 +4172,11 @@ public class Employee extends Customer { ... }
 
 > [!note] Il valore di default del discriminatore (per `DiscriminatorType.STRING`) è il **nome dell'entity**, cioè di solito il nome della classe: `Employee` → `"Employee"`.
 
-|id|DISCRIMINATOR|firstName|lastName|street/city|employeeId|
-|---|---|---|---|---|---|
-|1|PERSON|Mario|Rossi|NULL|NULL|
-|2|CUSTOMER|Luca|Bianchi|Roma|NULL|
-|3|EMPLOYEE|Anna|Verdi|Milano|E123|
+| id  | DISCRIMINATOR | firstName | lastName | street/city | employeeId |
+| --- | ------------- | --------- | -------- | ----------- | ---------- |
+| 1   | PERSON        | Mario     | Rossi    | NULL        | NULL       |
+| 2   | CUSTOMER      | Luca      | Bianchi  | Roma        | NULL       |
+| 3   | EMPLOYEE      | Anna      | Verdi    | Milano      | E123       |
 
 > [!attention] Si vede il contro principale: le colonne delle sottoclassi sono `NULL` per le righe che non le usano. Per questo **non si possono dichiarare `NOT NULL`** le colonne specifiche delle sottoclassi. La struttura del DB è semplice, ma con molte sottoclassi la tabella diventa molto larga.
 
@@ -4001,7 +4229,8 @@ public class Employee extends Customer { ... }
 
 `@Inheritance` serve a dire a JPA che le entity fanno parte della **stessa gerarchia** e devono supportare polimorfismo e query comuni. JPA vede che `Employee` estende `Person` dal codice Java (`extends`), ma **il database non rappresenta direttamente l'ereditarietà**.
 
-> [!question] Perché le query globali sono difficili? Una query "tutte le `Person`" deve leggere **tre tabelle** diverse e unirle con `UNION`, perché ogni persona sta in una sola tabella a seconda del suo tipo concreto.
+> [!question] Perché le query globali sono difficili? 
+> Una query "tutte le `Person`" deve leggere **tre tabelle** diverse e unirle con `UNION`, perché ogni persona sta in una sola tabella a seconda del suo tipo concreto.
 
 ### s3: Table per Subclass (Joined)
 
@@ -4102,40 +4331,33 @@ create table EMPLOYEE (
 - `@AttributeOverride(name="lastName", column=@Column(name="SURNAME"))` rinomina il campo `lastName` (ereditato da `Person`) in `SURNAME` nella tabella `CUSTOMER`.
 - `@PrimaryKeyJoinColumn(name="EMP_PK")` (strategia JOINED): la PK di `Employee` è unita alla tabella `Customer` (la superclasse) tramite la colonna `EMP_PK`.
 
-> [!note] Nelle slide c'è `name="lastname"` (minuscolo): `name` deve corrispondere **esattamente** al nome della proprietà, che è `lastName`. C'è anche il refuso `this.id = is`.
-
-> [!question] `@MappedSuperclass` o `@Inheritance`? Con `@MappedSuperclass` si riusa **codice** (campi comuni) ma `Person` non è un'entity: non puoi fare `em.find(Person.class, ...)` né query su `Person`. Con `@Inheritance` `Person` è un'entity vera e le query sono **polimorfiche**.
+> [!question] `@MappedSuperclass` o `@Inheritance`?
+>  Con `@MappedSuperclass` si riusa **codice** (campi comuni) ma `Person` non è un'entity: non puoi fare `em.find(Person.class, ...)` né query su `Person`. Con `@Inheritance` `Person` è un'entity vera e le query sono **polimorfiche**.
 
 ## Come si configura JPA
-
 Per far funzionare il codice serve un ambiente configurato:
-
 - il **database**, che contiene le tabelle
 - il **provider JPA** (es. Hibernate ORM o EclipseLink), che implementa la specifica
 - l'**EntityManager**, l'interfaccia con cui si gestiscono le entity: cercarle, renderle persistenti, aggiornarle, rimuoverle
 - la **Persistence Unit**, che definisce la configurazione della persistenza
-
 ### Le entity sono POJO
-
 - Nella specifica, le entity sono **semplici oggetti Java** (POJO): si allocano con `new` come qualsiasi altro oggetto.
 - Le istanze **non diventano persistenti** finché non vengono associate a un `EntityManager`.
 - Hanno un **ciclo di vita** proprio.
 
 ### JDBC vs JPA: il ruolo dell'EntityManager
-
 Se JDBC mette a disposizione `Connection`, `Statement` e `ResultSet`, JPA mette a disposizione soprattutto l'**`EntityManager`**.
 
-| Metodo          | Funzione                                                           |
-| --------------- | ------------------------------------------------------------------ |
-| `find()`        | recupera un'entity tramite identificativo                          |
-| `persist()`     | rende persistente una **nuova** entity                             |
-| `merge()`       | copia lo stato di un oggetto **non gestito** in un'istanza gestita |
-| `remove()`      | marca un'entity gestita per la rimozione                           |
-| `createQuery()` | crea una query, per esempio in JPQL                                |
-| `flush()`       | sincronizza le modifiche pendenti con il database                  |
+|Metodo|Funzione|
+|---|---|
+|`find()`|recupera un'entity tramite identificativo|
+|`persist()`|rende persistente una **nuova** entity|
+|`merge()`|copia lo stato di un oggetto **non gestito** in un'istanza gestita|
+|`remove()`|marca un'entity gestita per la rimozione|
+|`createQuery()`|crea una query, per esempio in JPQL|
+|`flush()`|sincronizza le modifiche pendenti con il database|
 
 ### Managed e unmanaged
-
 - Durante il ciclo di vita, un'istanza di entity può essere **managed** (collegata a un `EntityManager`) oppure **unmanaged** (scollegata).
 - Il **Persistence Context** è l'insieme delle istanze di entity gestite da un `EntityManager`.
 - L'`EntityManager` tiene traccia di tutte le entity del contesto per **rilevare le modifiche** e le invia al database.
@@ -4152,7 +4374,6 @@ flowchart LR
 ```
 
 ### Esempio
-
 ```java
 import jakarta.persistence.*;
 
@@ -4183,10 +4404,7 @@ cust.setName("Bill");
 
 > [!attention] Queste istruzioni creano un oggetto Java e chiamano `setName`, ma **nel database non succede nulla**. `cust` è solo un oggetto Java finché non si chiede all'`EntityManager` di creare l'entity corrispondente.
 
-> [!note] Nelle slide `getName()` non ha `public`: con property access JPA deve poter usare il getter, quindi va dichiarato `public` (o almeno `protected`).
-
 ### Ciclo di vita dell'Entity
-
 Un JavaBean è "solo" un oggetto Java. Un'entity JPA può trovarsi in stati diversi **in relazione al contesto di persistenza**: **transient**, **managed**, **detached**, **removed**.
 
 ```mermaid
@@ -4205,8 +4423,6 @@ stateDiagram-v2
 |**Managed** (gestita)|l'`EntityManager` ne tiene traccia e può sincronizzarne le modifiche|
 |**Detached**|non più tracciata dal contesto (ha ancora i dati, ma le modifiche non vengono salvate)|
 |**Removed**|marcata per la cancellazione|
-
-> [!note] Le frecce `merge()` e il passaggio al DELETE non sono nello schema delle slide: le ho aggiunte perché sono descritte più avanti ([[#Merge]], [[#Flush e FlushModeType]]).
 
 ## Ottenere un EntityManager: l'EntityManagerFactory
 
@@ -4235,7 +4451,6 @@ public interface EntityManagerFactory {
 > - Gli `EntityManager` sono **leggeri** e vengono creati indirettamente dalla factory, che nasconde i dettagli complessi: è il pattern [[#Factory]].
 
 ### Java SE: la classe Persistence
-
 La classe `Persistence` avvia una `EntityManagerFactory`:
 
 ```java
@@ -4262,7 +4477,7 @@ flowchart TD
 ```
 
 ### Java EE / Jakarta EE: iniezione dal container
-Programmazione per convenzioni: molto codice viene sostituito da semplici annotazioni `@`
+
 ```java
 import jakarta.persistence.*;
 import jakarta.ejb.*;
@@ -4291,11 +4506,10 @@ A differenza di Java SE:
 - l'`EntityManagerFactory` viene **iniettata** (`@PersistenceUnit`) e chiusa automaticamente dal container
 - l'`EntityManager` si inietta **direttamente** in un EJB con `@PersistenceContext`
 
-> [!note] `EXTENDED` vs default Di default (`TRANSACTION`)
-> il persistence context dura **una transazione**. Con `PersistenceContextType.EXTENDED` (per gli `EntityManager` iniettati dal container, solo negli EJB stateful) sopravvive tra più transazioni, finché vive il bean: è il caso in cui si può chiamare `persist()` fuori da una transazione (vedi [[#Persist]]).
+> [!note] `EXTENDED` vs default
+>  Di default (`TRANSACTION`) il persistence context dura **una transazione**. Con `PersistenceContextType.EXTENDED` (per gli `EntityManager` iniettati dal container, solo negli EJB stateful) sopravvive tra più transazioni, finché vive il bean: è il caso in cui si può chiamare `persist()` fuori da una transazione (vedi [[#Persist]]).
 
 ## Persistence Unit
-
 Una Persistence Unit è definita nel file `persistence.xml`, che può contenerne **una o più**. Il file sta nella directory `META-INF` di un JAR nel classpath (programma Java SE) o di un JAR in `WEB-INF/lib` di un `.war`, ecc.
 
 ```xml
@@ -4337,8 +4551,6 @@ EntityManagerFactory emf2 = Persistence.createEntityManagerFactory("db2PU");
 EntityManager em2 = emf2.createEntityManager();
 ```
 
-> [!info] Le slide usano la versione `javax` del file: namespace `http://xmlns.jcp.org/xml/ns/persistence` con `version="2.2"` e proprietà `javax.persistence.jdbc.url`, `...user`, `...password`. Con Jakarta Persistence 3.x diventano `jakarta.persistence.jdbc.*`, come sopra.
-
 ### Quali classi appartengono a una Persistence Unit
 
 - Di default appartengono alla PU **tutte le classi del JAR annotate con `@Entity`**.
@@ -4362,11 +4574,11 @@ EntityManager em2 = emf2.createEntityManager();
 |**EntityManager**|l'oggetto **operativo**, quello che usi per il CRUD|gestisce il persistence context; **non thread-safe**, dura poco (spesso una transazione)|
 |**Persistence Context**|lo **stato in memoria** delle entity gestite in una transazione|controlla dirty checking, merge, remove, flush|
 
->[!warning] Concorrenza e servlet
->Dato che una servlet ha **una sola istanza** condivisa tra thread (vedi [[#Ciclo di vita]]), un `EntityManager` **non** va messo in un campo di istanza della servlet: va creato per ogni richiesta. La `EntityManagerFactory`, invece, essendo thread-safe può essere condivisa (es. creata all'avvio e salvata nel [[#ServletContext]]).
+> [!warning] Concorrenza e servlet
+>  Dato che una servlet ha **una sola istanza** condivisa tra thread (vedi [[#Ciclo di vita]]), un `EntityManager` **non** va messo in un campo di istanza della servlet: va creato per ogni richiesta. La `EntityManagerFactory`, invece, essendo thread-safe può essere condivisa (es. creata all'avvio e salvata nel [[#ServletContext]]).
 
->[!note] Dirty checking 
->Il persistence context ricorda lo stato delle entity gestite al momento del caricamento. Al flush confronta lo stato attuale con quello iniziale e genera un `UPDATE` **solo** per le entity effettivamente modificate ("sporche"). Per questo basta chiamare un setter (vedi [[#Update]]).
+> [!note] Dirty checking
+>  Il persistence context ricorda lo stato delle entity gestite al momento del caricamento. Al flush confronta lo stato attuale con quello iniziale e genera un `UPDATE` **solo** per le entity effettivamente modificate ("sporche"). Per questo basta chiamare un setter (vedi [[#Update]]).
 
 # Data operations
 
@@ -4388,15 +4600,13 @@ Quando viene chiamato `persist()`, l'entity manager mette in coda il `Customer` 
 
 > [!important] Con `persist()` l'entity diventa **managed**, cioè gestita dal persistence context. Questo **non** significa che venga eseguito subito un `INSERT`: il provider (es. Hibernate) può rimandare l'operazione SQL a un momento successivo.
 
-> [!note] Nelle slide c'è `Custom cust = new Customer();`: il tipo è `Customer`.
-
 ### Persist
 Il momento dell'inserimento effettivo dipende da alcune variabili:
 
 - se `persist()` viene chiamato **dentro una transazione**, l'inserimento può avvenire subito oppure al flush/commit
 - si può chiamare `persist()` **fuori da una transazione** solo se l'entity manager ha un contesto di persistenza **EXTENDED**: l'inserimento viene messo in coda e posticipato finché il contesto non viene associato a una transazione
 
-> [!example] In Java SE la transazione si gestisce a mano (non è nelle slide di questa parte):
+> [!example] In Java SE la transazione si gestisce a mano:
 > 
 > ```java
 > EntityManager em = emf.createEntityManager();
@@ -4418,7 +4628,6 @@ Il momento dell'inserimento effettivo dipende da alcune variabili:
 > È lo stesso schema `commit`/`rollback` di [[#Transaction]], ma su oggetti invece che su `Connection`.
 
 ## Trovare le entity
-
 L'entity manager offre due meccanismi:
 
 1. metodi che individuano un'entity **tramite la sua chiave primaria** (`find`, `getReference`)
@@ -4458,8 +4667,8 @@ public interface EntityManager {
 > - `find()` → voglio tutti i dati subito (**eager**)
 > - `getReference()` → voglio solo il riferimento, per relazioni o chiavi esterne (**lazy**)
 
-> [!example] Quando conviene `getReference()`? Per collegare una prenotazione a una crociera esistente basta la sua chiave, non tutti i suoi dati:
-> 
+> [!example] Quando conviene `getReference()`?
+>  Per collegare una prenotazione a una crociera esistente basta la sua chiave, non tutti i suoi dati:
 > ```java
 > Cruise cruise = em.getReference(Cruise.class, 42);  // nessuna SELECT
 > reservation.setCruise(cruise);                      // all'INSERT serve solo CRUISE_ID = 42
@@ -4489,7 +4698,8 @@ Il problema dell'inizializzazione pigra si supera in due modi:
 > 
 > Con Hibernate questo produce una `LazyInitializationException`. Soluzione: accedere a `c.getReservations()` **prima** di `em.close()`, oppure caricarle subito (fetch eager o una query con `JOIN FETCH`).
 
-> [!note] FetchType Ogni relazione ha un attributo `fetch` (`FetchType.LAZY` o `FetchType.EAGER`). I default: `@OneToMany` e `@ManyToMany` sono **LAZY**; `@ManyToOne` e `@OneToOne` sono **EAGER**. Esempio: `@OneToMany(mappedBy = "cruise", fetch = FetchType.EAGER)`.
+> [!note] FetchType
+>  Ogni relazione ha un attributo `fetch` (`FetchType.LAZY` o `FetchType.EAGER`). I default: `@OneToMany` e `@ManyToMany` sono **LAZY**; `@ManyToOne` e `@OneToOne` sono **EAGER**. Esempio: `@OneToMany(mappedBy = "cruise", fetch = FetchType.EAGER)`.
 
 ## Update
 
@@ -4502,7 +4712,8 @@ public void updateBedCount(int id, int newCount) {
 }
 ```
 
-> [!question] Dove è finito l'`UPDATE`? Non serve chiamarlo: `cabin` è gestita, quindi al flush il [[#Entity Manager, Persistence Context, Persistence Unit|dirty checking]] vede che `bedCount` è cambiato e genera l'`UPDATE`.
+> [!question] Dove è finito l'`UPDATE`? 
+> Non serve chiamarlo: `cabin` è gestita, quindi al flush il [[#Entity Manager, Persistence Context, Persistence Unit|dirty checking]] vede che `bedCount` è cambiato e genera l'`UPDATE`.
 
 ## Merge
 
@@ -4567,7 +4778,8 @@ Le modifiche fatte con `persist()`, `merge()` o `remove()` non vengono sincroniz
 
 Si imposta con `entityManager.setFlushMode(FlushModeType.COMMIT)`.
 
-> [!question] Perché il flush prima di una query? Se ho fatto `persist()` di un cliente e poi eseguo una query "tutti i clienti", senza flush il nuovo cliente sarebbe ancora solo in memoria e la query (che va sul DB) non lo vedrebbe.
+> [!question] Perché il flush prima di una query?
+>  Se ho fatto `persist()` di un cliente e poi eseguo una query "tutti i clienti", senza flush il nuovo cliente sarebbe ancora solo in memoria e la query (che va sul DB) non lo vedrebbe.
 
 > [!important] Non confondere
 > 
@@ -4576,7 +4788,6 @@ Si imposta con `entityManager.setFlushMode(FlushModeType.COMMIT)`.
 > - `commit()`: rende **definitive** le modifiche. Un flush senza commit può ancora essere annullato con un rollback.
 
 ## Cascading
-
 Quando si esegue un'operazione dell'entity manager su un'entity, si può eseguire automaticamente **la stessa operazione** su tutte le sue relazioni. Esempio: salvando un nuovo cliente con un nuovo indirizzo e un nuovo numero di telefono, l'entity manager può creare tutto con **una sola** `persist()`.
 
 ```java
@@ -4586,11 +4797,7 @@ cust.getPhoneNumbers().add(new Phone());
 // li crea tutti con una sola invocazione dell'entity manager
 entityManager.persist(cust);
 ```
-
-> [!note] Nelle slide la variabile si chiama `cust` ma poi si usa `customer`: è la stessa.
-
 ### L'attributo cascade()
-
 La cascade si applica a diverse operazioni: `persist()`, `merge()`, `remove()`, `refresh()`. Si abilita con l'attributo `cascade()` dell'annotazione di relazione, un **array** delle operazioni da propagare alle entity correlate.
 
 ```java
@@ -4602,8 +4809,6 @@ public enum CascadeType {
 ```java
 @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 ```
-
-> [!note] Le slide elencano cinque valori; da JPA 2.0 esiste anche `DETACH`, ed è per questo che più avanti `CascadeType.ALL` viene descritto come "persist, merge, remove, refresh, detach".
 
 > [!warning] `REMOVE` (e quindi `ALL`) va usato solo quando le entity correlate **appartengono** davvero al padre (es. i telefoni di un cliente). Su un `@ManyToOne` verso un'entity condivisa (es. la nave di una crociera) cancellerebbe la nave e tutte le altre crociere che la usano ne resterebbero senza.
 
@@ -4628,8 +4833,8 @@ Due dimensioni indipendenti:
 - **cardinalità** (1:1, 1:N, N:1, N:M) → come sono le **tabelle** (dove sta la FK, se serve una tabella di join)
 - **direzione** (uni/bi) → come sono le **classi Java** (quali entity hanno il riferimento all'altra). Nel DB una FK si può sempre percorrere in entrambi i versi con una JOIN.
 
-> [!important] Il lato proprietario (owner) In ogni relazione **un solo lato** "possiede" la relazione: è quello le cui modifiche vengono scritte nel DB. Lo riconosci così:
-> 
+> [!important] Il lato proprietario (owner) 
+> In ogni relazione **un solo lato** "possiede" la relazione: è quello le cui modifiche vengono scritte nel DB. Lo riconosci così:
 > - ha `@JoinColumn` o `@JoinTable` → **proprietario**
 > - ha `mappedBy` → **lato inverso** (solo una vista: le sue modifiche sono ignorate dal DB)
 
@@ -4748,7 +4953,8 @@ entityManager.persist(cust);
 
 > [!attention] Nel caso 1:1 bidirezionale lo sviluppatore deve **mantenere coerenti entrambi i lati**. JPA salva solo il lato **owning**; l'altro resta inconsistente in memoria se non lo aggiorni. Quando si definiscono le relazioni, è sempre necessario collegare **entrambi** i lati.
 
-> [!question] Cosa succede se scrivo solo `card.setCustomer(cust)`? Nel DB **nulla**: `card` è il lato inverso, quindi `CREDIT_CARD_ID` in `CUSTOMER` resta `NULL`. Se scrivo solo `cust.setCreditCard(card)` il DB è corretto, ma in memoria `card.getCustomer()` restituisce `null` finché non ricarico.
+> [!question] Cosa succede se scrivo solo `card.setCustomer(cust)`?
+>  Nel DB **nulla**: `card` è il lato inverso, quindi `CREDIT_CARD_ID` in `CUSTOMER` resta `NULL`. Se scrivo solo `cust.setCreditCard(card)` il DB è corretto, ma in memoria `card.getCustomer()` restituisce `null` finché non ricarico.
 
 ## One-to-Many unidirezionale (Customer → Phone)
 
@@ -5086,3 +5292,1318 @@ Phone p = cust.getPhoneNumbers().get("617-333-3333");   // accesso diretto, senz
 ```
 
 > [!attention] La chiave scelta deve essere **unica** tra gli elementi della relazione: due telefoni con lo stesso `number` nella stessa mappa si sovrascriverebbero.
+
+
+## Transazioni: JDBC vs JPA
+
+> [!important] Transazione
+>  Una transazione in JDBC (e nei database in generale) è una sequenza di una o più operazioni SQL trattate come **un'unica unità logica di lavoro**: o tutte le operazioni hanno esito positivo, oppure nessuna.
+
+```mermaid
+flowchart LR
+    S1(("Stato<br>consistente 1")) -->|"INSERT / UPDATE / DELETE"| I1(("intermedio"))
+    I1 --> I2(("intermedio"))
+    I2 --> I3(("intermedio"))
+    I3 -->|"COMMIT"| S2(("Stato<br>consistente 2"))
+    I1 -.->|"ROLLBACK / errore"| S1
+    I2 -.->|"ROLLBACK / errore"| S1
+    I3 -.->|"ROLLBACK / errore"| S1
+```
+
+Gli stati intermedi non devono mai diventare "lo stato del DB": o si arriva al commit, o si torna allo stato di partenza.
+
+### Lato JDBC
+
+Il meccanismo è quello di [[#Transaction]]: `setAutoCommit(false)`, poi `commit()` o `rollback()`. In più si può scegliere il **livello di isolamento** (vedi [[#Inconsistenze]] e [[#Transaction Isolation]]):
+
+```java
+conn.setAutoCommit(false);
+conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+
+Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery("SELECT saldo FROM conti WHERE id=1");
+
+// se un'altra transazione aggiorna il saldo,
+// rs.next() restituirà sempre lo stesso valore fino al commit
+```
+
+|Livello JDBC|Descrizione|Problemi evitati|
+|---|---|---|
+|`TRANSACTION_READ_UNCOMMITTED`|nessuna protezione, si leggono anche dati non confermati|nessuno (possibili dirty, non-repeatable e phantom read)|
+|`TRANSACTION_READ_COMMITTED`|legge solo dati confermati|dirty read (ma non non-repeatable e phantom read)|
+|`TRANSACTION_REPEATABLE_READ`|le righe già lette non cambiano durante la transazione|dirty e non-repeatable read (ma non phantom read)|
+|`TRANSACTION_SERIALIZABLE`|massima protezione: esecuzione seriale delle transazioni|dirty, non-repeatable e phantom read|
+
+> [!bug] Attenzione: il commit nel `finally`
+>  Il `finally` viene eseguito **sempre**, anche dopo un errore: in caso di eccezione si fa `rollback()` e poi comunque `commit()`. Dopo il rollback non c'è più nulla da confermare, quindi di solito non fa danni, ma è fuorviante. La forma corretta mette il `commit()` alla fine del `try` (si arriva lì solo se tutto è andato bene) e lascia nel `finally` solo la `close()`. Lo stesso schema c'è anche in [[#Transaction]].
+> 
+> ```java
+> try {
+> 	statement.executeUpdate(...);
+> 	statement.executeUpdate(...);
+> 	connection.commit();          // solo se tutte le operazioni sono riuscite
+> } catch (SQLException e) {
+> 	connection.rollback();
+> } finally {
+> 	connection.close();
+> }
+> ```
+### Lato JPA
+
+> [!important] Il legame
+>  L'`EntityManager` gestisce il persistence context; la **transazione** definisce **quando** le entity managed vengono sincronizzate con il database.
+
+```java
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = em.getTransaction();
+tx.begin();            // collega l'EM alla transazione
+em.persist(entity);    // lavora dentro la transazione
+tx.commit();           // flush + commit e traduzione in SQL
+```
+
+|JPA|JDBC|
+|---|---|
+|`tx.begin()`|`setAutoCommit(false)`|
+|`tx.commit()`|`connection.commit()`|
+|`tx.rollback()`|`connection.rollback()`|
+
+> [!important] Le transazioni JPA sono implementate usando le transazioni JDBC del database! In modalità resource-local il provider, sotto, chiama proprio `setAutoCommit(false)` / `commit()` / `rollback()` sulla `Connection`.
+
+Le operazioni e le query EJB QL/JPQL vengono eseguite tramite l'`EntityManager` **dentro un contesto transazionale**, che garantisce la coerenza tra persistence context e database.
+
+> [!warning] Attenzione a bulk update/delete
+>  Una query JPQL di massa (`UPDATE Product p SET p.price = ...` o `DELETE ...`, eseguita con `executeUpdate()`) va **direttamente sul DB** e **salta il persistence context**: le entity già caricate in memoria non vengono aggiornate e restano con i valori vecchi. Dopo una bulk operation conviene fare `clear()` o `refresh()` sulle entity coinvolte.
+
+#### Architettura della Java Persistence API
+
+```mermaid
+flowchart TD
+    P["Persistence"] -->|"crea<br>(all'avvio dell'app)"| EMF["EntityManagerFactory"]
+    PU["Persistence Unit"] -->|"configura"| EMF
+    EMF -->|"crea"| EM["EntityManager"]
+    EM -->|"crea"| ET["EntityTransaction<br>(vive poco: termina con<br>commit o rollback)"]
+    EM -->|"crea"| Q["Query<br>(interroga il DB in SQL/JPQL)"]
+    EM -->|"gestisce"| E["Entity<br>(oggetti persistiti tramite l'EntityManager)"]
+```
+
+## JTA vs EntityManager
+
+Due modalità principali di gestione delle transazioni:
+
+|Resource-local transactions (JPA)|Transaction Manager (JTA)|
+|---|---|
+|gestita **direttamente dall'applicazione** tramite `EntityManager.getTransaction()`|**componente del container**, esterno a JPA|
+|`begin()` e `commit()` scritti a mano|transazioni coordinate a livello globale e gestite automaticamente: **niente** `begin()` o `commit()`|
+|una sola risorsa (un DB)|anche più risorse (più DB, code di messaggi...)|
+
+```java
+// Resource-local
+EntityManager em = emf.createEntityManager();
+EntityTransaction tx = em.getTransaction(); // API che controlla la transaction
+tx.begin();
+em.persist(entity);
+tx.commit();
+```
+
+```java
+// JTA
+@PersistenceContext
+EntityManager em;
+
+@Transactional
+public void save() {
+	em.persist(entity);
+}
+```
+
+Con JTA il container gestisce la transazione associata al metodo: se il metodo termina normalmente la transazione può essere confermata; se si verifica un'eccezione che ne determina il rollback, le modifiche vengono annullate.
+
+> [!note] Quale eccezione causa il rollback?
+>  Con `@Transactional` (Jakarta Transactions) di default fanno rollback le eccezioni **unchecked** (`RuntimeException`, `Error`); le eccezioni **checked** no, a meno di indicarle con `rollbackOn`. È per questo che le slide dicono "un'eccezione che **ne determina** il rollback", e non "qualsiasi eccezione".
+
+> [!important] Quando serve JTA
+>  Per gestire **transazioni distribuite** (più database o risorse nella stessa transazione) e per **evitare la gestione manuale** delle transazioni.
+### JTA ed EntityManager insieme
+
+Tipicamente si usano **insieme**, non in contrapposizione:
+
+1. il Transaction Manager JTA **apre** una transazione (in automatico con `@Transactional` o `@TransactionAttribute(REQUIRED)`) che la controlla
+2. l'`EntityManager` viene **associato** a quella transazione: si crea un persistence context **transaction-scoped**
+3. durante il metodo le entity diventano **managed** e le modifiche si accumulano nel persistence context
+4. al **commit** della transazione JTA, il Transaction Manager chiede all'`EntityManager` di fare **flush**, esegue il **commit**, e infine l'`EntityManager` **chiude** il persistence context (a meno che non sia EXTENDED)
+
+```mermaid
+sequenceDiagram
+    participant C as Container (JTA)
+    participant M as Metodo @Transactional
+    participant EM as EntityManager / PC
+    participant DB as Database
+    C->>C: begin()
+    C->>M: invoca il metodo
+    M->>EM: find / persist / setXxx
+    Note over EM: le modifiche si accumulano<br>nel persistence context
+    M-->>C: ritorno normale
+    C->>EM: flush()
+    EM->>DB: INSERT / UPDATE / DELETE
+    C->>DB: commit()
+    C->>EM: chiude il persistence context
+```
+
+> [!attention] flush ≠ commit
+>  `flush()` sincronizza le modifiche pendenti con il DB eseguendo l'SQL necessario. **Non equivale al commit**: la transazione può essere ancora aperta e terminare poi con un **rollback**.
+
+> [!important] Divisione dei compiti
+> 
+> - **JTA** → definisce **quando** una transazione inizia, finisce, fa commit o rollback
+> - **EntityManager** → definisce **cosa** viene fatto dentro la transazione
+
+### JPA e JTA: servono sempre entrambi?
+
+|Scenario|Gestione tipica|
+|---|---|
+|Jakarta EE con JPA e transazioni gestite dal container|JPA + JTA|
+|Jakarta EE con transazioni gestite dall'applicazione|JPA con controllo esplicito tramite l'API transazionale appropriata (es. `UserTransaction`)|
+|applicazione Java SE che usa JPA senza un container Jakarta EE|JPA con transazioni resource-local tramite `EntityTransaction`|
+
+> [!important] Take-away
+>  JPA gestisce la **persistenza degli oggetti**; JTA gestisce il **contesto transazionale**.
+
+> [!question] E con Tomcat? 
+> Tomcat è un servlet container, **non** un application server Jakarta EE completo: di base non ha un Transaction Manager JTA. Con Tomcat + Hibernate si è quindi nel terzo caso: resource-local con `EntityTransaction`, come in Java SE.
+
+## Persistence contexts
+
+> [!important] Persistence context
+>  È l'ambiente in cui JPA tiene traccia delle entity Java gestite e delle modifiche apportate a esse, sincronizzandole con il database quando necessario.
+
+Ma **come** e **per quanto tempo** l'`EntityManager` mantiene le entity managed? 
+Due tipi:
+- **Transaction-scoped** ("livello di transazione")
+    - durano per tutta la transazione e vengono chiusi **al suo termine**
+    - vengono iniettati con `@PersistenceContext` (o l'equivalente XML)
+- **Extended** ("estesi")
+    - durano **più** di una transazione
+    - le entity associate restano gestite **anche dopo** il completamento di una transazione
+
+|Transaction-scoped|Extended|
+|---|---|
+|step 1 → carichi le entity|carichi le entity una volta|
+|step 2 → devi fare `merge()`|le modifichi tra gli step|
+|step 3 → un altro `merge()`|alla fine fai commit → tutto salvato|
+
+|Caratteristica|Transaction-scoped|Extended|
+|---|---|---|
+|Durata tipica|associata alla transazione, in un ambiente con gestione transazionale JTA|può estendersi su più transazioni|
+|Utilizzo tipico|operazioni web ordinarie|flussi applicativi più lunghi, tradizionalmente in componenti stateful|
+|Entity managed|il contesto termina normalmente con la transazione, salvo altre condizioni previste dalla specifica|possono restare managed tra transazioni successive|
+|Complessità|minore|maggiore: richiede attenzione alla durata e alla concorrenza|
+
+> [!example] Flusso a più step
+>  Un wizard di prenotazione in tre pagine. Con un contesto **transaction-scoped** ogni richiesta è una transazione diversa: alla fine di ognuna la prenotazione diventa detached e alla pagina dopo va riattaccata con `merge()`. Con un contesto **extended** la prenotazione resta managed per tutto il wizard e si salva con un solo commit finale.
+
+#### persistence.xml
+
+- La radice è l'elemento `<persistence>`, che contiene uno o più `<persistence-unit>` (vedi [[#Persistence Unit]]).
+- Ogni `<persistence-unit>` ha due attributi: `name` (**obbligatorio**) e `transaction-type` (facoltativo: `JTA` o `RESOURCE_LOCAL`).
+
+|Sottoelemento (tutti opzionali)|Significato|
+|---|---|
+|`<description>`|descrizione leggibile della PU (solo documentazione)|
+|`<provider>`|il provider JPA (es. Hibernate, EclipseLink); se omesso viene rilevato automaticamente|
+|`<jta-data-source>`|data source gestito da JTA (transazioni gestite dal container)|
+|`<non-jta-data-source>`|data source non JTA (transazioni locali)|
+|`<mapping-file>`|file di mapping ORM esterno (es. `orm.xml`, vedi [[#Mapping in XML orm.xml]])|
+|`<jar-file>`|JAR che contengono classi entity|
+|`<class>`|elenco esplicito delle classi entity della PU|
+|`<properties>`|proprietà chiave-valore per la configurazione (es. impostazioni del DB, logging)|
+|`<exclude-unlisted-classes>`|flag (`true`/`false`): se `true`, le entity non elencate non vengono incluse|
+
+> [!note] Default di `transaction-type`
+>  Se non indicato vale `JTA` in un ambiente Jakarta EE e `RESOURCE_LOCAL` in Java SE.
+
+```xml
+<!-- esempio in un application server Jakarta EE -->
+<persistence-unit name="titan" transaction-type="JTA">
+	<jta-data-source>jdbc/TitanDS</jta-data-source>
+</persistence-unit>
+```
+
+### Transaction-scoped persistence context
+
+```java
+@PersistenceContext(unitName = "titan")
+EntityManager entityManager;
+
+@TransactionAttribute(REQUIRED)
+public Customer someMethod() {
+	Customer cust = entityManager.find(Customer.class, 1 /* key of the object */);
+	cust.setName("new name");
+	return cust;
+}
+```
+
+- `@PersistenceContext` **inietta** un'istanza di `EntityManager` nella classe; `unitName="titan"` indica la persistence unit (definita in `persistence.xml`). Se `unitName` non è specificato si usa la PU predefinita.
+- `@TransactionAttribute(REQUIRED)` garantisce che il metodo venga eseguito **dentro una transazione**: se non ne esiste una ne viene avviata una nuova, se esiste già viene usata quella.
+
+Passo per passo:
+
+1. quando viene eseguito `someMethod()`, il container lo invoca **sempre** nel contesto di una transazione JTA (per le proprietà ACID)
+2. un riferimento al cliente viene recuperato dall'`EntityManager` (`cust` è **managed**)
+3. `setName()` modifica il nome del cliente: la modifica viene riflessa nel DB **al commit** della transazione (dirty checking, nessun `UPDATE` esplicito)
+4. completata la transazione JTA, il persistence context transaction-scoped viene **distrutto** e l'istanza `Customer` restituita **non è più gestita**
+
+> [!attention] Conseguenza
+>  Se chi riceve `cust` chiama `setName()` dopo che l'istanza è stata scollegata, **nessuna modifica** arriva al DB. Per salvarla bisogna passarla di nuovo a un metodo transazionale che faccia `merge()`.
+
+### Extended persistence context
+
+```java
+Customer cust = null;
+
+transaction.begin();   // start transaction 1
+cust = extendedEntityManager.find(Customer.class, 1 /* object ID */);
+transaction.commit();  // transaction 1 ends
+
+transaction.begin();   // start transaction 2
+cust.setName("Bill");
+extendedEntityManager.flush();
+transaction.commit();
+// cust instance remains managed and changes are flushed
+```
+
+- `cust` viene inizializzata con `find()` nella transazione 1.
+- A differenza di un contesto transaction-scoped, l'istanza resta **gestita** anche dopo la fine della transazione 1 (il persistence context rimane attivo).
+- Nella transazione 2 il cliente viene aggiornato e le modifiche vengono salvate nel DB.
+
+> [!note] Da dove arriva `transaction`?
+>  Qui `transaction` è una transazione JTA gestita dall'applicazione (es. una `UserTransaction` iniettata). Nel caso transaction-scoped è invece JTA a farsi carico di begin/commit, anche di transazioni multiple. L'`extendedEntityManager` sarebbe iniettato con `@PersistenceContext(type = PersistenceContextType.EXTENDED)` in un bean stateful.
+
+### Stessa istanziazione, uso diverso (Java SE)
+
+In Java SE non c'è il container, ma i due comportamenti si possono riprodurre decidendo **quanto a lungo** tenere aperto l'`EntityManager`.
+
+**Case 1: simulare un extended persistence context**
+
+```java
+EntityManager em = emf.createEntityManager();   // creato una volta e riusato
+
+em.getTransaction().begin();
+Customer cust = em.find(Customer.class, 1);     // `cust` resta managed
+em.getTransaction().commit();
+
+// Riuso lo stesso EntityManager
+em.getTransaction().begin();
+cust.setName("Updated Name");                   // ancora managed
+em.getTransaction().commit();
+
+em.close();                                     // chiuso dopo tutte le transazioni
+```
+
+**Case 2: transaction-scoped persistence context**
+
+```java
+EntityManager em = emf.createEntityManager();   // creato per ogni transazione
+
+em.getTransaction().begin();
+Customer cust = em.find(Customer.class, 1);
+em.getTransaction().commit();
+em.close();                                     // EM chiuso, `cust` ora è detached
+
+// Nuova transazione, nuovo EntityManager
+em = emf.createEntityManager();
+em.getTransaction().begin();
+cust.setName("Updated Name");                   // ✗ `cust` è detached
+em.merge(cust);                                 // ✓ serve il merge per salvare la modifica
+em.getTransaction().commit();
+em.close();
+```
+
+> [!question] Perché nel Case 2 la modifica viene salvata anche se `setName()` è chiamato su un oggetto detached? 
+> Perché `merge()` viene chiamato **dopo**: copia nell'istanza managed lo stato attuale di `cust`, nome nuovo compreso. Senza `merge()` la modifica andrebbe persa. Ricorda che `merge()` restituisce una **copia** managed e che `cust` resta detached (vedi [[#Merge]]).
+
+## EJB QL (Enterprise JavaBeans Query Language)
+
+- Gli oggetti persistenti si possono interrogare anche tramite **EJB QL**.
+- EJB QL si esprime in termini di **schema di persistenza astratto** di un'entity: il suo nome astratto, le proprietà di base e le proprietà di relazione.
+    - usa i **nomi astratti** dello schema per identificare i bean, le **proprietà di base** per specificare i valori e le **proprietà di relazione** per navigare tra le relazioni
+
+> [!info] EJB QL → JPQL
+>  EJB QL era il linguaggio di interrogazione della persistenza dei vecchi EJB (prima di JPA), per interrogare entity gestite dai container EJB 2.x. Oggi è stato sostituito da **JPQL** in JPA, ma il ruolo concettuale è lo stesso: permettere query orientate agli **oggetti**, non alle **tabelle** del database.
+
+|EJB QL|SQL|
+|---|---|
+|`SELECT OBJECT(e) FROM Employee e`|`SELECT * FROM EMPLOYEE`|
+|`SELECT OBJECT(si) FROM StockItem AS si WHERE si.price BETWEEN 10 AND 100`|`SELECT * FROM STOCKITEM WHERE STOCKITEM.PRICE >= 10 AND STOCKITEM.PRICE <= 100`|
+|`SELECT DISTINCT w.lastname FROM Winners w WHERE w.lastname LIKE 'Mac%'`|`SELECT DISTINCT LASTNAME FROM WINNERS WHERE WINNERS.LASTNAME LIKE 'Mac%'`|
+
+> [!note] Cosa cambia In EJB QL/JPQL
+>  `Employee` è il nome dell'**entity** (la classe), non della tabella, e `si.price` è una **proprietà** Java, non una colonna. Il provider traduce in SQL usando il mapping. In JPQL `OBJECT(...)` non serve più: si scrive `SELECT e FROM Employee e`.
+### Queries
+
+Creare ed eseguire una query EJB QL è analogo a creare ed eseguire un `PreparedStatement` JDBC, ma invece di un `ResultSet` con righe del DB si ottengono **oggetti Entity già gestiti** dal persistence context, con binding dei parametri sicuro e type-safe:
+
+```java
+Query query = entityManager.createQuery("from Customer c where id=2");
+Customer cust = (Customer) query.getSingleResult();
+```
+
+> [!note]  In JPQL standard servono la `SELECT` e il riferimento tramite alias, e il valore va passato come **parametro**, come con il `PreparedStatement` (vedi [[#SQL injection]]):
+> 
+> ```java
+> TypedQuery<Customer> query = entityManager.createQuery(
+> 		"SELECT c FROM Customer c WHERE c.id = :id", Customer.class);
+> query.setParameter("id", 2);
+> Customer cust = query.getSingleResult();          // nessun cast con TypedQuery
+> 
+> List<Customer> all = entityManager
+> 		.createQuery("SELECT c FROM Customer c", Customer.class)
+> 		.getResultList();                          // più risultati
+> ```
+> 
+> `getSingleResult()` lancia `NoResultException` se non trova nulla e `NonUniqueResultException` se trova più di un risultato.
+
+Un oggetto `Query` si crea con:
+
+|Metodo|Uso|
+|---|---|
+|`createQuery(String queryString)`|query JPQL scritta al momento|
+|`createNamedQuery(String name)`|query JPQL predefinita con un nome (con `@NamedQuery` sull'entity)|
+|`createNativeQuery(String sqlString)`|query in **SQL nativo** del DB|
+|`createNativeQuery(String sqlString, Class resultClass)`|SQL nativo, risultati convertiti in entity della classe indicata|
+|`createNativeQuery(String sqlString, String resultSetMapping)`|SQL nativo con un mapping dei risultati definito a parte|
+
+## Cache
+**Obiettivo**: ridurre le interrogazioni al database e migliorare le prestazioni. La cache JPA può evitare di rileggere ripetutamente entity già presenti nel contesto.
+### Cache di primo livello
+- è associata al **persistence context** di un `EntityManager`
+- mantiene le entity già caricate o gestite nel contesto
+- se si recupera più volte la stessa entity nello stesso contesto, JPA può restituire **lo stesso oggetto** senza una nuova query SQL
+
+È parte del funzionamento ordinario di JPA. Esempio: in un e-commerce, recuperare più volte il prodotto con ID 10 usando lo stesso `EntityManager` non richiede necessariamente una nuova interrogazione al DB (è il comportamento di `find()` visto in [[#Trovare le entity]]).
+
+### Cache di secondo livello
+- è **opzionale** e dipende dal provider JPA e dalla sua configurazione
+- può **condividere** le entity memorizzate tra diversi `EntityManager` della stessa persistence unit
+- può ridurre ulteriormente gli accessi al database
+
+```mermaid
+flowchart LR
+    EM1["EntityManager 1<br>(cache di 1° livello)"] --> L2["Cache di 2° livello<br>(condivisa, nella EntityManagerFactory)"]
+    EM2["EntityManager 2<br>(cache di 1° livello)"] --> L2
+    L2 --> DB[("Database")]
+```
+
+|Caratteristica|Primo livello|Secondo livello|
+|---|---|---|
+|Ambito|singolo persistence context|condiviso tra persistence context|
+|Gestione|EntityManager|provider JPA|
+|Standard JPA|sì|supporto opzionale|
+|Configurazione esplicita|non necessaria|generalmente necessaria|
+|Rischio di dati obsoleti|possibile|possibile, soprattutto tra transazioni|
+
+### Configurare la cache di secondo livello
+Per indicare che un'entity può essere memorizzata nella cache:
+```java
+@Entity
+@Cacheable
+public class Prodotto {
+	@Id private Long id;
+	private String nome;
+	private double prezzo;
+}
+```
+Nel `persistence.xml` si seleziona la modalità di cache condivisa:
+```xml
+<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+```
+Con `ENABLE_SELECTIVE` vengono considerate per la cache condivisa **solo** le entity indicate esplicitamente come `@Cacheable`.
+
+- **Utile per**: dati letti spesso e modificati raramente, come categorie e descrizioni dei prodotti.
+- **Da valutare con attenzione per**: prezzi, disponibilità di magazzino e ordini, che possono cambiare spesso.
+- **Rischio principale**: leggere **dati non aggiornati**.
+
+> [!note] Altri valori di `shared-cache-mode
+> ` `ALL` (tutte le entity), `NONE` (nessuna), `ENABLE_SELECTIVE` (solo le `@Cacheable`), `DISABLE_SELECTIVE` (tutte tranne le `@Cacheable(false)`), `UNSPECIFIED` (decide il provider).
+### Cache: attenzione alla coerenza
+
+> [!warning] Rischio principale
+>  Leggere dati **non aggiornati** rispetto a quelli presenti nel database. Come evitarlo?
+
+**Esempio**: un utente visualizza il prodotto con ID 10, che costa 100 €. Nel frattempo un altro processo modifica il prezzo nel DB portandolo a 90 €. Se l'entity è già nel persistence context, una successiva `find()` nello stesso contesto **non garantisce** che il nuovo prezzo venga letto dal DB.
+
+|Operazione|Effetto principale|
+|---|---|
+|`em.refresh(prodotto)`|ricarica lo stato dell'entity dal DB, sovrascrivendo le modifiche locali non sincronizzate|
+|`em.clear()`|scollega tutte le entity dal persistence context; **non** svuota direttamente la cache di secondo livello|
+|`em.detach(prodotto)`|scollega la singola entity dal contesto|
+|`em.flush()`|sincronizza le modifiche pendenti con il DB; **non** svuota la cache|
+
+Per la cache di secondo livello, le regole di aggiornamento e invalidazione dipendono anche dal provider JPA e dalla configurazione.
+
+> [!note] Svuotare la cache di secondo livello
+>  Si fa dalla factory, non dall'`EntityManager`: `emf.getCache().evict(Prodotto.class, 10L)` toglie una singola entity, `emf.getCache().evictAll()` svuota tutto.
+
+# Entity Callbacks and Listeners
+
+## Life cycle events
+
+Quando si eseguono i metodi dell'`EntityManager` come `persist()`, `merge()`, `remove()` e `find()`, oppure query EJB QL, viene attivato un insieme predefinito di **eventi del ciclo di vita**. Ogni fase ha la sua annotazione:
+
+|Annotazione|Quando|
+|---|---|
+|`@PrePersist`|prima che `persist()` renda managed una nuova entity|
+|`@PostPersist`|dopo l'`INSERT` nel DB|
+|`@PostLoad`|dopo che l'entity è stata caricata dal DB|
+|`@PreUpdate`|prima dell'`UPDATE` nel DB|
+|`@PostUpdate`|dopo l'`UPDATE` nel DB|
+|`@PreRemove`|prima che `remove()` marchi l'entity per la cancellazione|
+|`@PostRemove`|dopo il `DELETE` nel DB|
+
+## Life cycle events interceptors
+
+In JPA si possono **intercettare** gli eventi del ciclo di vita di un'entity: creazione, persistenza, aggiornamento, rimozione, caricamento dal DB. Due modi:
+
+- **Entity Callbacks** → metodi **dentro la stessa entity**
+- **Listeners** → metodi in **classi separate** dedicate alla gestione degli eventi, associabili a una o più entity
+
+> [!important] A cosa servono
+>  Eseguire **automaticamente** del codice in corrispondenza di determinati eventi del ciclo di vita di un'entity.
+
+> [!attention] JPA, non JTA!
+>  Gli eventi possono verificarsi durante una transazione, ma **non** sono un meccanismo JTA.
+
+**Esempio**: creazione di un ordine (`@PrePersist`). Un utente crea un nuovo ordine sul sito e bisogna impostarne la data.
+
+- **Con callback**: la logica è dentro l'entity `Order`. `@PrePersist` imposta `createdAt = now()`; quando chiami `em.persist(order)` il metodo viene eseguito automaticamente.
+- **Con listener**: la logica è in una classe esterna `OrderListener`. `prePersist(Order order)` imposta `createdAt = now()`; quando chiami `em.persist(order)` il metodo viene eseguito automaticamente.
+
+|Feature|Entity Callback|Entity Listener|
+|---|---|---|
+|Posizione|dentro l'entity|classe separata|
+|Riutilizzabile|no|sì (più entity)|
+|Pulizia del codice|no, logica nell'entity|sì, separata|
+|Accesso ai dati|l'entity stessa (`this`)|entity passata come parametro|
+
+## Callbacks on Entity Classes
+
+Se i metodi di callback sono definiti **dentro la classe dell'entity**:
+
+- **non** possono accettare alcun parametro (nemmeno l'entity stessa: è `this`)
+- devono restituire `void`
+- non devono lanciare eccezioni **checked**
+
+```java
+@Entity
+public class Cabin {
+	// ...
+	@PostPersist void afterInsert() { ... }
+	@PostLoad void afterLoading() { ... }
+}
+```
+
+> [!attention] Gli eventi sono legati alle operazioni di persistenza
+>  Non alla semplice chiamata di un metodo Java: modificare un attributo **non** esegue subito `@PreUpdate`. L'evento è associato all'aggiornamento eseguito dal provider, cioè al **flush** .
+
+## Entity Listeners
+
+- Con un listener di entity (associato con `@EntityListeners`) si possono definire metodi che **accettano l'entity come parametro**.
+- I listener sono classi in grado di intercettare in modo **generico** gli eventi di callback delle entity: a ogni metodo si assegna lo specifico evento da intercettare.
+- I metodi restituiscono `void` e accettano un parametro `Object` che rappresenta l'istanza dell'entity su cui scatta l'evento.
+
+```java
+public class TitanAuditLogger {
+	@PostPersist void postInsert(Object entity) {
+		System.out.println("Inserted entity: " + entity.getClass().getName());
+	}
+	@PostLoad void postLoad(Object entity) {
+		System.out.println("Loaded entity: " + entity.getClass().getName());
+	}
+}
+```
+
+### Entity class
+
+```java
+@Target(TYPE) @Retention(RUNTIME)
+public @interface EntityListeners { Class[] value(); }
+```
+
+```java
+@Entity
+@EntityListeners({            // listener esterni con metodi esterni
+	TitanAuditLogger.class,
+	EntityJmxNotifier.class
+})
+public class Cabin {
+	// ...
+	@PostPersist void afterInsert() { ... }    // metodo di callback proprio
+	@PostLoad void afterLoading() { ... }      // metodo di callback proprio
+}
+```
+
+`Cabin` usa più listener con `@EntityListeners`: quando si verifica un evento vengono attivati i metodi di callback sia in `TitanAuditLogger` sia in `EntityJmxNotifier`, oltre a quelli definiti nell'entity stessa.
+
+> [!note] Ordine di esecuzione
+>  Per uno stesso evento vengono chiamati prima i metodi dei **listener**, nell'ordine in cui sono elencati in `@EntityListeners`, e poi il callback **dell'entity**.
+### Callback direttamente nell'entity
+Una classe `Product` di un e-commerce:
+
+```java
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+public class Product {
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	private String name;
+	private LocalDateTime createdAt;
+
+	@PrePersist
+	private void beforeInsert() {
+		createdAt = LocalDateTime.now();
+	}
+}
+```
+
+```java
+Product p = new Product();
+p.setName("Laptop");
+entityManager.persist(p);    // JPA chiama beforeInsert() prima dell'inserimento
+```
+
+Non dobbiamo richiamare `beforeInsert()` a mano: è il provider JPA a invocarlo in risposta all'evento del ciclo di vita.
+
+> [!question] Quando conviene? Quando il comportamento è **semplice** e strettamente legato alla **singola** entity.
+
+### Entity listener esterno
+Supponiamo che più entity debbano registrare automaticamente le date di creazione e modifica: replicare gli stessi callback in `Product`, `Customer` e `Order` sarebbe ridondante. Si sposta il comportamento in una classe dedicata.
+
+```java
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+public class AuditListener {
+	@PrePersist
+	public void beforeInsert(Object entity) {
+		if (entity instanceof Product p) {
+			p.setCreatedAt(LocalDateTime.now());
+		}
+	}
+}
+```
+
+```java
+@Entity
+@EntityListeners(AuditListener.class)
+public class Product {
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	private String name;
+	private LocalDateTime createdAt;
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+}
+```
+
+Così JPA sa che deve invocare il listener associato a `Product` quando si verifica l'evento previsto.
+
+> [!note] `entity instanceof Product p`
+>  È il **pattern matching per `instanceof`** (Java 16+): controlla il tipo e, se è vero, crea già la variabile `p` di tipo `Product`, senza cast esplicito. Per renderlo davvero riutilizzabile tra più entity si può far implementare a tutte un'interfaccia comune (es. `Auditable` con `setCreatedAt`) e controllare quella invece di `Product`.
+
+### Callback vs Entity Listener
+
+|Criterio|Callback nell'entity|Entity Listener|
+|---|---|---|
+|Codice specifico di `Product`|ideale|possibile|
+|Comportamento condiviso tra più entity|poco adatto|ideale|
+|Separazione delle responsabilità|minore|maggiore|
+|Esempio tipico|calcolare un valore derivato semplice|gestire campi di auditing comuni|
+
+> [!attention] Limiti
+>  Callback e listener sono adatti a operazioni **circoscritte** sul ciclo di vita dell'entity. Va evitato di inserirvi logiche applicative complesse, come la gestione completa di un ordine o l'invocazione di altre operazioni di persistenza.
+
+# Value Object Pattern
+
+## Il problema delle entity detached
+
+- Le entity **detached** (non gestite) possono essere serializzate e inviate in rete a un client remoto.
+- **Problema**: il client può modificarle in remoto e rimandarle al server per essere unite (`merge()`) e sincronizzate con il DB; l'istanza corretta da unire viene identificata tramite la **chiave primaria**.
+
+## Value Object
+
+> [!important] Value Object
+>  È un pattern di progettazione in cui un oggetto rappresenta un **valore**, definito dalle sue proprietà, anziché un'entity dotata di **identità** propria.
+
+Esempio in un e-commerce, un oggetto `Money`:
+```java
+public record Money(BigDecimal amount, String currency) {}
+```
+
+Due oggetti `Money` con lo stesso importo e la stessa valuta sono **equivalenti** in base al loro valore:
+
+```java
+Money a = new Money(new BigDecimal("29.99"), "EUR");
+Money b = new Money(new BigDecimal("29.99"), "EUR");
+System.out.println(a.equals(b));   // true
+```
+
+In Java, un `record` genera automaticamente `equals()` e `hashCode()` basati sui componenti dichiarati. Al contrario, due entity `Product` possono avere lo stesso prezzo e lo stesso nome ma essere **prodotti distinti**, con identificativi diversi.
+
+> [!important] Uguaglianza per valore
+>  Un value object contiene attributi ma **non ha un'identità univoca**: la sua uguaglianza si basa sul **valore**, non sull'identità. Due istanze sono uguali se hanno gli stessi dati, anche se sono oggetti diversi in memoria. Quindi nessuna incoerenza o desincronizzazione rispetto al persistence context, nemmeno con entity scollegate.
+
+|Entity|Value Object|
+|---|---|
+|uguaglianza per **identità** (chiave primaria)|uguaglianza per **valore** (tutti gli attributi)|
+|mutabile: cambia nel tempo|immutabile: si **sostituisce**|
+|vive da sola (ha una tabella)|vive dentro un'entity|
+|es. `Product`, `Customer`|es. `Money`, `Address`|
+
+> [!attention] `BigDecimal.equals()` e la scala `Money(new BigDecimal("29.99"), ...)` e `Money(new BigDecimal("29.990"), ...)` **non** risultano uguali: `BigDecimal.equals()` confronta anche la scala (numero di decimali). Per i soldi conviene normalizzare la scala nel costruttore.
+
+## Record
+
+Il `record` è una funzionalità del linguaggio introdotta in **Java 16** che permette di definire in modo conciso una classe destinata principalmente a contenere dati.
+
+```java
+public record Money(
+	BigDecimal amount,
+	String currency
+) {}
+```
+
+> [!note] Metodi di accesso I metodi di accesso sono `amount()` e `currency()`, **non** `getAmount()` e `getCurrency()` come per convenzione nei JavaBean.
+
+Scrivere un record equivale, per molti aspetti, a definire una classe con:
+
+- campi `private final` per le componenti dichiarate
+- un costruttore che riceve tutti i componenti
+- metodi di accesso con il nome della componente
+- `equals()`, `hashCode()` e `toString()` basati sui componenti
+
+```java
+// circa equivalente a
+public final class Money {
+	private final BigDecimal amount;
+	private final String currency;
+
+	public Money(BigDecimal amount, String currency) {
+		this.amount = amount;
+		this.currency = currency;
+	}
+	public BigDecimal amount() { return amount; }
+	public String currency() { return currency; }
+	// equals(), hashCode() e toString() basati su amount e currency
+}
+```
+
+> [!important] Perché un record è adatto a un Value Object
+> 
+> - i componenti **non possono essere riassegnati** dopo la costruzione
+> - l'uguaglianza è calcolata sui **valori** dei componenti
+> - la definizione è concisa e leggibile
+
+> [!question] Un record può essere un JavaBean o un'entity?
+>  No: non ha costruttore senza argomenti né setter, e la classe è `final`. Per questo un'entity JPA **non** può essere un record. Un record può invece essere un **embeddable** (supportato da Jakarta Persistence 3.2).
+
+## Detached entities: Value Object Pattern
+
+**Soluzione** al problema delle entity detached: il pattern Value Object aiuta a rappresentare le modifiche più facilmente, considerando importanti **i dati stessi** (gli attributi) invece di tracciare le modifiche a livello di **identità**.
+
+> [!important] Regola pratica
+> 
+> - Se un concetto ha **identità**, vive da solo e cambia nel tempo → **ENTITY**.
+> - Se è definito **solo dai suoi valori**, è immutabile e "vive dentro" un'entity → **VALUE OBJECT**.
+
+In JPA un value object si realizza con `@Embeddable` (vedi anche [[#Chiavi composite con `@EmbeddedId`]]):
+
+```java
+@Embeddable                       // indica un value object: non è persistente da solo
+public class Address {
+	private final String street;
+	private final String city;
+
+	// JPA richiede anche un costruttore protected/no-arg
+	protected Address() {
+		this.street = null; this.city = null;
+	}
+	public Address(String street, String city) {
+		this.street = street; this.city = city;
+	}
+
+	// Getter
+	public String getStreet() { return street; }
+	public String getCity() { return city; }
+
+	// equals/hashCode basati sui valori
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Address)) return false;
+		Address other = (Address) o;
+		return Objects.equals(street, other.street) && Objects.equals(city, other.city);
+	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(street, city);
+	}
+}
+```
+
+```java
+@Entity
+public class User {
+	@Id
+	private Long id;
+
+	@Embedded                     // value object incorporato nell'entity principale
+	private Address address;
+
+	protected User() {}
+	public User(Long id, Address address) {
+		this.id = id;
+		this.address = address;
+	}
+
+	public Address getAddress() { return address; }
+
+	public void changeAddress(Address newAddress) {
+		this.address = newAddress;   // sostituzione del VO (immutabile)
+	}
+}
+```
+
+> [!important] Immutabilità
+>  Nel Value Object pattern gli oggetti sono **immutabili**: invece di essere modificati vengono **sostituiti** con nuove istanze (`changeAddress(new Address(...))`, non `address.setCity(...)`).
+
+Nel DB non esiste una tabella `ADDRESS`: le colonne `street` e `city` stanno direttamente nella tabella `User`.
+
+# Entity Graph
+
+> [!important] Entity Graph
+>  È un meccanismo di Jakarta Persistence che permette di specificare **quali attributi** di un'entity e **quali relazioni** con altre entity devono essere recuperati durante una **determinata operazione di lettura**.
+
+- È particolarmente utile con `@OneToMany`, `@ManyToOne`, `@OneToOne` e `@ManyToMany`, perché permette di controllare il caricamento dei dati **senza modificare permanentemente** le annotazioni delle entity, evitando comportamenti tutto-o-niente.
+- `LAZY` ed `EAGER` definiscono il comportamento **predefinito** della relazione; l'Entity Graph specifica quali dati servono per una **particolare operazione**.
+
+```java
+@Entity
+public class Studente {
+	@Id
+	private Long id;
+	private String nome;
+
+	@OneToMany(mappedBy = "studente", fetch = FetchType.LAZY)   // oppure EAGER
+	private List<Esame> esami;
+}
+```
+
+```java
+@Entity
+public class Esame {
+	@Id
+	private Long id;
+	private String materia;
+	private int voto;
+
+	@ManyToOne
+	@JoinColumn(name = "studente_id")
+	private Studente studente;
+}
+```
+
+```java
+Studente s = entityManager.find(Studente.class, 1L);
+```
+
+- Con `FetchType.LAZY` non serve caricare subito la lista degli esami: JPA può rimandare il caricamento a quando serve. Se però nel frattempo l'entity è diventata **detached**, il caricamento non è più possibile (vedi [[#Lazy loading entity detached e FetchType]]).
+- Con `FetchType.EAGER` la lista degli esami viene caricata subito, ma così lo si impone **anche** alle operazioni che hanno bisogno solo del nome dello studente.
+
+> [!question] Il dilemma LAZY rischia di lasciare i dati non caricati quando servono; EAGER carica sempre tutto, anche quando non serve. L'Entity Graph risolve proprio questo: si dice a JPA di caricare subito gli esami **solo per questa operazione**, lasciando LAZY come impostazione predefinita.
+
+```java
+@NamedEntityGraph(
+	name = "Studente.conEsami",
+	attributeNodes = @NamedAttributeNode("esami")
+)
+@Entity
+public class Studente {
+	// ...
+}
+```
+
+> [!note] Cosa stiamo facendo (e cosa no) Non stiamo creando una nuova tabella e non stiamo cambiando la relazione tra `Studente` ed `Esame`. Stiamo definendo un **piano di caricamento** (gli attributi di `Studente`, `id` ed `esami`) tramite un override "selettivo" del fetch type.
+
+Le slide definiscono il grafo ma non mostrano come usarlo. Si passa come **hint** all'operazione di lettura:
+
+```java
+EntityGraph<?> graph = entityManager.getEntityGraph("Studente.conEsami");
+
+Studente s = entityManager.find(
+		Studente.class, 1L,
+		Map.of("jakarta.persistence.fetchgraph", graph));   // esami caricati subito
+
+// oppure su una query
+List<Studente> studenti = entityManager
+		.createQuery("SELECT s FROM Studente s", Studente.class)
+		.setHint("jakarta.persistence.fetchgraph", graph)
+		.getResultList();
+```
+
+|Hint|Effetto|
+|---|---|
+|`jakarta.persistence.fetchgraph`|gli attributi nel grafo vengono caricati subito; quelli **non** nel grafo vengono trattati come LAZY|
+|`jakarta.persistence.loadgraph`|gli attributi nel grafo vengono caricati subito; gli altri mantengono il loro fetch type di default|
+
+## Gestione delle transazioni in Jakarta EE: Jakarta Enterprise Beans
+
+_EJB — Enterprise Java Beans: denominazione storica e acronimo tuttora utilizzato._
+
+### Livelli di isolamento
+
+L'isolamento definisce quanto una transazione è "visibile" alle altre mentre è in esecuzione (vedi anche [[#Inconsistenze]] e [[#Transaction Isolation]]).
+
+|Isolation level|Evita dirty read?|Evita non-repeatable read?|Evita phantom read?|Prestazioni|Note|
+|---|---|---|---|---|---|
+|Read Uncommitted|no|no|no|la più veloce|praticamente nessun isolamento|
+|Read Committed|sì|no|no|moderata|legge solo dati committati (default)|
+|Repeatable Read|sì|sì|no|più lenta|le righe lette non cambiano|
+|Serializable|sì|sì|sì|la più lenta|simula l'esecuzione di una transazione alla volta|
+
+- **Dirty read**: una query legge un dato modificato da un'altra transazione **non ancora confermata**. Se quella transazione fa rollback, il dato letto è inconsistente.
+- **Non-repeatable read**: una query legge lo stesso dato più volte, ma il valore **cambia** perché un'altra transazione lo ha modificato e confermato nel frattempo.
+- **Phantom read**: la stessa query eseguita due volte restituisce un **insieme di righe diverso**, perché un'altra transazione ha aggiunto o eliminato righe che soddisfano il criterio.
+
+> [!note] "Default" dipende dal DBMS Read Committed è il default di PostgreSQL, Oracle e SQL Server; MySQL (InnoDB) usa invece **Repeatable Read** come default.
+
+### Modelli di transazioni
+
+- **Transazioni piatte**
+    - semplici
+    - composte da una sequenza "piatta" di operazioni: o tutto o niente
+- **Transazioni innestate**
+    - possono includere altre transazioni (sotto-transazioni)
+    - permettono di **ritentare** se una transazione innestata fallisce
+    - se la transazione principale fallisce, **tutte** le transazioni figlie vengono annullate
+
+**Esempio**: prenotazione di un viaggio da New York a Berlino, composta da tre sotto-transazioni:
+
+1. volo New York → Londra
+2. volo Londra → Parigi
+3. volo Parigi → Berlino
+
+```mermaid
+flowchart TD
+    T["Transazione principale<br>Viaggio New York → Berlino"] --> A["Volo NY → Londra"]
+    T --> B["Volo Londra → Parigi"]
+    T --> C["Volo Parigi → Berlino"]
+    B -.->|"fallisce"| B2["ritento: altro volo<br>Londra → Parigi"]
+```
+
+Con una transazione **piatta**, se il volo Londra → Parigi non è disponibile si annulla l'intero viaggio. Con una transazione **innestata** si può ritentare solo quella tratta (es. un altro volo), senza perdere le altre due; se invece fallisce la transazione principale, anche le tratte già prenotate vengono annullate.
+
+|Tipo di transazione|Struttura|Tentativi multipli|Flessibilità|Complessità|Utilizzo tipico|
+|---|---|---|---|---|---|
+|Piatte|sequenza lineare di operazioni|non supportati|limitata|bassa|operazioni semplici|
+|Innestate|struttura gerarchica con sotto-transazioni|possibili per le transazioni figlie|maggiore, grazie all'indipendenza parziale delle figlie|più elevata|sistemi complessi con più passaggi|
+
+> [!attention] EJB e JTA supportano solo transazioni piatte Le transazioni innestate sono un modello teorico: la specifica EJB e JTA **non** le supportano. Con `REQUIRES_NEW` (vedi sotto) si ottiene una transazione **indipendente**, che però non è una figlia: se la transazione esterna fa rollback, quella nuova, già confermata, resta confermata.
+
+### EJB: Declarative Transaction Management
+
+- In Jakarta EE la specifica EJB permette di gestire le transazioni in modo **dichiarativo** (si dice **cosa**, non **come**), separandole dalla logica di business.
+- EJB sposta la responsabilità delle transazioni al **container**: il metodo fa solo business; il container fa begin, commit e rollback e garantisce isolamento, propagazione, ecc.
+- Il comportamento transazionale si controlla **senza alterare la logica di business**, con l'annotazione `@TransactionAttribute` (`javax.ejb` nelle slide, `jakarta.ejb` con Jakarta) o con il deployment descriptor XML. Si può decidere se:
+    - partecipare a una transazione esistente
+    - crearne una nuova
+    - non usare transazioni
+    - quando inizia la transazione
+    - quali metodi/codice sono inclusi
+    - quando termina (commit o rollback)
+
+> [!important] Transaction scope Stesso codice di business, comportamento transazionale diverso: è il **transaction scope**. Ci sono due modi in cui un EJB decide se partecipare a una transazione: **implicito** o **esplicito**.
+
+|Approccio|Chi decide|Come|
+|---|---|---|
+|Implicito|il container|`@TransactionAttribute`|
+|Esplicito|il programmatore|JTA (`begin`, `commit`)|
+
+### Explicit Participation: JTA
+
+- Il programmatore specifica cosa fare e usa la **Java Transaction API (JTA)**.
+- Controlla **manualmente** la transazione e il suo scope, decidendo quando entrarne o uscirne (vedi [[#JTA vs EntityManager]] e [[#Extended persistence context]]).
+
+```java
+@Resource
+UserTransaction utx;
+
+public void bookPassage() throws Exception {
+	utx.begin();
+	try {
+		// ... operazioni
+		utx.commit();
+	} catch (Exception e) {
+		utx.rollback();
+		throw e;
+	}
+}
+```
+
+> [!note] Spoiler: Spring Con Spring Framework l'approccio esplicito è disponibile, **ma** viene quasi sempre evitato a vantaggio di quello implicito (`@Transactional`).
+
+### Implicit Participation: Transaction Attributes
+
+- I server EJB possono gestire le transazioni in modo **implicito**, in base agli **attributi di transazione** stabiliti al momento del deployment.
+- L'attributo si può impostare **a livello di classe** (default per tutti i metodi) o **a livello di singolo metodo**.
+- Si imposta con l'annotazione `@TransactionAttribute` o con il deployment descriptor.
+
+```java
+@TransactionAttribute(REQUIRED)
+public void bookPassage() {
+	// TRANSAZIONE ATTIVA
+}
+```
+
+> [!important] Cosa dice un transaction attribute I transaction attribute non dicono **come** gestire una transazione, ma **se e come un metodo partecipa** a una transazione.
+
+|Attribute|Descrizione|Comportamento|
+|---|---|---|
+|`NotSupported`|il metodo non partecipa ad alcuna transazione|se esiste una transazione, viene **sospesa** durante l'esecuzione del metodo|
+|`Supports`|il metodo può partecipare a una transazione se esiste|se esiste, il metodo vi partecipa; altrimenti viene eseguito senza transazione|
+|`Required`|il metodo deve essere eseguito in una transazione; se non esiste, ne viene creata una|se esiste, il metodo vi si unisce; altrimenti ne avvia una nuova|
+|`Requires_New`|il metodo viene sempre eseguito in una **nuova** transazione, indipendente da quella esistente|viene creata una nuova transazione per il metodo, sospendendo quella esistente|
+|`Mandatory`|il metodo deve essere eseguito in una transazione **già esistente**|se non esiste una transazione viene lanciata un'eccezione|
+|`Never`|il metodo **non deve** essere eseguito in una transazione|se esiste una transazione viene lanciata un'eccezione|
+
+### @TransactionAttribute
+
+```java
+public enum TransactionAttributeType {
+	MANDATORY, REQUIRED, REQUIRES_NEW,
+	SUPPORTS, NOT_SUPPORTED, NEVER
+}
+
+@Target({METHOD, TYPE})
+public @interface TransactionAttribute {
+	TransactionAttributeType value() default TransactionAttributeType.REQUIRED;
+}
+```
+
+> [!question] Come funzionano ereditarietà e override del comportamento transazionale in EJB? `@TransactionAttribute` può essere applicata:
+> 
+> - **a livello di classe** → comportamento di default
+> - **a livello di metodo** → override del default
+> 
+> **Il metodo vince sempre sulla classe.** Se non c'è alcuna annotazione, il default è `REQUIRED`.
+
+```java
+@Stateless
+@TransactionAttribute(NOT_SUPPORTED)              // per questo bean, in generale, niente transazioni
+public class TravelAgentBean implements TravelAgentRemote {
+
+	public void setCustomer(Customer cust) { ... }   // eredita NOT_SUPPORTED dalla classe
+
+	@TransactionAttribute(REQUIRED)               // ma prenotare un viaggio deve essere transazionale
+	public TicketDO bookPassage(CreditCardDO card, double price) {
+		...
+	}
+}
+```
+
+### TransactionAttribute: NotSupported
+
+_"Non voglio una transazione."_
+
+- Invocare un metodo con questo attributo **sospende** la transazione fino al completamento del metodo.
+    - l'ambito della transazione **non viene propagato** all'EJB NotSupported né agli EJB che esso chiama
+    - terminato il metodo, la transazione originale **riprende**
+
+|Comportamento|Quando usarlo|
+|---|---|
+|se esiste una transazione → sospesa; metodo eseguito fuori transazione; poi la transazione riprende|chiamate esterne, operazioni lente, logging non critico|
+
+### TransactionAttribute: Supports
+
+_"Se c'è una transazione, bene. Altrimenti va bene lo stesso."_
+
+- Il metodo viene incluso nell'ambito della transazione **se** viene richiamato all'interno di una transazione.
+    - se il client o l'EJB chiamante fa parte di una transazione, l'EJB Supports e tutti gli EJB a cui accede diventano parte della transazione originale
+    - l'EJB Supports non deve necessariamente far parte di una transazione: può interagire con client ed EJB che non sono in una transazione
+
+|Comportamento|Effetto|Quando usarlo|
+|---|---|---|
+|se esiste una transazione → partecipa; se non esiste → eseguito fuori transazione|comportamento "neutrale", nessuna forzatura|operazioni di sola lettura, servizi riutilizzabili|
+
+### TransactionAttribute: Required
+
+_"Ho bisogno di una transazione."_
+
+- Il metodo deve essere richiamato all'interno di una transazione.
+    - se il client o l'EJB chiamante fa parte di una transazione, l'EJB richiesto viene **automaticamente incluso** in essa
+    - se il chiamante non è in una transazione, l'EJB richiesto ne **avvia una nuova**
+
+|Comportamento|Effetto|Quando usarlo|
+|---|---|---|
+|se esiste una transazione → la usa; se non esiste → ne crea una nuova|transazione propagata; commit/rollback alla fine del metodo (se l'ha creata lui)|operazioni di business critiche, CRUD, casi standard|
+
+> [!note] Chi fa il commit? Se `Required` si è **unito** a una transazione esistente, alla fine del metodo non succede nulla: il commit lo farà chi l'ha avviata. Il commit alla fine del metodo avviene solo se è stato **questo** metodo a creare la transazione.
+
+### TransactionAttribute: RequiresNew
+
+_"Voglio una nuova transazione, sempre."_
+
+- Viene **sempre** avviata una nuova transazione, che il chiamante sia già in una transazione oppure no.
+    - se il chiamante è già in una transazione, questa viene **sospesa** fino al termine del metodo RequiresNew
+    - se non esiste una transazione, la crea
+
+|Comportamento|Effetto|Quando usarlo|
+|---|---|---|
+|se esiste una transazione → sospesa; ne viene creata una nuova; alla fine commit/rollback, poi riprende quella sospesa|transazione **isolata**: fallisce o riesce indipendentemente|logging, auditing, operazioni che devono essere salvate comunque|
+
+> [!example] Perché per il logging? Si vuole registrare il tentativo di prenotazione **anche se** la prenotazione fallisce. Se il log fosse `Required`, starebbe nella stessa transazione della prenotazione e verrebbe annullato insieme a essa dal rollback. Con `RequiresNew` il log viene confermato per conto suo.
+
+### TransactionAttribute: Mandatory
+
+_"Devo essere chiamato dentro una transazione."_
+
+- Il metodo deve **sempre** essere incluso nella transazione del client chiamante.
+    - se il chiamante fa parte di una transazione, bene
+    - se il chiamante **non** fa parte di una transazione, l'invocazione fallisce con un'eccezione `EJBTransactionRequiredException`
+
+|Comportamento|Effetto|Quando usarlo|
+|---|---|---|
+|se esiste una transazione → OK; se non esiste → eccezione|enforcement architetturale, niente transazioni implicite|metodi interni che non hanno senso fuori da un'unità di lavoro|
+
+> [!note] Correzione rispetto alle slide Nella slide il punto a) dice "Se il client chiamante **non** fa parte di una transazione, bene": è un refuso, va letto "fa parte".
+
+### TransactionAttribute: Never
+
+_"Non deve esistere alcuna transazione."_
+
+- Il metodo **non deve** essere invocato nell'ambito di una transazione.
+    - se il chiamante non è in un contesto transazionale, bene
+    - se il chiamante fa parte di una transazione, l'EJB Never lancia un'eccezione `EJBException`
+
+|Comportamento|Effetto|Quando usarlo|
+|---|---|---|
+|se esiste una transazione → eccezione; se non esiste → OK|divieto assoluto di transazioni|operazioni che non devono mai essere transazionali, integrazioni esterne sensibili|
+
+> [!note] Nomi delle eccezioni La tabella riassuntiva delle slide usa `TransactionRequiredException` (Mandatory) e `InvalidTransactionException` (Never): sono le eccezioni per i client **remoti** in stile EJB 2. Con le interfacce di business EJB 3 si ottengono `EJBTransactionRequiredException` ed `EJBException`, come indicato nelle slide dei singoli attributi.
+
+### Riepilogo dei transaction attribute
+
+|Attributo|Il chiamante **ha** una transazione|Il chiamante **non ha** una transazione|
+|---|---|---|
+|`NOT_SUPPORTED`|sospesa, il metodo gira senza|il metodo gira senza|
+|`SUPPORTS`|il metodo la usa|il metodo gira senza|
+|`REQUIRED` (default)|il metodo la usa|ne viene creata una nuova|
+|`REQUIRES_NEW`|sospesa, ne viene creata una nuova|ne viene creata una nuova|
+|`MANDATORY`|il metodo la usa|**eccezione**|
+|`NEVER`|**eccezione**|il metodo gira senza|
+
+## Isolation and Optimistic Locking
+
+A prescindere dall'approccio transazionale (implicito o esplicito), l'**isolamento** definisce quanto le transazioni sono indipendenti l'una dall'altra quando accedono agli stessi dati contemporaneamente.
+
+- **basso** isolamento → più velocità, più rischio di inconsistenza
+- **alto** isolamento → più sicurezza, più lock e potenziale rallentamento
+
+> [!important] Due strategie
+> 
+> - L'**Optimistic Locking** assume che le collisioni tra transazioni siano **rare** e verifica solo **al commit** se i dati sono stati modificati da un'altra transazione.
+> - Il **Pessimistic Locking** serve a **impedire** che transazioni concorrenti modifichino contemporaneamente gli stessi dati in modo incompatibile.
+
+|Tipo|Quando blocca|Performance|Uso tipico|
+|---|---|---|---|
+|Pessimistic lock|blocca **subito** il record per le altre transazioni|più lento, evita i conflitti|operazioni molto critiche, alto contenzioso|
+|Optimistic lock|**non** blocca, controlla solo al commit|più veloce, scala meglio|sistemi ad alto throughput, pochi conflitti|
+
+### Optimistic Locking
+
+- Non è un blocco nel senso tradizionale del termine.
+    - per un metodo di prenotazione `bookPassage()` si presuppone che nessun altro client stia prenotando la stessa cabina nello stesso momento
+    - al commit si lascia che sia il **database** a verificare se la cabina è stata prenotata nel frattempo: in caso affermativo si genera un'eccezione e si annulla la transazione
+- `@Version` permette a JPA di **rilevare i conflitti** di aggiornamento e fare **rollback automatico** quando due transazioni modificano la stessa entity contemporaneamente.
+- JPA confronta la versione in memoria con quella nel database: se non coincidono lancia `OptimisticLockException` e **tutta la transazione** fa rollback.
+
+```java
+@Entity
+public class Product {
+	@Id
+	private Long id;
+
+	private String name;
+
+	@Version
+	private int version;   // gestito automaticamente da JPA, aumenta a ogni aggiornamento
+}
+```
+
+Il controllo avviene direttamente nell'`UPDATE` che JPA genera al flush:
+
+```sql
+UPDATE Product
+SET name = 'Laptop Pro', version = 4
+WHERE id = 10 AND version = 3;
+```
+
+```mermaid
+sequenceDiagram
+    participant A as Transazione A
+    participant DB as Database
+    participant B as Transazione B
+    A->>DB: legge Product 10 (version = 3)
+    B->>DB: legge Product 10 (version = 3)
+    A->>DB: UPDATE ... WHERE version = 3
+    Note over DB: 1 riga aggiornata → version = 4
+    A->>DB: commit
+    B->>DB: UPDATE ... WHERE version = 3
+    Note over DB: 0 righe aggiornate (ora è 4)
+    DB-->>B: OptimisticLockException → rollback
+```
+
+> [!question] Perché `WHERE version = 3` basta a rilevare il conflitto? Se un'altra transazione ha già aggiornato la riga, la versione nel DB è salita a 4: l'`UPDATE` non trova righe con `version = 3` e ne modifica **zero**. JPA vede che il conteggio è 0 e capisce che qualcuno è arrivato prima. Nessun lock tenuto nel frattempo: il controllo e la scrittura avvengono in un'unica istruzione atomica.
+
+> [!note] Cosa fare dopo l'eccezione Il lavoro di B non è salvato. Di solito si ricarica l'entity (con la nuova versione) e si **ripete** l'operazione, oppure si avvisa l'utente ("i dati sono stati modificati da qualcun altro"). Il campo `@Version` non va mai impostato a mano.
+
+### Pessimistic Locking
+
+|`LockModeType`|Significato|
+|---|---|
+|`PESSIMISTIC_READ`|lock che consente la **lettura** concorrente, ma protegge da modifiche incompatibili (lock condiviso)|
+|`PESSIMISTIC_WRITE`|lock che impedisce ad altre transazioni di acquisire lock incompatibili per **modificare** lo stesso dato (lock esclusivo)|
+|`PESSIMISTIC_FORCE_INCREMENT`|come `PESSIMISTIC_WRITE`, ma forza anche l'incremento della versione di un'entity versionata (`@Version`)|
+
+```java
+@Entity
+public class ContoCorrente {
+	@Id
+	private Long id;
+	private BigDecimal saldo;
+	// getter e setter
+}
+```
+
+```java
+@Transactional
+public void preleva(Long contoId, BigDecimal importo) {
+	ContoCorrente conto = entityManager.find(
+			ContoCorrente.class,
+			contoId,
+			LockModeType.PESSIMISTIC_WRITE);
+
+	if (conto.getSaldo().compareTo(importo) < 0) {
+		throw new IllegalArgumentException("Saldo insufficiente");
+	}
+
+	conto.setSaldo(conto.getSaldo().subtract(importo));
+}
+```
+
+Il lock viene richiesto **durante il recupero** dell'entity ed è mantenuto secondo le regole transazionali e del database, normalmente **fino alla fine della transazione**.
+
+> [!note] In SQL Di solito `PESSIMISTIC_WRITE` diventa una `SELECT ... FOR UPDATE`: il DB blocca la riga finché la transazione non termina.
+
+**Cosa succede con due transazioni concorrenti?** A e B cercano entrambe di prelevare dallo stesso conto:
+
+1. **A** acquisisce il lock: legge il saldo e inizia il prelievo.
+2. **B** richiede lo stesso lock: deve **attendere** che A lo rilasci, oppure riceve un errore se scatta un timeout o un'altra condizione di conflitto.
+3. **A** completa la transazione: il saldo viene aggiornato e il lock rilasciato.
+4. **B** può procedere: dopo aver acquisito il lock opera su uno stato coerente con la propria transazione e le regole di isolamento adottate (legge il saldo **già** diminuito da A).
+
+```mermaid
+sequenceDiagram
+    participant A as Transazione A
+    participant DB as Database
+    participant B as Transazione B
+    A->>DB: find(..., PESSIMISTIC_WRITE) → lock acquisito
+    B->>DB: find(..., PESSIMISTIC_WRITE)
+    Note over B,DB: B attende il lock
+    A->>DB: UPDATE saldo + commit → lock rilasciato
+    DB-->>B: lock acquisito, legge il saldo aggiornato
+    B->>DB: UPDATE saldo + commit
+```
+
+> [!question] Cosa succederebbe senza lock? Saldo 100 €, A e B prelevano 80 € ciascuna. Entrambe leggono 100, entrambe superano il controllo `saldo >= importo`, entrambe scrivono 20: sono usciti 160 € da un conto che ne aveva 100, e uno dei due aggiornamenti è andato perso (_lost update_).
+
+> [!attention] `@Transactional` e lock pessimistico risolvono problemi diversi
+> 
+> - `@Transactional` definisce il **confine** della transazione: quali operazioni fanno parte della stessa unità di lavoro e vengono confermate o annullate insieme.
+> - `LockModeType.PESSIMISTIC_WRITE` chiede una **protezione** contro modifiche concorrenti incompatibili sul dato.
+> 
+> Senza lock, la transazione da sola non impedisce che due prelievi leggano lo stesso saldo.
+
+### Programmatic Locking via JPA
+
+|Aspetto|Lock pessimistico|Lock ottimistico|
+|---|---|---|
+|Strategia|protegge il dato durante l'operazione|presuppone che i conflitti siano poco frequenti|
+|Meccanismo tipico|lock sul database|attributo `@Version` e verifica al momento della scrittura|
+|Concorrenza|una transazione può dover attendere|le transazioni procedono; un conflitto può essere rilevato dopo|
+|Costo|attese, contesa e possibili **deadlock**|possibili tentativi falliti e necessità di ripetere l'operazione|
+|Utilizzo tipico|operazioni critiche con forte contesa|applicazioni con molte letture e conflitti relativamente rari|
+
+Per scenari ad alta concorrenza, in cui più transazioni leggono e scrivono la stessa entity, si possono **combinare** optimistic e pessimistic locking.
+
+> [!note] Proprietà vs operazione `@Version` è una proprietà **dell'entity** (vale sempre); il lock pessimistico viene richiesto per una **specifica operazione**.
+
+```java
+@Entity
+public class Appello {
+	@Id
+	private Long id;
+
+	private String insegnamento;
+	private int postiDisponibili;
+
+	@Version
+	private long versione;
+
+	public Appello() { }
+	public Appello(String insegnamento, int postiDisponibili) {
+		this.insegnamento = insegnamento;
+		this.postiDisponibili = postiDisponibili;
+	}
+
+	public void prenotaPosto() {
+		if (postiDisponibili <= 0) {
+			throw new IllegalStateException("Non ci sono posti disponibili");
+		}
+		postiDisponibili--;
+	}
+	// ...
+}
+```
+
+```java
+public class PrenotazioneService {
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Transactional
+	public void prenota(Long idAppello) {
+		Appello appello = entityManager.find(
+				Appello.class, idAppello, LockModeType.PESSIMISTIC_WRITE);
+		if (appello == null) {
+			throw new EntityNotFoundException("Appello non trovato");
+		}
+		appello.prenotaPosto();
+		entityManager.flush();
+	}
+}
+```
+
+> [!question] Perché tutti e due?
+> 
+> - Il **lock pessimistico** serializza le prenotazioni che passano da `prenota()`: due studenti non possono prendere l'ultimo posto contemporaneamente.
+> - `@Version` protegge da modifiche che arrivano da **altri percorsi** senza lock (es. un amministratore che modifica l'appello da un'altra schermata): in quel caso il conflitto viene comunque rilevato al flush.
+> 
+> La regola di business ("niente posti negativi") sta nell'entity (`prenotaPosto()`), il controllo della concorrenza nel service.
+

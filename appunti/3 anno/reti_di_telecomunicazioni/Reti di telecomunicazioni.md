@@ -1,10 +1,12 @@
+#appunti #telecomunicazioni
+
 1. funzionamento di internet
-2. protocolli per la comunicazione
-3. architetture di rete (TCP/IP)
+2. [[Protocolli]] per la comunicazione
+3. architetture di rete ([[Modello TCP IP]], [[Modello ISO OSI]])
 4. tecnologie di comunicazione e di rete
 5. modi di interpretare e gestire l'informazione
 
-esame
+**esame**
 prova scritta e orale
 la scritta è cambiata l'anno scorso e sarà come l'anno scorso
 
@@ -361,84 +363,9 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 
 
-[...] aggiungi dicitura protocolli di accesso al mezzo
-tassonomia e **classificazione** (centralizzati - distribuiti)
-
-l'intervallo di propagazione è associato al tempo di propagazione $\tau$.
-tutte le tecniche CSMA devono avere almeno $2\tau$: tempo necessario affinché tutte le stazioni ricevano un segnale
-aggiungi grafico di slide 127
-![[Reti di telecomunicazioni-1792596709655.webp|center|313]]
-
-tempo di rilevazione di una collisione - aggiungi tempi della slide 132
-dimensione minima
-
-grafico prestazioni CSMA CD e CSMA
-**Prestazioni** del CSMA CD
-
-$$
- S = \frac{G e^{-aG}}{G(1+2a) + e^{-aG} - G(1-\delta)(1-e^{-aG})} 
-$$
-dove $\delta$ tempo per accorgersi della collisione
-riduciamo la quantità di dati che hanno collisione tramite il jamming (dal - in poi)
-tempo necessario per rilevare / T
-se il tempo di detection è proporzionale a T non abbiamo una convenienza
-questo risparmio dipende dalle caratteristiche dell'hardware che ci permette di rilevare la collisione
-
-mezzi trasmissivi (slide 31)
-grafico dell'attenuazione
-multiplexaggio su frequenze diverse, ma sulla stessa banda, in modo da avere una bassa attenuazione
-wide band division multiplexing
-
----
-
-![[Reti di telecomunicazioni-1792600205867.webp|382]]
-rivedi divisione dei ruoli
-
-indirizzo fisico
-logical link control 802.2 - sottolivello superiore al livello 2
-per il sottolivello inferiore esistono più tipi di livello MAC (dipende molto dal mezzo fisico scelto)
-
-802.4 distribuito ma non ad accesso casuale, ma controllato, tramite l'utilizzo di un token, solo i possessori del frame possono trasmettere sul bus
-anche 802.5 ma usa una configurazione ad anello
-
-il wifi è IEEE 802.11 che utilizza un protocollo CSMA/CA
-
-grafico slide 9 che fa capire gerarchia
-da capire se fare suddivisione in gerarchia o semantica
-
-i limiti geografici sono dettati dal tipo di protocollo che non risulta più conveniente
-
-indirizzi di vario tipo
-- rete
-- logici
-- fisico
-
-l'indirizzo fisico serve a discriminare
-è associato alla scheda di rete utilizzata (a livello firmware) - sono memorizzate nella ROM dell'adattatore della scheda
-composto da 48 bit 6 coppie esadecimali
-suddiviso in due parti principali (3-3)
-primi 3 OUI organization unit identify - produttore
-ultimi 3 numero specifico progressivo decisa dal costruttore che identifica la scheda
-
-possono essere di tipo sorgente o destinazione
-
-comunicazione di 3 tipi
-- individuale
-- di gruppo
-- broadcast
-  se devo inviare un pacchetto in modalità broadcast sul bus devo utilizzare il mio MAC in modalità sorgente broadcast
-
-è grazie al MAC che in broadcast i sistemi che non sono destinazioni scartano il pacchetto
-
-I sap di livello 2 contengono i riferimenti ai mac fisici di destinazione e sorgente
-
-| MAC-DSAP | MAC-SSAP | Payload | FCS |
-| -------- | -------- | ------- | --- |
-
-
 com'è strutturata trama l'ethernet
 
-è importante che la destinazione sia prima della sorgente -> il ricevente può controllare meno bit
+
 preambolo permette la sincronizzazione
 il tipo indica il protocollo di livello superiore
 il livello 2 si deve occupare anche di inviare il dato al livello superiore, per capire a quale processo (protocollo) indirizzare il payload viene utilizzato il campo type

@@ -4,9 +4,11 @@
 		{"id":"09cf40ba22850af2","type":"file","file":"2 anno/elettromagnetismo_ed_elettrotecnica/appunti/Elettromagnetismo.md","x":-700,"y":61,"width":400,"height":400},
 		{"id":"5102434ea86e5a1c","type":"text","text":"#materia \n#elettromagnetismo_ed_elettrotecnica ","x":-340,"y":-100,"width":340,"height":60},
 		{"id":"2515665975c0ec4a","type":"file","file":"2 anno/elettromagnetismo_ed_elettrotecnica/appunti/Formulario - elettrotecnica.md","x":-156,"y":520,"width":400,"height":400},
-		{"id":"34df5bddb87e6267","x":-156,"y":1000,"width":400,"height":400,"type":"file","file":"2 anno/elettromagnetismo_ed_elettrotecnica/appunti/Domande - elettrotecnica.md"}
+		{"id":"34df5bddb87e6267","type":"file","file":"2 anno/elettromagnetismo_ed_elettrotecnica/appunti/Domande - elettrotecnica.md","x":-156,"y":1000,"width":400,"height":400}
 	],
 	"edges":[
-		{"id":"616f91f4ca4e4873","fromNode":"09cf40ba22850af2","fromSide":"right","toNode":"00c1405e0cca2e85","toSide":"left","color":"6"}
+		{"id":"616f91f4ca4e4873","fromNode":"09cf40ba22850af2","fromSide":"right","toNode":"00c1405e0cca2e85","toSide":"left","color":"6"},
+		{"id":"bce67040581b3053","fromNode":"00c1405e0cca2e85","fromSide":"bottom","toNode":"2515665975c0ec4a","toSide":"top"},
+		{"id":"638c6e16829999e3","fromNode":"2515665975c0ec4a","fromSide":"bottom","toNode":"34df5bddb87e6267","toSide":"top"}
 	]
 }
