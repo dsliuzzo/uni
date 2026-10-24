@@ -544,15 +544,11 @@ Ma perdendo l'esclusività si perde anche negli indirizzi: posso avere più indi
 
 **In conclusione**
 
-|              | **Totalità** | **Generalità** | **Relazioni** |
-| ------------ | ------------ | -------------- | ------------- |
-| **Metodo 1** | ✅            | ❌              | Solo padre    |
-| **Metodo 2** | ❌            | ❌              | ✅             |
-| **Metodo 3** | ✅            | ✅              | ❌             |
-
-
-
-
+|              | **Totalità** | **Esclusività** | **Relazioni** |
+| ------------ | ------------ | --------------- | ------------- |
+| **Metodo 1** | ✅            | ❌               | Solo padre    |
+| **Metodo 2** | ❌            | ❌               | ✅             |
+| **Metodo 3** | ✅            | ✅               | Solo figli    |
 
 # Implementazione 
 Una volta definito lo schema logico si passa all'**implementazione**: lo schema di relazione viene tradotto in istruzioni SQL (*DDL*, Data Definition Language) che creano la base di dati.

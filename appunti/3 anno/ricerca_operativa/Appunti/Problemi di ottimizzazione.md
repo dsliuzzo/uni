@@ -1082,7 +1082,7 @@ Sia $\bar{x}$ una soluzione ammissibile di base per $(P)$:
 $$
 \bar{x} = \binom{B^{-1}b}{0} \geq \binom{0}{0}
 $$
-
+### Forma canonica
 >[!important] Forma canonica
 >Possiamo esprimere il problema $(P)$ come **forma canonica** rispetto a $B$
 >$$
@@ -1335,6 +1335,9 @@ $$
 \hat{c}_N \not\geq 0
 $$
 Scelto un coefficiente di costo ridotto negativo e facendo entrare in base la corrispondente variabile con valore $\bar{\delta}>0$, è possibile costruire una nuova soluzione ammissibile di base $x$ con valore di funzione obiettivo $c^\top x < c^\top \bar{x}$ contraddicendo l'ottimalità di $\bar{x}$.
+
+>[!quote] In parole umane
+>Se ci sono elementi negativi all'interno di $\hat{c}_N$ allora possiamo affermare con certezza che la soluzione non è ottima (se non è degenere).
 ## Indeterminazioni e regola di Bland
 ### Scelta della variabile entrante in base
 Esistono più coefficienti di costo ridotto negativi, e quindi più variabili fuori base il cui incremento promette un decremento della funzione obbiettivo.
@@ -1561,12 +1564,3 @@ $$
 
 ---
 
-[...] da riprendere
-- trovare vettori linearmente indipendenti
-- trovare matrice inversa (controlla se lo fa la calc)
-- prodotto righe per colonna
-- calcolo det (laplace - sarrus)
-- prodotto matriciale
-
-
----

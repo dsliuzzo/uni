@@ -1,3 +1,4 @@
+#appunti #telecomunicazioni 
 Raccolta dei protocolli studiati, organizzati per livello ISO/OSI. La teoria generale di ogni livello resta nei rispettivi file ([[Modello ISO OSI]], [[Modello TCP IP]]).
 
 # Metriche di valutazione dei protocolli
@@ -8,7 +9,7 @@ Per la valutazione dei protocolli è necessario definire i ritardi:
 - **tempo di elaborazione**
   dipende dall'hardware della scheda di rete$$T_E$$
 - **tempo di accodamento**
-  [...]  [[Reti di telecomunicazioni#ritardo di accodamento]]
+   [[Reti di telecomunicazioni#ritardo di accodamento]]
 
 Inoltre faremo uso del **diagramma di timing** che rappresenta su due linee del tempo i due sistemi:
 ![[Reti di telecomunicazioni-1791451492256.webp|center|662]]
@@ -332,7 +333,21 @@ Il MAC address della stazione destinazione viene indicato nel campo destinazione
 
 L'accesso concorrente delle stazioni al mezzo trasmissivo genera il problema della **collisione**, per questo è fondamentale utilizzare dei protocolli che gestiscano queste situazioni.
 ![[Modello ISO OSI-1792316076558.webp|center|399]]
-In questo scenario abbiamo a disposizione un data rate del mezzo trasmissivo molto elevato (100 mbit/s $\uparrow$) e vogliamo mantenere un protocollo semplice per limitare lo scambio di informazioni superflue che sarebbero utili solo al controllo e non allo scambio effettivo di informazioni.
+
+>[!important] Protocolli di accesso al mezzo
+>![[Protocolli-1792670394746.webp|center|500]]
+>Servono quindi dei **protocolli di accesso al mezzo**, anche inefficienti, purché *semplici*: il data rate del mezzo è molto elevato (da 100 Mbit/s in su), quindi conviene limitare lo scambio di informazioni superflue, utili solo al controllo e non al trasferimento effettivo dei dati. Si distinguono per il tipo di controllo:
+>- **centralizzato**: un controllore riceve le richieste e decide chi trasmette (es. polling); ha una visione completa del sistema, ma è un singolo punto di fallimento;
+>- **distribuito**: ogni stazione decide da sola, senza conoscere lo stato delle altre (es. ALOHA, CSMA, token passing). È intrinsecamente più robusto ai guasti, ma rinuncia alla conoscenza completa dello stato del sistema (code, tempi di attesa), quindi accetta gestioni che possono non essere le migliori.
+>
+>I protocolli di accesso casuale che seguono sono tutti a controllo distribuito.
+>
+>**Allocazione statica.** Il canale è diviso in parti fisse, una per ogni nodo:
+>- **TDMA**: il tempo è diviso in turni (*slot*) di durata fissa, ciascuno assegnato a un nodo; se il nodo non ha nulla da trasmettere, lo slot resta vuoto;
+>- **FDMA**: la banda è divisa in sottobande, una per ogni nodo;
+>- **CDMA**: tutti i nodi usano lo stesso canale nello stesso momento, ma ciascuno codifica i propri bit con un codice diverso.
+>
+>Non ci sono collisioni, ma l'efficienza è bassa con traffico bursty perché la capacità assegnata a un nodo inattivo va persa.
 ### Protocollo Aloha
 In questo protocollo i pacchetti possono essere trasmessi non appena vengono generati (arrivano da un livello superiore), di conseguenza non presupponiamo di eliminare il rischio di collisione, ma di essere in grado di gestirlo.
 
@@ -468,6 +483,7 @@ L'aloha a slot raddoppia le performance
 La massima produttività è al 36%
 Possiamo aumentare il traffico.
 ### Protocollo CSMA
+*"ascolta prima di parlare*"
 Il **CSMA** (Carrier Sensing Multiple Access) deriva direttamente dall'[[#Aloha puro]], con l'aggiunta di un feedback sull'occupazione del canale. Lo strumento che rivela l'occupazione del canale si chiama **carrier sensing** e dà il nome al protocollo. Viene applicato su topologia a **bus bidirezionale** (full duplex).
 
 > [!protocollo] CSMA: ascolta prima di trasmettere Procedura:
@@ -485,6 +501,12 @@ In caso di collisione il **tempo speso per trasmettere l'intero pacchetto è spr
 
 >[!important] Intervallo di vulnerabilità
 >Nel CSMA è uguale a $2\tau$, dove $\tau$ è il ritardo di propagazione da estremo a estremo sul bus. $$ V = 2\tau $$ Viene detto anche **periodo cieco**.
+>>[!question] Perché $2\tau$
+>>Date due stazioni agli estremi opposti del bus, con ritardo di propagazione $\tau$, se A inizia a trasmettere in $t_0$ la sua trama collide con chiunque inizi in $(t_0-\tau,\ t_0+\tau)$:
+>>- **dopo A** (in $[t_0,\ t_0+\tau)$): il segnale di A non è ancora arrivato, quindi B trova il canale libero e trasmette
+>>- **prima di A** (in $(t_0-\tau,\ t_0)$): è il segnale di B a non essere ancora arrivato ad A, che trova il canale libero e trasmette
+>>![[Protocolli-1792836681819.webp|center|400]]
+>>Le due finestre hanno ampiezza $\tau$ ciascuna, da cui $V = 2\tau$ (stessa struttura dell'[[#Aloha puro]], dove $V = 2T$).
 
 Diversamente dall'Aloha ($V = 2T$) qui l'intervallo di vulnerabilità **non dipende dalla durata della trasmissione**, ma solo dal ritardo di propagazione.
 
@@ -518,14 +540,16 @@ Per le prestazioni si assume lo stesso modello dell'[[#Protocollo Aloha|Aloha]]:
 - $\tau$ tempo di propagazione
 - $a = \dfrac{\tau}{T}$
 
-Si assume inoltre la modalità **non persistente** (l'unica che consente di trattare facilmente il traffico sul canale). Si può mostrare che il throughput è $$ S = \frac{G e^{-aG}}{G(1+2a) + e^{-aG}} $$
+Si assume inoltre la modalità **non persistente** (l'unica che consente di trattare facilmente il traffico sul canale).
+Si può mostrare che il throughput è $$ S = \frac{G e^{-aG}}{G(1+2a) + e^{-aG}} $$
 
 ![[Modello ISO OSI-1792320159802.webp|center|533]]
 
 Più $a$ è piccolo (propagazione trascurabile rispetto alla trasmissione), più il CSMA si avvicina a $S = 1$ e supera nettamente Aloha e Aloha a slot.
 
 #### CSMA-CD
-**Collision Detection**: adotta la tecnica _"ascolta prima di parlare e mentre parli"_. Rispetto al CSMA migliora le prestazioni **riducendo la durata delle collisioni**.
+_"ascolta prima di parlare e mentre parli"_
+**Collision Detection**: rispetto al CSMA migliora le prestazioni **riducendo la durata delle collisioni**.
 
 Nel CSMA le stazioni coinvolte in una collisione continuano a trasmettere la trama intera. Il tempo necessario perché se ne accorgano dipende dal tempo di propagazione (piccolo rispetto al tempo di trasmissione nelle LAN).
 
@@ -542,6 +566,7 @@ Nel CSMA le stazioni coinvolte in una collisione continuano a trasmettere la tra
 > - **wired LAN**: collision detection facile, si misurano le intensità dei segnali e si confrontano i segnali trasmessi con quelli ricevuti
 > - **wireless LAN**: difficile, il ricevitore si disattiva mentre trasmette
 
+![[Reti di telecomunicazioni-1792596709655.webp|center|313]]
 
 > [!protocollo] Cosa succede in caso di collisione
 > 
@@ -552,6 +577,136 @@ Nel CSMA le stazioni coinvolte in una collisione continuano a trasmettere la tra
 > 
 > Per ridurre l'aumento di traffico dovuto alle ritrasmissioni, $\Delta T$ cresce **esponenzialmente** con il numero di collisioni consecutive: è il [[#Aloha a slot|backoff esponenziale]] già visto.
 
+![[Protocolli-1792837998891.webp|center|456]]
+dove
+$\tau$ tempo di propagazione da estremo ad estremo del bus
+$T_{1}$ tempo di rilevazione della collisione
+$T_{2}$ tempo di permanenza nello stato di collisione (tempo necessario all'invio della sequenza di jamming)
+
+Ne deriva il **tempo totale** necessario affinché tutti i terminali interrompano l'emissione
+$$
+T = 2 \tau + T_{1} + T_{2}
+$$
+e la lunghezza minima della trama
+$$
+L_{\min} = (2 \tau + T_{1}) R
+$$
+>[!question] Lunghezza minima della trama
+>Il nodo $A$ deve ancora essere in trasmissione quando la collisione gli viene rilevata (dopo $2\tau + T_{1}$). Se la PDU fosse più corta, $A$ avrebbe già finito di trasmettere senza accorgersi della collisione e non ritrasmetterebbe. Quindi la PDU deve durare almeno $2\tau + T_{1}$; moltiplicando per il ritmo binario $R$ si ottiene la lunghezza minima in bit.
+
+**Prestazioni**
+- Nel CSMA una trama che collide occupa il canale per tutta la sua durata $T$.
+- Nel CD la collisione viene rilevata e la trasmissione abortita dopo un tempo $\delta T$ (più i pochi bit di jamming), quindi si risparmia una frazione $(1-\delta)$ di $T$ per ogni collisione.
+Il throughput migliora quindi ed è descritto dalla seguente formula
+$$
+ S = \frac{G e^{-aG}}{G(1+2a) + e^{-aG} - G(1-\delta)(1-e^{-aG})} 
+$$
+
+![[Protocolli-1792837698678.webp|center|526]]
+questo risparmio dipende dalle caratteristiche dell'hardware che ci permette di rilevare la collisione: se il tempo di detection è proporzionale a T non abbiamo una convenienza.
+#### CSMA-CA
+Protocollo utilizzato nelle reti di tipo wireless LAN.
+## Standard IEEE 802
+Quando cominciarono a diffondersi le prime LAN, l’IEEE attivò il “progetto IEEE 802” con lo scopo di standardizzare
+tali reti.
+L’IEEE 802 introduce l’idea che le LAN devono fornire un’**interfaccia unificata** verso il livello rete, pur utilizzando tecnologie trasmissive diverse, perciò il livello in due sottolivelli:
+- **LLC** (logical link control)
+  sottolivello comune a tutte le tipologie di LAN; Svolge funzionalità di recupero, degli errori, cche sontrollo di flusso, gestione della connessione logica (visti fino ad ora per [[#Livello collegamento (livello 2)|tecnologie di collegamento punto-punto, data link]])
+- **MAC** (media access control)
+  diverso in funzione del tipo di protocollo di accesso utilizzato a livello fisico; Svolge funzionalità di controllo di accesso, indirizzamento, strutturazione delle informazioni in trame e delimitazione di quest'ultima, controllo di errore
+Lo standard inoltre definisce una suddivisione del sottolivello MAC basato sul tipo di tecnologia usato nel [[Modello ISO OSI#Livello fisico (livello 1)|livello fisico]].
+![[Protocolli-1792843136292.webp|center|841]]
+
+Inizialmente il progetto 802 prevedeva la presenza di 6 tipologie di livello MAC, ma con il tempo se ne sono aggiunte altre.
+
+| **cod**  | **Nome**   | **Velocità**           | **Topologia**                                   | **Tecnica di accesso** | **Mezzo fisico**                                           | **Lunghezza massima** |
+| -------- | ---------- | ---------------------- | ----------------------------------------------- | ---------------------- | ---------------------------------------------------------- | --------------------- |
+| $\vdots$ |            |                        |                                                 |                        |                                                            |                       |
+| 802.3    | CSMA/CD    | $1-10 \ \text{Mbit/s}$ | [[Reti di telecomunicazioni#topologia\|bus]]    | [[#CSMA-CD]]           | [[Modello ISO OSI#Mezzi trasmissivi\|doppino o coassiale]] | 500 m                 |
+| 802.4    | Token bus  | $10 \ \text{Mbit/s}$   | [[Reti di telecomunicazioni#topologia\|bus]]    | token                  | [[Modello ISO OSI#Mezzi trasmissivi\|coassiale]]           | 2000 m                |
+| 802.5    | Token ring | $4-10 \ \text{Mbit/s}$ | [[Reti di telecomunicazioni#topologia\|anello]] | token                  | [[Modello ISO OSI#Mezzi trasmissivi\|coassiale o fibra]]   | 3000 m                |
+| $\vdots$ |            |                        |                                                 |                        |                                                            |                       |
+| 802.11   | wifi       |                        |                                                 | [[#CSMA-CA]]           |                                                            |                       |
+### Indirizzi MAC
+Ogni livello è caratterizzato da un indirizzo e ne esistono di vario tipo:
+- [[#Indirizzo IP|rete]]
+- [[Modello ISO OSI#Framing|logici]]
+- [[#Indirizzi MAC|fisici]]
+
+Ogni dispositivo sulla LAN è identificato da un **indirizzo MAC**, utile a discriminare i dispositivi fisicamente collegati sulla stessa rete.
+L'indirizzo MAC è associato alla scheda di rete utilizzata (a livello firmware, sono memorizzate nella ROM dell'adattatore della scheda).
+È composto da 6 coppie di valori esadecimali, per un totale di 48 bit ed è suddiviso in due parti principali
+- 3 coppie che rappresentano il produttore della scheda (Organization Unit Identify - OUI)
+- 3 coppie che rappresentano il numero specifico progressivo, che identifica la scheda (deciso dal costruttore)
+
+La [[Reti di telecomunicazioni#Informazioni utente e di controllo, PDU, SAP|PDU]] del MAC ha degli elementi comuni a tutti i sottolivelli:
+![[Protocolli-1792853380174.webp|center|667]]
+- **MAC-DSAP**
+  indirizzo MAC del nodo mittente
+- **MAC-SSAP**
+  indirizzo MAC del nodo destinatario
+- **LLC-PDU**
+  campo info
+- **FCS**
+  32 bit utili all'identificazione di errori
+
+è importante che la destinazione sia prima della sorgente $\to$ il ricevente può controllare meno bit
+
+Gli indirizzi MAC possono essere di tipo:
+- Individuale
+- di gruppo
+- broadcast
+### Standard IEEE 802.3
+Lo standard IEEE 802.3 la rete ethernet, una delle LAN più diffuse al mondo.
+Utilizza il protocollo [[#CSMA-CD]] e può essere di vario tipo:
+$$
+x \ B \ y
+$$
+dove $x$ rappresenta i $\text{Mbit/s}$ in grado di tramettere, $y$ rappresenta l'estensione massima possibile e $B$ rappresenta il tipo di banda.
+*es.*
+$$
+10 \ \text{base} \ 5
+$$
+è un tipo di LAN che consente la trasmissione in $10\ \text{Mbit/s}$ in banda base per un massimo di $500 \ m$.
+Fa utilizzo di [[Modello ISO OSI#Mezzi trasmissivi|cavi coassiali thick]].
+I segmenti di lunghezza massima 500 m possono essere estesi facendo uso di **ripetitori** (semplice decodifica e reinvio) per estendere l'ampiezza della rete, per un massimo di 4 ripetitori a cascata (2500 m). Ogni segmento contente a 100 nodi di far parte della rete.
+
+*es.*
+$$
+10 \ \text{base} \ 2
+$$
+ha una estensione massima di 185 m per segmento dato dall'utilizzo di [[Modello ISO OSI#Mezzi trasmissivi|cavi coassiali thin]] che hanno maggiore dispersione.
+
+*es.*
+$$
+10 \ \text{base} \ \text{T}
+$$
+fa utilizzo di [[Modello ISO OSI#Mezzi trasmissivi|twister pair]] e permette quindi l'utilizzo di ripetitori multi porta.
+#### MAC frame
+![[Protocolli-1792856560970.webp|center|1007]]
+- **Preamble**
+  7 ottetti che permettono alle stazioni riceventi di sincronizzarsi con meccanismi di aggancio di fase sul clock di trasmissione del nodo mittente di ciascun pacchetto
+- **SFD**
+  delimitatore di inizio della trama
+- **Destination address**
+  indirizzo MAC 48 bit
+- **Source address**
+  indirizzo MAC 48 bit
+- **Length PDU**
+  2 byte che descrivono la lunghezza del campo dati
+- **Data**
+  Payload
+- **PAD**
+  bit di padding che permettono il raggiungimento della [[#CSMA-CD|lunghezza minima]] della trama
+- **FCS**
+  controllo di errori
+
+>[!bug] In caso di rilevamento di errori il frame viene completamente scartato, il reinvio viene demandato agli altri livelli
+
+La minima lunghezza della trama è 512 bit.
+La velocità di propagazione media è di $2 * 10^8\ \text{m/s}$.
+Ne segue una distanza massima teorica di $5 \ km$, ma per evitare problemi relativi ai ritardi dei router è fissata una distanza massima a $2,5 \ km$.
+due trame consecutive vengono sempre distanziate di un tempo minimo detto Inter Frame Gap.
 # Livello rete (livello 3)
 Equivalente TCP/IP: [[Modello TCP IP#Livello di rete (livello 2)|livello di rete]]
 Teoria del livello: [[Modello ISO OSI#Livello rete (livello 3)]]
@@ -559,7 +714,8 @@ Teoria del livello: [[Modello ISO OSI#Livello rete (livello 3)]]
 ## IP
 >[!protocollo] IP
 >Il protocollo utilizzato è l'Internet Protocol (IP), il quale provvede a instradare i dati attraverso reti multiple collegate in cascata. In pratica, si assicura di trovare il percorso giusto per trasferire informazioni tra sistemi terminali che appartengono a reti diverse.
-
+### Indirizzo IP
+[...]
 # Livello trasporto (livello 4)
 Equivalente TCP/IP: [[Modello TCP IP#Livello di trasporto (livello 3)|livello di trasporto]]
 Teoria del livello: [[Modello ISO OSI#Livello trasporto (livello 4)]]

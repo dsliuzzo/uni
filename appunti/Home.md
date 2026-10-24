@@ -18,6 +18,12 @@
 [[Algoritmi]]
 
 ## 3 anno
+[[Reti di telecomunicazioni]]
+[[Basi di dati]]
+[[Elettronica digitale]]
+[[Ricerca operativa]]
+[[Web]]
+
 
 
 ---

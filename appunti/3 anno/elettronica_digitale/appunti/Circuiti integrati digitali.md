@@ -1,3 +1,4 @@
+#appunti #elettronica_digitale 
 # Approcci progettuali
 La definizione delle **Funzioni & Specifiche** attestano cosa deve fare il chip, a che velocità, con che consumo e area, in quali volumi. Da qui si sceglie _quanto_ del chip viene personalizzato e _quando_ avviene la personalizzazione. Tutto lo schema si regge su due domande:
 

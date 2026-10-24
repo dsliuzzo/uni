@@ -104,6 +104,41 @@
         "a": 1,
         "rgb": 5431473
       }
+    },
+    {
+      "query": "tag:#elettronica_digitale  ",
+      "color": {
+        "a": 1,
+        "rgb": 16121794
+      }
+    },
+    {
+      "query": "tag:#web ",
+      "color": {
+        "a": 1,
+        "rgb": 5395168
+      }
+    },
+    {
+      "query": "tag:#ricerca_operativa  ",
+      "color": {
+        "a": 1,
+        "rgb": 3368448
+      }
+    },
+    {
+      "query": "tag:#basi_di_dati  ",
+      "color": {
+        "a": 1,
+        "rgb": 9584472
+      }
+    },
+    {
+      "query": "tag:#telecomunicazioni  ",
+      "color": {
+        "a": 1,
+        "rgb": 16728064
+      }
     }
   ],
   "collapse-display": false,
@@ -116,6 +151,6 @@
   "repelStrength": 6.85980122647494,
   "linkStrength": 0.389300063438359,
   "linkDistance": 259,
-  "scale": 0.24698176956018433,
-  "close": true
+  "scale": 0.16345286974960294,
+  "close": false
 }
