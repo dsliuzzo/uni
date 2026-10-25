@@ -1615,19 +1615,27 @@ Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (es
 >             & x_1, x_2, x_3, x_4, x_5 \ge 0
 > \end{cases}
 > $$
+>> [!note] Osservazione
+>> La forma standard di un problema con soli vincoli di $\le$ (e $b \ge 0$) è **già in forma canonica** rispetto alla base costituita dalle colonne delle variabili di slack. Infatti le colonne di $x_3, x_4, x_5$ formano la matrice identità, quindi $B = B^{-1} = I$. Inoltre $c_B = 0$, perciò $\hat{c}_N = c_N = (-1, 2)$, e $\bar{x}_B = b = (1, 8, 6)^\top \ge 0$, quindi la base è ammissibile.
+>>
+>> Poiché $x_N = (x_1, x_2) = 0$, la soluzione di base corrente corrisponde all'**origine** $(x_1, x_2) = (0, 0)$ delle variabili originali, e il suo valore obiettivo è $\bar{z} = c_B^\top B^{-1} b = 0$: per questo l'elemento in basso a destra del tableau vale $-\bar{z} = 0$. L'algoritmo parte, quindi, sempre dall'origine, spostandosi verso l'ottimo.
 >
 > Costruiamo il tableau rispetto alla base $\mathcal{B} = \{3, 4, 5\}$
 > $$
-> T = \begin{array}{|ccccc|c|}
+> T^{(0)} = \begin{array}{c|ccccc|c|l}
+> & x_1 & x_2 & x_3 & x_4 & x_5 & & \\
 > \hline
-> -1 & 1 & 1 & 0 & 0 & 1 \\
-> 1 & 2 & 0 & 1 & 0 & 8 \\
-> 1 & 1 & 0 & 0 & 1 & 6 \\
+> x_3 & -1 & 1 & 1 & 0 & 0 & 1 & \\
+> x_4 & 1 & 2 & 0 & 1 & 0 & 8 & \Big\} \ B^{-1}b = I^{-1}b = b \\
+> x_5 & 1 & 1 & 0 & 0 & 1 & 6 & \\
 > \hline
-> -1 & 2 & 0 & 0 & 0 & 0 \\
+> & \textcolor{#e06c75}{-1} & 2 & 0 & 0 & 0 & 0 & \\
 > \hline
 > \end{array}
 > $$
+> dove le colonne di $x_1, x_2$ sono $c_N$ (ultima riga) e le colonne di $x_3, x_4, x_5$ sono $c_B^\top$; $c_N = c_N^\top - \underbrace{c_B^\top B^{-1}}_{=0}$ perché le slack non compaiono nella funzione obiettivo.
+> La porzione del tableau contenente $I_{m \times m}\ B^{-1}N$ corrisponde esattamente alla matrice $A$, infatti $I^{-1}A = IA = A$.
+>
 > L'ultima riga rappresenta i coefficienti di costo ridotto $\hat{c}^\top_N = c_N^\top - c_B^\top B^{-1} N$, ma dato che $c_B^\top = 0$ allora $\hat{c}_N^\top = c_N^\top$ i coefficienti di costo ridotto delle variabili fuori base coincide con i coefficienti delle variabili fuori base iniziali
 >
 > **Test di ottimalità**
@@ -1645,7 +1653,7 @@ Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (es
 > 1 & 2 & 0 & 1 & 0 & 8 \\
 > 1 & 1 & 0 & 0 & 1 & 6 \\
 > \hline
-> \textcolor{red}{-1} & 2 & 0 & 0 & 0 & 0 \\
+> \textcolor{#e06c75}{-1} & 2 & 0 & 0 & 0 & 0 \\
 > \hline
 > \end{array}
 > $$
@@ -1656,15 +1664,15 @@ Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (es
 > $$
 > d = B^{-1} A_1 = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}
 > \begin{pmatrix} -1 \\ 1 \\ 1 \end{pmatrix}
-> = \begin{pmatrix} -1 \\ 1 \\ 1 \end{pmatrix}
+> = \textcolor{#e06c75}{\begin{pmatrix} -1 \\ 1 \\ 1 \end{pmatrix}}
 > $$
-> Osserviamo che esistono componenti di $d$ che sono positive, quindi non entra in azione il criterio di illimitatezza. Nel tableau la direzione $d$ è la colonna della variabile entrante:
+> Osserviamo che esistono componenti di $d$ che sono positive, quindi non entra in azione il criterio di illimitatezza. Nel tableau la direzione $d$ è esattamente la <span style="color:#e06c75">**colonna di $x_1$**</span> (righe $1, \dots, m$), cioè la colonna della variabile entrante:
 > $$
 > T = \begin{array}{|ccccc|c|}
 > \hline
-> \textcolor{red}{-1} & 1 & 1 & 0 & 0 & 1 \\
-> \textcolor{red}{1} & 2 & 0 & 1 & 0 & 8 \\
-> \textcolor{red}{1} & 1 & 0 & 0 & 1 & 6 \\
+> \textcolor{#e06c75}{-1} & 1 & 1 & 0 & 0 & 1 \\
+> \textcolor{#e06c75}{1} & 2 & 0 & 1 & 0 & 8 \\
+> \textcolor{#e06c75}{1} & 1 & 0 & 0 & 1 & 6 \\
 > \hline
 > -1 & 2 & 0 & 0 & 0 & 0 \\
 > \hline
@@ -1749,22 +1757,42 @@ Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (es
 > $$
 > T^{(0)} = \begin{array}{|ccccc|c|}
 > \hline
-> -1 & 1 & 1 & 0 & 0 & 1 \\
-> 1 & 2 & 0 & 1 & 0 & 8 \\
-> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \textcolor{#61afef}{-1} & 1 & 1 & 0 & \textcolor{#d19a66}{0} & 1 \\
+> \textcolor{#61afef}{1} & 2 & 0 & 1 & \textcolor{#d19a66}{0} & 8 \\
+> \textcolor{#61afef}{1} & 1 & 0 & 0 & \textcolor{#d19a66}{1} & 6 \\
 > \hline
-> -1 & 2 & 0 & 0 & 0 & 0 \\
+> \textcolor{#61afef}{-1} & 2 & 0 & 0 & \textcolor{#d19a66}{0} & 0 \\
 > \hline
 > \end{array}
 > \qquad \longrightarrow \qquad
 > T^{(1)} = \begin{array}{|ccccc|c|}
 > \hline
-> 0 & 2 & 1 & 0 & 1 & 7 \\
-> 0 & 1 & 0 & 1 & -1 & 2 \\
-> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \textcolor{#61afef}{0} & 2 & 1 & 0 & \textcolor{#d19a66}{1} & 7 \\
+> \textcolor{#61afef}{0} & 1 & 0 & 1 & \textcolor{#d19a66}{-1} & 2 \\
+> \textcolor{#61afef}{1} & 1 & 0 & 0 & \textcolor{#d19a66}{1} & 6 \\
 > \hline
-> 0 & 3 & 0 & 0 & 1 & 6 \\
+> \textcolor{#61afef}{0} & 3 & 0 & 0 & \textcolor{#d19a66}{1} & 6 \\
 > \hline
 > \end{array}
 > $$
+> dove la colonna di $x_1$ (<span style="color:#61afef">blu</span>) diventa il vettore unitario $e_3$, mentre $x_5$ non è più unitaria (<span style="color:#d19a66">arancione</span>).
+>
+> Dal nuovo tableau si legge direttamente la soluzione: ogni variabile in base ha una colonna unitaria, e il suo valore è il termine noto della riga in cui compare l'$1$. Gli stessi colori ritornano nella soluzione, dove $x_2 = x_5 = 0$ perché fuori base:
+> $$
+> T^{(1)} = \begin{array}{c|ccccc|c|}
+> & x_1 & x_2 & x_3 & x_4 & x_5 & \\
+> \hline
+> x_3 & 0 & 2 & \bbox[3px, border:2px solid #e06c75; border-radius:50%]{\color{#e06c75}{1}} & 0 & 1 & \bbox[3px, border:2px solid #e06c75; border-radius:50%]{\color{#e06c75}{7}} \\
+> x_4 & 0 & 1 & 0 & \bbox[3px, border:2px solid #98c379; border-radius:50%]{\color{#98c379}{1}} & -1 & \bbox[3px, border:2px solid #98c379; border-radius:50%]{\color{#98c379}{2}} \\
+> x_1 & \bbox[3px, border:2px solid #61afef; border-radius:50%]{\color{#61afef}{1}} & 1 & 0 & 0 & 1 & \bbox[3px, border:2px solid #61afef; border-radius:50%]{\color{#61afef}{6}} \\
+> \hline
+> & 0 & 3 & 0 & 0 & 1 & 6 \\
+> \hline
+> \end{array}
+> $$
+> $$
+> x^* = (\bbox[3px, border:2px solid #61afef; border-radius:50%]{\color{#61afef}{6}},\, 0,\, \bbox[3px, border:2px solid #e06c75; border-radius:50%]{\color{#e06c75}{7}},\, \bbox[3px, border:2px solid #98c379; border-radius:50%]{\color{#98c379}{2}},\, 0)^\top
+> $$
+> **Generalmente**, la riga della variabile in base $x_i$ ha un $1$ nella colonna di $x_i$ e il termine noto di quella riga è il valore di $x_i$.
+>
 > Rispetto all'esempio precedente si arriva allo stesso ottimo $x^* = (6, 0, 7, 2, 0)^\top$, ma con un percorso diverso: partendo dall'origine $(0,0)$ si passa direttamente al vertice $(6,0)$ in una sola iterazione.
