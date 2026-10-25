@@ -9,7 +9,7 @@ Un sistema che genera l'informazione o un host destinazione devono avere funzion
 # Livello fisico (livello 1)
 Fornisce i mezzi meccanici, fisici, funzionali e procedurali per attivare, mantenere e disattivare le connessioni fisiche.
 Ha il compito di effettuare la conversione da cifre binarie scambiate dalle entità di livello di collegamento.
-Le unità dati sono bit o simboli.
+## Servizi del livello
 È necessaria una interfaccia fisica in grado di interpretare le forme d'onda e una serie di procedure utili alla trasformazione del flusso informativo di bit in segnali da inviare al mezzo:
 - modulazione/demodulazione
 - codifica/decodifica
@@ -35,6 +35,10 @@ lunghezza d'onda in cui l'attenuazione (in dB/km) è bassa.
 - In queste bande il segnale percorre distanze maggiori prima di degradarsi troppo.
 - La scelta dipende anche dalle sorgenti e dai rilevatori disponibili: la prima finestra, ad esempio, era legata ai primi laser/LED.
 - L'attenuazione migliora passando da $0{,}85$ a $1{,}30$ a $1{,}55\,\mu\text{m}$, che è la finestra con l'attenuazione minima.
+## PDU e header
+Le unità dati sono bit o simboli: a questo livello non c'è un header vero e proprio, perché si trasmette direttamente il flusso di bit sul mezzo come segnale.
+## Protocolli
+Il livello fisico non ha protocolli veri e propri, ma specifiche di segnalazione e di mezzo. Per le varianti Ethernet (10Base5, 10Base2, 10BaseT) vedi [[Protocolli#Standard IEEE 802.3|IEEE 802.3]].
 # Livello collegamento (livello 2)
 Fornisce i mezzi funzionali e procedurali per il trasferimento delle unità dati tra entità di livello rete e per fronteggiare malfunzionamenti del livello fisico.
 
@@ -44,20 +48,20 @@ Funzioni fondamentali:
 
 È suddiviso in due sotto livelli:
 - **Data-link**
-- [[#Medium access control (MAC)]]
+- [[#Medium access control (MAC)|MAC]]
 ## Servizi del livello
 Ogni nodo sulla rete ha un processo di bufferizzazione, su vari livelli, necessari per l'implementazione store and forward e rendere i livelli indipendenti.
 La quantità di bit prelevate dopo il buffer è legata ai protocolli di tipo collegamento.
 Dobbiamo fornire i seguenti servizi:
 - servizi forniti a **livello rete** per prelevare o fornire dati al livello adiacente
 - **Livello data link**
-	- [[#Framing]]
+	- [[#Framing|Framing]]
 	  capire quando inizia e quando si conclude una porzione di dati, su questi frame è possibile effettuare:
-	- [[#Controllo degli errori]]
+	- [[#Controllo degli errori|Controllo degli errori]]
 	  che stanno avvenendo sul singolo frame, se qualcuno di questi è errato può essere ritrasmesso
-	- [[#Controllo del flusso e ritrasmissione (tecniche ARQ)]]
+	- [[#Controllo del flusso e ritrasmissione (tecniche ARQ)|Controllo del flusso e ritrasmissione]]
 	  controllo sulla velocità di invio dei dati - il ricevitore potrebbe non riuscire abbastanza velocemente i dati inviati
-- [[#Medium access control (MAC)]]
+- [[#Medium access control (MAC)|MAC]]
 	- Nel caso di mezzo condiviso fornisce i mezzi per condividere in maniera ottimale le risorse
 
 Vari tipi di buffer che possono essere organizzati a bit (livello 1) o frame (livello 2). Servono a creare una asincronicità e parallelizzazione del funzionamento dei livelli. Inoltre tramite il buffer possiamo capire se il dato è stato corrotto, segnalandolo alla corrente in modo che la sorgente possa ritrasmetterlo: il frame verrà eliminato dal buffer solo quando abbiamo la certezza che ha raggiunto la destinazione.
@@ -107,7 +111,7 @@ Il trasmittente incapsulano i datagrammi nel frame che li compete (ricevuti dal 
 >>[!blank]
 >**Lato ricevente**
 >Controlla errori e il flusso, estrae i datagrammi e li passa al nodo ricevente
-## Framing
+### Framing
 La quantità di bit è rappresentata dal datagramma + parte di controllo
 - **parte di controllo** - Header
 - **datagramma livello superiore** - Payload
@@ -126,10 +130,7 @@ Per delimitare le trame il ricevitore deve riconoscere l'inizio e la fine della 
 - **conteggio**
   una trama è composta da un determinato numero di bit che sarà sufficiente contare per determinare la fine
 
-### BSC
-Protocollo: [[Protocolli#BSC]]
-
-## Controllo degli errori
+### Controllo degli errori
 
 >[!bug] Possibili cause di alterazione
 >- **rumore termico**, probabilità di errore avendo un certo tipo di temperatura assoluta (dipende dai mezzi trasmissivi e apparati di ricezione e trasmissione) - PDF (probability density function)
@@ -185,18 +186,29 @@ In base al mezzo e a degli studi su di essi possiamo decidere se implementare un
 >[!important] Piggybacking
 >Quando il flusso dati è bidirezionale è possibile includere nell’intestazione della PDU dati un campo con l’informazione di riscontro (ACK) per il flusso dati che sta fluendo in direzione opposta. Questa tecnica è detta **piggybacking**.
 
-## Controllo del flusso e ritrasmissione (tecniche ARQ)
-Protocolli: [[Protocolli#Controllo del flusso e ritrasmissione (tecniche ARQ)]]
+### Controllo del flusso e ritrasmissione (tecniche ARQ)
+Protocolli: [[Protocolli#Controllo del flusso e ritrasmissione (tecniche ARQ)|tecniche ARQ]]
 
-## HDLC
-Protocollo: [[Protocolli#HDLC]]
+### Medium access control (MAC)
+Protocolli: [[Protocolli#Medium access control (MAC)|protocolli MAC]]
 
-## Medium access control (MAC)
-Protocolli: [[Protocolli#Medium access control (MAC)]]
+## PDU e header
+La PDU del livello 2 è il **frame** (trama): incapsula il datagramma ricevuto dal livello rete (payload) aggiungendo un header con le informazioni di controllo (delimitatori, indirizzi, numeri di sequenza e riscontri) e in coda un campo di controllo errori (FCS/CRC). Vedi [[#Framing|framing]] per i delimitatori.
+- Formato del frame HDLC (Flag, Address, Control, Info, FCS): [[Protocolli#Formato della trama|trama HDLC]]
+- Formato del frame MAC e IEEE 802.3 (preambolo, SFD, indirizzi, lunghezza, dati, PAD, FCS): [[Protocolli#MAC frame|frame MAC]]
+- Trama Ethernet (campo *type*): [[Protocolli#802.3 vs Ethernet|802.3 vs Ethernet]]
+
+## Protocolli
+- **Framing a caratteri**: [[Protocolli#BSC|BSC]]
+- **Controllo di flusso e ARQ**: [[Protocolli#Stop and wait|Stop and wait]], [[Protocolli#Go back N|Go back N]], [[Protocolli#Selective repeat|Selective repeat]]
+- **Collegamento punto-punto**: [[Protocolli#HDLC|HDLC]]
+- **Accesso al mezzo (MAC)**: [[Protocolli#Protocollo Aloha|Aloha]] ([[Protocolli#Aloha puro|puro]], [[Protocolli#Aloha a slot|a slot]]), [[Protocolli#Protocollo CSMA|CSMA]], [[Protocolli#CSMA-CD|CSMA-CD]], [[Protocolli#CSMA-CA|CSMA-CA]]
+- **Standard LAN**: [[Protocolli#Standard IEEE 802|IEEE 802]], [[Protocolli#Standard IEEE 802.3|IEEE 802.3]], [[Protocolli#Indirizzi MAC|Indirizzi MAC]]
 
 # Livello rete (livello 3)
 Fornisce i mezzi funzionali e procedurali per lo scambio di informazioni tra entità di livello di trasporto.
 Fornisce i mezzi per instaurare, mantenere e abbattere le connessioni di rete tra entità di livello trasporto.
+## Servizi del livello
 Funzioni fondamentali:
 - instradamento
 - indirizzamento
@@ -208,29 +220,65 @@ L'obbiettivo fondamentale di questo livello è quello di individuare il partner 
 | ------------ | ---------- |
 |              |            |
 
+## PDU e header
+La PDU del livello 3 è il **pacchetto** (datagramma in Internet): l'header contiene principalmente gli indirizzi di sorgente e destinazione usati per l'instradamento. Il formato dell'header IP andrà descritto in [[Protocolli#IP|IP]].
+
+## Protocolli
+- [[Protocolli#IP|IP]], con [[Protocolli#Indirizzo IP|indirizzo IP]]
 
 # Livello trasporto (livello 4)
 Fornisce alle entità di livello sessione le connessioni di livello trasporto.
 Colma le deficienze della qualità di servizio delle connessioni di livello rete.
 È il livello più basso con significato da estremo a estremo (la rete è una scatola nera, non ci interessa cosa avviene e come avviene la connessione tra gli host), per questo è implementato solo nei nodi terminali.
 In questo livello i messaggi vengono frammentati in segmenti.
+
+## Servizi del livello
 Le funzioni principali sono:
 - connessione
 - controllo di errore e di flusso
 
 ![[Reti di telecomunicazioni-1791128304964.webp|center|555]]
 
+## PDU e header
+La PDU del livello 4 è il **segmento**: l'header contiene le porte di sorgente e destinazione (per consegnare i dati al processo giusto) e le informazioni per controllo di errore (checksum) e, nel TCP, di flusso e connessione. I campi vanno descritti in [[Protocolli#TCP|TCP]] e [[Protocolli#UDP|UDP]].
+
+## Protocolli
+- [[Protocolli#TCP|TCP]]: orientato alla connessione
+- [[Protocolli#UDP|UDP]]: non orientato alla connessione
+
 # Livello sessione (livello 5)
 È responsabile dell'organizzazione del dialogo fra due programmi applicativi di sistemi diversi. Per permettere questa comunicazione, lo strato assicura alle entità di presentazione una connessione di sessione e si occupa di organizzare attivamente il colloquio tra le entità di presentazione stesse.
 
+## Servizi del livello
 Le sue funzioni principali si concentrano sulla gestione del dialogo e sulla sincronizzazione tra eventi. A livello pratico, questo livello struttura e sincronizza lo scambio di dati in modo da poterlo sospendere, riprendere e terminare ordinatamente. Infine, per garantire stabilità al dialogo rispetto ai problemi di rete inferiori, il livello di sessione maschera le interruzioni del servizio trasporto.
+
+## PDU e header
+Nello stack TCP/IP questo livello non esiste come strato separato: le sue funzioni sono svolte dall'applicazione, quindi non c'è un header dedicato (vedi [[Modello TCP IP#Livello applicazione (livello 4)|livello applicazione TCP/IP]]).
+
+## Protocolli
+Nessun protocollo trattato.
 # Livello presentazione (livello 6)
 Lo scopo principale è la corretta interpretazione e formattazione delle informazioni scambiate.
 
+## Servizi del livello
 Nello specifico, questo strato risolve i problemi di compatibilità per quanto riguarda la rappresentazione dei dati da trasferire. Per permettere una comunicazione trasparente tra architetture eterogenee, il livello di presentazione risolve i problemi relativi alla trasformazione della sintassi dei dati, una funzione essenziale, ad esempio, quando avviene un colloquio di sistemi basati su sistemi operativi diversi. Infine, oltre a gestire l'aspetto sintattico, questo livello può fornire servizi di cifratura delle informazioni.
+
+## PDU e header
+Come per la sessione, in TCP/IP non è uno strato separato e non ha un header dedicato (vedi [[Modello TCP IP#Livello applicazione (livello 4)|livello applicazione TCP/IP]]).
+
+## Protocolli
+Nessun protocollo trattato.
 # Livello applicazione (livello 7)
 Il compito fondamentale di questo strato è fungere da interfaccia diretta per il software: fornisce ai processi applicativi i mezzi per accedere all'ambiente OSI.
+
+## Servizi del livello
 Esempi di servizio:
 - trasferimento di file
 - terminale virtuale
 - posta elettronica
+
+## PDU e header
+Il formato dei messaggi dipende dal singolo protocollo applicativo.
+
+## Protocolli
+In TCP/IP ogni applicazione ha il suo protocollo (telnet, ftp, smtp, http, dns), vedi [[Modello TCP IP#Livello applicazione (livello 4)|livello applicazione TCP/IP]]. Non ancora presenti in [[Protocolli]].
