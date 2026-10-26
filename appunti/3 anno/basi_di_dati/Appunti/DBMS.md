@@ -909,3 +909,10 @@ _Esempio:_ partita IVA dei fornitori che stanno a RC **oppure** che forniscono M
 > - la **sottrazione** tiene una tupla quando **nessuna** riga della seconda coincide con essa $\to$ condizione universale $\forall$ (equivalente a $\neg\exists$)
 > 
 > Una join può solo verificare l'esistenza di una corrispondenza, mai la sua assenza: per questo $-$ è un operatore necessario.
+
+
+
+
+---
+
+
