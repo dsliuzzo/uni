@@ -21,6 +21,12 @@
 | F2        | M1            | 8      |
 
 
+| **Marca** |          |
+| --------- | -------- |
+| **nome**  | **sede** |
+| $\alpha$  | CS       |
+| $\beta$   | RC       |
+
 # Esercizi 1
 *es.* per casa
 1. i dati delle forniture della merce M2
@@ -192,8 +198,6 @@ $$
 ### Almeno innestato
 livello difficoltà prima query di prova di esame (capire se siamo in grado di ragionare sulla join in modo corretto).
 Nomi dei fornitori che forniscono almeno 2 merci, ciascuna delle quali è fornita da almeno 2 fornitori
-
-verifica questo [...]
 $$
 \displaylines{
 \text{fAlmeno2} = \text{Fornitura} \underset{\$1 = \$ 1 \wedge \$2 \neq \$2}{\bowtie} \text{Fornitura} \\
@@ -215,9 +219,7 @@ $$
 >fornitori che forniscono almeno 2 merci speciali (merci con una determinata proprietà)
 >$$\left(\text{Fornitura} \underset{\$2 = \$1}{\bowtie} \text{MerciSpeciali}\right) \underset{\$2 = \$1 \wedge \$ 4 \neq \$1}{\bowtie} \text{MerciSpeciali}$$
 >È sbagliata perchè:
->per ogni riga di fornitura effettua la prima join con MerciSpeciali quando la MerceSpeciale è quella fornita. Per ciascuna di queste righe prova a prolungarla con un altra MerceSpeciale, ma non può mai verificarsi la condizione della seconda join.
->Non può mai esistere una merce che è uguale al primo campo ma diverso allo stesso tempo.
->Cerca di capire dal quaderno [...]
+>per ogni riga di fornitura effettua la prima join con MerciSpeciali quando la MerceSpeciale è quella fornita. Per ciascuna di queste righe prova a prolungarla con un altra MerceSpeciale, ma non può mai verificarsi la condizione della seconda join: $\$2$ data la condizione della prima join sarà sempre uguale a $\$4$ se è presente nella tabella. Il risultato sarebbe quindi una relazione vuota.
 
 ## Negazioni
 Fornitori che non forniscono la marca $\alpha$
@@ -247,18 +249,58 @@ $$
 
 ---
 
-22 ore di studio al giorno
-Supponiamo l'esistenza di una ulteriore tabella
-
-| **Marca** |          |
-| --------- | -------- |
-| **nome**  | **sede** |
-|           |          |
-
-Query per casa
+**Query per casa**
 1. coppie nome fornitore - nome marca che hanno sede nella stessa città
 2. nomi delle marche che sono fornite da fornitori che risiedono nella loro città
 3. marche che producono almeno 2 merci, che sono fornite a meno di 10 euro da almeno 2 fornitori di CS
 4. fornitori che non forniscono merci prodotte a CS
 5. fornitori che forniscono solo merci prodotte a CS
 6. prezzo minimo a cui viene fornita la merce M1 (è minimo quando gli altri prezzi sono più alti)
+
+**fatti**
+1)
+$$
+\Pi_{\$2, \$4}\left(\text{Fornitore} \underset{\$ 3 = \$2}{\bowtie} \text{Marca}\right)
+$$
+
+| piva | nome | città | nome     | sede |
+| ---- | ---- | ----- | -------- | ---- |
+| F1   | A    | CS    | $\alpha$ | CS   |
+| F2   | B    | RC    | $\beta$  | RC   |
+| F3   | C    | CS    | $\alpha$ | CS   |
+
+| nome | nome     |
+| ---- | -------- |
+| A    | $\alpha$ |
+| B    | $\beta$  |
+| C    | $\alpha$ |
+
+2)
+$$
+\Pi_{\$9}\left\{\left[\left( \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitura}\right)\underset{\$5 = \$1}{\bowtie} \text{Merce}\right] \underset{\$9 = \$1 \wedge \$ 3 = \$2}{\bowtie} \text{Marca}\right\}
+$$
+
+| piva | nome | città | fornitore | merce | prezzo | cod | nome | marca    |
+| ---- | ---- | ----- | --------- | ----- | ------ | --- | ---- | -------- |
+| F1   | A    | CS    | F1        | M1    | 10     | M1  | x    | $\alpha$ |
+| F1   | A    | CS    | F1        | M2    | 5      | M2  | y    | $\beta$  |
+| F2   | B    | RC    | F2        | M1    | 8      | M1  | x    | $\alpha$ |
+
+| piva | nome | città | fornitore | merce | prezzo | cod | nome | marca    | nome     | sede |
+| ---- | ---- | ----- | --------- | ----- | ------ | --- | ---- | -------- | -------- | ---- |
+| F1   | A    | CS    | F1        | M1    | 10     | M1  | x    | $\alpha$ | $\alpha$ | CS   |
+
+| marca    |
+| -------- |
+| $\alpha$ |
+
+
+
+3)
+$$
+\displaylines{
+\text{merciCS-10} = \sigma_{\$3 = 'CS'} (\text{Fornitori}) \underset{\$1 = \$1}{\bowtie} \sigma_{\$3 < 10}(\text{Fornitura}) \\
+\text{merciAlmeno2} = \Pi_{\$5}\left(\text{merciCS-10} \underset{\$1 \neq \$1 \wedge \$5 = \$ 5}{\bowtie} \text{merciCS-10}\right) \\
+Q = \Pi_{\$3}\left[\left(\text{Merce} \underset{\$1 = \$1}{\bowtie} \text{merciAlmeno2}\right) \underset{\$1 \neq \$1 \wedge \$3 = \$3}{\bowtie} \left(\text{Merce} \underset{\$1 = \$1}{\bowtie} \text{merciAlmeno2}\right)\right]
+}
+$$
