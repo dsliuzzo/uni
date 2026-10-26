@@ -161,7 +161,25 @@ Dualmente alla AND dobbiamo creare un NOR e negare l'uscita
 
 ## XOR
 [[1. Reti logiche#Operatore XOR|XOR (reti logiche)]]
+$$
+f = \bar{a} \cdot b + a \bar{b}
+$$
 ![[Circuiti integrati digitali-1792585626485.webp|center|450]]
+tot = 14 interruttori ☠️
+[...] ho fatto un danno, va aggiunto il not alla fine
+## XNOR
+$$
+f = \bar{a} \cdot \bar{b} + a \cdot b
+$$
+![[Circuiti integrati digitali-1793024431119.webp|center|450]]
+Possiamo anche averla come [[#XOR]] tutta negata, quindi possiamo togliere l'inverter finale dal circuito della [[#XOR]] ottenendo lo stesso risultato con meno interruttori
+![[Circuiti integrati digitali-1792585626485.webp|center|450]]
+## MUX 2:1
+$$
+f = \bar{c} \cdot a + c \cdot b
+$$
+![[Circuiti integrati digitali-1793025022342.webp|center|450]]
+
 # Regole di progettazione
 Utilizzando formule in *prima forma canonica* (or di and - (·) + (·)), se in $f$ è presente l'operatore:
 1. $f=a \cdot b$ -`and`:
@@ -172,3 +190,75 @@ Utilizzando formule in *prima forma canonica* (or di and - (·) + (·)), se in $
 	- **Pull-down**: interruttori u in *parallelo*
 3. **diretta** (AND, OR) in uscita inserisco un *inverter*
 4. **negata** ($f = \overline{a \cdot b} \vee f = \overline{a + b}$ - NAND, NOR) in uscita ho direttamente `out`
+
+
+---
+
+
+
+| **a**        | **b**        | **c**        | **d**        | **e**        | **$U_{1}$** | **$U_{2}$** | **$U_{3}$** | **$U_{4}$** | **$U_{5}$** | **$Z_{1}$** | **$Z_{2}$** | **$Z_{3}$** | **$Z_{4}$** | **$Z_{5}$** | **$\bar{f}$** | **$f$**      |
+| -------- | -------- | -------- | -------- | -------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | --------- | -------- |
+| 0V       | 0V       | 0V       | 0V       | 0V       | off     | off     | off     | off     | off     | on      | on      | on      | on      | on      | $V_{DD}$  | 0V       |
+| $V_{DD}$ | $V_{DD}$ | $V_{DD}$ | $V_{DD}$ | $V_{DD}$ | on      | on      | on      | on      | on      | off     | off     | off     | off     | off     | 0V        | $V_{DD}$ |
+| $V_{DD}$ | 0V       | $V_{DD}$ | 0V       | $V_{DD}$ | on      | off     | on      | off     | on      | off     | on      | off     | on      | off     | 0V        | $V_{DD}$ |
+
+
+$$
+f = \overline{(c \cdot (d + e) + b) \cdot a}
+$$
+---
+
+# Caratteristiche fisiche dei circuiti ad interruttori
+Nel suo funzionamento una porta logica riceve dei segnali che cambiano nel tempo. Nonostante questo ci sono degli intervalli in cui il segnale rimane costante (**analisi statica**). Tra due intervalli costanti abbiamo un intervallo di tempo in cui cambia il segnale dato in ingresso alla porta logica e cambia di conseguenza il suo comportamento (**analisi dinamica**).
+[...] chiedi foto a cla
+## Analisi statica
+Dall'analisi statica possiamo capire alcune **caratteristiche statiche**
+![[Circuiti integrati digitali-1792569064632.webp|center|202]]
+### Dissipazione di potenza
+Il circuito riceve in ingresso una corrente $I$ che moltiplicato per $V_{DD}$ restituisce la dissipazione di potenza statica.
+Stato stabile per cui $I\neq 0$ e di conseguenza dà luogo ad una dissipazione di potenza.
+
+**caso 1** $V_{\text{in}} = 0\ V$
+Essendo un circuito aperto $I = 0$ e $V_{out} = V_{DD}$ di conseguenza $P_{\text{state}} = V_{DD} \cdot I = 0$
+[...] grafico1
+**caso 2** $V_{\text{in}} = V_{DD}$
+Essendo un circuito aperto $I = 0$ e $V_{out} = 0 \ V$ di conseguenza $P_{\text{state}} = V_{DD} \cdot I = 0$
+[...] grafico2
+
+>[!important] Rispettando il principio di mutua esclusione garantisce la presenza di almeno una rete aperta, grazie a questo staticamente la dissipazione di potenza statica sarà sempre nulla
+>(Con interruttori ideali)
+
+### [...]
+L'interruttore reale non si comporta come un circuito aperto, ma come un resistore con valore $R_{\text{off}}$, con resistenza molto elevata (tendente ad infinito).
+
+Quando invece è chiuso si comporta come una resistena molto piccola, che chiamiamo $R_{\text{on}}$ (tendente a 0).
+
+Mettendo in gioco queste resistenze riprendendo la [[#Dissipazione di potenza|dissipazione di potenza]] sostituiamo gli interruttori con le resistenze appena definite:
+[...] grafici
+si crea un [[Elettrotecnica#Partitore di tensione|partitore di tensione]]
+**caso 1**
+La tensione in uscita cambia, dobbiamo sottrarre la tensione relativa all'interruttore aperto
+$$
+V_{\text{out}} = V_{DD} - R_{\text{ON}} \cdot I
+$$
+Anche la potenza dissipata cambia di conseguenza
+$$
+P_{\text{state}} = V_{DD} \cdot I \approx 0 \neq 0
+$$
+**caso 2**
+$$
+V_{\text{out}} = R_{\text{ON}} \cdot I \approx 0
+$$
+### Fan in
+>[!important] Fan in
+>numero massimo di parametri che una porta logica può gestire in ingresso
+
+**caso 1** $V_A = V_B = V_{DD}$
+[...] AND
+$$
+V_{\text{out}} = 0 \ V \ \to \ V_{\text{out}} = 2 R_{\text{ON}} \cdot I
+$$
+mi sto allontanando da $V_{\text{out}} = 0 \ V$ ancora di più rispetto all'inverter.
+La resistenza della pull up sta diminuendo, mentre quella del pull down sta aumentando $\to$ mi sto allontanando dal principio di mutua esclusione della pull up e della pull down.
+
+## Analisi dinamica
