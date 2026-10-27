@@ -6607,3 +6607,16 @@ public class PrenotazioneService {
 > 
 > La regola di business ("niente posti negativi") sta nell'entity (`prenotaPosto()`), il controllo della concorrenza nel service.
 
+
+---
+# Spring
+[...] Introduzione slide 1-13
+## Core Package
+## Web-MVC Package
+## JEE Package
+## DAO Package
+## ORM Package
+## AOP Package
+
+# Spring data
+# Spring security
