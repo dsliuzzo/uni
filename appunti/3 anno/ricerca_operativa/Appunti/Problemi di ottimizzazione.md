@@ -1592,7 +1592,8 @@ $$
 Le celle in alto rappresentano i vincoli di uguaglianza trasformata in forma matriciale.
 La cella in basso a sinistra rappresentano la funzione obiettivo, il cui valore (cambiato di segno) nel punto corrente è rappresentato nella cella in basso a destra.
 
-Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (esce una variabile ed entra un'altra) dovremmo **riorganizzare tutta la tabella**. Per evitarlo, nel tableau le colonne restano nell'**ordine naturale** ($x_1, \dots, x_n$, cioè la colonna $j$ è associata a $x_j$): le colonne dell'identità risultano così **permutate**, e le righe sono ordinate secondo gli indici della base.
+Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (esce una variabile ed entra un'altra) dovremmo **riorganizzare tutta la tabella**. Per evitarlo, nel tableau le colonne restano nell'**ordine naturale** ($x_1, \dots, x_n$, cioè la colonna $j$ è associata a $x_j$): le colonne dell'identità risultano così **permutate**, e le righe sono ordinate secondo gli indici della base. 
+[...] <-(spiegare meglio questa parte)
 
 >[!check] Esempio con tableau
 > Consideriamo il problema
@@ -1796,3 +1797,13 @@ Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (es
 > **Generalmente**, la riga della variabile in base $x_i$ ha un $1$ nella colonna di $x_i$ e il termine noto di quella riga è il valore di $x_i$.
 >
 > Rispetto all'esempio precedente si arriva allo stesso ottimo $x^* = (6, 0, 7, 2, 0)^\top$, ma con un percorso diverso: partendo dall'origine $(0,0)$ si passa direttamente al vertice $(6,0)$ in una sola iterazione.
+
+
+
+
+---
+
+[...] $\uparrow$ ultima parte pptx 09
+
+### Formula di aggiornamento del tableau
+
