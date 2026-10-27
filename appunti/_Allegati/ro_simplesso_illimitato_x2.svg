@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="360" viewBox="0 0 520 360">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .tk{font-size:11px;opacity:.7} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e06c75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<line x1="40" y1="320" x2="40" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="110" y1="320" x2="110" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="180" y1="320" x2="180" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="250" y1="320" x2="250" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="320" y1="320" x2="320" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="390" y1="320" x2="390" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="460" y1="320" x2="460" y2="40" stroke-width="1" opacity=".18"/>
+<line x1="40" y1="320" x2="460" y2="320" stroke-width="1" opacity=".18"/>
+<line x1="40" y1="250" x2="460" y2="250" stroke-width="1" opacity=".18"/>
+<line x1="40" y1="180" x2="460" y2="180" stroke-width="1" opacity=".18"/>
+<line x1="40" y1="110" x2="460" y2="110" stroke-width="1" opacity=".18"/>
+<line x1="40" y1="40" x2="460" y2="40" stroke-width="1" opacity=".18"/>
+<polygon points="215.0,250 320,250 460,180 460,40 180,40 152.0,124.0" fill="#61afef" fill-opacity=".28" stroke="none"/>
+<polygon points="215.0,250 320,250 460,180 460,40 180,40 152.0,124.0" stroke="#b8b8b8" stroke-width="0"/>
+<line x1="40" y1="250" x2="482" y2="250" marker-end="url(#arrow)"/>
+<line x1="110" y1="320" x2="110" y2="18" marker-end="url(#arrow)"/>
+<line x1="110" y1="40" x2="250" y2="320" stroke="#b8b8b8" stroke-width="2.5" />
+<line x1="86.7" y1="320" x2="180" y2="40" stroke="#b8b8b8" stroke-width="2.5" />
+<line x1="180" y1="320" x2="460" y2="180" stroke="#b8b8b8" stroke-width="2.5" />
+<line x1="40" y1="75.0" x2="138.0" y2="320" stroke="#e06c75" stroke-width="2.5" />
+<line x1="110" y1="250" x2="40" y2="278.0" stroke="#e06c75" marker-end="url(#arrowr)"/>
+<circle cx="320" cy="250" r="5.5" fill="#98c379" stroke="#98c379" stroke-width="1"/>
+</g>
+<text class="th" x="496" y="250">x₁</text>
+<text class="th" x="126" y="12">x₂</text>
+<text class="tk" x="40" y="263">−1</text>
+<text class="tk" x="180" y="263">1</text>
+<text class="tk" x="250" y="263">2</text>
+<text class="tk" x="320" y="263">3</text>
+<text class="tk" x="390" y="263">4</text>
+<text class="tk" x="460" y="263">5</text>
+<text class="tk" x="99" y="320">−1</text>
+<text class="tk" x="99" y="180">1</text>
+<text class="tk" x="99" y="110">2</text>
+<text class="tk" x="99" y="40">3</text>
+<text class="ts" style="fill:#e06c75;text-anchor:end" x="103.0" y="302.5">(−5, −2)</text>
+<text class="ts" style="fill:#b8b8b8" transform="translate(183.2 206.4) rotate(63.4)">x₃ = 0</text>
+<text class="ts" style="fill:#b8b8b8" transform="translate(179.2 70.8) rotate(-71.6)">x₄ = 0</text>
+<text class="ts" style="fill:#b8b8b8" transform="translate(394.4 202.8) rotate(-26.6)">x₅ = 0</text>
+<text class="ts" style="fill:#e06c75" transform="translate(77.8 145.2) rotate(68.2)">−5x₁ − 2x₂ = 0</text>
+<text class="ts" style="fill:#b8b8b8;text-anchor:start" x="330.5" y="288.5">x̄ = (3, 0, 3, 9, 0)ᵀ</text>
+</svg>
