@@ -910,9 +910,108 @@ _Esempio:_ partita IVA dei fornitori che stanno a RC **oppure** che forniscono M
 > 
 > Una join può solo verificare l'esistenza di una corrispondenza, mai la sua assenza: per questo $-$ è un operatore necessario.
 
+*Esempio:* le due query seguenti sono diverse.
+$$
+\Pi_{\$1}(\text{Merce}) - \Pi_{\$2}\left[\sigma_{\$1 = \text{'F1'}}(\text{Fornitura})\right]
+$$
+$$
+\Pi_{\$1}(\text{Merce}) \underset{\$1 \neq \$1}{\bowtie} \Pi_{\$2} \left[\sigma_{\$1 = \text{'F1'}}(\text{Fornitura})\right]
+$$
+- **sottrazione**: restituisce le merci **non fornite** da F1. Una merce viene restituita se è diversa da *tutte* le merci fornite da F1 ($\forall$)
+- **join**: ogni merce viene prolungata con le merci fornite da F1 di codice diverso dal suo. Una merce appartiene al risultato se è possibile prolungarla, cioè se esiste *almeno una* merce fornita da F1 con codice diverso ($\exists$)
 
+### Quantificazioni
+Per contare quante volte un'entità compare in una relazione si sfrutta la join, che traduce proprio il concetto di **almeno**. L'algebra relazionale non ha operatori di conteggio (esistono in SQL): ogni quantificazione va quindi espressa confrontando tra loro più copie della stessa tabella.
 
+>[!important] Più occorrenze della stessa relazione
+>In una query la stessa relazione può occorrere più volte: ogni occorrenza viene sostituita con una copia dell'istanza di quella relazione.
 
----
+#### Almeno 1
+*Esempio:* fornitori che forniscono **almeno una** merce.
+$$
+\text{Almeno1} = \Pi_{\$1}(\text{Fornitura})
+$$
+
+#### Almeno 2
+*Esempio:* fornitori che forniscono **almeno due** merci.
+
+Si uniscono due copie di `Fornitura`, prolungando ogni riga con quelle dello stesso fornitore ma con merce diversa:
+$$
+\text{Almeno2} = \Pi_{\$1}\left[\text{Fornitura} \underset{\$1 = \$1 \,\wedge\, \$2 \neq \$2}{\bowtie} \text{Fornitura}\right]
+$$
+Il risultato della join contiene coppie di forniture con lo stesso fornitore e merci diverse. Poiché le coppie sono ordinate, un fornitore con tre forniture compare più volte (se F1 fornisce M1, M2 e M3, compare $3 \cdot 2 = 6$ volte): sarà la proiezione a eliminare i duplicati.
+
+| fornitore | merce |
+| --------- | ----- |
+| F1        | M1    |
+| F1        | M2    |
+| F1        | M3    |
+
+#### Almeno 3
+Servono due join, per confrontare tre copie di `Fornitura`:
+$$
+\text{Almeno3} = \Pi_{\$1}\left[\left(\text{Fornitura} \underset{\$1 = \$1 \,\wedge\, \$2 \neq \$2}{\bowtie} \text{Fornitura}\right) \underset{\$1 = \$1 \,\wedge\, \$2 \neq \$2 \,\wedge\, \$4 \neq \$2}{\bowtie} \text{Fornitura}\right]
+$$
+Si ottengono terne di forniture dello stesso fornitore con merci tutte diverse tra loro: nella seconda join la merce della terza copia (`$2` a destra) deve differire sia dalla merce della prima copia (`$2`) sia da quella della seconda (`$4`).
+
+#### Esattamente k e al più k
+*Esattamente $k$* equivale ad *almeno $k$* ma *non più di $k$*, quindi si ottiene per sottrazione.
+
+*Esempio:* fornitori che forniscono **esattamente una** merce.
+$$
+\text{Esattamente1} = \text{Almeno1} - \text{Almeno2}
+$$
+
+*Esempio:* fornitori che forniscono **al più una** merce (anche nessuna). Si sottraggono a *tutti* i fornitori quelli che ne forniscono almeno 2:
+$$
+\text{AlPiu1} = \text{Tutti} - \text{Almeno2} \qquad \text{dove} \qquad \text{Tutti} = \Pi_{\$1}(\text{Fornitore})
+$$
+
+#### Quantificazioni annidate
+Questo tipo di query verifica se si è in grado di ragionare correttamente sulla join.
+
+*Esempio:* nomi dei fornitori che forniscono almeno 2 merci, **ciascuna delle quali è fornita da almeno 2 fornitori**.
+
+Si scompone il problema: prima si individuano le merci fornite da almeno due fornitori, poi si cercano i fornitori che forniscono almeno due di *queste* merci.
+$$
+\displaylines{
+\text{Merci2F} = \Pi_{\$2}\left(\text{Fornitura} \underset{\$2 = \$2 \,\wedge\, \$1 \neq \$1}{\bowtie} \text{Fornitura}\right) \\
+\text{FornMerci2F} = \text{Fornitura} \underset{\$2 = \$1}{\bowtie} \text{Merci2F} \\
+Q = \Pi_{\$2} \left\{\text{Fornitore} \underset{\$1 = \$1}{\bowtie} \left[ \text{FornMerci2F} \underset{\$1 = \$1 \,\wedge\, \$2 \neq \$2}{\bowtie} \text{FornMerci2F} \right] \right\}
+}
+$$
+
+>[!bug] Errore tipico
+>Fornitori che forniscono almeno 2 merci *speciali* (merci con una determinata proprietà), con `MerciSpeciali` relazione di una sola colonna:
+>$$\left(\text{Fornitura} \underset{\$2 = \$1}{\bowtie} \text{MerciSpeciali}\right) \underset{\$2 = \$1 \,\wedge\, \$4 \neq \$1}{\bowtie} \text{MerciSpeciali}$$
+>È sbagliata: la prima join tiene le forniture la cui merce è speciale, e `$4` coincide con `$2`. La seconda join prolunga ogni riga con una merce speciale uguale a `$2` (`$2 = $1`), ma richiede anche che sia diversa da `$4`, cioè da `$2` stessa: la condizione non si verifica mai e il risultato è la relazione vuota.
+>
+>La soluzione corretta confronta due copie di `Fornitura ⋈ MerciSpeciali`, come nell'esempio precedente.
+
+### Negazioni
+*Esempio:* fornitori che **non forniscono** la marca $\alpha$.
+
+Si sottraggono a tutti i fornitori quelli che forniscono almeno una merce di marca $\alpha$:
+$$
+\displaylines{
+\text{merciAlpha} = \sigma_{\$3 = \text{'}\alpha\text{'}}(\text{Merce}) \\
+\text{fornisconoAlpha} = \Pi_{\$1} \left( \text{Fornitura} \underset{\$2 = \$1}{\bowtie} \text{merciAlpha} \right) \\
+Q = \Pi_{\$1}(\text{Fornitore}) - \text{fornisconoAlpha}
+}
+$$
+
+>[!bug] Errore
+>$$\Pi_{\$1} \left[ \text{Fornitura} \underset{\$2 = \$1}{\bowtie} \sigma_{\$3 \neq \text{'}\alpha\text{'}}(\text{Merce}) \right]$$
+>Restituisce anche i fornitori che forniscono sia $\alpha$ sia $\beta$: la join verifica solo che *esista* una merce di marca diversa da $\alpha$, non che non ne esista nessuna di marca $\alpha$.
+
+*Esempio:* fornitori che forniscono **solo** (al più) la marca $\alpha$, cioè che potrebbero non fornire nulla, ma se forniscono qualcosa deve essere di marca $\alpha$.
+
+Si sottraggono a tutti i fornitori quelli che forniscono almeno una marca diversa da $\alpha$:
+$$
+\displaylines{
+\text{fornisconoAltri} = \Pi_{\$1}\left[ \text{Fornitura} \underset{\$2 = \$1}{\bowtie} \sigma_{\$3 \neq \text{'}\alpha\text{'}} (\text{Merce}) \right] \\
+Q = \Pi_{\$1} (\text{Fornitore}) - \text{fornisconoAltri}
+}
+$$
 
 

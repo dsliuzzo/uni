@@ -192,73 +192,100 @@ Utilizzando formule in *prima forma canonica* (or di and - (·) + (·)), se in $
 4. **negata** ($f = \overline{a \cdot b} \vee f = \overline{a + b}$ - NAND, NOR) in uscita ho direttamente `out`
 
 
----
-
-
-
-| **a**        | **b**        | **c**        | **d**        | **e**        | **$U_{1}$** | **$U_{2}$** | **$U_{3}$** | **$U_{4}$** | **$U_{5}$** | **$Z_{1}$** | **$Z_{2}$** | **$Z_{3}$** | **$Z_{4}$** | **$Z_{5}$** | **$\bar{f}$** | **$f$**      |
-| -------- | -------- | -------- | -------- | -------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | ------- | --------- | -------- |
-| 0V       | 0V       | 0V       | 0V       | 0V       | off     | off     | off     | off     | off     | on      | on      | on      | on      | on      | $V_{DD}$  | 0V       |
-| $V_{DD}$ | $V_{DD}$ | $V_{DD}$ | $V_{DD}$ | $V_{DD}$ | on      | on      | on      | on      | on      | off     | off     | off     | off     | off     | 0V        | $V_{DD}$ |
-| $V_{DD}$ | 0V       | $V_{DD}$ | 0V       | $V_{DD}$ | on      | off     | on      | off     | on      | off     | on      | off     | on      | off     | 0V        | $V_{DD}$ |
-
-
-$$
-f = \overline{(c \cdot (d + e) + b) \cdot a}
-$$
----
-
 # Caratteristiche fisiche dei circuiti ad interruttori
-Nel suo funzionamento una porta logica riceve dei segnali che cambiano nel tempo. Nonostante questo ci sono degli intervalli in cui il segnale rimane costante (**analisi statica**). Tra due intervalli costanti abbiamo un intervallo di tempo in cui cambia il segnale dato in ingresso alla porta logica e cambia di conseguenza il suo comportamento (**analisi dinamica**).
-[...] chiedi foto a cla
+Il segnale in ingresso a una porta logica varia nel tempo, ma ci sono intervalli in cui rimane costante. Tra due intervalli costanti il segnale commuta da un valore all'altro e il comportamento della porta cambia di conseguenza.
+
+![[Circuiti integrati digitali-1793052553552.webp|center|391]]
+
+>[!multi-column]
+>
+>>[!important] Analisi statica
+>>Si applica una tensione **costante** agli ingressi: si studia cosa succede negli intervalli in cui il segnale resta stabile.
+>
+>>[!important] Analisi dinamica
+>>Si applica una tensione **variabile** agli ingressi: si studia cosa accade durante le **commutazioni** del segnale.
+
+Come riferimento si usa il circuito più semplice visto finora, l'**inverter**, con tensione di ingresso $V_{IN}$.
+
 ## Analisi statica
-Dall'analisi statica possiamo capire alcune **caratteristiche statiche**
+Dall'analisi statica si ricavano le **caratteristiche statiche** del circuito, in particolare la dissipazione di potenza.
 ![[Circuiti integrati digitali-1792569064632.webp|center|202]]
 ### Dissipazione di potenza
-Il circuito riceve in ingresso una corrente $I$ che moltiplicato per $V_{DD}$ restituisce la dissipazione di potenza statica.
-Stato stabile per cui $I\neq 0$ e di conseguenza dà luogo ad una dissipazione di potenza.
+La corrente $I$ erogata dall'alimentazione, moltiplicata per $V_{DD}$, dà la **potenza statica** dissipata:
+$$
+P_{\text{stat}} = V_{DD} \cdot I
+$$
+La potenza statica è diversa da zero solo se esiste uno stato stabile in cui $I \neq 0$, cioè se esiste un ramo chiuso tra l'alimentazione e la massa.
 
-**caso 1** $V_{\text{in}} = 0\ V$
-Essendo un circuito aperto $I = 0$ e $V_{out} = V_{DD}$ di conseguenza $P_{\text{state}} = V_{DD} \cdot I = 0$
-[...] grafico1
-**caso 2** $V_{\text{in}} = V_{DD}$
-Essendo un circuito aperto $I = 0$ e $V_{out} = 0 \ V$ di conseguenza $P_{\text{state}} = V_{DD} \cdot I = 0$
-[...] grafico2
+**Caso 1:** $V_{IN} = 0\ V$
+Il circuito di pull-down è aperto, quindi non c'è un ramo verso massa: $I = 0$, $V_{out} = V_{DD}$ e $P_{\text{stat}} = V_{DD} \cdot 0 = 0$.
+![[Circuiti integrati digitali-1793052592251.webp|200]]
 
->[!important] Rispettando il principio di mutua esclusione garantisce la presenza di almeno una rete aperta, grazie a questo staticamente la dissipazione di potenza statica sarà sempre nulla
->(Con interruttori ideali)
+**Caso 2:** $V_{IN} = V_{DD}$
+Il circuito di pull-up è aperto: $I = 0$, $V_{out} = 0\ V$ e $P_{\text{stat}} = V_{DD} \cdot 0 = 0$.
+![[Circuiti integrati digitali-1793052609361.webp|200]]
 
-### [...]
-L'interruttore reale non si comporta come un circuito aperto, ma come un resistore con valore $R_{\text{off}}$, con resistenza molto elevata (tendente ad infinito).
+>[!important] Mutua esclusione e potenza statica
+>Rispettando il principio di mutua esclusione, in ogni stato stabile almeno una delle due reti (pull-up o pull-down) è aperta. Con interruttori **ideali** la potenza statica è quindi sempre nulla.
 
-Quando invece è chiuso si comporta come una resistena molto piccola, che chiamiamo $R_{\text{on}}$ (tendente a 0).
+### Interruttori reali
+Gli interruttori reali, a livello elettrico, sono assimilabili a **resistori**:
 
-Mettendo in gioco queste resistenze riprendendo la [[#Dissipazione di potenza|dissipazione di potenza]] sostituiamo gli interruttori con le resistenze appena definite:
-[...] grafici
-si crea un [[Elettrotecnica#Partitore di tensione|partitore di tensione]]
-**caso 1**
-La tensione in uscita cambia, dobbiamo sottrarre la tensione relativa all'interruttore aperto
-$$
-V_{\text{out}} = V_{DD} - R_{\text{ON}} \cdot I
-$$
-Anche la potenza dissipata cambia di conseguenza
-$$
-P_{\text{state}} = V_{DD} \cdot I \approx 0 \neq 0
-$$
-**caso 2**
-$$
-V_{\text{out}} = R_{\text{ON}} \cdot I \approx 0
-$$
-### Fan in
->[!important] Fan in
->numero massimo di parametri che una porta logica può gestire in ingresso
+>[!multi-column]
+>
+>>[!important] Interruttore aperto
+>>- **Ideale**: circuito aperto
+>>- **Reale**: resistore con resistenza molto elevata, $R_{OFF} \to \infty$
+>
+>>[!important] Interruttore chiuso
+>>- **Ideale**: cortocircuito
+>>- **Reale**: resistore con resistenza molto piccola, $R_{ON} \to 0$
 
-**caso 1** $V_A = V_B = V_{DD}$
-[...] AND
+Sostituendo gli interruttori con queste resistenze, per ogni stato stabile si forma un [[Elettrotecnica#Partitore di tensione|partitore di tensione]] tra $V_{DD}$ e massa. Ora un ramo verso massa esiste sempre, quindi $I \neq 0$ e l'uscita non coincide più esattamente con $V_{DD}$ o con $0\ V$.
+
+**Caso 1:** $V_{IN} = 0\ V$
+![[Circuiti integrati digitali-1793052651769.webp|200]]
+
+L'interruttore chiuso (pull-up) provoca una piccola caduta di tensione $R_{ON} \cdot I$, che va sottratta a $V_{DD}$:
 $$
-V_{\text{out}} = 0 \ V \ \to \ V_{\text{out}} = 2 R_{\text{ON}} \cdot I
+V_{out} = V_{DD} - R_{ON} \cdot I \approx V_{DD}
 $$
-mi sto allontanando da $V_{\text{out}} = 0 \ V$ ancora di più rispetto all'inverter.
-La resistenza della pull up sta diminuendo, mentre quella del pull down sta aumentando $\to$ mi sto allontanando dal principio di mutua esclusione della pull up e della pull down.
+$$
+P_{\text{stat}} = V_{DD} \cdot I \neq 0
+$$
+
+**Caso 2:** $V_{IN} = V_{DD}$
+![[Circuiti integrati digitali-1793052686539.webp|200]]
+
+Dualmente, l'uscita è la caduta di tensione sulla resistenza di pull-down chiusa:
+$$
+V_{out} = R_{ON} \cdot I \approx 0
+$$
+$$
+P_{\text{stat}} = V_{DD} \cdot I \neq 0
+$$
+
+In entrambi i casi, essendo $R_{ON}$ molto piccola e $R_{OFF}$ molto grande, la corrente $I$ è piccolissima: la potenza statica non è nulla, ma si approssima a zero, e questo limita i danni fisici all'interno del circuito.
+
+### Fan-in
+>[!important] Fan-in
+>Numero massimo di ingressi che una porta logica può gestire.
+
+All'aumentare del numero di ingressi le resistenze in gioco si degradano.
+
+**Caso:** $V_A = V_B = V_{DD}$, porta a due ingressi con due interruttori in **serie** nella pull-down (come la NAND)
+[...] schema della porta a due ingressi
+
+Le due resistenze $R_{ON}$ del pull-down sono in serie, quindi la tensione di uscita, che idealmente è $0\ V$, diventa
+$$
+V_{out} = 2 R_{ON} \cdot I
+$$
+L'uscita si allontana da $0\ V$ **ancora di più** rispetto all'inverter. Inoltre i due interruttori aperti del pull-up sono in parallelo, quindi la resistenza della pull-up **diminuisce**, mentre quella della pull-down chiusa **aumenta**: ci si allontana dalla condizione di mutua esclusione.
+
+In generale, all'aumentare del numero di ingressi di una porta:
+- aumenta la $R_{ON}$ complessiva delle reti in serie
+- diminuisce la $R_{OFF}$ complessiva delle reti in parallelo
+
+e ci si allontana dalle condizioni che garantiscono la **mutua esclusione**.
 
 ## Analisi dinamica
