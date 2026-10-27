@@ -140,12 +140,13 @@ $$
 $$
 \Pi_{\$1}(\text{Merce}) \underset{\$1 \neq \$2}{\bowtie} \Pi_{\$2} \left[\sigma_{\$1 = 'F 1'} (\text{Fornitura})\right]
 $$
+--- 
 queste due query sono diverse: 
 - join: ogni riga di sinistra viene prolungata con le righe di destra con cui c'è la relazione (una merce appartiene al risultato quando è possibile prolungarla, c'è almeno una fornitura fatta da F1 con un codice diverso, basta che ce n'è una: la join traduce $\exists$)
 - sottrazione: merci non fornite da F1 (traduce $\forall$, prendo una merce e la restituisco se è diversa da tutte le merci che sono a destra)
-fai le tabelle intermedie [...]
 
-# Esercizi 3
+
+
 ## Quantificazioni
 ### Almeno 1
 Voglio conoscere i fornitori che forniscono **almeno una** merce
@@ -248,7 +249,7 @@ $$
 
 
 ---
-
+# Esercizi 3
 **Query per casa**
 1. coppie nome fornitore - nome marca che hanno sede nella stessa città
 2. nomi delle marche che sono fornite da fornitori che risiedono nella loro città
@@ -258,7 +259,7 @@ $$
 6. prezzo minimo a cui viene fornita la merce M1 (è minimo quando gli altri prezzi sono più alti)
 
 **fatti**
-1)
+1) coppie nome fornitore - nome marca che hanno sede nella stessa città
 $$
 \Pi_{\$2, \$4}\left(\text{Fornitore} \underset{\$ 3 = \$2}{\bowtie} \text{Marca}\right)
 $$
@@ -275,7 +276,7 @@ $$
 | B    | $\beta$  |
 | C    | $\alpha$ |
 
-2)
+2) nomi delle marche che sono fornite da fornitori che risiedono nella loro città
 $$
 \Pi_{\$9}\left\{\left[\left( \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitura}\right)\underset{\$5 = \$1}{\bowtie} \text{Merce}\right] \underset{\$9 = \$1 \wedge \$ 3 = \$2}{\bowtie} \text{Marca}\right\}
 $$
@@ -296,7 +297,7 @@ $$
 
 
 
-3)
+3) marche che producono almeno 2 merci, che sono fornite a meno di 10 euro da almeno 2 fornitori di CS
 $$
 \displaylines{
 \text{merciCS-10} = \sigma_{\$3 = 'CS'} (\text{Fornitori}) \underset{\$1 = \$1}{\bowtie} \sigma_{\$3 < 10}(\text{Fornitura}) \\
@@ -304,3 +305,100 @@ $$
 Q = \Pi_{\$3}\left[\left(\text{Merce} \underset{\$1 = \$1}{\bowtie} \text{merciAlmeno2}\right) \underset{\$1 \neq \$1 \wedge \$3 = \$3}{\bowtie} \left(\text{Merce} \underset{\$1 = \$1}{\bowtie} \text{merciAlmeno2}\right)\right]
 }
 $$
+supponiamo che il primo record di Fornitura abbia un costo di 9
+
+| piva | nome | città | fornitore | merce | prezzo |
+| ---- | ---- | ----- | --------- | ----- | ------ |
+| F1   | A    | CS    | F1        | M1    | 9      |
+| F1   | A    | CS    | F1        | M2    | 5      |
+
+| cod | nome | marca    | merce |
+| --- | ---- | -------- | ----- |
+| M1  | x    | $\alpha$ | M1    |
+| M2  | y    | $\beta$  | M2    |
+supponiamo che M2 abbia marca $\alpha$
+
+| marca    |
+| -------- |
+| $\alpha$ |
+4) fornitori che non forniscono merci prodotte a CS
+$$
+\displaylines{
+\text{fornisconoCS} = \Pi_{\$1}\sigma_{\$ 11 = 'CS'}\left\{ \left[ \left( \text{Fornitore} \underset{\$1 = \$1}{\bowtie} \text{Fornitura} \right) \underset{\$5 = \$1}{\bowtie} \text{Merce} \right] \underset{\$9 = \$1}{\bowtie} \text{Marca}\right\}\\
+Q = \Pi_{\$1}(\text{Fornitore}) - \text{fornisconoCS}
+}
+$$
+
+| piva | nome | città | fornitore | merce | prezzo | cod | nome | marca    | nome     | sede |
+| ---- | ---- | ----- | --------- | ----- | ------ | --- | ---- | -------- | -------- | ---- |
+| F1   | A    | CS    | F1        | M1    | 10     | M1  | x    | $\alpha$ | $\alpha$ | CS   |
+| F2   | B    | RC    | F2        | M1    | 8      | M1  | x    | $\alpha$ | $\alpha$ | CS   |
+
+| piva |
+| ---- |
+| F3   |
+
+5) fornitori che forniscono solo merci prodotte a CS
+$$
+\displaylines{
+\text{fornisconoAltro} =  \Pi_{\$1}\sigma_{\$ 11 \neq 'CS'}\left\{ \left[ \left( \text{Fornitore} \underset{\$1 = \$1}{\bowtie} \text{Fornitura} \right) \underset{\$5 = \$1}{\bowtie} \text{Merce} \right] \underset{\$9 = \$1}{\bowtie} \text{Marca}\right\}\\
+Q = \Pi_{\$1}(\text{Fornitore}) - \text{fornisconoAltro}
+}
+$$
+6) prezzo minimo a cui viene fornita la merce M1 (è minimo quando gli altri prezzi sono più alti)
+$$
+\displaylines{
+\text{fornituraM1} = \sigma_{\$2 = 'M1'}(\text{Fornitura}) \\
+Q = \Pi_{\$3}\left[\text{fornituraM1} - \Pi_{\$1, \$2, \$3}\left(\text{fornituraM1} \underset{\$2 = \$2 \wedge \$1 \neq \$ 1 \wedge \$3 > \$ 3}{\bowtie} \text{fornituraM1}\right)\right]
+}
+$$
+
+
+| fornitore | merce | prezzo |
+| --------- | ----- | ------ |
+| F1        | M1    | 10     |
+| F2        | M1    | 8      |
+| F3        | M1    | 6      |
+
+| fornitore | merce | prezzo | fornitore | merce | prezzo |
+| --------- | ----- | ------ | --------- | ----- | ------ |
+| F1        | M1    | 10     | F2        | M1    | 8      |
+| F1        | M1    | 10     | F3        | M1    | 6      |
+| F2        | M1    | 8      | F3        | M1    | 6      |
+
+| fornitore | merce | prezzo |
+| --------- | ----- | ------ |
+| F1        | M1    | 10     |
+| F2        | M1    | 8      |
+
+| fornitore | merce | prezzo |
+| --------- | ----- | ------ |
+| F3        | M1    | 6      |
+
+| prezzo |
+| ------ |
+| 6      |
+
+6.2)
+$$
+\displaylines{
+\text{prezziM1} = \Pi_{\$3}\left[\sigma_{\$2 = 'M1'}(\text{Fornitura})\right] \\
+Q = \text{prezziM1}-\Pi_{\$1}\left( \text{prezziM1} \underset{\$1 > \$1}{\bowtie} \text{prezziM1} \right)
+}
+$$
+
+| prezzo |
+| ------ |
+| 10     |
+| 8      |
+| 6      |
+
+| prezzo1 | prezzo2 |
+| ------- | ------- |
+| 10      | 8       |
+| 10      | 6       |
+| 8       | 6       |
+
+| prezzo |
+| ------ |
+| 6      |
