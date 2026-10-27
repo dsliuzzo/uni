@@ -225,7 +225,7 @@ Il circuito di pull-down è aperto, quindi non c'è un ramo verso massa: $I = 0$
 Il circuito di pull-up è aperto: $I = 0$, $V_{out} = 0\ V$ e $P_{\text{stat}} = V_{DD} \cdot 0 = 0$.
 ![[Circuiti integrati digitali-1793052609361.webp|200]]
 
->[!important] Mutua esclusione e potenza statica
+>[!important] Garanzia potenza statica nulla
 >Rispettando il principio di mutua esclusione, in ogni stato stabile almeno una delle due reti (pull-up o pull-down) è aperta. Con interruttori **ideali** la potenza statica è quindi sempre nulla.
 
 ### Interruttori reali
