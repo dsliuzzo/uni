@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simplesso passo passo</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<style>
+:root {
+  --bg: #fafafa; --panel: #ffffff; --border: #dcdcdc; --text: #222; --muted: #6b6b6b;
+  --line: #7a7a7a; --grid: rgba(0,0,0,.08); --region: #61afef; --red: #d4505c; --green: #4f9a3a;
+  --blue: #2f86d0; --orange: #c47a2c; --purple: #a052c4; --hl: rgba(212,80,92,.10); --hl2: rgba(47,134,208,.10);
+  --input: #fff;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1e1e1e; --panel: #262626; --border: #3a3a3a; --text: #dcdcdc; --muted: #9a9a9a;
+    --line: #b8b8b8; --grid: rgba(255,255,255,.08); --region: #61afef; --red: #e06c75; --green: #98c379;
+    --blue: #61afef; --orange: #d19a66; --purple: #c678dd; --hl: rgba(224,108,117,.14); --hl2: rgba(97,175,239,.14);
+    --input: #1b1b1b;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1e1e1e; --panel: #262626; --border: #3a3a3a; --text: #dcdcdc; --muted: #9a9a9a;
+  --line: #b8b8b8; --grid: rgba(255,255,255,.08); --region: #61afef; --red: #e06c75; --green: #98c379;
+  --blue: #61afef; --orange: #d19a66; --purple: #c678dd; --hl: rgba(224,108,117,.14); --hl2: rgba(97,175,239,.14);
+  --input: #1b1b1b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 "Helvetica Neue", Arial, sans-serif; }
+main { max-width: 1280px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 22px; margin: 4px 0 2px; font-weight: 600; }
+h2 { font-size: 17px; margin: 0 0 10px; font-weight: 600; }
+h3 { font-size: 14px; margin: 14px 0 6px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.sub { color: var(--muted); margin: 0 0 14px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+label { color: var(--muted); font-size: 13px; }
+input, select, button { font: inherit; color: var(--text); background: var(--input); border: 1px solid var(--border); border-radius: 6px; padding: 4px 6px; }
+input.num { width: 64px; text-align: right; }
+input.small { width: 52px; }
+button { cursor: pointer; padding: 5px 12px; }
+button.primary { background: var(--blue); border-color: var(--blue); color: #fff; font-weight: 600; }
+button:disabled { opacity: .4; cursor: default; }
+.grid-in { display: grid; gap: 4px 6px; align-items: center; justify-content: start; margin: 10px 0; overflow-x: auto; }
+.grid-in .h { font-size: 13px; color: var(--muted); text-align: center; }
+.err { color: var(--red); font-weight: 600; margin-top: 8px; }
+.note { color: var(--muted); font-size: 13px; }
+.tex { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+.tex-fallback { font-family: monospace; font-size: 12px; white-space: pre-wrap; }
+ul.plain { margin: 6px 0; padding-left: 20px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+.stepper { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 12px; }
+.pill { border-radius: 999px; padding: 3px 11px; font-size: 13px; }
+.pill.on { background: var(--blue); border-color: var(--blue); color: #fff; }
+svg.plot { width: 100%; height: auto; display: block; }
+svg.plot text { font-family: "Helvetica Neue", Arial, sans-serif; fill: var(--line); text-anchor: middle; dominant-baseline: central; }
+table.tab { border-collapse: collapse; font-variant-numeric: tabular-nums; margin: 4px 0; }
+table.tab td, table.tab th { padding: 4px 9px; text-align: center; min-width: 38px; }
+table.tab th { font-weight: 500; color: var(--muted); }
+table.tab td.lab { color: var(--muted); text-align: right; padding-right: 10px; }
+table.tab .vl { border-left: 1.5px solid var(--line); }
+table.tab .vr { border-right: 1.5px solid var(--line); }
+table.tab tr.costrow td { border-top: 1.5px solid var(--line); }
+table.tab tr.first td { border-top: 1.5px solid var(--line); }
+table.tab tr.last td { border-bottom: 1.5px solid var(--line); }
+table.tab tr.costrow td.lab, table.tab tr.first td.lab, table.tab tr.last td.lab, table.tab tr td.ratio { border-top: none; border-bottom: none; }
+table.tab .colp { background: var(--hl); }
+table.tab .rowp { background: var(--hl); }
+table.tab .piv { background: var(--red); color: #fff; font-weight: 700; border-radius: 4px; }
+table.tab .neg { color: var(--red); font-weight: 600; }
+table.tab .zero { color: var(--blue); font-weight: 600; }
+table.tab th.basic { color: var(--green); }
+table.tab td.ratio { color: var(--muted); font-size: 13px; text-align: left; padding-left: 14px; }
+table.tab td.ratio.min { color: var(--red); font-weight: 600; }
+.badge { display: inline-block; border-radius: 6px; padding: 2px 9px; font-size: 13px; font-weight: 600; margin: 2px 6px 2px 0; }
+.b-ok { background: rgba(79,154,58,.16); color: var(--green); }
+.b-red { background: var(--hl); color: var(--red); }
+.b-blue { background: var(--hl2); color: var(--blue); }
+.b-orange { background: rgba(196,122,44,.16); color: var(--orange); }
+.steps p { margin: 6px 0; }
+.ops { font-family: monospace; font-size: 13px; margin: 4px 0 0; padding-left: 18px; }
+details > summary { cursor: pointer; font-weight: 600; margin-bottom: 6px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin-right: 5px; }
+.copy { font-size: 12px; padding: 2px 8px; }
+table.tab td.cell { cursor: pointer; }
+table.tab td.cell:hover { outline: 2px solid var(--line); outline-offset: -2px; }
+table.tab td.sel { outline: 2.5px solid var(--text); outline-offset: -2px; }
+.r-old { box-shadow: inset 0 0 0 2.5px var(--blue); }
+.r-col { box-shadow: inset 0 0 0 2.5px var(--orange); }
+.r-piv { box-shadow: inset 0 0 0 2.5px var(--red); }
+.r-new { box-shadow: inset 0 0 0 2.5px var(--green); }
+.r-use { box-shadow: inset 0 0 0 2.5px var(--purple); }
+#tip { position: fixed; z-index: 10; max-width: min(560px, calc(100vw - 24px)); background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; box-shadow: 0 6px 24px rgba(0,0,0,.25); pointer-events: none; display: none; font-size: 14px; }
+.expl .tex { font-size: 15px; }
+.expl p { margin: 4px 0; }
+table.mini { font-size: 12px; }
+table.mini td, table.mini th { padding: 2px 6px; min-width: 28px; }
+.selpanel { border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; margin: 8px 0; }
+.kbd { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Simplesso passo passo</h1>
+  <p class="sub">Forma standard → base iniziale → forma canonica → tableau T<sup>(0)</sup>, T<sup>(1)</sup>, … con il grafico per i problemi in 2 variabili. Calcoli in frazioni esatte.</p>
+
+  <section class="card" id="input-card">
+    <h2>Problema</h2>
+    <div class="row">
+      <label>Esempio <select id="preset"></select></label>
+      <label>Variabili <input id="nvars" class="num small" type="number" min="1" max="8" value="2"></label>
+      <label>Vincoli <input id="ncons" class="num small" type="number" min="1" max="8" value="3"></label>
+      <label>Regola pivot
+        <select id="rule">
+          <option value="bland">Regola di Bland</option>
+          <option value="maxdec">Massimo decremento atteso</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid-in" id="grid"></div>
+    <div class="row">
+      <label>Base iniziale (opzionale) <input id="basis" placeholder="es. 1, 4, 5" style="width:130px"></label>
+      <button class="primary" id="solve">Risolvi</button>
+      <span class="note">Coefficienti interi, decimali o frazioni (1/3). Tutte le variabili sono ≥ 0.</span>
+    </div>
+    <div class="err" id="err"></div>
+  </section>
+
+  <div id="out"></div>
+</main>
+
+<!-- ===================== MOTORE DI CALCOLO ===================== -->
+<script id="engine">
+(function (root) {
+  "use strict";
+
+  // ---------- Frazioni esatte ----------
+  function gcd(a, b) { if (a < 0n) a = -a; if (b < 0n) b = -b; while (b) { [a, b] = [b, a % b]; } return a; }
+  class Q {
+    constructor(n, d = 1n) {
+      n = BigInt(n); d = BigInt(d);
+      if (d === 0n) throw new Error("divisione per zero");
+      if (d < 0n) { n = -n; d = -d; }
+      const g = gcd(n, d) || 1n;
+      this.n = n / g; this.d = d / g;
+    }
+    add(o) { return new Q(this.n * o.d + o.n * this.d, this.d * o.d); }
+    sub(o) { return new Q(this.n * o.d - o.n * this.d, this.d * o.d); }
+    mul(o) { return new Q(this.n * o.n, this.d * o.d); }
+    div(o) { if (o.n === 0n) throw new Error("divisione per zero"); return new Q(this.n * o.d, this.d * o.n); }
+    neg() { return new Q(-this.n, this.d); }
+    sign() { return this.n > 0n ? 1 : this.n < 0n ? -1 : 0; }
+    isZero() { return this.n === 0n; }
+    cmp(o) { return this.sub(o).sign(); }
+    eq(o) { return this.n === o.n && this.d === o.d; }
+    toNumber() { return Number(this.n) / Number(this.d); }
+    toString() { return this.d === 1n ? `${this.n}` : `${this.n}/${this.d}`; }
+    pretty() { return this.toString().replace("-", "−"); }
+    tex() {
+      if (this.d === 1n) return `${this.n}`;
+      const a = this.n < 0n ? -this.n : this.n;
+      return `${this.n < 0n ? "-" : ""}\\frac{${a}}{${this.d}}`;
+    }
+  }
+  const Z = new Q(0), ONE = new Q(1);
+
+  function parseDec(s) {
+    if (!/^[+-]?\d*(\.\d+)?$/.test(s) || s === "" || s === "+" || s === "-") throw new Error(`numero non valido: "${s}"`);
+    const neg = s.startsWith("-"); s = s.replace(/^[+-]/, "");
+    const [i, f = ""] = s.split(".");
+    const q = new Q(BigInt((i || "0") + f), 10n ** BigInt(f.length));
+    return neg ? q.neg() : q;
+  }
+  function parseQ(s) {
+    s = String(s).trim().replace(/−/g, "-").replace(/,/g, ".").replace(/\s+/g, "");
+    if (s === "") return Z;
+    const parts = s.split("/");
+    if (parts.length > 2) throw new Error(`numero non valido: "${s}"`);
+    const a = parseDec(parts[0]);
+    return parts.length === 2 ? a.div(parseDec(parts[1])) : a;
+  }
+
+  // ---------- Algebra lineare ----------
+  function inverse(M) {
+    const k = M.length;
+    const A = M.map((r, i) => [...r, ...Array.from({ length: k }, (_, j) => (i === j ? ONE : Z))]);
+    for (let c = 0; c < k; c++) {
+      let p = -1;
+      for (let r = c; r < k; r++) if (!A[r][c].isZero()) { p = r; break; }
+      if (p < 0) return null;
+      [A[c], A[p]] = [A[p], A[c]];
+      const pv = A[c][c];
+      A[c] = A[c].map(v => v.div(pv));
+      for (let r = 0; r < k; r++) {
+        if (r === c || A[r][c].isZero()) continue;
+        const f = A[r][c];
+        A[r] = A[r].map((v, j) => v.sub(f.mul(A[c][j])));
+      }
+    }
+    return A.map(r => r.slice(k));
+  }
+  const matVec = (M, v) => M.map(r => r.reduce((s, x, j) => s.add(x.mul(v[j])), Z));
+  const matMul = (M, N) => M.map(r => N[0].map((_, j) => r.reduce((s, x, l) => s.add(x.mul(N[l][j])), Z)));
+  const col = (A, j) => A.map(r => r[j]);
+
+  // ---------- Forma standard ----------
+  // P = { sense: 'min'|'max', c: [Q], rows: [{ a: [Q], op: '<='|'>='|'=', b: Q }] }
+  function standardize(P) {
+    const n0 = P.c.length, m = P.rows.length;
+    const notes = [];
+    let c = P.c.slice();
+    if (P.sense === "max") { c = c.map(v => v.neg()); notes.push({ type: "max" }); }
+    const flip = { "<=": ">=", ">=": "<=", "=": "=" };
+    const rows = P.rows.map((r, i) => {
+      if (r.b.sign() < 0) {
+        notes.push({ type: "flip", row: i, from: r.op, to: flip[r.op] });
+        return { a: r.a.map(v => v.neg()), b: r.b.neg(), op: flip[r.op] };
+      }
+      return { a: r.a.slice(), b: r.b, op: r.op };
+    });
+    let N = n0;
+    const slackOf = [], slackSign = [];
+    rows.forEach((r, i) => {
+      if (r.op === "=") { slackOf.push(-1); slackSign.push(0); }
+      else {
+        slackOf.push(N); slackSign.push(r.op === "<=" ? 1 : -1);
+        notes.push({ type: r.op === "<=" ? "slack" : "surplus", row: i, v: N });
+        N++;
+      }
+    });
+    const A = rows.map((r, i) => {
+      const row = new Array(N).fill(Z);
+      r.a.forEach((v, j) => (row[j] = v));
+      if (slackOf[i] >= 0) row[slackOf[i]] = new Q(slackSign[i]);
+      return row;
+    });
+    const cs = new Array(N).fill(Z);
+    c.forEach((v, j) => (cs[j] = v));
+    return { n0, N, m, A, b: rows.map(r => r.b), c: cs, slackOf, slackSign, rowsStd: rows, notes, sense: P.sense, P };
+  }
+
+  // ---------- Base iniziale ----------
+  function basisData(S, basis) {
+    const B = S.A.map(r => basis.map(j => r[j]));
+    const Binv = inverse(B);
+    if (!Binv) return { B, Binv: null };
+    return { B, Binv, xB: matVec(Binv, S.b) };
+  }
+
+  function findBasis(S, user) {
+    const { m, N } = S;
+    if (user && user.length) {
+      if (user.length !== m) return { error: `La base deve avere esattamente m = ${m} indici (ne hai dati ${user.length}).` };
+      if (new Set(user).size !== user.length) return { error: "Indici di base ripetuti." };
+      for (const j of user) if (!(j >= 0 && j < N)) return { error: `Indice x${j + 1} fuori intervallo (le variabili vanno da x1 a x${N}).` };
+      const bd = basisData(S, user);
+      if (!bd.Binv) return { error: `Le colonne {${user.map(j => j + 1).join(", ")}} non formano una base: B è singolare.` };
+      if (bd.xB.some(v => v.sign() < 0)) return { error: `La base {${user.map(j => j + 1).join(", ")}} non è ammissibile: x̄_B = B⁻¹b = (${bd.xB.map(v => v.pretty()).join(", ")}) ha componenti negative.` };
+      return { basis: user.slice(), method: "user" };
+    }
+    // colonne della matrice identità (tipicamente le slack)
+    const id = [];
+    for (let i = 0; i < m; i++) {
+      let pick = -1;
+      for (let j = 0; j < N; j++) {
+        if (!S.A[i][j].eq(ONE)) continue;
+        if (S.A.every((r, l) => l === i || r[j].isZero())) pick = j;
+      }
+      id.push(pick);
+    }
+    if (id.every(j => j >= 0)) return { basis: id, method: "identity" };
+    // enumerazione delle basi in ordine lessicografico
+    let tried = 0, found = null;
+    const comb = [];
+    (function rec(start) {
+      if (found || tried > 50000) return;
+      if (comb.length === m) {
+        tried++;
+        const bd = basisData(S, comb);
+        if (bd.Binv && bd.xB.every(v => v.sign() >= 0)) found = comb.slice();
+        return;
+      }
+      for (let j = start; j < N; j++) { comb.push(j); rec(j + 1); comb.pop(); if (found) return; }
+    })(0);
+    if (found) return { basis: found, method: "enum" };
+    return { error: "Nessuna base ammissibile trovata: il problema è inammissibile (oppure i vincoli sono linearmente dipendenti). La prima fase del simplesso non è implementata." };
+  }
+
+  // ---------- Tableau ----------
+  function buildTableau(S, basis) {
+    const { m, N } = S;
+    const { Binv, xB } = basisData(S, basis);
+    const T = [];
+    for (let i = 0; i < m; i++) {
+      const r = [];
+      for (let j = 0; j < N; j++) r.push(S.A.reduce((s, row, l) => s.add(Binv[i][l].mul(row[j])), Z));
+      r.push(xB[i]);
+      T.push(r);
+    }
+    const cB = basis.map(j => S.c[j]);
+    const cost = [];
+    for (let j = 0; j < N; j++) cost.push(S.c[j].sub(cB.reduce((s, v, i) => s.add(v.mul(T[i][j])), Z)));
+    cost.push(cB.reduce((s, v, i) => s.add(v.mul(xB[i])), Z).neg());
+    T.push(cost);
+    return T;
+  }
+
+  function pivot(T, s, k) {
+    const ps = T[s][k];
+    const newS = T[s].map(v => v.div(ps));
+    const ops = [];
+    const T2 = T.map((r, i) => {
+      if (i === s) return newS;
+      const f = r[k];
+      if (!f.isZero()) ops.push({ i, f });
+      return r.map((v, j) => v.sub(f.mul(newS[j])));
+    });
+    return { T: T2, ops, ps };
+  }
+
+  function makeState(S, basis, Nlist, T) {
+    const { m, N } = S;
+    const x = new Array(N).fill(Z);
+    basis.forEach((j, i) => (x[j] = T[i][N]));
+    return { basis, Nlist, T, x, z: T[m][N].neg() };
+  }
+
+  // Analisi di un tableau: test di ottimalità, scelta pivot, test di illimitatezza.
+  function analyze(S, st, rule, forceK) {
+    const { m, N } = S, T = st.T;
+    const nonbasic = st.Nlist.slice().sort((a, b) => a - b);
+    const neg = nonbasic.filter(j => T[m][j].sign() < 0);
+    const zeroN = nonbasic.filter(j => T[m][j].isZero());
+    const degenerate = st.basis.some((_, i) => T[i][N].isZero());
+    let k, kTies = [];
+    if (forceK == null) {
+      if (!neg.length) return { status: "optimal", neg, zeroN, degenerate };
+      if (rule === "bland") k = Math.min(...neg);
+      else {
+        k = neg[0];
+        for (const j of neg) if (T[m][j].cmp(T[m][k]) < 0) k = j;
+        kTies = neg.filter(j => T[m][j].eq(T[m][k]));
+      }
+    } else k = forceK;
+    const d = T.slice(0, m).map(r => r[k]);
+    const ratios = d.map((di, i) => (di.sign() > 0 ? T[i][N].div(di) : null));
+    const valid = ratios.map((r, i) => (r ? i : -1)).filter(i => i >= 0);
+    const base = { k, d, ratios, neg, zeroN, kTies, degenerate, forced: forceK != null };
+    if (!valid.length) return { ...base, status: forceK == null ? "unbounded" : "ray" };
+    let delta = ratios[valid[0]];
+    for (const i of valid) if (ratios[i].cmp(delta) < 0) delta = ratios[i];
+    const tieRows = valid.filter(i => ratios[i].eq(delta));
+    const s = tieRows[0];
+    return { ...base, status: "step", s, h: st.basis[s], delta, tieRows, degStep: delta.isZero(), newZ: st.z.add(T[m][k].mul(delta)) };
+  }
+
+  function applyMove(S, st, mv) {
+    const { T, ops, ps } = pivot(st.T, mv.s, mv.k);
+    mv.ops = ops; mv.ps = ps;
+    const basis = st.basis.slice(); basis[mv.s] = mv.k;
+    const Nlist = st.Nlist.map(j => (j === mv.k ? mv.h : j));
+    return makeState(S, basis, Nlist, T);
+  }
+
+  function run(S, basis0, rule, maxIter = 60) {
+    const Nlist0 = [...Array(S.N).keys()].filter(j => !basis0.includes(j));
+    let st = makeState(S, basis0.slice(), Nlist0, buildTableau(S, basis0));
+    const states = [], seen = new Set();
+    for (let it = 0; ; it++) {
+      const key = st.basis.slice().sort((a, b) => a - b).join(",");
+      st.info = analyze(S, st, rule);
+      if (seen.has(key) && st.info.status === "step") { st.info = { ...st.info, status: "cycle" }; states.push(st); break; }
+      seen.add(key);
+      states.push(st);
+      if (st.info.status !== "step") break;
+      if (it >= maxIter) { st.info = { ...st.info, status: "cap" }; break; }
+      st.move = st.info;
+      st = applyMove(S, st, st.move);
+    }
+    return states;
+  }
+
+  // Ottimo alternativo: forza l'ingresso di una variabile fuori base con costo ridotto nullo.
+  function explore(S, st, k) {
+    const mv = analyze(S, st, null, k);
+    if (mv.status !== "step") return { move: mv, next: null };
+    return { move: mv, next: applyMove(S, st, mv) };
+  }
+
+  root.Simplex = { Q, Z, ONE, parseQ, inverse, matVec, matMul, col, standardize, basisData, findBasis, buildTableau, pivot, analyze, run, explore };
+})(typeof window !== "undefined" ? window : globalThis);
+</script>
+
+<!-- ===================== INTERFACCIA ===================== -->
+<script>
+(function () {
+  "use strict";
+  const { Q, Z, parseQ, standardize, basisData, findBasis, run, explore, matMul, col } = window.Simplex;
+
+  const PRESETS = [
+    { name: "— personalizzato —" },
+    { name: "Esempio con tableau (ottimo unico)", sense: "min", c: ["-1", "2"], rows: [[["-1", "1"], "<=", "1"], [["1", "2"], "<=", "8"], [["1", "1"], "<=", "6"]], rule: "bland", basis: "" },
+    { name: "Infinite soluzioni ottime", sense: "min", c: ["-2", "-4"], rows: [[["1", "2"], "<=", "4"], [["-1", "1"], "<=", "1"], [["3", "-2"], "<=", "4"]], rule: "maxdec", basis: "" },
+    { name: "Problema illimitato (base 1, 4, 5)", sense: "max", c: ["5", "2"], rows: [[["2", "1"], ">=", "3"], [["3", "-1"], ">=", "0"], [["2", "-4"], "<=", "6"]], rule: "bland", basis: "1, 4, 5" },
+    { name: "Esercizio 3 (forma standard, 6 variabili)", sense: "min", c: ["1", "2", "1", "1", "1", "1"], rows: [[["1", "2", "3", "1", "0", "0"], "=", "3"], [["2", "-1", "-5", "0", "1", "0"], "=", "2"], [["1", "2", "-1", "0", "0", "1"], "=", "1"]], rule: "bland", basis: "1, 3, 4" },
+  ];
+
+  const $ = id => document.getElementById(id);
+  const SUB = "₀₁₂₃₄₅₆₇₈₉";
+  const sub = n => String(n).split("").map(ch => SUB[+ch]).join("");
+  const xv = j => `x${sub(j + 1)}`;                 // nome unicode (j 0-based)
+  const xh = j => `x<sub>${j + 1}</sub>`;           // nome html
+  const xt = j => `x_{${j + 1}}`;                   // nome latex
+  const esc = s => String(s).replace(/[&<>]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
+
+  // ---------- LaTeX ----------
+  function tex(el, src, display = true) {
+    if (window.katex) {
+      try { katex.render(src, el, { displayMode: display, throwOnError: false, strict: false }); return; } catch (e) { /* fallback */ }
+    }
+    if (el.dataset.fb) { el.textContent = el.dataset.fb; return; }
+    el.classList.add("tex-fallback"); el.textContent = src;
+  }
+  function texBlock(src) { return `<div class="tex" data-tex="${encodeURIComponent(src)}"></div>`; }
+  function texInline(src, fb) { return `<span class="tex-i" data-tex="${encodeURIComponent(src)}"${fb ? ` data-fb="${fb}"` : ""}></span>`; }
+  const CB = texInline("\\mathcal{B}", "B"), CN = texInline("\\mathcal{N}", "N");
+  function renderTex(root) {
+    root.querySelectorAll("[data-tex]").forEach(el => tex(el, decodeURIComponent(el.dataset.tex), el.classList.contains("tex")));
+  }
+  function lin(terms, keepZero = false) {
+    let out = "";
+    for (const { q, j } of terms) {
+      if (q.isZero() && !keepZero) continue;
+      const neg = q.sign() < 0, a = neg ? q.neg() : q;
+      const coef = a.eq(Simplex.ONE) ? "" : a.tex();
+      out += out === "" ? (neg ? "-" : "") : (neg ? " - " : " + ");
+      out += coef + xt(j);
+    }
+    return out || "0";
+  }
+  const vecTex = v => `\\begin{pmatrix} ${v.map(q => q.tex()).join(" \\\\ ")} \\end{pmatrix}`;
+  const rowTex = v => `(${v.map(q => q.tex()).join(",\\ ")})`;
+  const matTex = M => `\\begin{pmatrix} ${M.map(r => r.map(q => q.tex()).join(" & ")).join(" \\\\ ")} \\end{pmatrix}`;
+  const setTex = s => `\\{${s.map(j => j + 1).join(", ")}\\}`;
+  const opTex = { "<=": "\\le", ">=": "\\ge", "=": "=" };
+
+  // ---------- Form ----------
+  let state = null;
+  let geo = null;      // geometria dell'ultimo grafico disegnato (per l'animazione)
+  let animId = 0;
+
+  function buildGrid(keep = true) {
+    const n = Math.max(1, Math.min(8, +$("nvars").value || 2));
+    const m = Math.max(1, Math.min(8, +$("ncons").value || 1));
+    const old = keep ? readRaw() : null;
+    const g = $("grid");
+    g.style.gridTemplateColumns = `auto repeat(${n}, 70px) 64px 70px`;
+    let h = `<div></div>${Array.from({ length: n }, (_, j) => `<div class="h">${xh(j)}</div>`).join("")}<div></div><div class="h">b</div>`;
+    h += `<div><select id="sense"><option value="min">min</option><option value="max">max</option></select></div>`;
+    for (let j = 0; j < n; j++) h += `<input class="num" id="c${j}" value="${old?.c[j] ?? "0"}">`;
+    h += `<div></div><div></div>`;
+    for (let i = 0; i < m; i++) {
+      h += `<div class="h">v${sub(i + 1)}</div>`;
+      for (let j = 0; j < n; j++) h += `<input class="num" id="a${i}_${j}" value="${old?.rows[i]?.a[j] ?? "0"}">`;
+      h += `<select id="op${i}"><option value="<=">≤</option><option value=">=">≥</option><option value="=">=</option></select>`;
+      h += `<input class="num" id="b${i}" value="${old?.rows[i]?.b ?? "0"}">`;
+    }
+    g.innerHTML = h;
+    if (old) {
+      $("sense").value = old.sense;
+      for (let i = 0; i < m; i++) if (old.rows[i]) $(`op${i}`).value = old.rows[i].op;
+    }
+  }
+  function readRaw() {
+    if (!$("sense")) return null;
+    let n = 0;
+    while ($(`c${n}`)) n++;
+    const rows = [];
+    for (let i = 0; $(`b${i}`); i++) {
+      rows.push({ a: Array.from({ length: n }, (_, j) => $(`a${i}_${j}`)?.value ?? "0"), op: $(`op${i}`).value, b: $(`b${i}`).value });
+    }
+    return { sense: $("sense").value, c: Array.from({ length: n }, (_, j) => $(`c${j}`).value), rows };
+  }
+  function loadPreset(p) {
+    $("nvars").value = p.c.length; $("ncons").value = p.rows.length;
+    buildGrid(false);
+    $("sense").value = p.sense;
+    p.c.forEach((v, j) => ($(`c${j}`).value = v));
+    p.rows.forEach(([a, op, b], i) => { a.forEach((v, j) => ($(`a${i}_${j}`).value = v)); $(`op${i}`).value = op; $(`b${i}`).value = b; });
+    $("rule").value = p.rule; $("basis").value = p.basis;
+  }
+
+  function solve() {
+    $("err").textContent = "";
+    let P, user = null;
+    try {
+      const r = readRaw();
+      P = { sense: r.sense, c: r.c.map(parseQ), rows: r.rows.map(x => ({ a: x.a.map(parseQ), op: x.op, b: parseQ(x.b) })) };
+      const bs = $("basis").value.trim();
+      if (bs) {
+        user = bs.split(/[\s,;{}]+/).filter(Boolean).map(t => {
+          const v = parseInt(t.replace(/^x/i, ""), 10);
+          if (!Number.isInteger(v)) throw new Error(`indice di base non valido: "${t}"`);
+          return v - 1;
+        });
+      }
+    } catch (e) { $("err").textContent = "Errore: " + e.message; return; }
+    const S = standardize(P);
+    if (S.m >= S.N) { $("err").textContent = `Servono m < n: dopo la standardizzazione ci sono ${S.m} vincoli e ${S.N} variabili.`; return; }
+    const fb = findBasis(S, user);
+    const rule = $("rule").value;
+    state = { S, fb, rule, states: fb.error ? [] : run(S, fb.basis, rule), idx: 0, sel: null };
+    render();
+  }
+
+  // ---------- Rendering: sezioni fisse ----------
+  function renderFormulation(S, fb) {
+    const P = S.P;
+    const orig = `\\begin{cases} \\${P.sense} & ${lin(P.c.map((q, j) => ({ q, j })))} \\\\ ` +
+      P.rows.map((r, i) => `${i === 0 ? "\\text{s.t.}" : ""} & ${lin(r.a.map((q, j) => ({ q, j })))} ${opTex[r.op]} ${r.b.tex()}`).join(" \\\\ ") +
+      ` \\\\ & ${Array.from({ length: S.n0 }, (_, j) => xt(j)).join(", ")} \\ge 0 \\end{cases}`;
+    const std = `\\begin{cases} \\min & ${lin(S.c.map((q, j) => ({ q, j })))} \\\\ ` +
+      S.A.map((r, i) => `${i === 0 ? "\\text{s.t.}" : ""} & ${lin(r.map((q, j) => ({ q, j })))} = ${S.b[i].tex()}`).join(" \\\\ ") +
+      ` \\\\ & ${Array.from({ length: S.N }, (_, j) => xt(j)).join(", ")} \\ge 0 \\end{cases}`;
+    const sym = { "<=": "≤", ">=": "≥", "=": "=" };
+    const notes = S.notes.map(nt => {
+      if (nt.type === "max") return `<li>Problema di <b>max</b>: diventa <b>min</b> cambiando segno ai costi (max f = −min(−f)).</li>`;
+      if (nt.type === "flip") return `<li>Vincolo ${nt.row + 1}: termine noto negativo, moltiplico per −1 (il verso ${sym[nt.from]} diventa ${sym[nt.to]}).</li>`;
+      if (nt.type === "slack") return `<li>Vincolo ${nt.row + 1} (≤): aggiungo la variabile di <b>slack</b> ${xh(nt.v)} con coefficiente +1.</li>`;
+      return `<li>Vincolo ${nt.row + 1} (≥): sottraggo la variabile di <b>surplus</b> ${xh(nt.v)} (coefficiente −1).</li>`;
+    }).join("");
+    let basisTxt;
+    if (fb.error) basisTxt = `<p class="err">${esc(fb.error)}</p>`;
+    else {
+      const bset = fb.basis.map(j => j + 1).join(", ");
+      basisTxt = {
+        user: `<p>Base fornita: ${CB} = {${bset}}. Le righe del tableau seguono quest'ordine.</p>`,
+        identity: `<p>Le colonne di {${bset}} formano la matrice identità e b ≥ 0, quindi ${CB} = {${bset}} è una base ammissibile: la forma standard è già in forma canonica rispetto a ${CB}.</p>`,
+        enum: `<p>Le colonne non contengono l'identità. Ho trovato una base ammissibile enumerando le basi in ordine lessicografico: ${CB} = {${bset}}. A lezione si userebbe la prima fase (non implementata), oppure la base data dal testo.</p>`,
+      }[fb.method];
+    }
+    return `<section class="card">
+      <h2>1. Dal problema alla forma standard</h2>
+      <div class="layout">
+        <div><h3>Problema</h3>${texBlock(orig)}</div>
+        <div><h3>Forma standard</h3>${texBlock(std)}</div>
+      </div>
+      ${notes ? `<ul class="plain">${notes}</ul>` : `<p class="note">Il problema è già in forma standard.</p>`}
+      <h3>Base ammissibile iniziale</h3>${basisTxt}
+    </section>`;
+  }
+
+  // ---------- Rendering: tableau ----------
+  function tableauHTML(S, st, mv, cellClass) {
+    const { m, N } = S, T = st.T;
+    const k = mv && mv.status === "step" ? mv.k : mv && (mv.status === "unbounded" || mv.status === "ray") ? mv.k : -1;
+    const s = mv && mv.status === "step" ? mv.s : -1;
+    const optimal = st.info.status === "optimal";
+    let h = `<table class="tab"><tr><th></th>`;
+    for (let j = 0; j < N; j++) h += `<th class="${st.basis.includes(j) ? "basic" : ""}${j === 0 ? " vl" : ""}">${xh(j)}</th>`;
+    h += `<th class="vl vr">B⁻¹b</th>${mv && mv.ratios ? `<th></th>` : ""}</tr>`;
+    for (let i = 0; i <= m; i++) {
+      const cost = i === m;
+      h += `<tr class="${cost ? "costrow last" : i === 0 ? "first" : ""}"><td class="lab">${cost ? "ĉ / −z̄" : xh(st.basis[i])}</td>`;
+      for (let j = 0; j <= N; j++) {
+        const v = T[i][j];
+        const cls = [];
+        if (j === 0) cls.push("vl");
+        if (j === N) cls.push("vl", "vr");
+        if (i === s && j === k) cls.push("piv");
+        else if (i === s && !cost) cls.push("rowp");
+        else if (j === k && j < N) cls.push("colp");
+        if (cost && j < N && !st.basis.includes(j)) {
+          if (v.sign() < 0) cls.push("neg");
+          else if (v.isZero() && optimal) cls.push("zero");
+        }
+        if (cellClass) cls.push("cell", ...cellClass(i, j));
+        h += `<td class="${cls.join(" ")}" data-i="${i}" data-j="${j}">${v.pretty()}</td>`;
+      }
+      if (mv && mv.ratios) {
+        const r = !cost ? mv.ratios[i] : null;
+        const isMin = r && mv.delta && r.eq(mv.delta);
+        h += `<td class="ratio${isMin ? " min" : ""}">${r ? `${T[i][N].pretty()} / ${T[i][k].pretty()} = ${r.pretty()}` : cost ? "" : "—"}</td>`;
+      }
+      h += `</tr>`;
+    }
+    return h + `</table>`;
+  }
+
+  // ---------- Spiegazione delle celle (formule degli appunti) ----------
+  // ruoli: old = t_ij^(r), col = t_ik^(r), piv = t_sk^(r), new = t_sj^(r+1), use = dati usati in T^(0)
+  const RC = { old: "#3d8fd6", col: "#c47a2c", piv: "#d4505c", new: "#4f9a3a", use: "#a052c4" };
+  const paint = (role, x) => `\\textcolor{${RC[role]}}{${x}}`;
+  const par = q => (q.sign() < 0 ? `\\left(${q.tex()}\\right)` : q.tex());
+  const ix = (a, b) => (a > 9 || b > 9 ? `${a},${b}` : `${a}${b}`);
+  const tt = (r, i, j) => `t^{(${r})}_{${ix(i + 1, j + 1)}}`;
+
+  function explainCell(S, states, idx, i, j) {
+    const { m, N } = S, st = states[idx], T = st.T, v = T[i][j];
+    const cost = i === m, rhs = j === N;
+    const prevRoles = new Map(), curRoles = new Map();
+    const lines = [];   // righe LaTeX
+    const notes = [];   // osservazioni in testo
+    let title;
+    if (idx === 0) {
+      const bd = basisData(S, st.basis);
+      const isId = bd.Binv.every((r, a) => r.every((q, b) => q.eq(a === b ? Simplex.ONE : Z)));
+      if (!cost && !rhs) {
+        title = `Elemento t<sup>(0)</sup><sub>${i + 1}${j + 1}</sub> = (B⁻¹A<sub>${j + 1}</sub>)<sub>${i + 1}</sub>: coefficiente di ${xh(j)} nel vincolo di ${xh(st.basis[i])}`;
+        if (isId) {
+          lines.push(`${tt(0, i, j)} = (B^{-1}A_{${j + 1}})_{${i + 1}} = (I\\,A_{${j + 1}})_{${i + 1}} = a_{${ix(i + 1, j + 1)}} = ${v.tex()}`);
+          notes.push("B = I (colonne della matrice identità): il tableau iniziale coincide con A.");
+        } else {
+          const terms = bd.Binv[i].map((q, l) => `${par(q)}\\cdot ${par(S.A[l][j])}`).join(" + ");
+          lines.push(`${tt(0, i, j)} = (B^{-1}A_{${j + 1}})_{${i + 1}} = \\sum_{l} (B^{-1})_{${i + 1}l}\\, a_{l${j + 1}} = ${terms} = ${v.tex()}`);
+        }
+        if (st.basis.includes(j)) notes.push(`${xh(j)} è in base: la sua colonna è il vettore unitario e<sub>${st.basis.indexOf(j) + 1}</sub>.`);
+      } else if (!cost && rhs) {
+        title = `Termine noto t<sup>(0)</sup><sub>${i + 1},${N + 1}</sub> = x̄<sub>${CB}(${i + 1})</sub> = valore di ${xh(st.basis[i])}`;
+        if (isId) lines.push(`${tt(0, i, j)} = (B^{-1}b)_{${i + 1}} = b_{${i + 1}} = ${v.tex()}`);
+        else lines.push(`${tt(0, i, j)} = (B^{-1}b)_{${i + 1}} = ${bd.Binv[i].map((q, l) => `${par(q)}\\cdot ${par(S.b[l])}`).join(" + ")} = ${v.tex()}`);
+      } else if (cost && !rhs) {
+        title = `Costo ridotto ĉ<sub>${j + 1}</sub> di ${xh(j)}`;
+        if (st.basis.includes(j)) {
+          lines.push(`\\hat{c}_{${j + 1}} = 0 \\quad (${xt(j)} \\in \\mathcal{B})`);
+          notes.push("Le variabili in base hanno costo ridotto nullo.");
+        } else {
+          const cB = st.basis.map(b => S.c[b]);
+          const sum = st.basis.map((b, l) => `${par(cB[l])}\\cdot ${par(T[l][j])}`).join(" + ");
+          lines.push(`\\hat{c}_{${j + 1}} = c_{${j + 1}} - c_B^\\top B^{-1}A_{${j + 1}} = c_{${j + 1}} - \\sum_{l} c_{\\mathcal{B}(l)}\\, t^{(0)}_{l${j + 1}}`);
+          lines.push(`= ${par(S.c[j])} - \\left(${sum}\\right) = ${v.tex()}`);
+          for (let l = 0; l < m; l++) curRoles.set(`${l},${j}`, "use");
+          if (st.basis.every(b => S.c[b].isZero())) notes.push("c<sub>B</sub> = 0 (le slack non compaiono nella funzione obiettivo) ⇒ ĉ<sub>N</sub> = c<sub>N</sub>.");
+        }
+      } else {
+        title = "Angolo in basso a destra: −z̄";
+        const sum = st.basis.map((b, l) => `${par(S.c[b])}\\cdot ${par(T[l][N])}`).join(" + ");
+        lines.push(`-\\bar{z} = -c_B^\\top B^{-1}b = -\\sum_l c_{\\mathcal{B}(l)}\\,\\bar{x}_{\\mathcal{B}(l)} = -\\left(${sum}\\right) = ${v.tex()}`);
+        for (let l = 0; l < m; l++) curRoles.set(`${l},${N}`, "use");
+        notes.push(`Quindi z̄ = ${st.z.pretty()} (cambio di segno).`);
+      }
+      return { title, lines, notes, prevRoles, curRoles, r: 0 };
+    }
+    // T^(r+1) ottenuto da T^(r) con l'operazione di pivot
+    const r = idx - 1, pst = states[r], P = pst.T, mv = pst.move, s = mv.s, k = mv.k;
+    const R1 = r + 1;
+    const where = cost ? (rhs ? "angolo −z̄" : `riga dei costi ridotti (ĉ<sub>${j + 1}</sub>)`) : rhs ? `termine noto della riga ${i + 1}` : `riga ${i + 1}, colonna ${xh(j)}`;
+    title = `t<sup>(${R1})</sup><sub>${i + 1}${j + 1}</sub> — ${where}`;
+    if (i === s) {
+      lines.push(`${tt(R1, i, j)} = \\frac{${tt(r, s, j)}}{${tt(r, s, k)}} = \\frac{${paint("old", P[s][j].tex())}}{${paint("piv", P[s][k].tex())}} = ${v.tex()}`);
+      prevRoles.set(`${s},${j}`, "old"); prevRoles.set(`${s},${k}`, "piv");
+      notes.push(`Riga di pivot: si divide tutta la riga ${s + 1} per l'elemento di pivot t<sub>${s + 1}${k + 1}</sub> = ${P[s][k].pretty()}.`);
+      if (j === k) notes.push("È l'elemento di pivot: diventa 1.");
+      if (P[s][k].eq(Simplex.ONE)) notes.push("Il pivot vale 1, quindi la riga si ricopia.");
+    } else {
+      const a = P[i][j], b = P[i][k], c = T[s][j];
+      lines.push(`${tt(R1, i, j)} = ${tt(r, i, j)} - ${tt(r, i, k)}\\cdot ${tt(R1, s, j)}`);
+      lines.push(`= ${paint("old", a.tex())} - ${paint("col", par(b))}\\cdot ${paint("new", par(c))} = ${v.tex()}`);
+      prevRoles.set(`${i},${j}`, "old"); prevRoles.set(`${i},${k}`, "col");
+      prevRoles.set(`${s},${j}`, "piv"); prevRoles.set(`${s},${k}`, "piv");
+      curRoles.set(`${s},${j}`, "new");
+      notes.push(`${tt0("new")} t<sup>(${R1})</sup><sub>${s + 1}${j + 1}</sub> = t<sup>(${r})</sup><sub>${s + 1}${j + 1}</sub> / t<sup>(${r})</sup><sub>${s + 1}${k + 1}</sub> = ${P[s][j].pretty()} / ${P[s][k].pretty()} è l'elemento della riga di pivot già aggiornata.`);
+      if (j === k) notes.push("Colonna di pivot: t<sub>ik</sub> − t<sub>ik</sub>·1 = 0, la colonna della variabile entrante diventa unitaria.");
+      else if (b.isZero()) notes.push(`t<sup>(${r})</sup><sub>${i + 1}${k + 1}</sub> = 0: questa riga non cambia.`);
+      else if (c.isZero()) notes.push(`La riga di pivot ha 0 in questa colonna: il valore non cambia${pst.basis.includes(j) ? ` (${xh(j)} resta in base)` : ""}.`);
+      if (cost && rhs) notes.push(`z passa da ${pst.z.pretty()} a ${st.z.pretty()} (= z̄ + ĉ<sub>${k + 1}</sub>·δ̄).`);
+    }
+    return { title, lines, notes, prevRoles, curRoles, r };
+  }
+  const tt0 = role => `<b style="color:${RC[role]}">●</b>`;
+
+  function explainHTML(S, states, idx, i, j) {
+    const e = explainCell(S, states, idx, i, j);
+    let h = `<p><b>${e.title}</b></p>${e.lines.map(texBlock).join("")}`;
+    if (e.notes.length) h += e.notes.map(n => `<p class="note">${n}</p>`).join("");
+    if (idx > 0) {
+      const pst = states[idx - 1];
+      h += `<p class="note">Da T<sup>(${idx - 1})</sup> (pivot t<sub>${pst.move.s + 1}${pst.move.k + 1}</sub>): ${tt0("old")} t<sub>ij</sub> &nbsp; ${tt0("col")} t<sub>ik</sub> &nbsp; ${tt0("piv")} riga/elemento di pivot</p>`;
+      h += tableauHTML(S, pst, null, (a, b) => { const rl = e.prevRoles.get(`${a},${b}`); return rl ? [`r-${rl}`] : []; }).replace('class="tab"', 'class="tab mini"').replace(/ cell/g, "");
+    } else if (e.curRoles.size) h += `<p class="note">${tt0("use")} celle di T<sup>(0)</sup> usate nel calcolo.</p>`;
+    return h;
+  }
+
+  function mainCellClass(S, idx) {
+    if (!state.sel) return () => [];
+    const e = explainCell(S, state.states, idx, state.sel.i, state.sel.j);
+    return (a, b) => {
+      const c = [];
+      if (a === state.sel.i && b === state.sel.j) c.push("sel");
+      const rl = e.curRoles.get(`${a},${b}`);
+      if (rl) c.push(`r-${rl}`);
+      return c;
+    };
+  }
+
+  function bindCells() {
+    const tab = $("maintab");
+    if (!tab) return;
+    let tip = $("tip");
+    if (!tip) { tip = document.createElement("div"); tip.id = "tip"; tip.className = "expl"; document.body.appendChild(tip); }
+    const { S, states, idx } = state;
+    let marked = [];
+    tab.querySelectorAll("td.cell").forEach(td => {
+      const i = +td.dataset.i, j = +td.dataset.j;
+      td.onmouseenter = () => {
+        tip.innerHTML = explainHTML(S, states, idx, i, j);
+        renderTex(tip);
+        tip.style.display = "block";
+        const rc = td.getBoundingClientRect(), tw = tip.offsetWidth, th = tip.offsetHeight;
+        let x = rc.right + 10, y = rc.top;
+        if (x + tw > innerWidth - 8) x = Math.max(8, rc.left - tw - 10);
+        if (y + th > innerHeight - 8) y = Math.max(8, innerHeight - th - 8);
+        tip.style.left = x + "px"; tip.style.top = y + "px";
+        explainCell(S, states, idx, i, j).curRoles.forEach((rl, key) => {
+          const [a, b] = key.split(",");
+          const el = tab.querySelector(`td[data-i="${a}"][data-j="${b}"]`);
+          if (el) { el.classList.add(`r-${rl}`); marked.push([el, `r-${rl}`]); }
+        });
+      };
+      td.onmouseleave = () => {
+        tip.style.display = "none";
+        marked.forEach(([el, c]) => { if (!(state.sel && el.classList.contains("sel"))) el.classList.remove(c); });
+        marked = [];
+        if (state.sel) mainCellClassRefresh();
+      };
+      td.onclick = () => {
+        state.sel = state.sel && state.sel.i === i && state.sel.j === j ? null : { i, j };
+        tip.style.display = "none";
+        render();
+      };
+    });
+  }
+  function mainCellClassRefresh() {
+    const tab = $("maintab"), f = mainCellClass(state.S, state.idx);
+    tab.querySelectorAll("td.cell").forEach(td => {
+      const want = f(+td.dataset.i, +td.dataset.j);
+      want.forEach(c => td.classList.add(c));
+    });
+  }
+
+  function tableauLatex(S, st, r, mv) {
+    const { m, N } = S, T = st.T;
+    const red = v => `\\textcolor{#e06c75}{${v}}`;
+    const k = mv && mv.status === "step" ? mv.k : -1, s = mv && mv.status === "step" ? mv.s : -1;
+    let out = `T^{(${r})} = \\begin{array}{|${"c".repeat(N)}|c|}\n\\hline\n`;
+    for (let i = 0; i <= m; i++) {
+      if (i === m) out += `\\hline\n`;
+      out += T[i].map((v, j) => (i === s && j === k ? red(v.toString()) : v.toString())).join(" & ") + ` \\\\\n`;
+    }
+    return out + `\\hline\n\\end{array}`;
+  }
+
+  // ---------- Rendering: dettagli del passo ----------
+  function stepHTML(S, st, r) {
+    const { m, N } = S;
+    const info = st.info, mv = st.move || null;
+    const T = st.T;
+    const fmtX = `(${st.x.map(v => v.pretty()).join(", ")})ᵀ`;
+    const zOrig = S.sense === "max" ? st.z.neg() : st.z;
+    let h = `<div class="steps">`;
+    h += `<p><b>Base</b> ${CB} = {${st.basis.map(j => j + 1).join(", ")}}, ${CN} = {${st.Nlist.map(j => j + 1).join(", ")}}</p>`;
+    h += `<p><b>Soluzione di base</b> x̄ = ${fmtX}</p>`;
+    h += `<p><b>z̄</b> = cᵀx̄ = ${st.z.pretty()}${S.sense === "max" ? ` &nbsp;→&nbsp; valore del max = ${zOrig.pretty()}` : ""}</p>`;
+    if (info.degenerate) h += `<p><span class="badge b-orange">SBA degenere</span> una variabile in base vale 0.</p>`;
+
+    const nb = st.Nlist.slice().sort((a, b) => a - b);
+    const ctxt = nb.map(j => `ĉ${sub(j + 1)} = ${T[m][j].pretty()}`).join(", ");
+    h += `<p><b>Test di ottimalità</b>: ${ctxt}. `;
+    if (info.status === "optimal") {
+      h += `Tutti ≥ 0 ⇒ <b>STOP</b>.</p>`;
+      if (info.zeroN.length) {
+        h += `<p><span class="badge b-blue">Infinite soluzioni ottime</span> ${info.zeroN.map(j => `ĉ${sub(j + 1)}`).join(", ")} = 0 per una variabile fuori base: perturbandola z non cambia${info.degenerate ? " (con SBA degenere potrebbe essere lo stesso punto)" : ""}.</p>`;
+        h += `<p>${info.zeroN.map(j => `<button class="explore" data-k="${j}">Esplora: fai entrare ${xh(j)}</button>`).join(" ")}</p>`;
+      } else h += `<p><span class="badge b-ok">Soluzione ottima unica</span> tutti i costi ridotti fuori base sono &gt; 0.</p>`;
+      h += `<p>x* = ${fmtX}, z* = ${st.z.pretty()}${S.sense === "max" ? ` (max = ${zOrig.pretty()})` : ""}</p>`;
+    } else {
+      h += `Esiste ĉ &lt; 0 ⇒ ${info.degenerate ? "la condizione è solo sufficiente (SBA degenere): proseguo" : "non ottima, proseguo"}.</p>`;
+    }
+    const mvv = mv || (["unbounded", "cycle", "cap"].includes(info.status) ? info : null);
+    if (mvv && mvv.k != null) {
+      const k = mvv.k;
+      if (mvv.forced) h += `<p><b>Entrante</b>: ${xh(k)} (costo ridotto nullo, ottimo alternativo).</p>`;
+      else if (state.rule === "bland") h += `<p><b>Entrante (Bland)</b>: indice minimo tra {${info.neg.map(j => j + 1).join(", ")}} ⇒ k = ${k + 1}, entra ${xh(k)}.</p>`;
+      else h += `<p><b>Entrante (massimo decremento)</b>: ĉ più negativo = ${T[m][k].pretty()} ⇒ k = ${k + 1}, entra ${xh(k)}${mvv.kTies.length > 1 ? ` <span class="badge b-orange">parità tra ${mvv.kTies.map(xh).join(", ")}: scelgo l'indice minore</span>` : ""}.</p>`;
+      h += `<p><b>Direzione</b> d = B⁻¹A${sub(k + 1)} = colonna di ${xh(k)}: ${mvv.d.map((v, i) => `${xh(st.basis[i])}: ${v.pretty()}`).join(", ")}</p>`;
+      if (mvv.status === "unbounded" || mvv.status === "ray") {
+        h += `<p><b>Test di illimitatezza</b>: d<sub>i</sub> ≤ 0 per ogni i ⇒ <span class="badge b-red">${mvv.status === "ray" ? "semiretta di soluzioni ottime" : "problema illimitato inferiormente"}</span></p>`;
+        if (mvv.status === "unbounded") h += `<p>Lungo x = x̄ + δ·(direzione), δ → ∞, z → −∞${S.sense === "max" ? " (il max → +∞)" : ""}.</p>`;
+      } else if (mvv.status === "step" || mvv.status === "cycle" || mvv.status === "cap") {
+        const rs = mvv.ratios.map((q, i) => (q ? `x̄${sub(st.basis[i] + 1)}/d${sub(i + 1)} = ${q.pretty()}` : null)).filter(Boolean);
+        h += `<p><b>δ̄</b> = min{${rs.join(", ")}} = ${mvv.delta.pretty()}</p>`;
+        h += `<p><b>Uscente</b>: i* = ${mvv.s + 1} ⇒ h = ${CB}(${mvv.s + 1}) = ${mvv.h + 1}, esce ${xh(mvv.h)}${mvv.tieRows.length > 1 ? ` <span class="badge b-orange">parità tra le righe ${mvv.tieRows.map(i => i + 1).join(", ")}: scelgo i minore ⇒ la nuova SBA è degenere</span>` : ""}</p>`;
+        if (mvv.degStep) h += `<p><span class="badge b-orange">Cambio di base degenere</span> δ̄ = 0: il punto non cambia, cambia solo la base.</p>`;
+        h += `<p><b>Nuovo valore</b> z = z̄ + ĉ${sub(k + 1)}·δ̄ = ${st.z.pretty()} + (${T[m][k].pretty()})·${mvv.delta.pretty()} = ${mvv.newZ.pretty()}</p>`;
+        if (mv && mv.ops) {
+          const ps = mv.ps.eq(Simplex.ONE) ? `R${sub(mv.s + 1)}` : `R${sub(mv.s + 1)} / ${mv.ps.pretty()}`;
+          h += `<p><b>Pivot</b> t${sub(mv.s + 1)}${sub(k + 1)} = ${mv.ps.pretty()} ⇒ T<sup>(${r + 1})</sup>:</p><ul class="ops"><li>R${sub(mv.s + 1)}′ = ${ps}</li>` +
+            mv.ops.map(o => `<li>${o.i === m ? "R<sub>ĉ</sub>" : `R${sub(o.i + 1)}`}′ = ${o.i === m ? "R<sub>ĉ</sub>" : `R${sub(o.i + 1)}`} ${o.f.sign() < 0 ? "+ " + o.f.neg().pretty() : "− " + o.f.pretty()}·R${sub(mv.s + 1)}′</li>`).join("") + `</ul>`;
+        }
+        if (info.status === "cycle") h += `<p><span class="badge b-red">Ciclo</span> questa base è già comparsa: con questa regola l'algoritmo cicla. Prova la regola di Bland.</p>`;
+        if (info.status === "cap") h += `<p class="err">Raggiunto il limite di iterazioni.</p>`;
+      }
+    }
+    return h + `</div>`;
+  }
+
+  function canonicalHTML(S, st) {
+    const { m, N } = S, T = st.T;
+    const nb = st.Nlist;
+    const obj = `${st.z.tex()} + \\begin{cases} \\min & ${lin(nb.map(j => ({ q: T[m][j], j })), true)} \\\\ ` +
+      st.basis.map((bj, i) => `${i === 0 ? "\\text{s.t.}" : ""} & ${lin([{ q: Simplex.ONE, j: bj }, ...nb.map(j => ({ q: T[i][j], j }))])} = ${T[i][N].tex()}`).join(" \\\\ ") +
+      ` \\\\ & ${Array.from({ length: N }, (_, j) => xt(j)).join(", ")} \\ge 0 \\end{cases}`;
+    const bd = basisData(S, st.basis);
+    const Nm = S.A.map(r => nb.map(j => r[j]));
+    const BinvN = matMul(bd.Binv, Nm);
+    const cB = st.basis.map(j => S.c[j]), cN = nb.map(j => S.c[j]);
+    const cHat = nb.map(j => T[m][j]);
+    const lab = (pre, set) => `(${set.map(j => `${pre}_{${j + 1}}`).join(", ")})`;
+    const mats = [
+      `\\mathcal{B} = ${setTex(st.basis)} \\quad B = ${matTex(bd.B)} \\qquad \\mathcal{N} = ${setTex(nb)} \\quad N = ${matTex(Nm)}`,
+      `c_B^\\top = ${rowTex(cB)} \\qquad c_N^\\top = ${rowTex(cN)} \\qquad B^{-1} = ${matTex(bd.Binv)}`,
+      `\\bar{x}_B = B^{-1}b = ${lab("x", st.basis)}^\\top = ${rowTex(bd.xB)}^\\top \\qquad B^{-1}N = ${matTex(BinvN)}`,
+      `\\hat{c}_N^\\top = c_N^\\top - c_B^\\top B^{-1}N = ${lab("\\hat{c}", nb)} = ${rowTex(cHat)}`,
+    ];
+    return `<details open><summary>Forma canonica rispetto a ${CB} = {${st.basis.map(j => j + 1).join(", ")}}</summary>${texBlock(obj)}</details>
+      <details><summary>Calcolo matriciale (B, N, B⁻¹, ĉ<sub>N</sub>)</summary>${mats.map(texBlock).join("")}</details>`;
+  }
+
+  // ---------- Grafico 2D ----------
+  function graphSVG(S, states, idx) {
+    const P = S.P;
+    const W = 600, H = 470, M = 26;
+    const cons = P.rows.map((r, i) => ({ a: r.a.map(q => q.toNumber()), b: r.b.toNumber(), op: r.op, i }));
+    const halfs = [];
+    cons.forEach(c => {
+      if (c.op !== ">=") halfs.push({ a: c.a, b: c.b });
+      if (c.op !== "<=") halfs.push({ a: [-c.a[0], -c.a[1]], b: -c.b });
+    });
+    halfs.push({ a: [-1, 0], b: 0 }, { a: [0, -1], b: 0 });
+    const lines = [...cons.map(c => ({ a: c.a, b: c.b })), { a: [1, 0], b: 0 }, { a: [0, 1], b: 0 }];
+    const eps = 1e-9;
+    const feas = p => halfs.every(hp => hp.a[0] * p[0] + hp.a[1] * p[1] <= hp.b + 1e-7);
+    const pts = [];
+    for (let i = 0; i < lines.length; i++) for (let j = i + 1; j < lines.length; j++) {
+      const [a1, b1] = lines[i].a, [a2, b2] = lines[j].a, det = a1 * b2 - a2 * b1;
+      if (Math.abs(det) < eps) continue;
+      const p = [(lines[i].b * b2 - lines[j].b * b1) / det, (a1 * lines[j].b - a2 * lines[i].b) / det];
+      if (feas(p)) pts.push(p);
+    }
+    const path = states.slice(0, idx + 1).map(s => [s.x[0].toNumber(), s.x[1].toNumber()]);
+    const bb = [...pts, ...path, [0, 0], [1, 1]];
+    let x0 = Math.min(...bb.map(p => p[0])), x1 = Math.max(...bb.map(p => p[0]));
+    let y0 = Math.min(...bb.map(p => p[1])), y1 = Math.max(...bb.map(p => p[1]));
+    const span0 = Math.max(x1 - x0, y1 - y0, 1);
+    // illimitatezza della regione: clip su un box molto più grande e guardo se tocca il bordo
+    const big = clip(rect(x0 - 10 * span0, x1 + 10 * span0, y0 - 10 * span0, y1 + 10 * span0), halfs);
+    const unb = big.some(p => p[0] > x1 + 5 * span0 || p[1] > y1 + 5 * span0);
+    if (unb) { x1 += 0.6 * span0; y1 += 0.6 * span0; }
+    const pad = 0.18 * span0 + 0.4;
+    x0 -= pad; x1 += pad; y0 -= pad; y1 += pad;
+    // stessa scala sui due assi
+    const sc = Math.min((W - 2 * M) / (x1 - x0), (H - 2 * M) / (y1 - y0));
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    x0 = cx - (W - 2 * M) / 2 / sc; x1 = cx + (W - 2 * M) / 2 / sc;
+    y0 = cy - (H - 2 * M) / 2 / sc; y1 = cy + (H - 2 * M) / 2 / sc;
+    const X = x => M + (x - x0) * sc, Y = y => H - M - (y - y0) * sc;
+    const f = v => v.toFixed(1);
+    const view = rect(x0, x1, y0, y1);
+
+    let g = `<svg class="plot" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" style="stroke:var(--line)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" style="stroke:var(--red)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+        <marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" style="stroke:var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      </defs>`;
+    // griglia
+    const step = niceStep((x1 - x0) / 9);
+    let grid = "", ticks = "";
+    for (let v = Math.ceil(x0 / step) * step; v <= x1; v += step) {
+      grid += `<line x1="${f(X(v))}" y1="${M}" x2="${f(X(v))}" y2="${H - M}"/>`;
+      if (Math.abs(v) > step / 2) ticks += `<text style="font-size:11px;opacity:.7" x="${f(X(v))}" y="${f(Math.min(H - M + 10, Math.max(M, Y(0) + 13)))}">${fmtN(v)}</text>`;
+    }
+    for (let v = Math.ceil(y0 / step) * step; v <= y1; v += step) {
+      grid += `<line x1="${M}" y1="${f(Y(v))}" x2="${W - M}" y2="${f(Y(v))}"/>`;
+      if (Math.abs(v) > step / 2) ticks += `<text style="font-size:11px;opacity:.7;text-anchor:end" x="${f(Math.max(M + 14, X(0) - 7))}" y="${f(Y(v))}">${fmtN(v)}</text>`;
+    }
+    g += `<g style="stroke:var(--grid)" stroke-width="1">${grid}</g>`;
+    // regione ammissibile
+    const reg = clip(view, halfs);
+    if (reg.length >= 2) g += `<polygon points="${reg.map(p => `${f(X(p[0]))},${f(Y(p[1]))}`).join(" ")}" style="fill:var(--region);stroke:var(--region)" fill-opacity=".28" stroke-width="${reg.length < 3 ? 4 : 1}" stroke-opacity=".6"/>`;
+    // assi
+    g += `<line x1="${M}" y1="${f(Y(0))}" x2="${W - 8}" y2="${f(Y(0))}" style="stroke:var(--line)" stroke-width="2" marker-end="url(#ar)"/>`;
+    g += `<line x1="${f(X(0))}" y1="${H - M}" x2="${f(X(0))}" y2="8" style="stroke:var(--line)" stroke-width="2" marker-end="url(#ar)"/>`;
+    g += `<text style="font-size:14px;font-weight:500" x="${W - 12}" y="${f(Y(0) - 14)}">x₁</text><text style="font-size:14px;font-weight:500" x="${f(X(0) + 16)}" y="12">x₂</text>`;
+    g += ticks;
+    // rette dei vincoli
+    const labT = [0.82, 0.2, 0.62, 0.38, 0.9, 0.1, 0.7, 0.3];
+    cons.forEach((c, i) => {
+      const seg = clipLine(c.a, c.b, view);
+      if (!seg) return;
+      const [p, q] = seg;
+      g += `<line x1="${f(X(p[0]))}" y1="${f(Y(p[1]))}" x2="${f(X(q[0]))}" y2="${f(Y(q[1]))}" style="stroke:var(--line)" stroke-width="2.2" stroke-linecap="round"/>`;
+      const sv = S.slackOf[i];
+      const lbl = sv >= 0 ? `${xv(sv)} = 0` : `vincolo ${i + 1}`;
+      g += lineLabel(X, Y, p, q, labT[i % labT.length], lbl, "var(--line)");
+    });
+    // funzione obiettivo (c della forma di min, come nei grafici del prof)
+    const c = [S.c[0].toNumber(), S.c[1].toNumber()];
+    const st = states[idx];
+    const cur = [st.x[0].toNumber(), st.x[1].toNumber()];
+    if (Math.hypot(c[0], c[1]) > eps) {
+      const zc = c[0] * cur[0] + c[1] * cur[1];
+      const seg = clipLine(c, zc, view);
+      if (seg) {
+        g += `<line id="lvl" x1="${f(X(seg[0][0]))}" y1="${f(Y(seg[0][1]))}" x2="${f(X(seg[1][0]))}" y2="${f(Y(seg[1][1]))}" style="stroke:var(--red)" stroke-width="2" stroke-dasharray="7 5"/>`;
+        g += lineLabel(X, Y, seg[0], seg[1], 0.15, `${objLabel(S)} = ${st.z.pretty()}`, "var(--red)", "lvllbl");
+      }
+      const L = 1.1 * step / Math.hypot(c[0], c[1]);
+      const tip = [c[0] * L, c[1] * L];
+      g += `<line x1="${f(X(0))}" y1="${f(Y(0))}" x2="${f(X(tip[0]))}" y2="${f(Y(tip[1]))}" style="stroke:var(--red)" stroke-width="2.4" marker-end="url(#arr)"/>`;
+      const left = tip[0] < 0 && X(tip[0]) > 130;
+      g += `<text style="font-size:12px;fill:var(--red);text-anchor:${left ? "end" : "start"};paint-order:stroke;stroke:var(--panel);stroke-width:3px" x="${f(X(tip[0]) + (left ? -6 : 6))}" y="${f(Y(tip[1]) + (tip[1] < 0 ? 10 : -10))}">c = (${S.c[0].pretty()}, ${S.c[1].pretty()})</text>`;
+    }
+    // percorso già fatto
+    for (let i = 1; i < path.length; i++) {
+      const a = path[i - 1], b = path[i];
+      if (Math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-9) continue;
+      g += `<line ${i === path.length - 1 ? `id="lastArrow" ` : ""}x1="${f(X(a[0]))}" y1="${f(Y(a[1]))}" x2="${f(X(b[0]))}" y2="${f(Y(b[1]))}" style="stroke:var(--red)" stroke-width="3.2" marker-end="url(#arr)"/>`;
+    }
+    path.slice(0, -1).forEach((p, i) => {
+      g += `<circle cx="${f(X(p[0]))}" cy="${f(Y(p[1]))}" r="4" style="fill:var(--line)"/>`;
+      g += `<text style="font-size:11px;opacity:.85" x="${f(X(p[0]) - 12)}" y="${f(Y(p[1]) + 12)}">${i}</text>`;
+    });
+    // prossima mossa / semiretta
+    let ray = null;
+    const mv = st.move || (st.info.status === "unbounded" ? st.info : null);
+    if (mv && mv.k != null) {
+      const dir = [0, 0];
+      [0, 1].forEach(v => {
+        if (v === mv.k) dir[v] = 1;
+        const bi = st.basis.indexOf(v);
+        if (bi >= 0) dir[v] = -mv.d[bi].toNumber();
+      });
+      if (mv.status === "step") {
+        const nx = [cur[0] + dir[0] * mv.delta.toNumber(), cur[1] + dir[1] * mv.delta.toNumber()];
+        if (Math.hypot(nx[0] - cur[0], nx[1] - cur[1]) > 1e-9)
+          g += `<line id="nextArrow" x1="${f(X(cur[0]))}" y1="${f(Y(cur[1]))}" x2="${f(X(nx[0]))}" y2="${f(Y(nx[1]))}" style="stroke:var(--green)" stroke-width="2.4" stroke-dasharray="6 5" marker-end="url(#arg)"/>`;
+      } else if (Math.hypot(dir[0], dir[1]) > eps) {
+        const far = 3 * (x1 - x0);
+        const seg = clipSeg(cur, [cur[0] + dir[0] * far, cur[1] + dir[1] * far], view);
+        if (seg) {
+          g += `<line x1="${f(X(seg[0][0]))}" y1="${f(Y(seg[0][1]))}" x2="${f(X(seg[1][0]))}" y2="${f(Y(seg[1][1]))}" style="stroke:var(--red)" stroke-width="3" stroke-dasharray="8 5" marker-end="url(#arr)"/>`;
+          g += lineLabel(X, Y, seg[0], seg[1], 0.55, "semiretta: z → −∞", "var(--red)", "raylbl");
+          ray = seg[1];
+        }
+      }
+    }
+    // vertice corrente
+    g += `<circle id="cur" cx="${f(X(cur[0]))}" cy="${f(Y(cur[1]))}" r="6.5" style="fill:var(--green);stroke:var(--bg)" stroke-width="1.5"/>`;
+    const lbl = `x̄ = (${st.x.map(v => v.pretty()).join(", ")})ᵀ`;
+    const right = X(cur[0]) < W * 0.6;
+    g += `<text id="curlbl" style="font-size:12px;fill:var(--green);font-weight:600;text-anchor:${right ? "start" : "end"};paint-order:stroke;stroke:var(--panel);stroke-width:4px" x="${f(X(cur[0]) + (right ? 11 : -11))}" y="${f(Y(cur[1]) - 13)}">${esc(lbl)}</text>`;
+    geo = { X, Y, view, c, ray };
+    return g + `</svg>`;
+  }
+  function objLabel(S) {
+    let out = "";
+    [0, 1].forEach(j => {
+      const q = S.c[j];
+      if (q.isZero()) return;
+      const neg = q.sign() < 0, a = neg ? q.neg() : q;
+      const co = a.eq(Simplex.ONE) ? "" : a.pretty();
+      out += out === "" ? (neg ? "−" : "") : (neg ? " − " : " + ");
+      out += co + xv(j);
+    });
+    return out || "0";
+  }
+  function lineLabel(X, Y, p, q, t, text, color, id = "") {
+    const P1 = [X(p[0]), Y(p[1])], P2 = [X(q[0]), Y(q[1])];
+    let ang = Math.atan2(P2[1] - P1[1], P2[0] - P1[0]) * 180 / Math.PI;
+    if (ang > 90) ang -= 180; if (ang < -90) ang += 180;
+    const len = Math.hypot(P2[0] - P1[0], P2[1] - P1[1]) || 1;
+    let nx = -(P2[1] - P1[1]) / len, ny = (P2[0] - P1[0]) / len;
+    if (ny > 0) { nx = -nx; ny = -ny; }
+    const x = P1[0] + (P2[0] - P1[0]) * t + nx * 10, y = P1[1] + (P2[1] - P1[1]) * t + ny * 10;
+    return `<text ${id ? `id="${id}" ` : ""}style="font-size:12px;fill:${color};paint-order:stroke;stroke:var(--panel);stroke-width:3px" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(1)})">${esc(text)}</text>`;
+  }
+  function rect(x0, x1, y0, y1) { return [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]; }
+  function clip(poly, halfs) {
+    for (const { a, b } of halfs) {
+      const out = [];
+      const val = p => a[0] * p[0] + a[1] * p[1] - b;
+      for (let i = 0; i < poly.length; i++) {
+        const p = poly[i], q = poly[(i + 1) % poly.length], vp = val(p), vq = val(q);
+        if (vp <= 1e-9) out.push(p);
+        if ((vp < -1e-9 && vq > 1e-9) || (vp > 1e-9 && vq < -1e-9)) {
+          const t = vp / (vp - vq);
+          out.push([p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1])]);
+        }
+      }
+      poly = out;
+      if (!poly.length) break;
+    }
+    return poly;
+  }
+  function clipSeg(p, q, view) {
+    const [[x0, y0], , [x1, y1]] = view;
+    let t0 = 0, t1 = 1;
+    const dx = q[0] - p[0], dy = q[1] - p[1];
+    for (const [pp, qq] of [[-dx, p[0] - x0], [dx, x1 - p[0]], [-dy, p[1] - y0], [dy, y1 - p[1]]]) {
+      if (Math.abs(pp) < 1e-12) { if (qq < 0) return null; continue; }
+      const r = qq / pp;
+      if (pp < 0) t0 = Math.max(t0, r); else t1 = Math.min(t1, r);
+      if (t0 > t1) return null;
+    }
+    return [[p[0] + t0 * dx, p[1] + t0 * dy], [p[0] + t1 * dx, p[1] + t1 * dy]];
+  }
+  function clipLine(a, b, view) {
+    const n2 = a[0] * a[0] + a[1] * a[1];
+    if (n2 < 1e-12) return null;
+    const p0 = [a[0] * b / n2, a[1] * b / n2], d = [-a[1], a[0]];
+    const F = 1e6;
+    return clipSeg([p0[0] - F * d[0], p0[1] - F * d[1]], [p0[0] + F * d[0], p0[1] + F * d[1]], view);
+  }
+  function niceStep(raw) {
+    const p = Math.pow(10, Math.floor(Math.log10(raw))), r = raw / p;
+    return (r < 1.5 ? 1 : r < 3.5 ? 2 : r < 7.5 ? 5 : 10) * p;
+  }
+  function fmtN(v) { const r = Math.round(v * 100) / 100; return String(r).replace("-", "−"); }
+
+  // ---------- Rendering principale ----------
+  function render() {
+    const out = $("out");
+    if (!state) { out.innerHTML = ""; return; }
+    const { S, fb, states } = state;
+    let h = renderFormulation(S, fb);
+    if (!fb.error && states.length) {
+      const idx = state.idx, st = states[idx];
+      const two = S.n0 === 2;
+      h += `<section class="card"><h2>2. Iterazioni del simplesso <span class="note">(${state.rule === "bland" ? "regola di Bland" : "massimo decremento atteso"})</span></h2>
+        <div class="stepper">
+          <button id="prev" ${idx === 0 ? "disabled" : ""}>◀ Indietro</button>
+          ${states.map((_, i) => `<button class="pill${i === idx ? " on" : ""}" data-i="${i}">T<sup>(${i})</sup></button>`).join("")}
+          <button id="next" ${idx === states.length - 1 ? "disabled" : ""}>Avanti ▶</button>
+          ${two && idx > 0 ? `<button id="replay">↻ Rivedi transizione</button>` : ""}
+          ${two && st.info.status === "unbounded" ? `<button id="rayBtn">Scorri lungo la semiretta</button>` : ""}
+          <span class="kbd">frecce ← → da tastiera</span>
+        </div>
+        <div class="layout">
+          <div>${two ? graphSVG(S, states, idx) + `<div class="legend"><span><i style="background:var(--region);opacity:.5"></i>regione ammissibile</span><span><i style="background:var(--red)"></i>percorso / c / curva di livello</span><span><i style="background:var(--green)"></i>vertice corrente e prossimo passo</span></div>`
+            : `<p class="note">Il grafico è disponibile solo con 2 variabili decisionali (qui sono ${S.n0}).</p>`}
+            ${stepHTML(S, st, idx)}
+          </div>
+          <div>
+            <h3>Tableau T<sup>(${idx})</sup> rispetto a ${CB} = {${st.basis.map(j => j + 1).join(", ")}}</h3>
+            <div style="overflow-x:auto" id="maintab">${tableauHTML(S, st, st.move || (st.info.status === "unbounded" ? st.info : null), mainCellClass(S, idx))}</div>
+            <p class="note">Passa sopra una cella per vedere da dove viene; cliccala per fissare la spiegazione (resta sulla stessa cella anche cambiando tableau).</p>
+            <div id="selpanel">${state.sel ? `<div class="selpanel expl">${explainHTML(S, states, idx, state.sel.i, state.sel.j)}</div>` : ""}</div>
+            <p><button class="copy" id="copytex">Copia LaTeX del tableau</button> <span class="note" id="copied"></span></p>
+            <p class="note">In rosso: elemento di pivot, riga e colonna. Costi ridotti negativi in rosso, nulli all'ottimo in blu. Intestazioni verdi: variabili in base. A destra i rapporti x̄<sub>${CB}(i)</sub>/d<sub>i</sub> per d<sub>i</sub> &gt; 0.</p>
+            ${canonicalHTML(S, st)}
+          </div>
+        </div>
+        <p class="note">Convenzioni (come negli appunti): colonne in ordine naturale, la variabile entrante prende la riga di quella uscente, in basso a destra c'è −z̄. Bland: entra la variabile con indice minimo tra quelle con ĉ &lt; 0. Massimo decremento: entra quella con ĉ più negativo (a parità, indice minore). In entrambi i casi, a parità di δ̄ esce la variabile della riga i* minore.</p>
+      </section>`;
+    }
+    out.innerHTML = h;
+    renderTex(out);
+    bind();
+    bindCells();
+  }
+
+  function go(i) {
+    if (!state) return;
+    const prev = state.idx;
+    state.idx = Math.max(0, Math.min(state.states.length - 1, i));
+    render();
+    if (Math.abs(state.idx - prev) === 1) transition(prev, state.idx);
+  }
+
+  // ---------- Animazione: la retta di livello scorre verso il vertice successivo ----------
+  const pt = i => [state.states[i].x[0].toNumber(), state.states[i].x[1].toNumber()];
+  function transition(from, to) {
+    if (state.S.n0 === 2) animate(pt(from), pt(to), to > from);
+  }
+  function animate(a, b, growArrow, onDone) {
+    if (!geo || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = ++animId;
+    const { X, Y, view, c } = geo;
+    const lvl = $("lvl"), cur = $("cur"), la = growArrow ? $("lastArrow") : null;
+    const fade = ["lvllbl", "curlbl", "nextArrow", "raylbl"].map($).filter(Boolean);
+    fade.forEach(e => { e.style.transition = "none"; e.style.opacity = 0; });
+    const still = Math.hypot(b[0] - a[0], b[1] - a[1]) < 1e-12;   // cambio di base degenere
+    const dur = still ? 700 : 1300, t0 = performance.now();
+    let done = false;
+    function frame(now) {
+      if (id !== animId || done) return;
+      const u = Math.min(1, (now - t0) / dur);
+      const e = u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+      const p = [a[0] + (b[0] - a[0]) * e, a[1] + (b[1] - a[1]) * e];
+      cur.setAttribute("cx", X(p[0])); cur.setAttribute("cy", Y(p[1]));
+      if (still) cur.setAttribute("r", 6.5 + 5 * Math.sin(Math.PI * u));
+      if (lvl) {
+        const seg = clipLine(c, c[0] * p[0] + c[1] * p[1], view);
+        if (seg) {
+          lvl.setAttribute("x1", X(seg[0][0])); lvl.setAttribute("y1", Y(seg[0][1]));
+          lvl.setAttribute("x2", X(seg[1][0])); lvl.setAttribute("y2", Y(seg[1][1]));
+        }
+      }
+      if (la) { la.setAttribute("x2", X(p[0])); la.setAttribute("y2", Y(p[1])); la.style.opacity = u > 0.03 ? 1 : 0; }
+      if (u < 1) requestAnimationFrame(frame);
+      else {
+        done = true;
+        fade.forEach(el => { el.style.transition = "opacity .35s"; el.style.opacity = 1; });
+        if (onDone) onDone();
+      }
+    }
+    requestAnimationFrame(frame);
+    setTimeout(() => frame(t0 + dur), dur + 400);   // se il browser rallenta i frame, chiudo comunque
+  }
+
+  function bind() {
+    $("prev") && ($("prev").onclick = () => go(state.idx - 1));
+    $("next") && ($("next").onclick = () => go(state.idx + 1));
+    document.querySelectorAll(".pill").forEach(b => (b.onclick = () => go(+b.dataset.i)));
+    $("replay") && ($("replay").onclick = () => { render(); transition(state.idx - 1, state.idx); });
+    $("rayBtn") && ($("rayBtn").onclick = () => {
+      render();
+      animate(pt(state.idx), geo.ray, false, () => setTimeout(() => { if (state) render(); }, 700));
+    });
+    document.querySelectorAll(".explore").forEach(b => (b.onclick = () => {
+      const { S, states, idx } = state;
+      const st = states[idx];
+      const { move, next } = explore(S, st, +b.dataset.k);
+      states.length = idx + 1;
+      st.move = move;
+      if (next) { next.info = Simplex.analyze(S, next, state.rule); states.push(next); go(idx + 1); }
+      else render();
+    }));
+    const ct = $("copytex");
+    if (ct) ct.onclick = () => {
+      const { S, states, idx } = state, st = states[idx];
+      const txt = tableauLatex(S, st, idx, st.move);
+      navigator.clipboard?.writeText(txt).then(() => ($("copied").textContent = "copiato"), () => prompt("Copia:", txt));
+    };
+  }
+
+  document.addEventListener("keydown", e => {
+    if (!state || ["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+    if (e.key === "ArrowLeft") go(state.idx - 1);
+    if (e.key === "ArrowRight") go(state.idx + 1);
+  });
+
+  // ---------- Avvio ----------
+  $("preset").innerHTML = PRESETS.map((p, i) => `<option value="${i}">${p.name}</option>`).join("");
+  $("preset").onchange = () => { const p = PRESETS[+$("preset").value]; if (p.c) { loadPreset(p); solve(); } };
+  $("nvars").onchange = $("ncons").onchange = () => { buildGrid(true); $("preset").value = 0; };
+  $("solve").onclick = solve;
+  $("preset").value = 1;
+  loadPreset(PRESETS[1]);
+  solve();
+})();
+</script>
+</body>
+</html>

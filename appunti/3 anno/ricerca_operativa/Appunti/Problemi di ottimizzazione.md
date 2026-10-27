@@ -605,7 +605,7 @@ Possiamo scrivere in forma compatta
 $$
 A(\overline{x} - \epsilon d) = b \hspace{4ex} \forall \epsilon \in \mathbb{R}
 $$
-la forma completa comprende anche dei termini che si annullano in quanto possiamo espandere il vettore $d = (d_{1},\dots,d_p,0,\dots,0)$ e le componenti $\overline{x}_{p+1},\dots,\overline{x}_n$ valgono 0 ([...] riprendi perchè)
+la forma completa comprende anche dei termini che si annullano in quanto possiamo espandere il vettore $d = (d_{1},\dots,d_p,0,\dots,0)$ e le componenti $\overline{x}_{p+1},\dots,\overline{x}_n$ valgono 0
 $$
 A_{1}(\overline{x}_1 - \epsilon d_{1}) + \dots + A_p (\overline{x}_p - \epsilon d_p) + \underbrace{A_{p+1}(\overline{x}_{p+1} - \epsilon d_{p+1})+\dots+ A_n (\overline{x}_n - \epsilon d_n)}_{\text{sono tutti 0}}= b
 $$
@@ -1798,12 +1798,451 @@ Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (es
 >
 > Rispetto all'esempio precedente si arriva allo stesso ottimo $x^* = (6, 0, 7, 2, 0)^\top$, ma con un percorso diverso: partendo dall'origine $(0,0)$ si passa direttamente al vertice $(6,0)$ in una sola iterazione.
 
-
-
-
----
-
-[...] $\uparrow$ ultima parte pptx 09
-
 ### Formula di aggiornamento del tableau
+Considerando una forma generalizzata della tabella del simplesso
+$$
+T^{(r)} =
+\begin{array}{|cccccccc|c|}
+\hline
+t_{11}^{(r)} & t_{12}^{(r)} & \cdots & t_{1h}^{(r)} & \cdots & t_{1k}^{(r)} & \cdots & t_{1n}^{(r)} & t_{1,n+1}^{(r)} \\
+t_{21}^{(r)} & t_{22}^{(r)} & \cdots & t_{2h}^{(r)} & \cdots & t_{2k}^{(r)} & \cdots & t_{2n}^{(r)} & t_{2,n+1}^{(r)} \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+t_{s1}^{(r)} & t_{s2}^{(r)} & \cdots & t_{sh}^{(r)} & \cdots & t_{sk}^{(r)} & \cdots & t_{sn}^{(r)} & t_{s,n+1}^{(r)} \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+t_{m1}^{(r)} & t_{m2}^{(r)} & \cdots & t_{mh}^{(r)} & \cdots & t_{mk}^{(r)} & \cdots & t_{mn}^{(r)} & t_{m,n+1}^{(r)} \\
+\hline
+t_{m+1,1}^{(r)} & t_{m+1,2}^{(r)} & \cdots & t_{m+1,h}^{(r)} & \cdots & t_{m+1,k}^{(r)} & \cdots & t_{m+1,n}^{(r)} & t_{m+1,n+1}^{(r)} \\
+\hline
+\end{array}
+$$
 
+- le prime $n$ colonne di $T^{(r)}$ sono associate alle variabili del problema, secondo l'ordinamento originario
+- se $x_h$ è una variabile di base rispetto alla base $\mathcal{B}^{(r)}$ (è una colonna della matrice identità), allora la relativa colonna è tutta nulla a eccezione della riga $s$ (la riga relativa al vincolo in cui $x_h$ è in base) in cui vale $1$
+- se $x_k$ non è una variabile di base, allora la relativa colonna sarà
+$$
+\begin{pmatrix} B^{-1}A_k \\ \hat{c}_k \end{pmatrix}
+$$
+
+$$
+T^{(r)} =
+\begin{array}{c|cccccccc|c|}
+& & & & x_h & & x_k & & & \\
+\hline
+& t_{11}^{(r)} & t_{12}^{(r)} & \cdots & 0 & \cdots & t_{1k}^{(r)} & \cdots & t_{1n}^{(r)} & t_{1,n+1}^{(r)} \\
+& t_{21}^{(r)} & t_{22}^{(r)} & \cdots & 0 & \cdots & t_{2k}^{(r)} & \cdots & t_{2n}^{(r)} & t_{2,n+1}^{(r)} \\
+& \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+& t_{s1}^{(r)} & t_{s2}^{(r)} & \cdots & 1 & \cdots & t_{sk}^{(r)} & \cdots & t_{sn}^{(r)} & t_{s,n+1}^{(r)} \\
+& \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+& t_{m1}^{(r)} & t_{m2}^{(r)} & \cdots & 0 & \cdots & t_{mk}^{(r)} & \cdots & t_{mn}^{(r)} & t_{m,n+1}^{(r)} \\
+\hline
+& t_{m+1,1}^{(r)} & t_{m+1,2}^{(r)} & \cdots & 0 & \cdots & t_{m+1,k}^{(r)} & \cdots & t_{m+1,n}^{(r)} & t_{m+1,n+1}^{(r)} \\
+\hline
+\end{array}
+$$
+
+#### Verifica di ottimalità e illimitatezza
+**Verifica ottimalità**
+- se $t_{m+1,j}^{(r)} \ge 0$ per ogni $j \in \{1, \dots, n\}$ → **STOP**
+- altrimenti si sceglie una colonna $k$ tale che $t_{m+1,k}^{(r)} < 0$
+- la variabile $x_k$ può entrare in base
+- la colonna $k$ è detta **colonna di pivot**
+
+**Verifica illimitatezza**
+- se $t_{i,k}^{(r)} \le 0$ per ogni $i \in \{1, \dots, m\}$ → **STOP**
+- altrimenti si sceglie una riga $s$ tale che $t_{sk}^{(r)} > 0$ e che
+$$
+\frac{t_{s,n+1}^{(r)}}{t_{sk}^{(r)}} \le \frac{t_{i,n+1}^{(r)}}{t_{ik}^{(r)}} \qquad \forall i \in \{1, \dots, m : t_{ik}^{(r)} > 0\}
+$$
+- la variabile che attualmente è in base nel vincolo $s$ lascia la base
+- la riga $s$ è detta **riga di pivot**
+- l'elemento $t_{sk}^{(r)}$ è detto **elemento di pivot**
+
+#### Operazione di pivot
+Portare in base la variabile $x_k$ nel vincolo $s$ al posto della variabile $x_h$ significa trasformare la colonna associata a $x_k$ nella colonna associata a $x_h$.
+
+$$
+T^{(r)} =
+\begin{array}{c|cccccccc|c|}
+& & & & x_h & & x_k & & & \\
+\hline
+& t_{11}^{(r)} & t_{12}^{(r)} & \cdots & 0 & \cdots & t_{1k}^{(r)} & \cdots & t_{1n}^{(r)} & t_{1,n+1}^{(r)} \\
+& \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+& t_{s1}^{(r)} & t_{s2}^{(r)} & \cdots & 1 & \cdots & \textcolor{#e06c75}{t_{sk}^{(r)}} & \cdots & t_{sn}^{(r)} & t_{s,n+1}^{(r)} \\
+& \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+& t_{m1}^{(r)} & t_{m2}^{(r)} & \cdots & 0 & \cdots & t_{mk}^{(r)} & \cdots & t_{mn}^{(r)} & t_{m,n+1}^{(r)} \\
+\hline
+& t_{m+1,1}^{(r)} & t_{m+1,2}^{(r)} & \cdots & 0 & \cdots & t_{m+1,k}^{(r)} & \cdots & t_{m+1,n}^{(r)} & t_{m+1,n+1}^{(r)} \\
+\hline
+\end{array}
+$$
+
+>[!multi-column]
+>
+>>[!important] La riga $s$ è detta **riga di pivot**
+>
+>>[!important] La colonna $k$ è detta **colonna di pivot**
+
+>[!important] L'intersezione tra la riga di pivot e la colonna di pivot è detto **elemento di pivot** $t_{sk}^{(r)}$
+>nel nuovo tableau in corrispondenza di questo elemento ci deve stare 1 => dividiamo tutta la riga s per $t_{sk}^{(r)}$
+
+Inoltre dobbiamo anche garantire la presenza di 0 in tutti gli altri elementi della colonna di pivot.
+
+>[!important] Generazione di $T^{(r+1)}$
+> - la nuova riga $s$ si ottiene dividendo la riga di pivot per l'elemento di pivot
+> $$t_{sj}^{(r+1)} = \frac{t_{sj}^{(r)}}{t_{sk}^{(r)}} \qquad \forall j \in \{1, \dots, n+1\}$$
+> - per ogni riga $i \in \{1, \dots, m+1\} \setminus s$
+> $$t_{ij}^{(r+1)} = t_{ij}^{(r)} - t_{ik}^{(r)} t_{sj}^{(r+1)} \qquad \forall j \in \{1, \dots, n+1\}$$
+
+Dopo questa operazione la colonna $k$ sarà la colonna $h$ del vecchio tableau.
+
+>[!check] Esercizio con aggiornamento del tableau
+> Partendo dal tableau
+> $$
+> T^{(0)} = \begin{array}{|ccccc|c|}
+> \hline
+> -1 & 1 & 1 & 0 & 0 & 1 \\
+> 1 & 2 & 0 & 1 & 0 & 8 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> -1 & 2 & 0 & 0 & 0 & 0 \\
+> \hline
+> \end{array}
+> $$
+> determiniamo il tableau
+> $$
+> T^{(1)} = \begin{array}{|ccccc|c|}
+> \hline
+> 0 & 2 & 1 & 0 & 1 & 7 \\
+> 0 & 1 & 0 & 1 & -1 & 2 \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> 0 & 3 & 0 & 0 & 1 & 6 \\
+> \hline
+> \end{array}
+> $$
+> (è lo stesso passaggio $T^{(0)} \to T^{(1)}$ svolto nell'[[#Tableau del simplesso|esempio con tableau]] sopra, con $x_1$ entrante e $x_5$ uscente).
+>
+> **Trasformazione passo passo.** Qui $k = 1$ e $s = 3$. Indicando con $R_i$ la riga $i$ di $T^{(0)}$:
+> - riga 3 (pivot): $R_3 / 1 = (1, 1, 0, 0, 1 \mid 6)$
+> - riga 1: $R_1 - (-1) \cdot R_3 = (-1, 1, 1, 0, 0 \mid 1) + (1, 1, 0, 0, 1 \mid 6) = (0, 2, 1, 0, 1 \mid 7)$
+> - riga 2: $R_2 - 1 \cdot R_3 = (1, 2, 0, 1, 0 \mid 8) - (1, 1, 0, 0, 1 \mid 6) = (0, 1, 0, 1, -1 \mid 2)$
+> - riga dei costi: $R_4 - (-1) \cdot R_3 = (-1, 2, 0, 0, 0 \mid 0) + (1, 1, 0, 0, 1 \mid 6) = (0, 3, 0, 0, 1 \mid 6)$
+>
+> Vediamo come si costruisce il nuovo tableau un pezzo alla volta.
+>
+> **1. Test di ottimalità:** $\hat{c}_1 = -1 < 0$, quindi la condizione di arresto non è soddisfatta (essendo la soluzione non degenere, $\hat{c}_N \not\ge 0 \Rightarrow$ non è ottima).
+>
+> **2. Test di illimitatezza:** la colonna di $x_1$ ($B^{-1}A_1$) contiene elementi positivi, quindi calcolo $\bar{\delta}$. Il suo valore è irrilevante per l'aggiornamento del tableau: serve solo a individuare la riga di pivot. $\bar{\delta} = 6 \to s = 3$, quindi rimuovo la variabile in base sul III vincolo $\Rightarrow h = 5$.
+>
+> **3. Riga di pivot:** $t^{(r+1)}_{sj} = t^{(r)}_{sj} / t^{(r)}_{sk}$ $\forall j \in \{1, \dots, n+1\}$. Poiché $t^{(r)}_{sk} = 1$, la riga si **ricopia**:
+> $$
+> \begin{array}{|ccccc|c|}
+> \hline
+> \, & \, & \, & \, & \, & \, \\
+> \, & \, & \, & \, & \, & \, \\
+> \textcolor{#e06c75}{1} & \textcolor{#e06c75}{1} & \textcolor{#e06c75}{0} & \textcolor{#e06c75}{0} & \textcolor{#e06c75}{1} & \textcolor{#e06c75}{6} \\
+> \hline
+> \, & \, & \, & \, & \, & \, \\
+> \hline
+> \end{array}
+> $$
+>
+> **4. Colonne di $x_3$ e $x_4$:** poiché rimangono in base, le loro colonne restano uguali (vettori unitari $e_1$, $e_2$ e $0$ nella riga dei costi). Infatti, scegliendo $j = 3$:
+> $$
+> t^{(r+1)}_{13} = t^{(r)}_{13} - t^{(r)}_{11} \cdot \underbrace{t^{(r+1)}_{33}}_{=\,0} = t^{(r)}_{13} = 1
+> \qquad
+> t^{(r+1)}_{23} = t^{(r)}_{23} - t^{(r)}_{21} \cdot \underbrace{t^{(r+1)}_{33}}_{=\,0} = t^{(r)}_{23} = 0
+> $$
+> cioè la colonna di base viene moltiplicata per $0$ (l'elemento della riga di pivot in quella colonna), quindi non cambia.
+> $$
+> \begin{array}{|ccccc|c|}
+> \hline
+> \, & \, & \textcolor{#e06c75}{1} & \textcolor{#c678dd}{0} & \, & \, \\
+> \, & \, & \textcolor{#e06c75}{0} & \textcolor{#c678dd}{1} & \, & \, \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> \, & \, & \textcolor{#e06c75}{0} & \textcolor{#c678dd}{0} & \, & \, \\
+> \hline
+> \end{array}
+> $$
+>
+> **5. Colonna di pivot:** sono tutti zeri, ma per scrupolo li calcoliamo (con $t^{(r+1)}_{31} = 1$, il pivot):
+> $$
+> t^{(r+1)}_{11} = t^{(r)}_{11} - t^{(r)}_{11} \cdot \underbrace{t^{(r+1)}_{31}}_{=\,1} = 0
+> \qquad
+> t^{(r+1)}_{21} = t^{(r)}_{21} - t^{(r)}_{21} \cdot \underbrace{t^{(r+1)}_{31}}_{=\,1} = 0
+> $$
+> e lo stesso vale per la riga dei costi.
+> $$
+> \begin{array}{|ccccc|c|}
+> \hline
+> \textcolor{#98c379}{0} & \, & 1 & 0 & \, & \, \\
+> \textcolor{#98c379}{0} & \, & 0 & 1 & \, & \, \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> \textcolor{#98c379}{0} & \, & 0 & 0 & \, & \, \\
+> \hline
+> \end{array}
+> $$
+>
+> **6. Elementi rimanenti:** per calcolare un elemento si prende il suo valore nel tableau *vecchio* e gli si sottrae il prodotto tra l'elemento della colonna di pivot sulla stessa riga (tableau vecchio) e l'elemento della riga di pivot *già aggiornata* (tableau nuovo, $t^{(r+1)}_{sj}$) sulla stessa colonna, ad esempio
+> $$
+> t^{(r+1)}_{12} = t^{(r)}_{12} - t^{(r)}_{11}\, t^{(r+1)}_{32} = 1 - (-1)\cdot 1 = 2
+> $$
+> Ripetendo il calcolo per tutti gli elementi si ottiene il tableau finale, dove in blu sono evidenziati gli elementi calcolati con la formula:
+> $$
+> T^{(1)} = \begin{array}{|ccccc|c|}
+> \hline
+> 0 & \textcolor{#61afef}{2} & 1 & 0 & \textcolor{#61afef}{1} & \textcolor{#61afef}{7} \\
+> 0 & \textcolor{#61afef}{1} & 0 & 1 & \textcolor{#61afef}{-1} & \textcolor{#61afef}{2} \\
+> 1 & 1 & 0 & 0 & 1 & 6 \\
+> \hline
+> 0 & \textcolor{#61afef}{3} & 0 & 0 & \textcolor{#61afef}{1} & \textcolor{#61afef}{6} \\
+> \hline
+> \end{array}
+> $$
+> La nuova base è $\mathcal{B} = \{3, 4, 1\}$ e $x_{\mathcal{B}(1)} = x_3 = 7$, $x_{\mathcal{B}(2)} = x_4 = 2$, $x_{\mathcal{B}(3)} = x_1 = 6$.
+>
+> **Verifica dell'ottimalità da $T^{(1)}$:** $\hat{c}_N \ge 0$ (costi ridotti $3$ e $1$) $\Rightarrow$ la soluzione è **ottima**:
+> $$
+> x^* = (6, 0, 7, 2, 0)^\top \qquad c^\top x^* = -6
+> $$
+> L'elemento in basso a destra del tableau vale $+6 = -c^\top x^*$: *cambio di segno*.
+
+### Casi particolari
+#### Infinite soluzioni ottime
+$$
+\begin{cases}
+\min & -2x_1 - 4x_2 \\
+\text{s.t.} & x_1 + 2x_2 \le 4 \\
+& -x_1 + x_2 \le 1 \\
+& 3x_1 - 2x_2 \le 4 \\
+& x_1, x_2 \ge 0
+\end{cases}
+$$
+**Forma standard**
+$$
+\begin{cases}
+\min & -2x_1 - 4x_2 \\
+\text{s.t.} & x_1 + 2x_2 + x_3 = 4 \\
+& -x_1 + x_2 + x_4 = 1 \\
+& 3x_1 - 2x_2 + x_5 = 4 \\
+& x_1, x_2, x_3, x_4, x_5 \ge 0
+\end{cases}
+$$
+
+![[ro_simplesso_infinite_base.svg|center]]
+Dal grafico vediamo come le soluzioni ottime sono infinite, ma potrebbero essere soluzioni migliori di altre (*es.* magari una delle soluzioni ottime si differenzia di poco da ciò che un'azienda sta già facendo).
+Inizialmente il vertice considerato è l'origine.
+**Forma canonica rispetto a $\mathcal{B} = \{3, 4, 5\}$**
+$$
+T^{(0)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 2 & 1 & 0 & 0 & 4 \\
+-1 & 1 & 0 & 1 & 0 & 1 \\
+3 & -2 & 0 & 0 & 1 & 4 \\
+\hline
+-2 & -4 & 0 & 0 & 0 & 0 \\
+\hline
+\end{array}
+$$
+
+**Operazione di pivot rispetto a $k = 2$ e $s = 2$**
+Scegliamo $k$ applicando il criterio del massimo decremento atteso:
+$$
+T^{(0)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 2 & 1 & 0 & 0 & 4 \\
+-1 & \textcolor{#e06c75}{1} & 0 & 1 & 0 & 1 \\
+3 & -2 & 0 & 0 & 1 & 4 \\
+\hline
+-2 & -4 & 0 & 0 & 0 & 0 \\
+\hline
+\end{array}
+$$
+Operativamente è meglio scegliere la colonna con coefficiente minore ($-4$), ma applicando la [[#Regola di Bland]] avremmo scelto $-2$.
+**Forma canonica rispetto a $\mathcal{B} = \{3, 2, 5\}$**
+$$
+T^{(1)} = \begin{array}{|ccccc|c|}
+\hline
+3 & 0 & 1 & -2 & 0 & 2 \\
+-1 & 1 & 0 & 1 & 0 & 1 \\
+1 & 0 & 0 & 2 & 1 & 6 \\
+\hline
+-6 & 0 & 0 & 4 & 0 & 4 \\
+\hline
+\end{array}
+$$
+
+**Operazione di pivot rispetto a $k = 1$ e $s = 1$**
+$$
+T^{(1)} = \begin{array}{|ccccc|c|}
+\hline
+\textcolor{#e06c75}{3} & 0 & 1 & -2 & 0 & 2 \\
+-1 & 1 & 0 & 1 & 0 & 1 \\
+1 & 0 & 0 & 2 & 1 & 6 \\
+\hline
+-6 & 0 & 0 & 4 & 0 & 4 \\
+\hline
+\end{array}
+$$
+
+**Forma canonica rispetto a $\mathcal{B} = \{1, 2, 5\}$**
+$$
+T^{(2)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 0 & 1/3 & -2/3 & 0 & 2/3 \\
+0 & 1 & 1/3 & 1/3 & 0 & 5/3 \\
+0 & 0 & -1/3 & 8/3 & 1 & 16/3 \\
+\hline
+0 & 0 & 2 & \textcolor{#61afef}{0} & 0 & 8 \\
+\hline
+\end{array}
+$$
+- Soluzione ottima: $x^{(*1)} = (2/3, 5/3, 0, 0, 16/3)^\top$
+- Valore ottimo: $c^\top x^{(*1)} = -8$
+- Osserviamo che $\hat{c}_4 = 0$
+
+perturbando la variabile fuori base (associata al coefficiente pari a 0) la funzione obiettivo non varia => esistono infinite soluzioni.
+![[ro_simplesso_infinite_x1.svg|center]]
+
+**Operazione di pivot rispetto a $k = 4$ e $s = 3$**
+possiamo fare una ulteriore iterazione, facendo entrare la colonna $k = 4$: per il [[#Teorema fondamentale della PL in forma standard|teorema fondamentale]] ci spostiamo lungo un segmento di soluzioni ottime
+$$
+T^{(2)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 0 & 1/3 & -2/3 & 0 & 2/3 \\
+0 & 1 & 1/3 & 1/3 & 0 & 5/3 \\
+0 & 0 & -1/3 & \textcolor{#e06c75}{8/3} & 1 & 16/3 \\
+\hline
+0 & 0 & 2 & 0 & 0 & 8 \\
+\hline
+\end{array}
+$$
+
+**Forma canonica rispetto a $\mathcal{B} = \{1, 2, 4\}$**
+$$
+T^{(3)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 0 & 1/4 & 0 & 0 & 2 \\
+0 & 1 & 3/8 & 0 & -1/8 & 1 \\
+0 & 0 & -1/8 & 1 & 3/8 & 2 \\
+\hline
+0 & 0 & 2 & 0 & 0 & 8 \\
+\hline
+\end{array}
+$$
+- Soluzione ottima: $x^{(*2)} = (2, 1, 0, 2, 0)^\top$
+- Valore ottimo: $c^\top x^{(*2)} = -8$
+- Per convessità sono ottime tutte le soluzioni, quindi possono essere espresse come combinazione convessa delle due soluzioni:
+$$
+\lambda x^{(*1)} + (1-\lambda) x^{(*2)} \qquad \forall \lambda \in [0, 1]
+$$
+
+![[ro_simplesso_infinite_both.svg|center]]
+#### Problema illimitato
+$$
+\begin{cases}
+\max & 5x_1 + 2x_2 \\
+\text{s.t.} & 2x_1 + x_2 \ge 3 \\
+& 3x_1 - x_2 \ge 0 \\
+& 2x_1 - 4x_2 \le 6 \\
+& x_1, x_2 \ge 0
+\end{cases}
+$$
+**Forma standard**
+$$
+\begin{cases}
+\min & -5x_1 - 2x_2 \\
+\text{s.t.} & 2x_1 + x_2 - x_3 = 3 \\
+& 3x_1 - x_2 - x_4 = 0 \\
+& 2x_1 - 4x_2 + x_5 = 6 \\
+& x_1, x_2, x_3, x_4, x_5 \ge 0
+\end{cases}
+$$
+Non possiamo prendere come base 3,4,5 in quanto non compongono la matrice identità.
+Per la forma standard è nota una base ammissibile $\mathcal{B} = \{1, 4, 5\}$. Determinare la soluzione ottima a partire dalla base $\mathcal{B}$ utilizzando l'Algoritmo del Simplesso.
+
+![[ro_simplesso_illimitato_base.svg|center]]
+
+Rispetto agli indici $\mathcal{B} = \{1, 4, 5\}$ e $\mathcal{N} = \{2, 3\}$ abbiamo
+$$
+B = \begin{pmatrix} 2 & 0 & 0 \\ 3 & -1 & 0 \\ 2 & 0 & 1 \end{pmatrix}
+\qquad
+N = \begin{pmatrix} 1 & -1 \\ -1 & 0 \\ -4 & 0 \end{pmatrix}
+$$
+Quindi
+$$
+c_B = (-5, 0, 0)^\top \qquad c_N = (-2, 0)^\top \qquad
+B^{-1} = \begin{pmatrix} 1/2 & 0 & 0 \\ 3/2 & -1 & 0 \\ -1 & 0 & 1 \end{pmatrix}
+$$
+e la corrispondente soluzione di base
+$$
+\bar{x}_B = B^{-1} b = (3/2, 9/2, 3)^\top \qquad \bar{x}_N = (0, 0)^\top
+$$
+cioè
+$$
+\bar{x} = (3/2, 0, 0, 9/2, 3)^\top \qquad c^\top \bar{x} = -15/2
+$$
+è ammissibile.
+
+Determiniamo la matrice
+$$
+B^{-1} N = \begin{pmatrix} 1/2 & 0 & 0 \\ 3/2 & -1 & 0 \\ -1 & 0 & 1 \end{pmatrix}
+\begin{pmatrix} 1 & -1 \\ -1 & 0 \\ -4 & 0 \end{pmatrix}
+= \begin{pmatrix} 1/2 & -1/2 \\ 5/2 & -3/2 \\ -5 & 1 \end{pmatrix}
+$$
+Calcoliamo i coefficienti di costo ridotto
+$$
+\hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N = (-2, 0) - (-5, 0, 0)
+\begin{pmatrix} 1/2 & -1/2 \\ 5/2 & -3/2 \\ -5 & 1 \end{pmatrix}
+= (1/2, -5/2)
+$$
+
+**Forma canonica rispetto a $\mathcal{B} = \{1, 4, 5\}$**
+$$
+T^{(0)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 1/2 & -1/2 & 0 & 0 & 3/2 \\
+0 & 5/2 & -3/2 & 1 & 0 & 9/2 \\
+0 & -5 & 1 & 0 & 1 & 3 \\
+\hline
+0 & 1/2 & -5/2 & 0 & 0 & 15/2 \\
+\hline
+\end{array}
+$$
+
+![[ro_simplesso_illimitato_x1.svg|center]]
+
+**Operazione di pivot rispetto a $k = 3$ e $s = 3$**
+$$
+T^{(0)} = \begin{array}{|ccccc|c|}
+\hline
+1 & 1/2 & -1/2 & 0 & 0 & 3/2 \\
+0 & 5/2 & -3/2 & 1 & 0 & 9/2 \\
+0 & -5 & \textcolor{#e06c75}{1} & 0 & 1 & 3 \\
+\hline
+0 & 1/2 & -5/2 & 0 & 0 & 15/2 \\
+\hline
+\end{array}
+$$
+
+**Forma canonica rispetto a $\mathcal{B} = \{1, 4, 3\}$**
+$$
+T^{(1)} = \begin{array}{|ccccc|c|}
+\hline
+1 & \textcolor{#e06c75}{-2} & 0 & 0 & 1/2 & 3 \\
+0 & \textcolor{#e06c75}{-5} & 0 & 1 & 3/2 & 9 \\
+0 & \textcolor{#e06c75}{-5} & 1 & 0 & 1 & 3 \\
+\hline
+0 & -12 & 0 & 0 & 5/2 & 15 \\
+\hline
+\end{array}
+$$
+La soluzione corrente non è ottima ed è verificato il criterio di illimitatezza: la colonna di $x_2$ ha $\hat{c}_2 = -12 < 0$ e tutte le componenti $\le 0$.
+
+![[ro_simplesso_illimitato_x2.svg|center]]
+
+$$
+\bar{x} = (3, 0, 3, 9, 0)^\top
+$$
