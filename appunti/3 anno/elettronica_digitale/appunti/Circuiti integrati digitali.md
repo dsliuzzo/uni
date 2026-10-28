@@ -378,14 +378,3 @@ si definiscono i **margini di rumore**, cioè quanto disturbo può sommarsi al s
 >[!important] Il circuito funziona correttamente solo se **entrambi** i margini sono $> 0$
 
 ## Analisi dinamica
-
-
-
----
-
-MOSFET
-metal oxide semiconductor field effect transistor
-reticolo ordinato di atomi di silicio con pochi elettroni liberi.
-Possiamo adattare il materiale ed avere un maggior numero di elettroni liberi.
-deposito un materiale isolando sul silicio e, lavorano con temperature molto elevate, garantiamo che gli atomi del materiale isolante vadano dentro la struttura atomica del silicio (ossido di silicio).
-Per passare dal semiconduttore al conduttore effettuiamo una meccanismo di **drogaggio**: utilizziamo degli atomi di fosforo (pentavalenti - 5 elettroni di cui 1 libero). Per impatto andiamo a sostituire degli atomi di silicio con degli atomi di fosforo. Più atomi di fosforo ci sono maggiore sarà il numero di elettroni liberi e il materiale si comporterà come un metallo. Possiamo anche usare atomi trivalenti come il boro (drogaggio di tipo P) ottenendo così un NMOS (la corrente è sorretta dalle cariche negative)
