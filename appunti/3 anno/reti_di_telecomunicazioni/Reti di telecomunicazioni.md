@@ -369,3 +369,29 @@ com'è strutturata trama l'ethernet
 preambolo permette la sincronizzazione
 il tipo indica il protocollo di livello superiore
 il livello 2 si deve occupare anche di inviare il dato al livello superiore, per capire a quale processo (protocollo) indirizzare il payload viene utilizzato il campo type
+
+
+
+
+---
+
+
+Protocolli ARP e RARP
+Si occupano della traduzione degli indirizzi IP
+è necessaria una traduzione perché il modello TCP/IP nel network access è fatto da uno strato non definito, è demandato alla più totale libertà a chi vuole implementare le reti a livello 2.
+Il protocollo IP (livello 2) è il linguaggio comune alla rete internet.
+Possiamo connettere qualsiasi tipo di rete di livello basta, a patto che in mezzo ci sia un router con interfacce diverse.
+La forza di internet sono proprio i protocolli di traduzione.
+ARP: Address Resolution Protocol.
+Ogni nodo della rete ha certamente un indirizzo ip.
+L'obbiettivo del livello rete è proprio quello di far comunicare reti con tecnologie eterogenee.
+Gli indirizzi IP sono noti, mentre gli indirizzi fisici cambiano da rete in rete.
+Gli indirizzi di livello 2 che contraddistinguono un sistema nell'ambito della sotto rete possono essere:
+- indirizzi MAC nelle LAN
+- identificatori di un circuito virtuale
+- numero telefonico
+Gli indirizzi IP hanno una natura geografica, invece gli indirizzi fisici no, ogni tecnologia ha il suo indirizzo fisico e il suo modo di assegnarli.
+Nasce quindi la necessità di tradurre indirizzi fisici e logici.
+
+Prima capiamo come sono fatti gli indirizzi fisici
+Nella stragrande maggioranza dei casi sono indirizzi di 6 B scritti come 6 coppie di cifre esadecimali divise in due parti (già scritto da qualche parte negli appunti).
