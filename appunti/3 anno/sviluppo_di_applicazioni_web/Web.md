@@ -6606,17 +6606,3 @@ public class PrenotazioneService {
 > - `@Version` protegge da modifiche che arrivano da **altri percorsi** senza lock (es. un amministratore che modifica l'appello da un'altra schermata): in quel caso il conflitto viene comunque rilevato al flush.
 > 
 > La regola di business ("niente posti negativi") sta nell'entity (`prenotaPosto()`), il controllo della concorrenza nel service.
-
-
----
-# Spring
-[...] Introduzione slide 1-13
-## Core Package
-## Web-MVC Package
-## JEE Package
-## DAO Package
-## ORM Package
-## AOP Package
-
-# Spring data
-# Spring security

@@ -267,25 +267,125 @@ $$
 
 In entrambi i casi, essendo $R_{ON}$ molto piccola e $R_{OFF}$ molto grande, la corrente $I$ è piccolissima: la potenza statica non è nulla, ma si approssima a zero, e questo limita i danni fisici all'interno del circuito.
 
+### Tensione di soglia
+Negli interruttori reali la commutazione non dipende dal valore esatto della tensione di controllo $V_c$ ($0\ V$ o $V_{DD}$), ma dal superamento di una **tensione di soglia** $V_{\text{soglia}}$.
+
+>[!multi-column]
+>
+>>[!important] Interruttore di tipo 1
+>>**Ideale**
+>>- $V_c = V_{DD} \implies$ ON
+>>- $V_c = 0\ V \implies$ OFF
+>>
+>>**Reale (con soglia)**
+>>- $V_c \geq V_{\text{soglia}} \implies$ ON
+>>- $V_c < V_{\text{soglia}} \implies$ OFF
+>
+>>[!important] Interruttore di tipo 0
+>>**Ideale**
+>>- $V_c = 0\ V \implies$ ON
+>>- $V_c = V_{DD} \implies$ OFF
+>>
+>>**Reale (con soglia)**
+>>- $V_c \leq V_{\text{soglia}} \implies$ ON
+>>- $V_c > V_{\text{soglia}} \implies$ OFF
+
+In un circuito l'uscita di una porta (**porta pilota**) è l'ingresso di un'altra porta (**porta di carico**). Come visto con gli interruttori reali, a causa delle cadute di tensione su $R_{ON}$ l'uscita della porta pilota non vale esattamente $V_{DD}$ o $0\ V$. Questo non è un problema finché la tensione resta **dal lato giusto della soglia**: la porta di carico interpreta comunque correttamente il valore logico.
+
+Il problema nasce quando aumentano gli ingressi della porta pilota, ed è da qui che si ricava il limite di [[#Fan-in]].
+
 ### Fan-in
 >[!important] Fan-in
 >Numero massimo di ingressi che una porta logica può gestire.
 
-All'aumentare del numero di ingressi le resistenze in gioco si degradano.
+All'aumentare del numero di ingressi le resistenze in gioco si degradano e l'uscita si allontana dai valori nominali, fino a non essere più interpretata correttamente dalla porta di carico.
 
-**Caso:** $V_A = V_B = V_{DD}$, porta a due ingressi con due interruttori in **serie** nella pull-down (come la NAND)
+#### Problemi sullo 0 logico: NAND
+Il caso peggiore per lo 0 logico è una porta con gli interruttori in **serie** nella pull-down (come la NAND) e tutti gli ingressi a $V_{DD}$.
+
+**NAND a 2 ingressi:** $V_A = V_B = V_{DD}$
 [...] schema della porta a due ingressi
 
-Le due resistenze $R_{ON}$ del pull-down sono in serie, quindi la tensione di uscita, che idealmente è $0\ V$, diventa
+Le due resistenze $R_{ON}$ della pull-down sono in serie, quindi l'uscita, che idealmente è $0\ V$, diventa
 $$
 V_{out} = 2 R_{ON} \cdot I
 $$
-L'uscita si allontana da $0\ V$ **ancora di più** rispetto all'inverter. Inoltre i due interruttori aperti del pull-up sono in parallelo, quindi la resistenza della pull-up **diminuisce**, mentre quella della pull-down chiusa **aumenta**: ci si allontana dalla condizione di mutua esclusione.
+e si allontana da $0\ V$ **più che nell'inverter**. Inoltre i due interruttori aperti della pull-up sono in parallelo, quindi la resistenza della pull-up **diminuisce**, mentre quella della pull-down chiusa **aumenta**: ci si allontana dalla condizione di mutua esclusione.
 
-In generale, all'aumentare del numero di ingressi di una porta:
-- aumenta la $R_{ON}$ complessiva delle reti in serie
-- diminuisce la $R_{OFF}$ complessiva delle reti in parallelo
+**NAND a 4 ingressi:** $A = B = C = D = V_{DD}$
+[...] grafici
 
-e ci si allontana dalle condizioni che garantiscono la **mutua esclusione**.
+- la pull-down è la **serie** di 4 resistenze $R_{ON}$
+- la pull-up è il **parallelo** di 4 resistenze $R_{OFF}$
+
+$$
+V_{out} = 4 R_{ON} \cdot I
+$$
+Finché $V_{out} < V_{\text{soglia}}$ la porta di carico legge correttamente uno 0 logico. Aumentando il numero di ingressi però $V_{out}$ cresce, fino a un valore che il carico non riesce più a interpretare come 0: c'è quindi un limite sul **valore massimo** che la porta pilota può dare in uscita per rappresentare lo 0.
+
+>[!important] $V_{OL}$ (Output Low)
+>Massimo valore di tensione in **uscita** dalla **porta pilota** che rappresenta lo 0 logico.
+
+>[!important] $V_{IL}$ (Input Low)
+>Massimo valore di tensione in **ingresso** che la **porta di carico** interpreta come 0 logico.
+
+Perché tutto funzioni correttamente deve valere:
+$$
+V_{OL} \leq V_{IL}
+$$
+
+$V_{OL}$ dipende dalla topologia della porta pilota, che decidiamo noi, quindi possiamo controllarlo; $V_{IL}$ invece è un **parametro della tecnologia** e non possiamo modificarlo.
+
+#### Problemi sull'1 logico: NOR
+[...] grafici
+
+Dualmente, il caso peggiore per l'1 logico è una porta con gli interruttori in **serie** nella pull-up (come la NOR). Con una NOR a 4 ingressi e $A = B = C = D = 0\ V$ la pull-up è la serie di 4 resistenze $R_{ON}$, quindi
+$$
+V_{out} = V_{DD} - 4 R_{ON} \cdot I
+$$
+All'aumentare del numero di ingressi $V_{out}$ si allontana dal valore nominale $V_{DD}$.
+
+>[!important] $V_{OH}$ (Output High)
+>Minimo valore di tensione in **uscita** dalla **porta pilota** che rappresenta l'1 logico. Dipende da come è fatto il circuito e possiamo condizionarlo cambiandone la topologia.
+
+>[!important] $V_{IH}$ (Input High)
+>Minimo valore di tensione in **ingresso** che la **porta di carico** interpreta come 1 logico (parametro della tecnologia).
+
+Perché tutto funzioni correttamente deve valere:
+$$
+V_{OH} \geq V_{IH}
+$$
+
+>[!important] Riassumendo
+>All'aumentare del numero di ingressi di una porta:
+>- aumenta la $R_{ON}$ complessiva delle reti in serie
+>- diminuisce la $R_{OFF}$ complessiva delle reti in parallelo
+>
+>ci si allontana dalle condizioni che garantiscono la **mutua esclusione** e l'uscita rischia di non rispettare $V_{OL} \leq V_{IL}$ o $V_{OH} \geq V_{IH}$: questo fissa il fan-in massimo.
+
+### Margini di rumore
+Mettendo insieme le due condizioni ricavate:
+$$
+\begin{cases}
+V_{OH} \geq V_{IH} \\
+V_{OL} \leq V_{IL}
+\end{cases}
+$$
+si definiscono i **margini di rumore**, cioè quanto disturbo può sommarsi al segnale tra porta pilota e porta di carico senza che il valore logico venga interpretato in modo sbagliato:
+- **margine di rumore alto**: $NM_H = V_{OH} - V_{IH}$
+- **margine di rumore basso**: $NM_L = V_{IL} - V_{OL}$
+
+>[!important] Il circuito funziona correttamente solo se **entrambi** i margini sono $> 0$
 
 ## Analisi dinamica
+
+
+
+---
+
+MOSFET
+metal oxide semiconductor field effect transistor
+reticolo ordinato di atomi di silicio con pochi elettroni liberi.
+Possiamo adattare il materiale ed avere un maggior numero di elettroni liberi.
+deposito un materiale isolando sul silicio e, lavorano con temperature molto elevate, garantiamo che gli atomi del materiale isolante vadano dentro la struttura atomica del silicio (ossido di silicio).
+Per passare dal semiconduttore al conduttore effettuiamo una meccanismo di **drogaggio**: utilizziamo degli atomi di fosforo (pentavalenti - 5 elettroni di cui 1 libero). Per impatto andiamo a sostituire degli atomi di silicio con degli atomi di fosforo. Più atomi di fosforo ci sono maggiore sarà il numero di elettroni liberi e il materiale si comporterà come un metallo. Possiamo anche usare atomi trivalenti come il boro (drogaggio di tipo P) ottenendo così un NMOS (la corrente è sorretta dalle cariche negative)
