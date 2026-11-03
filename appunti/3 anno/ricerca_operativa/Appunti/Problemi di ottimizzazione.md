@@ -2246,3 +2246,398 @@ La soluzione corrente non è ottima ed è verificato il criterio di illimitatezz
 $$
 \bar{x} = (3, 0, 3, 9, 0)^\top
 $$
+
+
+
+
+
+
+
+
+---
+
+
+
+slide45
+$$
+\displaylines{
+A x^* + I \alpha^* = b \\
+\binom{x^*}{\alpha^*} = \binom{B^{-1}b}{0}
+}
+$$
+ci sono due sotto casi rispetto a $\rho^* = 0$
+1. $\alpha^*$ fuori dalla base, significa che la matrice $B$ è una sotto matrice di $A$.
+   $B$ è tutta quanta una sotto matrice di $A$
+   $m$ variabili associati a colonne della matrice dei vincoli e tutte le altre nulle --> $(n+m)-m=n$ variabili nulle. Le $\alpha^*$ sono $m$, quindi mancano $(n-m)$ zeri, che saranno quindi parte di $x^*$. Ne consegue che $x^*$ ha $n-m$ zeri e $m$ componenti associate ad una base
+   L'algoritmo ci restituisce una soluzione di base ammissibile per il problema originale
+2. Può succedere che alcune $\alpha^*$ pur essendo tutte nulle non sono uscite tutte dalla base, abbiamo ottenuto quindi una soluzione ottima di base degenere per il problema artificiale. In questo caso abbiamo $m-1$ colonne di $A$ che compongono la base: manca la base per il problema di partenza. Non è grave perché si può forzare l'algoritmo a fare qualche passo in più ragionando in maniera speculare: le $\alpha^*$ sono tutte pari a 0, all'ottimo ci siamo. Facciamo uscire dalla base una variabile dalla base $\hat{i} \in \{1,\dots,m\}$; facciamo uscire $\alpha^*_{\hat{i}}$ e facciamo entrare una colonna della matrice $A$. Facendo questa operazione $\bar{\delta} = 0$ indipendentemente da come scegliamo la colonna. Non ci sposteremo più dal punto trovato e va bene, in quanto siamo già all'ottimo. Cambiamo rappresentazione del punto corrente, ed è possibile anche perché la soluzione è degenere.
+
+
+
+
+
+---
+
+
+>[!check] Prima fase con variabili artificiali fuori base all'ottimo
+> Risolvere mediante l'algoritmo del simplesso il problema
+> $$
+> \left\{\begin{array}{lrcrcr}
+> \min & 2x_1 & + & 3x_2 \\
+> \text{s.t.} & x_1 & + & x_2 & \ge & 3 \\
+>  & -2x_1 & + & x_2 & \ge & 2 \\
+>  & x_1 & , & x_2 & \ge & 0
+> \end{array}\right.
+> $$
+> **Forma standard**
+> $$
+> \left\{\begin{array}{lrcrcrcrcr}
+> \min & 2x_1 & + & 3x_2 \\
+> \text{s.t.} & x_1 & + & x_2 & - & x_3 &  &  & = & 3 \\
+>  & -2x_1 & + & x_2 &  &  & - & x_4 & = & 2 \\
+>  & x_1 & , & x_2 & , & x_3 & , & x_4 & \ge & 0
+> \end{array}\right.
+> $$
+> Le colonne delle variabili di surplus $x_3, x_4$ non formano la matrice identità, quindi non abbiamo una base ammissibile di partenza: costruiamo il problema artificiale.
+>
+> **Problema artificiale**
+> $$
+> \left\{\begin{array}{lrcrcrcrcrcrcr}
+> \min &  &  &  &  &  &  &  &  & \alpha_1 & + & \alpha_2 \\
+> \text{s.t.} & x_1 & + & x_2 & - & x_3 &  &  & + & \alpha_1 &  &  & = & 3 \\
+>  & -2x_1 & + & x_2 &  &  & - & x_4 &  &  & + & \alpha_2 & = & 2 \\
+>  & x_1 & , & x_2 & , & x_3 & , & x_4 & , & \alpha_1 & , & \alpha_2 & \ge & 0
+> \end{array}\right.
+> $$
+> **Tableau** rispetto a $\mathcal{B} = \{\alpha_1, \alpha_2\}$
+> $$
+> T^{(\alpha_0)} = \begin{array}{|cccc|cc|c|}
+> \hline
+> 1 & 1 & -1 & 0 & 1 & 0 & 3 \\
+> -2 & 1 & 0 & -1 & 0 & 1 & 2 \\
+> \hline
+> 1 & -2 & 1 & 1 & 0 & 0 & -5 \\
+> \hline
+> \end{array}
+> $$
+>dove $\hat{c}_N^\top = c_N^\top-c_B^\top B^{-1}N = 0^\top - (1,1) A$
+>La matrice $N$ è pari alla matrice originaria del problema $A$
+>
+> **Prima fase: iterazione 1** (entra $x_2$, esce $\alpha_2$)
+> $$
+> T^{(\alpha_0)} = \begin{array}{|cccc|cc|c|}
+> \hline
+> 1 & 1 & -1 & 0 & 1 & 0 & 3 \\
+> -2 & \textcolor{#e06c75}{1} & 0 & -1 & 0 & 1 & 2 \\
+> \hline
+> 1 & -2 & 1 & 1 & 0 & 0 & -5 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_1)} = \begin{array}{|cccc|cc|c|}
+> \hline
+> 3 & 0 & -1 & 1 & 1 & -1 & 1 \\
+> -2 & 1 & 0 & -1 & 0 & 1 & 2 \\
+> \hline
+> -3 & 0 & 1 & -1 & 0 & 2 & -1 \\
+> \hline
+> \end{array}
+> $$
+>
+> **Prima fase: iterazione 2** (entra $x_1$, esce $\alpha_1$)
+> $$
+> T^{(\alpha_1)} = \begin{array}{|cccc|cc|c|}
+> \hline
+> \textcolor{#e06c75}{3} & 0 & -1 & 1 & 1 & -1 & 1 \\
+> -2 & 1 & 0 & -1 & 0 & 1 & 2 \\
+> \hline
+> -3 & 0 & 1 & -1 & 0 & 2 & -1 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_2)} = \begin{array}{|cccc|cc|c|}
+> \hline
+> 1 & 0 & -\frac{1}{3} & \frac{1}{3} & \frac{1}{3} & -\frac{1}{3} & \frac{1}{3} \\
+> 0 & 1 & -\frac{2}{3} & -\frac{1}{3} & \frac{2}{3} & \frac{1}{3} & \frac{8}{3} \\
+> \hline
+> 0 & 0 & 0 & 0 & 1 & 1 & 0 \\
+> \hline
+> \end{array}
+> $$
+> I costi ridotti sono tutti $\ge 0$ e il valore ottimo del problema artificiale è $\rho^* = 0$; inoltre tutte le variabili artificiali sono **fuori base**, quindi $\mathcal{B} = \{1, 2\}$ è una base ammissibile per il problema originale.
+>
+> **Seconda fase: iterazione 1**
+> Eliminiamo le colonne delle variabili artificiali e ricalcoliamo i costi ridotti rispetto alla funzione obiettivo originale:
+> $$
+> T^{(0)} = \begin{array}{|cccc|c|}
+> \hline
+> 1 & 0 & -\frac{1}{3} & \frac{1}{3} & \frac{1}{3} \\
+> 0 & 1 & -\frac{2}{3} & -\frac{1}{3} & \frac{8}{3} \\
+> \hline
+> 0 & 0 & \frac{8}{3} & \frac{1}{3} & -\frac{26}{3} \\
+> \hline
+> \end{array}
+> $$
+> $\hat{c}_N \ge 0$ $\Rightarrow$ la soluzione è già **ottima**:
+> $$
+> x^* = \left(\frac{1}{3}, \frac{8}{3}, 0, 0\right)^\top \qquad c^\top x^* = \frac{26}{3}
+> $$
+
+>[!check] Prima fase con variabili artificiali in base all'ottimo
+> Risolvere mediante l'algoritmo del simplesso il problema
+> $$
+> \left\{\begin{array}{lrcrcrcrcr}
+> \min & 2x_1 & - & x_2 & + & 5x_3 & - & 3x_4 \\
+> \text{s.t.} & x_1 & - & x_2 &  &  &  &  & = & 1 \\
+>  & x_1 &  &  & + & x_3 & - & x_4 & = & 2 \\
+>  &  & - & 2x_2 & + & x_3 & - & x_4 & = & 1 \\
+>  & x_1 & , & x_2 & , & x_3 & , & x_4 & \ge & 0
+> \end{array}\right.
+> $$
+> Il problema è già in **forma standard** (solo vincoli di uguaglianza con $b \ge 0$).
+>
+> **Problema artificiale**
+> $$
+> \left\{\begin{array}{lrcrcrcrcrcrcrcr}
+> \min &  &  &  &  &  &  &  &  & \alpha_1 & + & \alpha_2 & + & \alpha_3 \\
+> \text{s.t.} & x_1 & - & x_2 &  &  &  &  & + & \alpha_1 &  &  &  &  & = & 1 \\
+>  & x_1 &  &  & + & x_3 & - & x_4 &  &  & + & \alpha_2 &  &  & = & 2 \\
+>  &  & - & 2x_2 & + & x_3 & - & 2x_4 &  &  &  &  & + & \alpha_3 & = & 1 \\
+>  & x_1 & , & x_2 & , & x_3 & , & x_4 & , & \alpha_1 & , & \alpha_2 & , & \alpha_3 & \ge & 0
+> \end{array}\right.
+> $$
+> (nelle slide il coefficiente di $x_4$ nel terzo vincolo del problema artificiale è $-2$, mentre nel problema originale è $-1$)
+>
+> **Tableau** rispetto a $\mathcal{B} = \{\alpha_1, \alpha_2, \alpha_3\}$
+> $$
+> T^{(\alpha_0)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 1 & 0 & 1 & -1 & 0 & 1 & 0 & 2 \\
+> 0 & -2 & 1 & -2 & 0 & 0 & 1 & 1 \\
+> \hline
+> -2 & 3 & -2 & 3 & 0 & 0 & 0 & -4 \\
+> \hline
+> \end{array}
+> $$
+>
+> **Prima fase: iterazione 1** (entra $x_1$, esce $\alpha_1$)
+> $$
+> T^{(\alpha_0)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> \textcolor{#e06c75}{1} & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 1 & 0 & 1 & -1 & 0 & 1 & 0 & 2 \\
+> 0 & -2 & 1 & -2 & 0 & 0 & 1 & 1 \\
+> \hline
+> -2 & 3 & -2 & 3 & 0 & 0 & 0 & -4 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_1)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 0 & 1 & 1 & -1 & -1 & 1 & 0 & 1 \\
+> 0 & -2 & 1 & -2 & 0 & 0 & 1 & 1 \\
+> \hline
+> 0 & 1 & -2 & 3 & 2 & 0 & 0 & -2 \\
+> \hline
+> \end{array}
+> $$
+>
+> **Prima fase: iterazione 2** (entra $x_3$, esce $\alpha_2$)
+> $$
+> T^{(\alpha_1)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 0 & 1 & \textcolor{#e06c75}{1} & -1 & -1 & 1 & 0 & 1 \\
+> 0 & -2 & 1 & -2 & 0 & 0 & 1 & 1 \\
+> \hline
+> 0 & 1 & -2 & 3 & 2 & 0 & 0 & -2 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_2)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 0 & 1 & 1 & -1 & -1 & 1 & 0 & 1 \\
+> 0 & -3 & 0 & -1 & 1 & -1 & 1 & 0 \\
+> \hline
+> 0 & 3 & 0 & 1 & 0 & 1 & 0 & 0 \\
+> \hline
+> \end{array}
+> $$
+> I costi ridotti sono tutti $\ge 0$ e $\rho^* = 0$, ma la variabile artificiale $\alpha_3$ è **ancora in base** (con valore $0$): la soluzione ottima del problema artificiale è **degenere** e mancano colonne di $A$ per formare una base del problema originale.
+>
+> **Prima fase: iterazione 3** (scambio degenere: entra $x_4$, esce $\alpha_3$)
+> Facciamo uscire $\alpha_3$ dalla base scegliendo come pivot un elemento non nullo della sua riga in corrispondenza di una colonna di $A$; essendo $\bar{x}_{\alpha_3} = 0$ si ha $\bar{\delta} = 0$, quindi il punto non cambia, cambia solo la sua rappresentazione.
+> $$
+> T^{(\alpha_2)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 0 & 1 & 1 & -1 & -1 & 1 & 0 & 1 \\
+> 0 & -3 & 0 & \textcolor{#e06c75}{-1} & 1 & -1 & 1 & 0 \\
+> \hline
+> 0 & 3 & 0 & 1 & 0 & 1 & 0 & 0 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_3)} = \begin{array}{|cccc|ccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 & 0 & 0 & 1 \\
+> 0 & 4 & 1 & 0 & -2 & 2 & -1 & 1 \\
+> 0 & 3 & 0 & 1 & -1 & 1 & -1 & 0 \\
+> \hline
+> 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0 \\
+> \hline
+> \end{array}
+> $$
+> Ora $\mathcal{B} = \{1, 3, 4\}$ è una base ammissibile (degenere) per il problema originale.
+>
+> **Seconda fase: iterazione 1** (entra $x_2$, esce $x_4$)
+> $$
+> T^{(0)} = \begin{array}{|cccc|c|}
+> \hline
+> 1 & -1 & 0 & 0 & 1 \\
+> 0 & 4 & 1 & 0 & 1 \\
+> 0 & \textcolor{#e06c75}{3} & 0 & 1 & 0 \\
+> \hline
+> 0 & -10 & 0 & 0 & -7 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(1)} = \begin{array}{|cccc|c|}
+> \hline
+> 1 & 0 & 0 & \frac{1}{3} & 1 \\
+> 0 & 0 & 1 & -\frac{4}{3} & 1 \\
+> 0 & 1 & 0 & \frac{1}{3} & 0 \\
+> \hline
+> 0 & 0 & 0 & \frac{10}{3} & -7 \\
+> \hline
+> \end{array}
+> $$
+> Il passo è degenere ($\bar{\delta} = 0$, il valore della funzione obiettivo non cambia), ma ora $\hat{c}_N \ge 0$ $\Rightarrow$ la soluzione è **ottima** con $\mathcal{B} = \{1, 3, 2\}$:
+> $$
+> x^* = (1, 0, 1, 0)^\top \qquad c^\top x^* = 7
+> $$
+
+>[!check] Prima fase con vincoli sovrabbondanti
+> Risolvere mediante l'algoritmo del simplesso il problema
+> $$
+> \left\{\begin{array}{lrcrcrcr}
+> \min & 4x_1 & + & x_2 & + & x_3 \\
+> \text{s.t.} & 2x_1 & + & x_2 & + & 2x_3 & = & 4 \\
+>  & 3x_1 & + & 3x_2 & + & x_3 & = & 3 \\
+>  & x_1 & - & x_2 & + & 3x_3 & = & 5 \\
+>  & x_1 & , & x_2 & , & x_3 & \ge & 0
+> \end{array}\right.
+> $$
+> Il problema è già in **forma standard**.
+>
+> **Problema artificiale**
+> $$
+> \left\{\begin{array}{lrcrcrcrcrcrcr}
+> \min &  &  &  &  &  &  & \alpha_1 & + & \alpha_2 & + & \alpha_3 \\
+> \text{s.t.} & 2x_1 & + & x_2 & + & 2x_3 & + & \alpha_1 &  &  &  &  & = & 4 \\
+>  & 3x_1 & + & 3x_2 & + & x_3 &  &  & + & \alpha_2 &  &  & = & 3 \\
+>  & x_1 & - & x_2 & + & 3x_3 &  &  &  &  & + & \alpha_3 & = & 5 \\
+>  & x_1 & , & x_2 & , & x_3 & , & \alpha_1 & , & \alpha_2 & , & \alpha_3 & \ge & 0
+> \end{array}\right.
+> $$
+> **Tableau** rispetto a $\mathcal{B} = \{\alpha_1, \alpha_2, \alpha_3\}$
+> $$
+> T^{(\alpha_0)} = \begin{array}{|ccc|ccc|c|}
+> \hline
+> 2 & 1 & 2 & 1 & 0 & 0 & 4 \\
+> 3 & 3 & 1 & 0 & 1 & 0 & 3 \\
+> 1 & -1 & 3 & 0 & 0 & 1 & 5 \\
+> \hline
+> -6 & -3 & -6 & 0 & 0 & 0 & -12 \\
+> \hline
+> \end{array}
+> $$
+>
+> **Prima fase: iterazione 1** (entra $x_1$, esce $\alpha_2$)
+> $$
+> T^{(\alpha_0)} = \begin{array}{|ccc|ccc|c|}
+> \hline
+> 2 & 1 & 2 & 1 & 0 & 0 & 4 \\
+> \textcolor{#e06c75}{3} & 3 & 1 & 0 & 1 & 0 & 3 \\
+> 1 & -1 & 3 & 0 & 0 & 1 & 5 \\
+> \hline
+> -6 & -3 & -6 & 0 & 0 & 0 & -12 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_1)} = \begin{array}{|ccc|ccc|c|}
+> \hline
+> 0 & -1 & \frac{4}{3} & 1 & -\frac{2}{3} & 0 & 2 \\
+> 1 & 1 & \frac{1}{3} & 0 & \frac{1}{3} & 0 & 1 \\
+> 0 & -2 & \frac{8}{3} & 0 & -\frac{1}{3} & 1 & 4 \\
+> \hline
+> 0 & 3 & -4 & 0 & 2 & 0 & -6 \\
+> \hline
+> \end{array}
+> $$
+>
+> **Prima fase: iterazione 2** (entra $x_3$, esce $\alpha_1$)
+> $$
+> T^{(\alpha_1)} = \begin{array}{|ccc|ccc|c|}
+> \hline
+> 0 & -1 & \textcolor{#e06c75}{\frac{4}{3}} & 1 & -\frac{2}{3} & 0 & 2 \\
+> 1 & 1 & \frac{1}{3} & 0 & \frac{1}{3} & 0 & 1 \\
+> 0 & -2 & \frac{8}{3} & 0 & -\frac{1}{3} & 1 & 4 \\
+> \hline
+> 0 & 3 & -4 & 0 & 2 & 0 & -6 \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(\alpha_2)} = \begin{array}{|ccc|ccc|c|}
+> \hline
+> 0 & -\frac{3}{4} & 1 & \frac{3}{4} & -\frac{1}{2} & 0 & \frac{3}{2} \\
+> 1 & \frac{5}{4} & 0 & -\frac{1}{4} & \frac{1}{2} & 0 & \frac{1}{2} \\
+> 0 & 0 & 0 & -2 & 1 & 1 & 0 \\
+> \hline
+> 0 & 0 & 0 & 3 & 0 & 0 & 0 \\
+> \hline
+> \end{array}
+> $$
+> $\rho^* = 0$ ma $\alpha_3$ è ancora in base. A differenza dell'esempio precedente, la sua riga ha **tutti zeri in corrispondenza delle colonne di $A$**, quindi non è possibile far entrare in base nessuna variabile originale al suo posto: il terzo vincolo è **sovrabbondante** (combinazione lineare degli altri, infatti $\text{riga}_3 = 2\cdot\text{riga}_1 - \text{riga}_2$) e può essere eliminato insieme ad $\alpha_3$.
+>
+> **Seconda fase: iterazione 1** (entra $x_2$, esce $x_1$)
+> Eliminiamo la riga sovrabbondante e le colonne artificiali, e ricalcoliamo i costi ridotti con $\mathcal{B} = \{3, 1\}$:
+> $$
+> T^{(0)} = \begin{array}{|ccc|c|}
+> \hline
+> 0 & -\frac{3}{4} & 1 & \frac{3}{2} \\
+> 1 & \textcolor{#e06c75}{\frac{5}{4}} & 0 & \frac{1}{2} \\
+> \hline
+> 0 & -\frac{13}{4} & 0 & -\frac{7}{2} \\
+> \hline
+> \end{array}
+> \qquad
+> T^{(1)} = \begin{array}{|ccc|c|}
+> \hline
+> \frac{3}{5} & 0 & 1 & \frac{9}{5} \\
+> \frac{4}{5} & 1 & 0 & \frac{2}{5} \\
+> \hline
+> \frac{13}{5} & 0 & 0 & -\frac{11}{5} \\
+> \hline
+> \end{array}
+> $$
+> $\hat{c}_N \ge 0$ $\Rightarrow$ la soluzione è **ottima** con $\mathcal{B} = \{3, 2\}$:
+> $$
+> x^* = \left(0, \frac{2}{5}, \frac{9}{5}\right)^\top \qquad c^\top x^* = \frac{11}{5}
+> $$
+
+>[!check] Determinazione di una SBA iniziale
+> È dato il seguente problema $(P)$ di programmazione lineare
+> $$
+> (P)\left\{\begin{array}{lrcrcrcr}
+> \min & 3x_1 & + & 6x_2 & + & 6x_3 \\
+> \text{s.t.} & -x_1 & + & 3x_2 & - & 3x_3 & = & 3 \\
+>  & 2x_1 & - & 2x_2 & - & 4x_3 & = & 2 \\
+>  & x_1 & , & x_2 & , & x_3 & \ge & 0
+> \end{array}\right.
+> $$
+> 1. Si determini quale dei due punti $x_A = \left(\frac{15}{2}, \frac{9}{2}, 1\right)^\top$ e $x_B = \left(3, 2, \frac{1}{6}\right)^\top$ è ammissibile per $(P)$ e lo si indichi con $x^{(0)}$.
+> 2. Si determini una soluzione di base ammissibile $x^{(1)}$ a partire da $x^{(0)}$ mediante l'applicazione del [[#Teorema fondamentale della PL in forma standard|teorema fondamentale della programmazione lineare]].
