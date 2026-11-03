@@ -2256,7 +2256,7 @@ $$
 
 ---
 
-
+[...]
 
 slide45
 $$
@@ -2382,6 +2382,13 @@ ci sono due sotto casi rispetto a $\rho^* = 0$
 > $$
 > x^* = \left(\frac{1}{3}, \frac{8}{3}, 0, 0\right)^\top \qquad c^\top x^* = \frac{26}{3}
 > $$
+
+
+Il caso ha voluto che fossero tutti $\geq 0$ o qualcun altro, qualcun altro è:
+a) 💛
+b) 🎱
+c) ✝️
+d) 🧹🏠
 
 >[!check] Prima fase con variabili artificiali in base all'ottimo
 > Risolvere mediante l'algoritmo del simplesso il problema
@@ -2533,7 +2540,7 @@ ci sono due sotto casi rispetto a $\rho^* = 0$
 > $$
 > Il problema è già in **forma standard**.
 >
-> **Problema artificiale**
+> **Problema artificiale** associato al problema dato
 > $$
 > \left\{\begin{array}{lrcrcrcrcrcrcr}
 > \min &  &  &  &  &  &  & \alpha_1 & + & \alpha_2 & + & \alpha_3 \\
