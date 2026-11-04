@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="240" viewBox="0 0 700 240">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .r{fill:#e57373} .g{fill:#81c784} .o{fill:#ffb74d} </style>
+<defs>
+ <marker id="arrow-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e57373" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+ <marker id="arrow-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#81c784" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- rete 1 -->
+ <rect x="45" y="140" width="50" height="40" rx="6"/>
+ <rect x="125" y="140" width="50" height="40" rx="6"/>
+ <line x1="30" y1="210" x2="338" y2="210"/>
+ <line x1="70" y1="180" x2="70" y2="210"/>
+ <line x1="150" y1="180" x2="150" y2="210"/>
+ <!-- router -->
+ <circle cx="350" cy="160" r="24" stroke="#ffb74d"/>
+ <line x1="338" y1="181" x2="338" y2="210"/>
+ <line x1="362" y1="181" x2="362" y2="210"/>
+ <!-- rete 2 -->
+ <rect x="525" y="140" width="50" height="40" rx="6"/>
+ <rect x="605" y="140" width="50" height="40" rx="6"/>
+ <line x1="362" y1="210" x2="670" y2="210"/>
+ <line x1="550" y1="180" x2="550" y2="210"/>
+ <line x1="630" y1="180" x2="630" y2="210"/>
+ <!-- ARP request di A per B, intercettata da R -->
+ <polyline points="62,140 62,60 362,60 362,135" stroke="#e57373" marker-end="url(#arrow-r)"/>
+ <!-- reply di R con il proprio MAC -->
+ <polyline points="338,139 338,100 78,100 78,136" stroke="#81c784" marker-end="url(#arrow-g)"/>
+</g>
+<text class="ts r" x="212" y="46">ARP request per B</text>
+<text class="ts g" x="208" y="86">reply con il MAC di R</text>
+<text class="t" x="70" y="160">A</text>
+<text class="t" x="150" y="160">C</text>
+<text class="t o" x="350" y="160">R</text>
+<text class="t" x="550" y="160">B</text>
+<text class="t" x="630" y="160">D</text>
+<text class="ts" x="184" y="228">rete 1</text>
+<text class="ts" x="516" y="228">rete 2</text>
+</svg>

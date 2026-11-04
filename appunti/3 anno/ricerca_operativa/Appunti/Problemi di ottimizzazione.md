@@ -2648,3 +2648,5 @@ d) 🧹🏠
 > $$
 > 1. Si determini quale dei due punti $x_A = \left(\frac{15}{2}, \frac{9}{2}, 1\right)^\top$ e $x_B = \left(3, 2, \frac{1}{6}\right)^\top$ è ammissibile per $(P)$ e lo si indichi con $x^{(0)}$.
 > 2. Si determini una soluzione di base ammissibile $x^{(1)}$ a partire da $x^{(0)}$ mediante l'applicazione del [[#Teorema fondamentale della PL in forma standard|teorema fondamentale della programmazione lineare]].
+>
+>[...] da fare
