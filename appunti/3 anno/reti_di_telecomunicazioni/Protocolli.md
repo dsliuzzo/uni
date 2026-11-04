@@ -774,7 +774,174 @@ Teoria del livello: [[Modello ISO OSI#Livello rete (livello 3)]]
 >[!protocollo] IP
 >Il protocollo utilizzato è l'Internet Protocol (IP), il quale provvede a instradare i dati attraverso reti multiple collegate in cascata. In pratica, si assicura di trovare il percorso giusto per trasferire informazioni tra sistemi terminali che appartengono a reti diverse.
 ### Indirizzo IP
-[...]
+### Funzioni dell'IP
+#### Frammentazione/aggregazione
+#### Indirizzamento
+#### Instradamento
+
+## ARP e RARP
+>[!protocollo] ARP e RARP
+>**ARP** (Address Resolution Protocol, RFC 826) e **RARP** (Reverse Address Resolution Protocol, RFC 903) sono protocolli di supporto a [[#IP]] che si occupano della **traduzione degli indirizzi**:
+>- **ARP**: dato un [[#Indirizzo IP|indirizzo IP]] restituisce l'indirizzo fisico (di livello 2) associato
+>- **RARP**: dato un indirizzo fisico restituisce l'indirizzo IP associato
+>
+>Sono usati sia dagli **host** che dai **router**.
+
+### Perché serve una traduzione
+Nel [[Modello TCP IP]] il [[Modello TCP IP#Livello di accesso alla rete (livello 1)|livello di accesso alla rete]] non è definito: chi realizza una rete è libero di usare qualunque tecnologia di livello 2.
+Il protocollo IP ([[Modello TCP IP#Livello di rete (livello 2)|livello 2 TCP/IP]]) è invece il **linguaggio comune** di internet: si può connettere qualsiasi tipo di rete, a patto che in mezzo ci sia un router con le interfacce adatte.
+L'obiettivo del livello rete è quindi far comunicare reti con tecnologie **eterogenee**, e la forza di internet sono proprio i protocolli di traduzione.
+
+Ogni nodo della rete ha certamente un indirizzo IP, ma il livello di collegamento non capisce gli indirizzi IP. Gli indirizzi di livello 2 che contraddistinguono un sistema nell'ambito della sottorete dipendono dalla tecnologia:
+- [[#Indirizzi MAC|indirizzi MAC]] nelle LAN (es. indirizzo Ethernet della scheda di rete)
+- identificatori di [[Reti di telecomunicazioni#Circuito virtuale|circuito virtuale]] (X.25, Frame Relay, ATM)
+- numero telefonico
+
+>[!multi-column]
+>
+>>[!important] Indirizzo MAC
+>>Legato alla scheda di rete: non cambia in qualunque posto venga usato il computer (struttura OUI + numero progressivo, vedi [[#Indirizzi MAC]]).
+>
+>>[!important] Indirizzo IP
+>>Ha struttura **gerarchica** (parte rete, parte host) e natura **geografica**: deve cambiare quando l'host si sposta in un'altra rete.
+
+Ogni tecnologia ha il suo indirizzo fisico e il suo modo di assegnarlo: gli indirizzi IP sono noti, mentre gli indirizzi fisici cambiano da rete a rete. Nasce quindi la necessità di **tradurre** indirizzi logici in indirizzi fisici e viceversa.
+
+**Imbustamento di IP su LAN**
+Quando un datagramma IP scende al livello 2 viene inserito nel campo dati della trama: il payload della [[Reti di telecomunicazioni#Informazioni utente e di controllo, PDU, SAP|PDU]] MAC è la PDU IP. L'header della trama contiene però gli indirizzi MAC di destinazione e sorgente, che il livello IP non conosce.
+Se un flusso di dati attraversa $n$ reti diverse, a ogni hop il pacchetto IP viene decapsulato e incapsulato in una trama diversa ([[Reti di telecomunicazioni#Incapsulamento/decapsulamento|incapsulamento/decapsulamento]]).
+
+![[Protocolli-ARP-imbustamento.svg|center|560]]
+
+>[!question] Problema
+>Conoscendo l'indirizzo IP del destinatario, come si ricava il suo indirizzo fisico nella sottorete?
+
+La funzionalità di ARP e RARP è legata unicamente alla rete a cui è collegato il calcolatore: **ogni sottorete usa i suoi protocolli ARP/RARP**, perché le sottoreti sono potenzialmente tutte eterogenee.
+ARP e RARP fanno da **cuscinetto** tra indirizzi IP e indirizzi fisici: nell'architettura vista a lezione sono collocati nello strato **3b**, tra IP (strato 3c) e le tecnologie di rete sottostanti.
+
+### Mapping tra indirizzi
+La traduzione può essere effettuata in maniera:
+- **statica**
+  ogni nodo contiene una tabella, inserita a mano, che associa a ogni indirizzo IP un indirizzo fisico. È un'operazione altamente inefficiente, soprattutto se la rete varia nel tempo
+- **dinamica**
+  la tabella viene costruita automaticamente tramite il protocollo ARP. Contiene indirizzo IP, indirizzo fisico e tempo di vita della voce (valore tipico 20 min)
+
+Nel mapping dinamico bisogna distinguere il tipo di rete:
+>[!multi-column]
+>
+>>[!protocollo] Broadcast ARP
+>>Usato nelle reti [[Reti di telecomunicazioni#Topologia di rete|broadcast]] (LAN): si sfrutta la possibilità di inviare una trama **broadcast**, ascoltata da tutti i nodi. Se un nodo si guasta la rete continua a funzionare normalmente.
+>
+>>[!protocollo] ARP server
+>>Usato nelle reti **non broadcast** (es. ATM): un server mantiene la tabella di associazione e viene interrogato ogni volta che serve risolvere un indirizzo. Il mapping è dinamico perché le macchine possono *registrarsi* presso il server.
+
+>[!bug] Limiti dell'ARP server
+>- l'indirizzo dell'ARP server deve essere noto a tutte le macchine della rete
+>- se c'è un solo server e si guasta non si riesce più a risolvere nessun indirizzo (problema di **affidabilità**)
+>- se ci sono più server nascono problemi di coordinamento tra di essi
+
+### Broadcast ARP
+Il nodo A vuole inviare un datagramma al nodo B, che appartiene alla stessa rete IP. A conosce il proprio indirizzo IP e fisico e l'indirizzo IP di B, ma **non l'indirizzo fisico di B**, che gli serve per imbustare la trama.
+>[!protocollo] Funzionamento
+>1. A invia in broadcast una **ARP request** che contiene il proprio indirizzo fisico e logico e l'indirizzo IP di B ("chi è l'host B?")
+>2. tutti i nodi ascoltano la richiesta, ma solo B riconosce il proprio indirizzo IP e risponde ad A con una **ARP reply** che contiene il suo indirizzo fisico
+>3. A ha ora tutti gli elementi per inviare a B una trama dedicata (non broadcast)
+
+![[Protocolli-ARP-request-reply.svg|center|660]]
+
+>[!important] ARP cache
+>Al termine della procedura A e B annotano nella propria **ARP cache** la coppia indirizzo IP - indirizzo fisico dell'altro: da questo momento se B vuole parlare con A non deve rieseguire il protocollo. Prima di ogni comunicazione si consulta la cache e solo se l'indirizzo non c'è si invia una ARP request.
+
+- Essendo la rete broadcast, **tutti** i nodi che vedono passare la request scoprono gli indirizzi del mittente e li annotano nella cache, anche se non sono interessati alla comunicazione; lo stesso vale per la reply e gli indirizzi di B. È sufficiente che ogni nodo abbia comunicato almeno una volta perché tutti abbiano la tabella completa.
+- La cache è **volatile**: allo scadere di un timer la coppia viene eliminata e le richieste ripartono. Internet è altamente dinamica: lo stesso indirizzo IP può essere associato nel tempo a schede con indirizzi fisici diversi, quindi una voce vecchia potrebbe non essere più veritiera.
+
+>[!bug] ARP funziona solo nella rete locale
+>I router **non inoltrano** le trame broadcast di livello 2: se ogni ARP request venisse inoltrata, si genererebbe una valanga di richieste broadcast su tutte le reti. Per comunicare con un nodo di un'altra rete serve il [[#Proxy ARP]].
+
+### Pacchetto ARP
+![[Protocolli-ARP-pacchetto.svg|center|660]]
+
+- **Hardware type** (2 byte)
+  tipo di rete: a ogni LAN è associato un numero (Ethernet $= 1$)
+- **Protocol type** (2 byte)
+  protocollo di livello rete (IPv4 $=$ `0800` in esadecimale)
+- **Hardware size** (1 byte)
+  lunghezza in byte dell'indirizzo fisico (Ethernet $= 6$). Serve perché tecnologie eterogenee hanno indirizzi fisici di lunghezza diversa
+- **Protocol size** (1 byte)
+  lunghezza in byte dell'indirizzo IP (IPv4 $= 4$)
+- **Operation** (2 byte)
+  distingue ARP request ($1$) da ARP reply ($2$)
+- **Indirizzo fisico del mittente** (6 byte per Ethernet)
+- **Indirizzo IP del mittente** (4 byte per IPv4)
+- **Indirizzo fisico del destinatario**
+  **vuoto** nelle ARP request, perché è proprio l'informazione cercata
+- **Indirizzo IP del destinatario** (4 byte per IPv4)
+
+**Incapsulamento**
+ARP **non** si appoggia su IP: il pacchetto ARP viene inserito direttamente nel campo dati della trama di livello 2 (header | pacchetto ARP | FCS), e l'header della trama indica che il contenuto è un pacchetto ARP (campo type, vedi [[#802.3 vs Ethernet]]).
+- Nella ARP request la trama è inviata all'indirizzo di **broadcast** di livello 2 (tipicamente tutti 1), perché deve essere elaborata da tutte le macchine. La richiesta contiene gli indirizzi di livello 2 e 3 del mittente, così chi risponde sa a chi inviare la reply.
+- Nella ARP reply vengono riempiti **tutti** i campi; in particolare compare l'indirizzo di livello 2 di chi risponde, cioè l'informazione richiesta.
+
+### Come decide l'host
+Come fa A a sapere se B è nella propria sottorete? Attraverso la **netmask**.
+>[!important] ARP: ricapitolando
+>L'host esegue un **AND logico** tra l'indirizzo IP della destinazione e la propria netmask:
+>- se il risultato è l'indirizzo della propria sottorete, invia una ARP request per risolvere l'indirizzo della destinazione
+>- altrimenti il pacchetto va inviato al **router di default**: se il suo indirizzo MAC non è noto, l'host invia una ARP request per risolvere l'indirizzo IP del router
+
+### Proxy ARP
+Se un host della rete 1 vuole comunicare con un host della rete 2 (di cui conosce l'indirizzo IP), la ARP request non riceve risposta, perché il router non la inoltra.
+Soluzioni:
+1. **proxy ARP**: il router che interconnette le due reti è configurato per rispondere alle ARP request per gli host della rete 2. L'host sorgente salva nella cache la corrispondenza tra l'IP dell'host remoto e l'indirizzo fisico del router
+2. l'host sorgente si accorge (tramite la [[#Come decide l'host|netmask]]) che la destinazione è su una rete remota e invia il messaggio all'indirizzo locale di default, cioè il router; in questo caso il router non deve conoscere già la corrispondenza, ma può inviare a sua volta una ARP request nella rete 2
+
+>[!protocollo] Proxy ARP
+>L'host A non sa che B si trova su una rete remota e invia una ARP request come se B fosse nella sua sottorete. Il router R intercetta la richiesta e risponde al posto di B con il **proprio indirizzo fisico**: R "fa credere" ad A di essere il destinatario e poi inoltra il datagramma verso B (usando a sua volta ARP).
+>Il router ha 2 indirizzi IP, 2 indirizzi MAC (due adattatori) e 2 moduli ARP.
+
+![[Protocolli-proxy-ARP.svg|center|600]]
+
+### RARP
+RARP esegue la procedura inversa: associa un indirizzo IP a un indirizzo fisico. È usato all'**accensione** dai sistemi che conoscono l'indirizzo fisico della propria interfaccia ma non il proprio indirizzo IP:
+- sistemi senza disco rigido, che non possono "ricordare" il loro indirizzo IP (il boot avviene da una ROM con le informazioni minime installate dal produttore e l'immagine del sistema operativo viene scaricata da un file server remoto)
+- sistemi a cui non è stato assegnato un indirizzo IP e che si connettono a internet tramite un ISP
+
+>[!protocollo] Funzionamento
+>1. l'host (che deve avere un client RARP) invia una **RARP request** contenente il proprio indirizzo fisico, con indirizzo di destinazione tutti 1 (*limited broadcast*)
+>2. un **server RARP**, che deve essere presente nella sottorete, cerca il mapping nel suo file di configurazione e risponde con una **RARP reply** in **unicast** contenente l'indirizzo IP dell'host
+
+Il **pacchetto RARP** è uguale al [[#Pacchetto ARP]], con le differenze:
+- **Operation**: RARP request ($3$), RARP reply ($4$)
+- **indirizzo IP del mittente** e **indirizzo IP del destinatario** sono vuoti nelle RARP request
+
+>[!question] Osservazione
+>Oggi RARP non si usa più: se una scheda di rete non conosce il proprio indirizzo IP lo richiede a un **server DHCP**. Il problema è quindi risolto a livello applicativo.
+
+### ARP spoofing
+ARP è vitale per il funzionamento di internet ed è quindi un bersaglio per gli attaccanti.
+>[!bug] Debolezze di ARP
+>- la tabella ARP viene aggiornata a ogni ARP reply ricevuta
+>- le richieste non vengono tracciate
+>- gli annunci ARP non sono autenticati
+>- le macchine si fidano l'una dell'altra
+>
+>Una macchina "canaglia" (*rogue*) può quindi fingersi un'altra macchina (**spoofing**).
+
+**Attacco**: la macchina malevola invia, senza che ci sia stata una richiesta, una ARP reply che associa il **proprio** indirizzo fisico all'indirizzo IP della vittima. Chi la riceve aggiorna la cache e da quel momento invia all'attaccante i pacchetti destinati alla vittima (**intercettazione**). In una rete broadcast la reply falsa viene memorizzata da tutti i nodi.
+
+**Poisoned ARP cache (man in the middle)**
+*es.* l'attaccante `192.168.1.106` (MAC `00:11:22:33:44:03`) avvelena le cache di due host:
+- invia a `192.168.1.1` (MAC `00:11:22:33:44:01`) il messaggio "`192.168.1.105` is at `00:11:22:33:44:03`"
+- invia a `192.168.1.105` (MAC `00:11:22:33:44:02`) il messaggio "`192.168.1.1` is at `00:11:22:33:44:03`"
+
+Nelle cache dei due host l'indirizzo IP dell'altro è ora associato al MAC dell'attaccante: tutti i dati scambiati passano per l'attaccante, che si trova nel mezzo della comunicazione.
+
+![[Protocolli-ARP-poisoning.svg|center|540]]
+
+>[!important] Contromisure
+>- **voci statiche** nella cache: risolvono il problema, ma sono quasi impossibili da gestire
+>- controllo delle **occorrenze multiple dello stesso MAC** (un MAC associato a più indirizzi IP, come nell'esempio)
+>- **software di rilevamento**: Anti-arpspoof, Xarp, Arpwatch
 # Livello trasporto (livello 4)
 Equivalente TCP/IP: [[Modello TCP IP#Livello di trasporto (livello 3)|livello di trasporto]]
 Teoria del livello: [[Modello ISO OSI#Livello trasporto (livello 4)]]

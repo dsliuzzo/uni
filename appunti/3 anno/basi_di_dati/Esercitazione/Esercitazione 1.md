@@ -1,4 +1,4 @@
-# Prova esame 29 giugno 2018
+[[prova esame 08.07.2019 es 1]]# Prova esame 29 giugno 2018
 ## Esercizio 1
 ### A
 ![[prova esame 29.06.2018 es 1]]
@@ -146,3 +146,98 @@ $$
 $$
 
 
+# Prova esame 24 marzo 2022
+## Esercizio 4
+- I condomini di Rende che hanno almeno due appartamenti, ciascuno dei quali è stato fittato ad almeno due inquini diversi nell'anno 2021
+- I condomini di Rende che non hanno affittato alcun appartamento nell'anno 2020
+- I condomini di Rende che hanno affittato appartamenti solo ad inquilini della città di Cosenza
+- Le coppie di nomi di inquilini che hanno affittato lo stesso insieme di appartamenti nella città di Cosenza
+
+# Prova esame 8 luglio 2019
+## Esercizio 1
+### A
+![[prova esame 08.07.2019 es 1]]
+
+### B
+$$
+\begin{array}{l}
+\text{Organizzatore}(\underline{\text{CF}}\text{, nome, dataN, disponibilità}) \\
+\text{Giocatore}(\underline{\text{CF}}\text{, nome, dataN, dataS, abbonamento}) \\
+\text{Giocatore}[\text{abbonamento}] \sqsubseteq_{FK} \text{Abbonamento}[\text{cod}] \\
+\text{Abbonamento} (\underline{\text{cod}}\text{, nome, descrizione}) \\
+\text{Squadra} (\underline{\text{nome, dataF}}\text{,}\overset{\text{NULL}}{\text{capitano}}) \\
+\text{Squadra}[\text{capitano}] \sqsubseteq_{FK} \text{Giocatore}[\text{CF}] \\
+\text{Componente}(\underline{\text{giocatore, squadraN, squadraD}}\text{, nickname}) \\
+\text{Componente}[\text{giocatore}] \sqsubseteq_{FK} \text{Giocatore}[\text{CF}] \\
+\text{Componente}[\text{squadraN, squadraD}] \sqsubseteq_{FK} \text{Squadra}[\text{nome, dataF}] \\
+\text{Incontro}(\underline{\text{data, fascia, salaP, salaN}}\text{, rossaN, rossaD, giallaN, giallaD, organizzatore}) \\
+\text{Incontro}[\text{salaP, salaN}] \sqsubseteq_{FK} \text{Sala}[\text{piano, numero}] \\
+\text{Incontro}[\text{rossaN, rossaD}] \sqsubseteq_{FK} \text{Squadra}[\text{nome, dataF}] \\
+\text{Incontro}[\text{giallaN, giallaD}] \sqsubseteq_{FK} \text{Squadra}[\text{nome, dataF}] \\
+\text{Incontro}[\text{organizzatore}] \sqsubseteq_{FK} \text{Organizzatore}[\text{CF}] \\
+\text{Sala}(\underline{\text{piano, numero}}\text{, capienza}) \\
+\text{Colpo}(\underline{\text{data/ora, incD, incF, incP, incN, colpisce}}\text{, zona, colpito}) \\
+\text{Colpo}[\text{incD, incF, incP, incN}] \sqsubseteq_{FK} \text{Incontro}[\text{data, fascia, salaP, salaN}] \\
+\text{Colpo}[\text{colpisce}] \sqsubseteq_{FK} \text{Giocatore}[\text{CF}] \\
+\text{Colpo}[\text{colpito}] \sqsubseteq_{FK} \text{Giocatore}[\text{CF}]
+\end{array}
+$$
+
+# Prova esame 4 settembre 2020
+## Esercizio 3
+Sia dato il seguente schema di database:
+- $\text{SOTTOSCRIZIONE}(\underline{\text{Cliente}}, \underline{\text{Investimento}}, \text{NumeroQuote})$
+- $\text{INVESTIMENTO}(\underline{\text{Nome}}, \text{SocietàFinanziaria}, \text{TipoInvestimento}, \text{ValoreSingolaQuota})$
+- $\text{SOCIETA\_FINANZIARIA}(\underline{\text{Nome}}, \text{Citta}, \text{AnnoFondazione})$
+- $\text{CLIENTE}(\underline{\text{CodiceFiscale}}, \text{Nome}, \text{Citta})$
+
+Ed i seguenti vincoli di chiave esterna:
+- $\text{SOTTOSCRIZIONE}[\text{Cliente}] \subseteq_{FK} \text{CLIENTE}[\text{CodiceFiscale}]$
+- $\text{SOTTOSCRIZIONE}[\text{Investimento}] \subseteq_{FK} \text{INVESTIMENTO}[\text{Nome}]$
+- $\text{INVESTIMENTO}[\text{SocietàFinanziaria}] \subseteq_{FK} \text{SOCIETA\_FINANZIARIA}[\text{Nome}]$
+
+1) I clienti della città di Cosenza che hanno sottoscritto un investimento con una società finanziaria fondata nel 1990
+$$
+\begin{array}{l}
+\text{clientiCS} = \sigma_{\$3 = \text{'CS'}} (\text{cliente}) \\
+\text{fondate1990} = \sigma_{\$3 = 1990}(\text{societa\_finanziaria}) \\
+Q = \Pi_{\$4, \$5, \$6}\left\{\left[ \left(\text{sottoscrizione} \underset{\$1 = \$1}{\bowtie} \text{clientiCS}\right) \underset{\$2 = \$1}{\bowtie} \text{investimento}\right] \underset{\$8 = \$1}{\bowtie} \text{fondate1990}\right\}
+\end{array}
+$$
+2) I clienti della città di Cosenza che hanno sottoscritto almeno due investimenti
+$$
+\begin{array}{l}
+\text{almeno2inv} = \Pi_{\$1}\left(\text{sottoscrizione} \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} \text{sottoscrizione}\right) \\
+Q = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2inv} \right)
+\end{array}
+$$
+3) I clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie
+$$
+\begin{array}{l}
+\text{sottSoc} = \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento} \\
+\text{almeno2soc} = \Pi_{\$1}\left( \text{sottSoc} \underset{\$1 = \$1 \wedge \$5 \neq \$ 5}{\bowtie} \text{sottSoc} \right) \\
+Q = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2soc} \right)
+\end{array}
+$$
+4) Il nome dei clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie, ciascuna delle quali è curatrice di almeno due investimenti;
+$$
+\begin{array}{l}
+\text{curatrici2} = \Pi_{\$2}\left( \text{investimento} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{investimento} \right) \\
+\text{sottCur} = \text{sottSoc} \underset{\$5 = \$1}{\bowtie} \text{curatrici2} \\
+\text{pippo} = \Pi_{\$1} \left( \text{sottCur} \underset{\$1 = \$1 \wedge \$5 \neq \$5}{\bowtie} \text{sottCur} \right) \\
+Q = \Pi_{\$2} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{pippo} \right)
+\end{array}
+$$
+5) I clienti che hanno sottoscritto almeno un investimento di tipo “obbligazione” curati da società finanziarie di Cosenza
+
+6) I clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
+
+7) Le città dei clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
+
+8) Le città che non hanno nessun cliente che ha sottoscritto almeno un investimenti di tipo “obbligazione”
+
+9) Le città dei clienti che hanno sottoscritto investimenti, ma non di tipo “obbligazione”
+
+10) I clienti che hanno sottoscritto tutti gli investimenti di tipo “obbligazione” curati da società finanziarie di Cosenza.
+
+11) Coppie di clienti <C1,C2> che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie

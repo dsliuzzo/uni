@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200" viewBox="0 0 640 200">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .y{fill:#e6c35c} .b{fill:#64b5f6} </style>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- IP-PDU -->
+ <rect x="120" y="30" width="110" height="44" rx="6" stroke="#e6c35c"/>
+ <rect x="238" y="30" width="372" height="44" rx="6"/>
+ <!-- MAC-PDU -->
+ <rect x="120" y="130" width="110" height="44" rx="6" stroke="#64b5f6"/>
+ <rect x="238" y="130" width="110" height="44" rx="6" stroke="#64b5f6"/>
+ <rect x="356" y="130" width="170" height="44" rx="6"/>
+ <rect x="534" y="130" width="76" height="44" rx="6"/>
+ <!-- la IP-PDU diventa il campo DATI della trama -->
+ <line x1="120" y1="78" x2="356" y2="126" stroke-dasharray="6 6" stroke-width="1.5"/>
+ <line x1="610" y1="78" x2="526" y2="126" stroke-dasharray="6 6" stroke-width="1.5"/>
+</g>
+<text class="th" x="60" y="52">IP-PDU</text>
+<text class="th" x="60" y="152">MAC-PDU</text>
+<text class="t y" x="175" y="52">IP-Header</text>
+<text class="t" x="424" y="52">DATI</text>
+<text class="t b" x="175" y="152">MAC-Dest.</text>
+<text class="t b" x="293" y="152">MAC-Sorg.</text>
+<text class="t" x="441" y="152">DATI</text>
+<text class="t" x="572" y="152">FCS</text>
+</svg>
