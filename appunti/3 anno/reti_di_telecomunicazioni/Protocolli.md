@@ -773,11 +773,85 @@ Teoria del livello: [[Modello ISO OSI#Livello rete (livello 3)]]
 ## IP
 >[!protocollo] IP
 >Il protocollo utilizzato è l'Internet Protocol (IP), il quale provvede a instradare i dati attraverso reti multiple collegate in cascata. In pratica, si assicura di trovare il percorso giusto per trasferire informazioni tra sistemi terminali che appartengono a reti diverse.
-### Indirizzo IP
+
+Il protocollo IP fornisce un servizio di trasferimento delle unità informative con le seguenti proprietà:
+- **senza connessione**
+  tratta ciascuna unità informativa indipendentemente dalle altre, ognuna può seguire una strada diversa per arrivare a destinazione e non mantiene informazioni di stato sulle unità dati inoltrate
+- **inaffidabile**
+  non è garantita la consegna di un’unità informativa a destinazione, un’unità dati può essere persa, duplicata, ritardata o consegnata fuori sequenza
+
+Il compito di garantire qualità del servizio è quindi demandato ad altri livelli.
+
+![[Protocolli-1793875265884.webp|center|481]]
+Ogni interfaccia del router (è dotato di più interfacce) deve avere un suo indirizzo di rete specifico. Ogni interfaccia avrà una rete distinta (un indirizzo di rete distinto). Quando abbiamo un determinato indirizzo, sulla base della maschera di rete riusciremo a calcolare la rete a cui appartiene un host.
+
+### Formato dell'unità dati
+Le unità dati dello strato IP sono detti **datagrammi**.
+L'header del datagramma ha una grandezza variabile da 20 a 60 byte.
+![[Protocolli-1793875449416.webp|center|670]]
+- **Version** (4 bit)
+  Versione del protocollo IP
+- **IHL** (4 bit)
+  Dimensione dell'header. È composto da soli 4 bit, vengono moltiplicati per 4 e così si ottiene la lunghezza (es. 1111 implica una lunghezza dell'header di 60 byte), se minore di 0101 viene scartato perché $5*4=20$ e la lunghezza minima dell'header è 20
+- **Type of service** (8 bit)
+  Distinguere flussi di tipo diverso dando importanza ad elementi diversi, es. delay D (tento di inoltrare prima loro sulla rete), throughput T, affidabilità R (se le sue code di bufferizzazione si riempiono e superano la sua dimensione massimale, deve iniziare a scartare pacchetti, non scarta quelli con affidabilità ad 1).
+  Sono bit utilizzati per cambiare la politica di gestione del pacchetto. Inoltre il campo precedence, a parità di bit D,T,R definisce un ordine. Da qui nascono algoritmi di scheduling ed emissione di chiamata appositi.
+  
+  abbiamo due azioni distinte [...] aggiustalo
+  è più una cosa di scheduling non solo di instradamento
+- **Total length** (16 bit)
+  Dimensione di header+payload. La dimensione massima teorica è $2^{16} = 64$ Kbyte, tipicamente però non viene usata l'intera grandezza, ma solo 1500 Kbyte, in quanto non conviene avere pacchetti di dimensioni troppo grandi
+- **Identification** (16 bit)
+  Indica il numero del datagramma, utile alla ricomposizione del pacchetto in caso di frammentazione
+- **Flags** (3 bit)
+  è un campo di bit di controllo
+  -X non usato e posto a 0
+  -DF (don't fragment) se posto a 0 indica che il datagramma può essere frammentato
+  -MF (more fragment) se posto a 0 indica che è l'ultimo frammento del datagramma
+- **Fragment offset** (13 bit)
+  Indica la posizione del frammento nel datagramma originario
+- **Time to live** (8 bit)
+  Counter inizializzato al primo invio del datagramma, ad ogni hop viene decrementato e se arriva a 0 il pacchetto viene scartato
+- **Protocol** (8 bit)
+  Protocollo del livello superiore a cui inviare il payload
+- **Header checksum** (16 bit)
+  Controllo di errore sull'header, non sul payload
+- **IP source address** (32 bit)
+  Indirizzo IP della sorgente
+- **IP destination address** (32 bit)
+  Indirizzo IP della destinazione
+- **Options** (lunghezza variabile a multipli di 8 bit, l'ultima sequenza è delimitata da 0)
+  -Record Route Option (RRO), permette al mittente di creare una lista vuota di indirizzi IP, ogni nodo attraversato riempirà il campo vuoto successivo
+  -Source Route Option (SRO), consente al mittente di specificare i nodi attraverso il quale vuole che transiti il datagramma
+  -Timestamp Option, come RRO, ma ogni nodo aggiunge anche il timestamp del passaggio
+- **Padding** (lunghezza variabile)
+  rende la lunghezza dell'intestazione un multiplo intero di 32 bit mediante introduzione di zeri
 ### Funzioni dell'IP
 #### Frammentazione/aggregazione
+Le sottoreti possono avere diverse limitazioni circa la lunghezza massima delle loro unità dati.
+La dimensione max dell’unità dati di una sotto-rete è detta, in TCP/IP, Maximum Transfer Unit (**MTU**).
+Se il datagramma incontra una sottorete con una MTU di dimensione inferiore a quella scelta per il datagramma, quest’ultimo viene segmentato in più parti detti **frammenti**.
+Anche il frammento può essere frammentato a sua volta se incontra sottoreti con MTU ancora più piccole, ma solo per ipv4, non su ipv6
+
+I soli vincoli imposti da IP sono:
+- i router devono accettare datagrammi di dimensioni pari a quelli delle MTU delle sottoreti interconnesse
+- tutti i sistemi (host e router) devono comunque accettare datagrammi di dimensioni almeno pari a 576 byte (frammentati o non)
+- I sistemi devono poter inoltrare datagrammi di 68 byte senza ulteriore frammentazione (60 byte di header al massimo + 8 byte di frammento, che è il minimo
+
+![[Protocolli-1793884757859.webp|center|586]]
+se si perde un singolo frammento viene perso tutto il pacchetto. Inoltre si ha overhead protocollare, le informazione del protocollo vengono ripetute molte volte se si va a spezzettare in frammenti sempre più piccoli. Il rapporto tra informazioni di controllo e totale ci dà una indicazione su questo. Per questi motivi in ipv6 si tende a limitare questo processo.
+L'ultimo frammento avrà il campo more fragment = 0, mentre tutti i precedenti lo hanno pari a 1.
+
+I datagrammi IP non segmentabili (bit DF=1) non vengono frammentati; ciò comporta la perdita del datagramma se incompatibile con la capacità di trasporto della rete.
+
+Il campo **Fragment Offset** assegnato ad ogni frammento permette al destinatario di risalire alla posizione (in multipli di 8 byte) del frammento nel datagramma originario per poterlo ricomporre.
+
+Nel momento in cui un datagramma viene frammentato le informazioni dell'header vengono copiate, tranne per il campo total length.
 #### Indirizzamento
+Per far comunicare tra loro tutti i sistemi connessi a Internet serve un metodo **globalmente accettato** per identificare e indirizzare in modo univoco ogni sistema. È stato quindi definito un nuovo schema di indirizzamento, perché le sottoreti pre-esistenti avevano schemi propri, diversi tra loro e non univoci globalmente (indirizzi Ethernet, indirizzi X.25, numeri telefonici…).
+
 #### Instradamento
+[...]
 
 ## ARP e RARP
 >[!protocollo] ARP e RARP
