@@ -1015,3 +1015,11 @@ Q = \Pi_{\$1} (\text{Fornitore}) - \text{fornisconoAltri}
 $$
 
 
+
+
+
+
+
+---
+
+

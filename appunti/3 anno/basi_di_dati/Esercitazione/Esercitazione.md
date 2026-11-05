@@ -1,4 +1,4 @@
-[[prova esame 08.07.2019 es 1]]# Prova esame 29 giugno 2018
+# Prova esame 29 giugno 2018
 ## Esercizio 1
 ### A
 ![[prova esame 29.06.2018 es 1]]
@@ -229,15 +229,38 @@ Q = \Pi_{\$2} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{pippo}
 \end{array}
 $$
 5) I clienti che hanno sottoscritto almeno un investimento di tipo “obbligazione” curati da società finanziarie di Cosenza
-
+[...]
 6) I clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
-
+[...]
 7) Le città dei clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
-
+[...]
 8) Le città che non hanno nessun cliente che ha sottoscritto almeno un investimenti di tipo “obbligazione”
-
+[...]
 9) Le città dei clienti che hanno sottoscritto investimenti, ma non di tipo “obbligazione”
-
+[...]
 10) I clienti che hanno sottoscritto tutti gli investimenti di tipo “obbligazione” curati da società finanziarie di Cosenza.
-
+[...]
 11) Coppie di clienti <C1,C2> che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
+[...]
+
+# Prova esame 30 giugno 2022
+
+1) I nomi degli scrittori che hanno redatto almeno due articolo di categoria “Cronaca”
+$$
+\begin{array}{l}
+\text{artC} = \Pi_{\$1, \$2, \$3, \$4}\left[\sigma_{\$6 = \text{'cronaca'}}\left( \text{articolo} \underset{\$2 = \$1}{\bowtie} \text{categoria} \right)\right] \\
+Q = \Pi_{\$2}\left[\text{scrittori} \underset{\$1 = \$1}{\bowtie}\left(\text{artC} \underset{\$ 1 = \$ 1 \wedge \$2 \neq \$2}{\bowtie} \text{artC}\right)\right]
+\end{array}
+$$
+2)  I nomi delle categorie di cui esiste una coppia di articoli redatti da scrittori diversi accreditati per tale categoria, dove ciascuno di tali scrittori ha scritto articoli di almeno due categorie differenti nell'anno 2018
+$$
+\begin{array}{l}
+\text{catDiff2018} = \Pi_{\$1}\left\{[\sigma_{\$4 = 2018}(\text{articolo})] \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} [\sigma_{\$4 = 2018}(\text{articolo})]\right\} \\
+\text{acc2018} = \Pi_{\$1, \$2}\left( \text{accreditato} \underset{\$1 = \$1}{\bowtie} \text{catDiff2018}\right) \\
+Q = \Pi_{\$2}\left(\text{categoria} \underset{\$1 = \$2}{\bowtie}\left\{\left[\left(\text{articolo} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{articolo}\right) \underset{\$1 = \$1 \wedge \$2 = \$2}{\bowtie} \text{acc2018}\right] \underset{\$5 = \$1 \wedge \$6 = \$2}{\bowtie} \text{acc2018}\right\}\right)
+\end{array}
+$$
+3)  Gli scrittori della città di Genova che hanno scritto solo articoli di categorie per le quali non sono accreditati
+[...]
+4) Le coppie di scrittori <S1,S2> che hanno scritto articoli per lo stesso insieme di categorie
+[...]
