@@ -2247,37 +2247,184 @@ $$
 \bar{x} = (3, 0, 3, 9, 0)^\top
 $$
 
+## Prima fase dell'algoritmo del simplesso
+>Determinare una soluzione di base ammissibile per il problema $(P)$, oppure certificare l'inammissibilità del problema.
 
+1. `if` $\Omega(P) \neq \emptyset$ `then`
+2. `   calcola una soluzione ammissibile di base`$\bar{x}$ di $\Omega(P)$
+3. `else`
+4. `   exit`
+5. `fi`
 
+Assumiamo per ipotesi che $b\geq 0$. Questa ipotesi non è restrittiva in quanto, se esistesse una componente $b_i < 0$ basterebbe riscrivere l'uguaglianza con il segno cambiato.
 
-
-
-
-
----
-
-[...]
-
-slide45
+### Caso particolare
+Consideriamo un problema di PL con $q$ variabili ed $m$ vincoli
 $$
-\displaylines{
-A x^* + I \alpha^* = b \\
+\begin{cases}
+\min & d^\top y \\
+& Dy \leq b \\
+& y \geq 0
+\end{cases}
+$$
+con $D \in \mathbb{R}^{m \times q}$
+Quindi, se il problema è composto esclusivamente da vincoli $\leq$ e $b \geq 0 \implies$ il problema ricade nel caso particolare.
+Indicando con $s$ il vettore delle variabili di slack, otteniamo il problema in Forma Standard
+$$
+\begin{cases}
+\min & d^\top y \\
+& Dy & + & I s & = b \\
+& y >0 & , & s\geq 0
+\end{cases}
+$$
+Poniamo $n = m+q, A = [D|I] \in \mathbb{R}^{m \times n}, x^\top = (y^\top, s^\top), c^\top = (d^\top, 0^\top)$
+
+Scegliendo $B = I$ e $N = D$, il problema è già in forma canonica.
+Le variabili di base $x_B$ corrispondono alle variabili di slack $s$.
+Inoltre $\bar{x}_B = b$, quindi l'ammissibilità è garantita da $b \geq 0$.
+Infine, i coefficienti di costo delle variabili di base sono nulli, quindi i coefficienti di costo ridotto sono $\hat{c}_N = c_N = d$.
+Pertanto la soluzione di base iniziale è immediatamente disponibile.
+
+>[!check] Esempio
+>
+> $$
+> \begin{cases}
+> \min & -x_1 + 2x_2 \\
+> & -x_1 + x_2 \le 1 \\
+> & x_1 + 2x_2 \le 8 \\
+> & x_1 + x_2 \le 6 \\
+> & x_1, x_2 \ge 0
+> \end{cases}
+> $$
+> **Forma standard**
+> $$
+> \begin{cases}
+> \min & -x_1 + 2x_2 \\
+> & -x_1 + x_2 + x_3 = 1 \\
+> & x_1 + 2x_2 + x_4 = 8 \\
+> & x_1 + x_2 + x_5 = 6 \\
+> & x_1, x_2, x_3, x_4, x_5 \ge 0
+> \end{cases}
+> $$
+> Le variabili di slack $x_3, x_4, x_5$ formano la base iniziale:
+> $$
+> \mathcal{B} = \{3, 4, 5\} \qquad \mathcal{N} = \{1, 2\} \qquad \hat{c}_N^\top = (-1, 2) \qquad \bar{x} = (0, 0, 1, 8, 6)^\top
+> $$
+>
+> ![[ro_prima_fase_caso_particolare.svg|center]]
+
+### Problema artificiale (caso generale)
+Se non si ricade nel caso particolare, non serve un nuovo algoritmo: si costruisce un **nuovo problema** che ricade nel caso particolare e lo si risolve con lo stesso simplesso.
+
+Partiamo dal problema in forma standard, con $b \geq 0$ (se qualche $b_i < 0$, si moltiplica la riga per $-1$):
+
+$$
+\begin{cases} \min & c^\top x \\ & Ax = b \\ & x \geq 0 \end{cases}
+\qquad A \in \mathbb{R}^{m \times n}
+$$
+
+Introduciamo una **variabile artificiale** $\alpha_i$ per ogni vincolo e costruiamo il problema artificiale:
+
+$$
+\begin{cases} \min & \rho = \sum_{i=1}^m \alpha_i \\ \text{s.t.} & \sum_{j=1}^n a_{ij}x_j + \alpha_i = b_i & i = 1,\dots,m \\ & x_j \geq 0 & j = 1,\dots,n \\ & \alpha_i \geq 0 & i = 1,\dots,m \end{cases}
+$$
+
+In forma matriciale il vincolo è $Ax + I\alpha = b$.
+
+**Significato di $\alpha_i$:** misura di quanto il vincolo $i$-esimo *non* è soddisfatto. Se $\alpha_i = 0$, il vincolo $i$ originale vale per uguaglianza.
+
+#### Soluzione di base iniziale
+Il sistema $Ax + I\alpha = b$ ha $m$ vincoli e $n+m$ variabili. Una soluzione di base ha:
+- $m$ variabili in base → le $\alpha$, con $B = I$
+- $(n+m) - m = n$ variabili fuori base, poste a $0$ → le $x$
+
+Quindi
+$$
+\binom{x}{\alpha} = \binom{0}{b}
+$$
+è una **soluzione di base ammissibile**, perché $b \geq 0$. Il problema artificiale ricade nel caso particolare e si può risolvere subito con il simplesso. Risolvere questo problema è la **prima fase**.
+
+#### Proprietà del problema artificiale
+- **Sempre ammissibile:** $\binom{0}{b}$ è ammissibile per ipotesi ($b \geq 0$).
+- **Inferiormente limitato:** $\rho = \sum \alpha_i$ con $\alpha_i \geq 0$, quindi $\rho \geq 0$.
+
+Di conseguenza il problema artificiale ha **sempre una soluzione ottima**.
+
+#### Perché $\alpha_i \geq 0$
+L'idea è: $\rho = 0 \iff$ tutte le $\alpha_i = 0 \iff Ax = b$. Questa equivalenza vale **solo** se le $\alpha_i$ non possono essere negative.
+
+Senza il vincolo $\alpha_i \geq 0$, alcune $\alpha_i$ positive e altre negative potrebbero compensarsi e dare $\rho = 0$ anche se $Ax \neq b$. In quel caso $\rho = 0$ non garantirebbe più l'ammissibilità.
+
+#### Esito della prima fase
+Sia $\rho^*$ il valore ottimo:
+- $\rho^* > 0$ → il problema originale è **inammissibile**
+- $\rho^* = 0$ → tutte le $\alpha = 0$, quindi la $x$ trovata è ammissibile per il problema originale e si passa alla **seconda fase** con i costi $c$
+
+#### Forma compatta
+$$
+\begin{cases}
+\min & \rho = & & e^\top \alpha \\
+& Ax & + & I \alpha & = b \\
+& x \geq 0 & , & \alpha \geq 0
+\end{cases}
+$$
+con $e \in \mathbb{R}^{m}, e = (1,1,\dots,1)^\top$.
+La struttura dei vincoli è identica al [[#Caso particolare]].
+
+#### Applicazione della seconda fase
+Selezioniamo $B = I$ e otteniamo
+- $\bar{\alpha} = b$
+- $\bar{x} = 0$
+- $\bar{\rho} = \sum_{i=1}^m b_i$
+La soluzione
+$$
+\binom{\bar{x}}{\bar{\alpha}}
+$$
+è di base e ammissibile per $(P^{(\alpha)})$, ciò consente di applicare la seconda fase al problema $(P^{(\alpha)})$.
+
+Il problema artificiale $(P^{(\alpha)})$ è sempre ammissibile, cioè $\Omega(P^{(\alpha)})\neq \emptyset$;
+La funzione obiettivo è inferiormente limitata su $\Omega(P^{(\alpha)})$, cioè $\rho \geq 0$;
+Si conseguenza: $(P^{(\alpha)})$ ammette sempre ottimo finito e $\rho^* \geq 0$.
+
+In particolare, per costruzione si ha
+$$
+\tilde{x} \in \Omega(P) \Longleftrightarrow \binom{\tilde{x}}{0} \in \Omega(P^{(\alpha)}) \Longleftrightarrow \tilde{\rho} = \rho(\tilde{x}, 0) = 0
+$$
+cioè le soluzioni ammissibili del problema originale corrispondono esattamente alle soluzioni del problema artificiale con tutte le $\alpha = 0$, ovvero con $\rho = 0$. Il motivo: con $\alpha = 0$ il vincolo $Ax + I\alpha = b$ diventa proprio $Ax = b$.
+
+Indichiamo quindi con
+$$
+\binom{x^*}{\alpha^*}
+$$
+la soluzione ottima $(P^{(\alpha)})$ ottenuta con l'algoritmo del simplesso, e con $\rho^*$ il valore ottimo della funzione obiettivo. A questo punto sono possibili due casi:
+
+1. $\rho^* > 0$, allora $\Omega(P) = \emptyset$, e l'algoritmo si arresta dichiarando $(P)$ inammissibile.
+   qualche variabile artificiale è positiva. L'algoritmo non è riuscito a portarle tutte a 0 => il problema originario è inammissibile.
+   Se $\exists \ \bar{x} : A \bar{x} = b$
+   allora $\binom{\bar{x}}{0} : A \bar{x} + I 0 = b$, dove $0 = \alpha$
+   se esistesse un vettore di questo tipo l'algoritmo l'avrebbe trovato.
+   **Certificato di inammissibilità del problema di partenza** (non del problema artificiale).
+  
+2. $\rho^* = 0$, allora certamente si avrà $\alpha_i^* = 0 \ \forall i = 1,\dots,m$.
+   abbiamo trovato una soluzione che è ammissibile per il problema di partenza.
+
+$\rho^* = 0$ può avvenire in due casi distinti:
+
+In entrambi i casi la soluzione ottima ha la forma
+$$
 \binom{x^*}{\alpha^*} = \binom{B^{-1}b}{0}
-}
 $$
-ci sono due sotto casi rispetto a $\rho^* = 0$
-1. $\alpha^*$ fuori dalla base, significa che la matrice $B$ è una sotto matrice di $A$.
-   $B$ è tutta quanta una sotto matrice di $A$
-   $m$ variabili associati a colonne della matrice dei vincoli e tutte le altre nulle --> $(n+m)-m=n$ variabili nulle. Le $\alpha^*$ sono $m$, quindi mancano $(n-m)$ zeri, che saranno quindi parte di $x^*$. Ne consegue che $x^*$ ha $n-m$ zeri e $m$ componenti associate ad una base
-   L'algoritmo ci restituisce una soluzione di base ammissibile per il problema originale
-2. Può succedere che alcune $\alpha^*$ pur essendo tutte nulle non sono uscite tutte dalla base, abbiamo ottenuto quindi una soluzione ottima di base degenere per il problema artificiale. In questo caso abbiamo $m-1$ colonne di $A$ che compongono la base: manca la base per il problema di partenza. Non è grave perché si può forzare l'algoritmo a fare qualche passo in più ragionando in maniera speculare: le $\alpha^*$ sono tutte pari a 0, all'ottimo ci siamo. Facciamo uscire dalla base una variabile dalla base $\hat{i} \in \{1,\dots,m\}$; facciamo uscire $\alpha^*_{\hat{i}}$ e facciamo entrare una colonna della matrice $A$. Facendo questa operazione $\bar{\delta} = 0$ indipendentemente da come scegliamo la colonna. Non ci sposteremo più dal punto trovato e va bene, in quanto siamo già all'ottimo. Cambiamo rappresentazione del punto corrente, ed è possibile anche perché la soluzione è degenere.
 
+- Le variabili artificiali sono tutte fuori base: $B$ è una sottomatrice di $A$. Le variabili nulle sono $(n+m)-m = n$, di cui $m$ sono le $\alpha^*$, quindi $x^*$ ha $n-m$ componenti nulle e $m$ componenti associate alla base $B$. Perciò $x^*$ è una **soluzione di base ammissibile per il problema originale** e si può passare alla [[#Seconda fase dell'algoritmo del simplesso|seconda fase]].
+- Esiste almeno un indice $\hat{i} \in \{1,\dots,m\}$ tale che $\alpha^*_{\hat{i}} = 0$ ma in base. Se ciò accade, la soluzione ottima di $(P^{(\alpha)})$ è degenere.
 
+>[!important] In questo ultimo caso possiamo effettuare ulteriori considerazioni:
+>Supponiamo che la variabile artificiale in base a valore nullo sia solo una, la variabile artificiale $\alpha_{\hat{i}}^* = 0$.
+>Lo scambio degenere è possibile se e solo se per almeno una colonna $A_k$ che non è in base l'elemento in riga $\hat{i}$ è non nullo, in modo tale che $(B^{-1}A_k)_{\hat{i}} = d_{\hat{i}} \neq 0$.
+>Non è necessario che sia $d_{\hat{i}} > 0$, perché le coordinate del punto non cambieranno, né importa se qualcuno dei nuovi coefficienti di costo ridotto dovesse risultare negativo.
+>Se la componente $\hat{i}$esima del vettore $B^{-1}A_k$ è nulla per ogni $k$, la riga $a_{\hat{i}}^\top$ di $A$ dipende linearmente dalle altre, cioè $\text{rango}(A) = m-1$. Perciò si possono rimuovere l'equazione $\hat{i}$esima dai vincoli e la variabile $\alpha_{\hat{i}}$ dall'insieme delle variabili di base.
 
-
-
----
-
+#### Esempi prima fase
 
 >[!check] Prima fase con variabili artificiali fuori base all'ottimo
 > Risolvere mediante l'algoritmo del simplesso il problema
