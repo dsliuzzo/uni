@@ -410,3 +410,13 @@ $$
 4. Merci fornite da tutti i fornitori
 5. Merci di marca $\alpha$ fornite da tutti i fornitori di CS
 
+**fatti**
+1) Nomi delle merci prodotte a CS che sono fornite da almeno due fornitori, ciascuno dei quali fornisce almeno 2 merci prodotte a RC
+$$
+\begin{array}{l}
+\text{fornitureRC} = \Pi_{\$ 1, \$ 2}\left\{\text{Fornitura} \underset{\$ 2 = \$ 1}{\bowtie}\left[ \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \sigma_{\$ 2 = 'RC}(\text{Marca})\right]\right\} \\
+\text{fornitoreRC} = \text{fornitureRC} \underset{\$ 1 = \$ 1 \wedge \$ 2 \neq \$ 2}{\bowtie} \text{fornitureRC} \\
+\text{fornitureOK} = \Pi_{\$ 1, \$ 2}\left\{\left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{fornitoreRC} \right) \underset{\$ 2 = \$ 1}{\bowtie} \left[ \sigma_{\$ 5 = 'CS'}\left( \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \right]\right\} \\
+Q =\Pi_{\$ 2} \left[\text{Merce} \underset{\$ 1 = \$ 2}{\bowtie}\left( \text{fornitureOK} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie} \text{fornitureOK}\right)  \right]
+\end{array}
+$$
