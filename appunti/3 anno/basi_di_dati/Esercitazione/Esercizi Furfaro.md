@@ -295,8 +295,6 @@ $$
 | -------- |
 | $\alpha$ |
 
-la dimensione del risultato della join ha cardinalità pari alla cardinalità maggiore tra le due relazioni usate come operando, questo perché [...] da verificare e scrivere per bene
-e l'operazione è commutativa
 
 3) marche che producono almeno 2 merci, che sono fornite a meno di 10 euro da almeno 2 fornitori di CS
 $$
@@ -404,50 +402,6 @@ $$
 | ------ |
 | 6      |
 
----
-
-nomi dei fornitori che forniscono tutte le merci della marca x
-prendo tutte le merci di marca x
-$$
-\begin{array}{l}
-RMMI = \text{Fornitore}\underset{\$ 1 = \$ 1}{\bowtie}\left[ \underset{\$ 2 = \$ 1}{\bowtie}\sigma_{\$ 3= 'x'}(\text{Merce}) \right]
-\end{array}
-$$
-record mondiale di minchiata indoor
-
----
-
-nomi dei fornitori che forniscono tutte le merci della marca x
-$\equiv$ nomi dei fornitori tali che **non esiste** alcuna merce di marca x che essi non forniscono
-$\forall x:P(x) \equiv \nexists x : \neg P(x)$
-
-nomi dei fornitori tali che non esiste alcuna merce che essi non forniscono
-un fornitore non va bene quando esiste una merce che non fornisce, questo avviene quando la coppia fornitore-merce non sta in fornitura
-$$
-\begin{array}{l}
-\text{FornituraNO} = [\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}(Merce)] - \Pi_{\$ 1, \$ 2}(\text{Fornitura})
-\end{array}
-$$
-
-| F2  | M2  |
-| --- | --- |
-| F3  | M1  |
-| F3  | M2  |
-il fornitore $\$ 1$ non fornisce la merce $\$ 2$
-
-quindi ora per trovare i fornitori tali che non esiste alcuna merce che essi non forniscono
-$$
-\text{FornitoriSI} = \Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{FornituraNO})
-$$
-Per trovare quelle relativa alle merci x cambiamo FornituraNO
-$$
-\begin{array}{l}
-\text{FornituraNO} = [\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}(\sigma_{\$ 3 = x}(\text{Merce}))] - \Pi_{\$ 1, \$ 2}(\text{Fornitura})
-\end{array}
-$$
-
----
-
 # Esercizi 4
 **Query per casa**
 1. Nomi delle merci prodotte a CS che sono fornite da almeno due fornitori, ciascuno dei quali fornisce almeno 2 merci prodotte a RC
@@ -455,3 +409,4 @@ $$
 3. Per ogni nome di merce restituire il prezzo massimo di fornitura della merce (due colonne \[nome merce | prezzo di fornitura] dove il prezzo è il massimo prezzo di fornitura per quella merce)
 4. Merci fornite da tutti i fornitori
 5. Merci di marca $\alpha$ fornite da tutti i fornitori di CS
+
