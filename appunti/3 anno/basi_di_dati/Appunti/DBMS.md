@@ -845,6 +845,20 @@ $$
 \Pi_{\$5}\left[\sigma_{\$2=\text{'M1'}}\left(\text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right)\right]
 $$
 Nella condizione `$1 = $1` il primo `$1` si riferisce a `Fornitura` (`fornitore`), il secondo a `Fornitore` (`piva`).
+#### Cardinalità del risultato
+In generale, con $|T_1| = m$ e $|T_2| = n$:
+$$
+0 \le |T_1 \bowtie T_2| \le m \cdot n
+$$
+($0$ se nessuna coppia rispetta la condizione, $m \cdot n$ se la rispettano tutte, come nel [[#Prodotto cartesiano]]).
+
+>[!important] Join chiave esterna - chiave primaria
+>Se la condizione è solo *chiave esterna = chiave primaria* e vale il vincolo di integrità referenziale, ogni riga della tabella con la chiave esterna si prolunga con **esattamente una** riga dell'altra (la chiave primaria è unica, la chiave esterna punta sempre a una riga esistente). Il risultato ha quindi la cardinalità della **tabella che contiene la chiave esterna**:
+>$$|\text{Fornitura} \underset{\$2 = \$1}{\bowtie} \text{Merce}| = |\text{Fornitura}|$$
+
+Non è detto che sia la tabella più grande: se `Fornitura` avesse 1 riga e `Merce` 100, il risultato avrebbe 1 riga. Inoltre basta aggiungere altre condizioni per ridurre il risultato: nell'esempio *nomi delle marche fornite da fornitori che risiedono nella loro città* le prime due join danno 3 righe ($= |\text{Fornitura}|$), mentre l'ultima join con `Marca`, che ha anche la condizione `$3 = $2`, ne lascia 1.
+
+La join è commutativa ($T_1 \bowtie T_2 \equiv T_2 \bowtie T_1$) **a meno dell'ordine delle colonne**: con la notazione posizionale, scambiando gli operandi vanno aggiornati gli indici nelle condizioni e nelle proiezioni.
 ### Operatori insiemistici
 L'algebra relazionale è un'estensione dell'algebra insiemistica, quindi possiamo usare anche gli operatori sugli insiemi: **prodotto cartesiano**, **unione**, **intersezione** e **sottrazione**. Poiché una tabella è un insieme di tuple, anche questi operatori sono **rientranti**: il risultato è ancora una tabella.
 #### Prodotto cartesiano
@@ -1014,12 +1028,40 @@ Q = \Pi_{\$1} (\text{Fornitore}) - \text{fornisconoAltri}
 }
 $$
 
+### Quantificazione universale
+*Esempio:* nomi dei fornitori che forniscono **tutte** le merci della marca x.
 
+>[!bug] Errore
+>$$\text{Fornitore}\underset{\$1 = \$1}{\bowtie}\left[\text{Fornitura} \underset{\$2 = \$1}{\bowtie}\sigma_{\$3 = 'x'}(\text{Merce}) \right]$$
+>La join traduce $\exists$: restituisce i fornitori che forniscono **almeno una** merce di marca x, non tutte.
 
+L'algebra relazionale non ha un operatore per il $\forall$: lo si riscrive come negazione di un $\exists$
+$$
+\forall m : P(m) \equiv \nexists m : \neg P(m)
+$$
+Fornitori che forniscono tutte le merci di marca x $\equiv$ fornitori per cui **non esiste** una merce di marca x che **non** forniscono. Un fornitore va scartato se esiste una merce di marca x tale che la coppia fornitore-merce **non** sta in `Fornitura`.
 
+1. Tutte le coppie possibili fornitore - merce di marca x, meno quelle che esistono davvero: restano le coppie (fornitore, merce x che **non** fornisce)
+$$
+\text{FornituraNO} = \left\{\Pi_{\$1}(\text{Fornitore}) \times \Pi_{\$1}\left[\sigma_{\$3 = 'x'}(\text{Merce})\right]\right\} - \Pi_{\$1, \$2}(\text{Fornitura})
+$$
+2. Fornitori "buoni" = tutti i fornitori meno quelli che compaiono in `FornituraNO`
+$$
+\text{FornitoriSI} = \Pi_{\$1}(\text{Fornitore}) - \Pi_{\$1}(\text{FornituraNO})
+$$
+3. Nomi
+$$
+Q = \Pi_{\$3}\left(\text{FornitoriSI} \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right)
+$$
 
+*Esempio* senza filtro sulla marca (fornitori che forniscono **tutte** le merci): $\{F1,F2,F3\} \times \{M1,M2\}$ ha 6 coppie, tolte le 3 di `Fornitura` restano
 
+| fornitore | merce |
+| --------- | ----- |
+| F2        | M2    |
+| F3        | M1    |
+| F3        | M2    |
 
----
+il fornitore `$1` non fornisce la merce `$2` $\implies$ `FornitoriSI` $= \{F1, F2, F3\} - \{F2, F3\} = \{F1\}$, $Q = \{A\}$.
 
-
+Con marca $\alpha$ (solo M1): `FornituraNO` $= \{(F3, M1)\}$, `FornitoriSI` $= \{F1, F2\}$, $Q = \{A, B\}$.
