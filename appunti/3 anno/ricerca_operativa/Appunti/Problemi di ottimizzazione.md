@@ -2797,3 +2797,324 @@ d) 🧹🏠
 > 2. Si determini una soluzione di base ammissibile $x^{(1)}$ a partire da $x^{(0)}$ mediante l'applicazione del [[#Teorema fondamentale della PL in forma standard|teorema fondamentale della programmazione lineare]].
 >
 >[...] da fare
+
+# Teoria della dualità
+## Motivazioni
+Consideriamo un problema di programmazione lineare in forma standard (problema **primale**)
+$$
+(P)\begin{cases}
+\min & c^\top x \\
+s.t. & Ax = b \\
+& x \geq 0
+\end{cases}
+$$
+con $c \in \mathbb{R}^n$, $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$.
+
+Indichiamo con $x$ una qualsiasi soluzione ammissibile per $(P)$, e con $y \in \mathbb{R}^m$ un vettore che ha tante componenti quanti sono i vincoli di $(P)$. Osserviamo che risulta
+$$
+c^\top x = c^\top x + (b - Ax)^\top y = x^\top c + b^\top y - x^\top A^\top y = b^\top y + x^\top (c - A^\top y)
+$$
+Se vincoliamo $y$ in modo tale che $A^\top y \leq c$, otteniamo
+$$
+c^\top x \geq b^\top y \qquad \forall y : A^\top y \leq c \quad \forall x : Ax = b, \ x \geq 0
+$$
+Quindi ricercare il massimo di $b^\top y$ tra tutti i vettori di $\mathbb{R}^m$ che soddisfano $A^\top y \leq c$ fornisce un **lower bound** per l'ottimo di $(P)$.
+
+## Problema duale
+>[!info] Definizione (problema duale)
+>Dato il problema primale $(P)$ in forma standard, il suo **duale** è
+>$$
+>(D)\begin{cases}
+>\max & b^\top y \\
+>s.t. & A^\top y \leq c
+>\end{cases}
+>$$
+>- $(D)$ ha $m$ variabili, una per ogni vincolo in $(P)$
+>- i coefficienti della funzione obiettivo di $(D)$ sono i termini noti di $(P)$
+>- $(D)$ ha $n$ vincoli, uno per ogni variabile in $(P)$
+>- il generico $j$-esimo vincolo è della forma $A_j^\top y \leq c_j$
+
+## Duale di un problema non standard
+Supponiamo che $(P)$ soddisfi tutte le condizioni della forma standard tranne una: il vincolo $i$-esimo è di disuguaglianza
+$$
+a_i^\top x \geq b_i
+$$
+Introduciamo una [[#Riduzione alla forma standard|variabile di surplus]] $s_i$:
+$$
+a_i^\top x - s_i = b_i, \qquad s_i \geq 0
+$$
+quindi la matrice dei vincoli diventa
+$$
+\begin{pmatrix} A & \vdots & -\hat{e}_i \end{pmatrix}
+$$
+L'introduzione della nuova variabile in $(P)$ comporta la presenza di un vincolo in più in $(D)$
+$$
+\begin{pmatrix} A & \vdots & -\hat{e}_i \end{pmatrix}^\top = \begin{pmatrix} A^\top \\ \cdots \\ -\hat{e}_i^\top \end{pmatrix}
+$$
+Il vincolo aggiuntivo in $(D)$ sarà
+$$
+-\hat{e}_i^\top y \leq 0 \implies -y_i \leq 0 \implies y_i \geq 0
+$$
+ovvero semplicemente un vincolo di non negatività sulla variabile duale $i$-esima.
+
+- Analogamente, un vincolo di disuguaglianza del tipo
+$$
+a_i^\top x \leq b_i
+$$
+è associato a una variabile duale vincolata in segno
+$$
+\hat{e}_i^\top y \leq 0 \implies y_i \leq 0
+$$
+- Una variabile $x_j$ [[#Variabili libere in segno|libera in segno]] può essere sostituita con la differenza di due variabili positive
+$$
+x_j = x_j^+ - x_j^- \qquad x_j^+, x_j^- \geq 0
+$$
+Le nuove variabili compariranno nella funzione obiettivo con costi $c_j$ e $-c_j$, e nei vincoli con colonne di coefficienti $A_j$ e $-A_j$. Nel problema duale $(D)$, a tali variabili corrispondono i vincoli
+$$
+\begin{array}{rcr}
+A_j^\top y & \leq & c_j \\
+-A_j^\top y & \leq & -c_j
+\end{array}
+\iff A_j^\top y = c_j
+$$
+
+>[!important] In generale
+>- ad ogni **vincolo di disuguaglianza** in $(P)$ corrisponde una **variabile vincolata in segno** in $(D)$
+>- ad ogni **variabile libera in segno** in $(P)$ corrisponde un **vincolo di uguaglianza** in $(D)$
+
+## Coppia primale-duale simmetrica
+>[!info] Proposizione
+>Se il problema primale $(P)$ è nella forma
+>$$
+>(P)\begin{cases}
+>\min & c^\top x \\
+>s.t. & Ax \geq b \\
+>& x \geq 0
+>\end{cases}
+>$$
+>allora il suo duale $(D)$ è il seguente
+>$$
+>(D)\begin{cases}
+>\max & b^\top y \\
+>s.t. & A^\top y \leq c \\
+>& y \geq 0
+>\end{cases}
+>$$
+
+La coppia primale-duale simmetrica è spesso adottata per la definizione di dualità.
+
+### Duale di un problema in forma standard
+$$
+Ax = b \iff \begin{cases}
+Ax \geq b \\
+-Ax \geq -b
+\end{cases}
+$$
+Indichiamo con $u \in \mathbb{R}^m$ e $v \in \mathbb{R}^m$ i vettori di variabili duali corrispondenti ai due gruppi di disuguaglianze in $(P)$, ed applichiamo la definizione di duale simmetrico:
+$$
+(D)\begin{cases}
+\max & b^\top u - b^\top v \\
+s.t. & A^\top u - A^\top v \leq c \\
+& u \geq 0 \\
+& v \geq 0
+\end{cases}
+\iff
+\begin{cases}
+\max & b^\top (u - v) \\
+s.t. & A^\top (u - v) \leq c \\
+& u \geq 0 \\
+& v \geq 0
+\end{cases}
+$$
+Posto $y = u - v$, il vettore $y$ è libero in segno, e il problema ottenuto coincide con il duale della forma standard: quindi ad ogni **vincolo di uguaglianza** in $(P)$ corrisponde una **variabile non vincolata in segno** in $(D)$.
+
+## Duale di un problema duale
+>[!info] Proposizione
+>Per ogni coppia di problemi primale-duale, il duale del problema duale è il problema primale.
+
+#dimostrazione
+Consideriamo la coppia primale-duale simmetrica e costruiamo il duale di $(D)$. Portiamo $(D)$ nella forma di problema di minimo con vincoli di $\geq$:
+$$
+(D)\begin{cases}
+\max & b^\top y \\
+s.t. & A^\top y \leq c \\
+& y \geq 0
+\end{cases}
+\iff
+-\begin{cases}
+\min & -b^\top y \\
+s.t. & -A^\top y \geq -c \\
+& y \geq 0
+\end{cases}
+$$
+Indichiamo con $x$ il vettore delle variabili duali e, applicando la definizione di duale simmetrico, otteniamo
+$$
+(D(D)) \ -\begin{cases}
+\max & -c^\top x \\
+s.t. & -Ax \leq -b \\
+& x \geq 0
+\end{cases}
+\iff
+\begin{cases}
+\min & c^\top x \\
+s.t. & Ax \geq b \\
+& x \geq 0
+\end{cases}
+\iff (P)
+$$
+Quindi per ogni coppia di problemi di PL di cui l'uno sia il duale dell'altro, è possibile parlare di **coppia di problemi duali**.
+
+## Relazioni primale-duale
+Indichiamo con
+- $I$ l'insieme degli indici dei vincoli di uguaglianza
+- $J$ l'insieme degli indici dei vincoli di disuguaglianza ($\geq$)
+- $M$ l'insieme degli indici delle variabili libere
+- $N$ l'insieme degli indici delle variabili vincolate ($\geq 0$)
+
+|               | Primale $\longrightarrow$ / Duale $\longleftarrow$ | Duale / Primale                 |               |
+| ------------- | -------------------------------------------------- | ------------------------------- | ------------- |
+| **Obiettivo** | $\min$                                             | $\max$                          | **Obiettivo** |
+| **Vincoli**   | $= b_i, \ i \in I$                                 | $y_i, \ i \in I$, libere        | **Variabili** |
+|               | $\geq b_i, \ i \in J$                              | $y_i, \ i \in J$, $y_i \geq 0$  |               |
+| **Variabili** | $x_j \geq 0, \ j \in N$                            | $\leq c_j, \ j \in N$           | **Vincoli**   |
+|               | $x_j, \ j \in M$, libere                           | $= c_j, \ j \in M$              |               |
+
+## Costruzione di problemi duali: esempi
+>[!check] Esempio 1
+>Primale:
+>$$
+>\left\{\begin{array}{lrcrcrcrcr}
+>\min & 2x_1 & + & 3x_2 & + & 4x_3 & + & x_4 \\
+> & x_1 & & & - & 5x_3 & + & 2x_4 & \geq & 7 \\
+> & 2x_1 & + & 4x_2 & - & 6x_3 & & & \geq & 9
+>\end{array}\right.
+>$$
+>Duale:
+>$$
+>\left\{\begin{array}{lrcrcr}
+>\max & 7y_1 & + & 9y_2 \\
+> & y_1 & + & 2y_2 & = & 2 \\
+> & & & 4y_2 & = & 3 \\
+> & -5y_1 & - & 6y_2 & = & 4 \\
+> & 2y_1 & & & = & 1 \\
+> & y_1 & , & y_2 & \geq & 0
+>\end{array}\right.
+>$$
+
+>[!check] Esempio 2
+>Primale:
+>$$
+>\left\{\begin{array}{lrcrcrcr}
+>\max & 4x_1 & + & 3x_2 & + & 2x_3 \\
+> & x_1 & + & 2x_2 & + & 3x_3 & \leq & 8 \\
+> & 2x_1 & & & - & x_3 & \leq & 7 \\
+> & 3x_1 & + & 4x_2 & - & x_3 & \leq & 5 \\
+> & & & x_2 & + & x_3 & \leq & 6 \\
+> & & & x_2 & & & \geq & 0
+>\end{array}\right.
+>$$
+>Duale:
+>$$
+>\left\{\begin{array}{lrcrcrcrcr}
+>\min & 8y_1 & + & 7y_2 & + & 5y_3 & + & 6y_4 \\
+> & y_1 & + & 2y_2 & + & 3y_3 & & & = & 4 \\
+> & 2y_1 & & & + & 4y_3 & + & y_4 & \geq & 3 \\
+> & 3y_1 & - & y_2 & - & y_3 & + & y_4 & = & 2 \\
+> & y_1 & , & y_2 & , & y_3 & , & y_4 & \geq & 0
+>\end{array}\right.
+>$$
+
+>[!check] Esempio 3
+>Primale:
+>$$
+>\left\{\begin{array}{lrcrcrcr}
+>\min & 2x_1 & - & 3x_2 & + & x_3 \\
+> & 3x_1 & + & x_2 & + & 5x_3 & \geq & 7 \\
+> & x_1 & + & x_2 & - & 6x_3 & \leq & 9 \\
+> & 4x_1 & - & x_2 & - & 2x_3 & = & 8 \\
+> & x_1 & , & x_2 & & & \geq & 0
+>\end{array}\right.
+>$$
+>Riscriviamo il vincolo di $\leq$ come vincolo di $\geq$:
+>$$
+>\left\{\begin{array}{lrcrcrcr}
+>\min & 2x_1 & - & 3x_2 & + & x_3 \\
+> & 3x_1 & + & x_2 & + & 5x_3 & \geq & 7 \\
+> & -x_1 & - & x_2 & + & 6x_3 & \geq & -9 \\
+> & 4x_1 & - & x_2 & - & 2x_3 & = & 8 \\
+> & x_1 & , & x_2 & & & \geq & 0
+>\end{array}\right.
+>$$
+>Duale:
+>$$
+>\left\{\begin{array}{lrcrcrcr}
+>\max & 7y_1 & - & 9y_2 & + & 8y_3 \\
+> & 3y_1 & - & y_2 & + & 4y_3 & \leq & 2 \\
+> & y_1 & - & y_2 & - & y_3 & \leq & -3 \\
+> & 5y_1 & + & 6y_2 & - & 2y_3 & = & 1 \\
+> & y_1 & , & y_2 & & & \geq & 0
+>\end{array}\right.
+>$$
+
+## Teoremi di dualità
+>[!info] Teorema di dualità debole
+>Dati un problema di programmazione lineare in forma standard e il suo duale, per ogni $x \in \Omega(P)$ e ogni $y \in \Omega(D)$ vale:
+>$$
+>b^\top y \leq c^\top x
+>$$
+
+#dimostrazione
+Siano $\bar{x} \in \Omega(P)$ e $\bar{y} \in \Omega(D)$:
+$$
+A\bar{x} = b, \quad \bar{x} \geq 0, \qquad A^\top \bar{y} \leq c
+$$
+Trasponendo $A^\top \bar{y} \leq c$ e moltiplicando scalarmente per $\bar{x}$ ambo i membri, otteniamo
+$$
+\bar{y}^\top A \bar{x} \leq c^\top \bar{x}
+$$
+da cui segue, poiché $A\bar{x} = b$, $\bar{x} \geq 0$:
+$$
+\bar{y}^\top b \leq c^\top \bar{x}
+$$
+che è la tesi, per la commutatività del prodotto scalare.
+
+>[!question] Osservazioni
+>- In ogni coppia di problemi duali, il valore dell'obiettivo del problema di massimo in qualunque punto ammissibile è sempre non maggiore del valore dell'obiettivo del problema di minimo in un qualunque punto ammissibile.
+>- Quando si considera il punto di ottimo (se esiste) del problema primale di minimo, il valore della funzione duale in un arbitrario punto ammissibile costituisce un estremo inferiore (**lower bound**):
+>$$
+>b^\top \bar{y} \leq c^\top x^* \ \ \forall \bar{y} \in \Omega(D), \qquad b^\top y^* \leq c^\top \bar{x} \ \ \forall \bar{x} \in \Omega(P), \qquad b^\top y^* \leq c^\top x^*
+>$$
+>- Quindi le due funzioni obiettivo
+>$$
+>z(x) = c^\top x \qquad w(y) = b^\top y
+>$$
+>valutate nelle rispettive regioni ammissibili, si limitano a vicenda. La differenza
+>$$
+>c^\top x - b^\top y \geq 0 \qquad \forall x \in \Omega(P), \ \forall y \in \Omega(D)
+>$$
+>viene detta **gap di dualità**.
+
+>[!info] Corollario 1
+>Per ogni coppia di problemi duali $(P)$ e $(D)$:
+>$$
+>\bar{x} \in \Omega(P), \quad \bar{y} \in \Omega(D), \quad b^\top \bar{y} = c^\top \bar{x}
+>$$
+>$$\Downarrow$$
+>$\bar{x}$ è soluzione ottima di $(P)$ e $\bar{y}$ è soluzione ottima di $(D)$.
+
+#dimostrazione
+Per assurdo. Supponiamo che $\bar{y}$ non sia ottima per $(D)$. Allora deve esistere una $\tilde{y} \in \Omega(D)$ tale che $b^\top \tilde{y} > b^\top \bar{y}$. Ciò implica che
+$$
+b^\top \tilde{y} > b^\top \bar{y} = c^\top \bar{x}
+$$
+che contraddice il teorema di dualità debole.
+
+>[!info] Corollario 2
+>Sia $(P)$-$(D)$ una coppia di problemi duali in cui $(P)$ è un problema di minimo. Se $(P)$ è inferiormente illimitato, allora $(D)$ è inammissibile.
+
+#dimostrazione
+Per assurdo. Se esistesse $\bar{y} \in \Omega(D)$, allora si avrebbe
+$$
+b^\top \bar{y} \leq c^\top x \qquad \forall x \in \Omega(P)
+$$
+contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata su $\Omega(P)$.
