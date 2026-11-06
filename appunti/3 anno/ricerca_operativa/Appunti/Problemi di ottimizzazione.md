@@ -2796,10 +2796,10 @@ d) 🧹🏠
 > 1. Si determini quale dei due punti $x_A = \left(\frac{15}{2}, \frac{9}{2}, 1\right)^\top$ e $x_B = \left(3, 2, \frac{1}{6}\right)^\top$ è ammissibile per $(P)$ e lo si indichi con $x^{(0)}$.
 > 2. Si determini una soluzione di base ammissibile $x^{(1)}$ a partire da $x^{(0)}$ mediante l'applicazione del [[#Teorema fondamentale della PL in forma standard|teorema fondamentale della programmazione lineare]].
 >
->[...] da fare
+>[...] da fare, non ci ho capito un cazzo
 
 # Teoria della dualità
-## Motivazioni
+## Problema duale
 Consideriamo un problema di programmazione lineare in forma standard (problema **primale**)
 $$
 (P)\begin{cases}
@@ -2809,19 +2809,30 @@ s.t. & Ax = b \\
 \end{cases}
 $$
 con $c \in \mathbb{R}^n$, $A \in \mathbb{R}^{m \times n}$, $b \in \mathbb{R}^m$.
+$\Omega(P) = \{x \in \mathbb{R}^{n};Ax = b, x\geq 0\}$ insieme delle soluzioni ammissibili.
 
-Indichiamo con $x$ una qualsiasi soluzione ammissibile per $(P)$, e con $y \in \mathbb{R}^m$ un vettore che ha tante componenti quanti sono i vincoli di $(P)$. Osserviamo che risulta
+Indichiamo con $x$ una qualsiasi soluzione ammissibile per $(P)$, e con $y \in \mathbb{R}^m$ un vettore che ha tante componenti quanti sono i vincoli di $(P)$ ($m$). Osserviamo che risulta
 $$
-c^\top x = c^\top x + (b - Ax)^\top y = x^\top c + b^\top y - x^\top A^\top y = b^\top y + x^\top (c - A^\top y)
+c^\top x =c^\top x + 0 =c^\top x + 0^\top y
 $$
-Se vincoliamo $y$ in modo tale che $A^\top y \leq c$, otteniamo
+Sapendo che $Ax=b \implies b-Ax = 0^\top$ possiamo riscrivere l'uguaglianza come
+$$
+c^\top x + (b - Ax)^\top y = x^\top c + b^\top y - x^\top A^\top y = b^\top y + \underbrace{x^\top}_{\geq 0} (c - A^\top y)
+$$
+%% se ci sono dei prodotti il trasposto fa invertire l'ordine %%
+Se vincoliamo $y$ in modo tale che $(c-A^\top y) \geq 0 \implies A^\top y \leq c$,
+otteniamo un prodotto scalare $x^\top (c-A^\top y) \geq 0$ e allora [...] non ho capito perché
 $$
 c^\top x \geq b^\top y \qquad \forall y : A^\top y \leq c \quad \forall x : Ax = b, \ x \geq 0
 $$
 Quindi ricercare il massimo di $b^\top y$ tra tutti i vettori di $\mathbb{R}^m$ che soddisfano $A^\top y \leq c$ fornisce un **lower bound** per l'ottimo di $(P)$.
+Questo vale in particolare per l'ottimo del nostro problema:
+$$
+c^\top x^* \geq b^\top y \qquad \forall y : A^\top y \leq c \quad \forall x : Ax = b, \ x \geq 0
+$$
+A questo punto quindi possiamo definire un altro problema di ottimizzazione, tra tutte le $y$ che generano un lower bound per il nostro problema, il contenuto informativo migliore è dato dall'ottenere un vincolo più stringente possibile facendo salire il più possibile $b^\top y$ : **problema duale**
 
-## Problema duale
->[!info] Definizione (problema duale)
+>[!important] Definizione (problema duale)
 >Dato il problema primale $(P)$ in forma standard, il suo **duale** è
 >$$
 >(D)\begin{cases}
@@ -2834,8 +2845,11 @@ Quindi ricercare il massimo di $b^\top y$ tra tutti i vettori di $\mathbb{R}^m$ 
 >- $(D)$ ha $n$ vincoli, uno per ogni variabile in $(P)$
 >- il generico $j$-esimo vincolo è della forma $A_j^\top y \leq c_j$
 
+È un universo parallelo in cui manipoliamo gli stessi dati del problema, in $\mathbb{R}^m$ invece che in $\mathbb{R}^n$.
+Le informazioni che estraiamo sono legate al problema primale.
 ## Duale di un problema non standard
-Supponiamo che $(P)$ soddisfi tutte le condizioni della forma standard tranne una: il vincolo $i$-esimo è di disuguaglianza
+Supponiamo che $(P)$ soddisfi tutte le condizioni della forma standard tranne una:
+- il vincolo $i$-esimo è di disuguaglianza
 $$
 a_i^\top x \geq b_i
 $$
@@ -2855,7 +2869,7 @@ Il vincolo aggiuntivo in $(D)$ sarà
 $$
 -\hat{e}_i^\top y \leq 0 \implies -y_i \leq 0 \implies y_i \geq 0
 $$
-ovvero semplicemente un vincolo di non negatività sulla variabile duale $i$-esima.
+sarebbe minore del coefficiente di costo della variabile ausiliaria nella funzione di costo, ma essendo pari a 0, otteniamo semplicemente un vincolo di non negatività sulla variabile duale $i$-esima.
 
 - Analogamente, un vincolo di disuguaglianza del tipo
 $$
@@ -2871,10 +2885,10 @@ x_j = x_j^+ - x_j^- \qquad x_j^+, x_j^- \geq 0
 $$
 Le nuove variabili compariranno nella funzione obiettivo con costi $c_j$ e $-c_j$, e nei vincoli con colonne di coefficienti $A_j$ e $-A_j$. Nel problema duale $(D)$, a tali variabili corrispondono i vincoli
 $$
-\begin{array}{rcr}
+\left\{\begin{array}{rcr}
 A_j^\top y & \leq & c_j \\
 -A_j^\top y & \leq & -c_j
-\end{array}
+\end{array}\right.
 \iff A_j^\top y = c_j
 $$
 
@@ -2964,6 +2978,8 @@ s.t. & Ax \geq b \\
 $$
 Quindi per ogni coppia di problemi di PL di cui l'uno sia il duale dell'altro, è possibile parlare di **coppia di problemi duali**.
 
+Il duale rappresenta un **lower bound** del problema primale, ma è anche vero il contrario: il primale è un **upper bound** per il problema primale.
+
 ## Relazioni primale-duale
 Indichiamo con
 - $I$ l'insieme degli indici dei vincoli di uguaglianza
@@ -2971,14 +2987,15 @@ Indichiamo con
 - $M$ l'insieme degli indici delle variabili libere
 - $N$ l'insieme degli indici delle variabili vincolate ($\geq 0$)
 
-|               | Primale $\longrightarrow$ / Duale $\longleftarrow$ | Duale / Primale                 |               |
-| ------------- | -------------------------------------------------- | ------------------------------- | ------------- |
-| **Obiettivo** | $\min$                                             | $\max$                          | **Obiettivo** |
-| **Vincoli**   | $= b_i, \ i \in I$                                 | $y_i, \ i \in I$, libere        | **Variabili** |
-|               | $\geq b_i, \ i \in J$                              | $y_i, \ i \in J$, $y_i \geq 0$  |               |
-| **Variabili** | $x_j \geq 0, \ j \in N$                            | $\leq c_j, \ j \in N$           | **Vincoli**   |
-|               | $x_j, \ j \in M$, libere                           | $= c_j, \ j \in M$              |               |
+|               | Primale $\longrightarrow$ / Duale $\longleftarrow$ | Duale / Primale                |               |
+| ------------- | -------------------------------------------------- | ------------------------------ | ------------- |
+| **Obiettivo** | $\min$                                             | $\max$                         | **Obiettivo** |
+| **Vincoli**   | $= b_i, \ i \in I$                                 | $y_i, \ i \in I$, libere       | **Variabili** |
+|               | $\geq b_i, \ i \in J$                              | $y_i, \ i \in J$, $y_i \geq 0$ |               |
+| **Variabili** | $x_j \geq 0, \ j \in N$                            | $\leq c_j, \ j \in N$          | **Vincoli**   |
+|               | $x_j, \ j \in M$, libere                           | $= c_j, \ j \in M$             |               |
 
+[...] sistema la tabella
 ## Costruzione di problemi duali: esempi
 >[!check] Esempio 1
 >Primale:
@@ -3024,6 +3041,8 @@ Indichiamo con
 >\end{array}\right.
 >$$
 
+mensa? ❌💪
+
 >[!check] Esempio 3
 >Primale:
 >$$
@@ -3056,6 +3075,8 @@ Indichiamo con
 >\end{array}\right.
 >$$
 
+
+---
 ## Teoremi di dualità
 >[!info] Teorema di dualità debole
 >Dati un problema di programmazione lineare in forma standard e il suo duale, per ogni $x \in \Omega(P)$ e ogni $y \in \Omega(D)$ vale:
@@ -3118,3 +3139,10 @@ $$
 b^\top \bar{y} \leq c^\top x \qquad \forall x \in \Omega(P)
 $$
 contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata su $\Omega(P)$.
+
+
+---
+
+\#programmazione lineare
+##simplesso
+##dualità
