@@ -363,18 +363,3 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 
 
-com'è strutturata trama l'ethernet
-
-
-preambolo permette la sincronizzazione
-il tipo indica il protocollo di livello superiore
-il livello 2 si deve occupare anche di inviare il dato al livello superiore, per capire a quale processo (protocollo) indirizzare il payload viene utilizzato il campo type
-
-
-
-
----
-
-[...] da recuperare protocollo ip
-
----
