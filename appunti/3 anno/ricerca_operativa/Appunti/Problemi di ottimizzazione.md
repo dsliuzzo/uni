@@ -1593,7 +1593,6 @@ Le celle in alto rappresentano i vincoli di uguaglianza trasformata in forma mat
 La cella in basso a sinistra rappresentano la funzione obiettivo, il cui valore (cambiato di segno) nel punto corrente è rappresentato nella cella in basso a destra.
 
 Con le colonne ordinate in questo modo, però, ogni volta che la base cambia (esce una variabile ed entra un'altra) dovremmo **riorganizzare tutta la tabella**. Per evitarlo, nel tableau le colonne restano nell'**ordine naturale** ($x_1, \dots, x_n$, cioè la colonna $j$ è associata a $x_j$): le colonne dell'identità risultano così **permutate**, e le righe sono ordinate secondo gli indici della base. 
-[...] <-(spiegare meglio questa parte)
 
 >[!check] Esempio con tableau
 > Consideriamo il problema
@@ -2796,7 +2795,52 @@ d) 🧹🏠
 > 1. Si determini quale dei due punti $x_A = \left(\frac{15}{2}, \frac{9}{2}, 1\right)^\top$ e $x_B = \left(3, 2, \frac{1}{6}\right)^\top$ è ammissibile per $(P)$ e lo si indichi con $x^{(0)}$.
 > 2. Si determini una soluzione di base ammissibile $x^{(1)}$ a partire da $x^{(0)}$ mediante l'applicazione del [[#Teorema fondamentale della PL in forma standard|teorema fondamentale della programmazione lineare]].
 >
->[...] da fare, non ci ho capito un cazzo
+> **a.** Sostituisco i due punti nei vincoli.
+> $x_A$:
+> $$
+> \begin{cases}
+> -\dfrac{15}{2} + 3 \cdot \dfrac{9}{2} - 3 \cdot 1 = 3 & \checkmark \\[2ex]
+> 2 \cdot \dfrac{15}{2} - 2 \cdot \dfrac{9}{2} - 4 \cdot 1 = 2 & \checkmark
+> \end{cases}
+> $$
+> $\implies x_A$ è ammissibile, ma è di base? Si ha $m = 2$ e $n = 3 \to$ dovrei avere $n - m = 1$ zero $\implies$ **non** è di base ($x_A$ ha tutte le componenti positive).
+> $x_B$ **non** soddisfa i vincoli $\implies x^{(0)} = x_A$.
+>
+> **b.** $Ax^{(0)} = b$. Dobbiamo trovare una direzione $d = (d_1, d_2, d_3)^\top$ che perturbi le componenti di $x^{(0)}$. Siccome ogni componente di $x^{(0)}$ è positiva $\Rightarrow$ per $\varepsilon > 0$ abbastanza piccolo $x^{(0)} - \varepsilon d$ resta $\ge 0$ qualunque sia il segno delle componenti di $d$, quindi $d$ non ha vincoli di segno.
+> Scrivendo $A_1 x_1 + A_2 x_2 + A_3 x_3 = b$, perché anche $x^{(0)} - \varepsilon d$ soddisfi i vincoli deve valere
+> $$
+> A_1 d_1 + A_2 d_2 + A_3 d_3 = 0 \tag{1}
+> $$
+> con $d_1, d_2, d_3$ **non** tutte nulle. Perturbo sottraendo: $x^{(0)} - \varepsilon d$.
+> **Quindi:** per trovare $d$ risolvo (1).
+>
+> **Risoluzione di $Ad = 0$**, con $A = \begin{pmatrix} -1 & 3 & -3 \\ 2 & -2 & -4 \end{pmatrix}$.
+> Il sistema ha $2$ equazioni e $3$ incognite, quindi un'incognita resta libera ($d_3$) e le altre si esprimono in funzione di essa:
+> $$
+> \begin{cases}
+> -d_1 + 3d_2 - 3d_3 = 0 \\
+> 2d_1 - 2d_2 - 4d_3 = 0
+> \end{cases}
+> $$
+> 1. Dalla prima equazione: $d_1 = 3d_2 - 3d_3$.
+> 2. Sostituendo nella seconda: $6d_2 - 6d_3 - 2d_2 - 4d_3 = 0 \implies 4d_2 = 10d_3 \implies d_2 = \dfrac{5}{2}d_3$.
+> 3. Quindi $d_1 = \dfrac{15}{2}d_3 - 3d_3 = \dfrac{9}{2}d_3$.
+>
+> Scelgo un valore comodo, ad esempio $d_3 = 2$, così si tolgono le frazioni: $d = (9, 5, 2)^\top$ (deve essere $\neq 0$).
+> Verifica: $-9 + 15 - 6 = 0 \ \checkmark$, $\quad 18 - 10 - 8 = 0 \ \checkmark$.
+>
+> **Passaggio successivo: $x^{(0)} - \varepsilon d$.** Tutte le componenti di $d$ sono positive, quindi sottraendo $\varepsilon d$ le componenti di $x^{(0)}$ diminuiscono. Prendo $\varepsilon$ uguale al rapporto minimo (così almeno una componente si annulla e nessuna diventa negativa):
+> $$
+> \varepsilon = \min\left\{ \frac{15/2}{9}, \frac{9/2}{5}, \frac{1}{2} \right\}
+> = \min\left\{ \frac{5}{6}, \frac{9}{10}, \frac{1}{2} \right\} = \frac{1}{2}
+> $$
+> $$
+> x^{(1)} = x^{(0)} - \frac{1}{2}d = \left( \frac{15}{2} - \frac{9}{2}, \frac{9}{2} - \frac{5}{2}, 1 - 1 \right)^\top = (3, 2, 0)^\top
+> $$
+> Questa è una **soluzione di base ammissibile**, perché:
+> - soddisfa i vincoli: $-3 + 6 = 3 \ \checkmark$ e $6 - 4 = 2 \ \checkmark$, e $x^{(1)} \ge 0$;
+> - ha una componente nulla;
+> - le colonne $A_1$ e $A_2$ sono linearmente indipendenti, perché $\det\begin{pmatrix} -1 & 3 \\ 2 & -2 \end{pmatrix} = 2 - 6 = -4 \neq 0$.
 
 # Teoria della dualità
 ## Problema duale
@@ -2821,7 +2865,7 @@ c^\top x + (b - Ax)^\top y = x^\top c + b^\top y - x^\top A^\top y = b^\top y + 
 $$
 %% se ci sono dei prodotti il trasposto fa invertire l'ordine %%
 Se vincoliamo $y$ in modo tale che $(c-A^\top y) \geq 0 \implies A^\top y \leq c$,
-otteniamo un prodotto scalare $x^\top (c-A^\top y) \geq 0$ e allora [...] non ho capito perché
+otteniamo un prodotto scalare $x^\top (c-A^\top y) \geq 0$, per cui è possibile notare la relazione che esiste tra $c^\top x$ e $b^\top y$: infatti $c^\top x$ è pari alla somma di $b^\top y$ e una quantità strettamente positiva.
 $$
 c^\top x \geq b^\top y \qquad \forall y : A^\top y \leq c \quad \forall x : Ax = b, \ x \geq 0
 $$
@@ -2987,15 +3031,12 @@ Indichiamo con
 - $M$ l'insieme degli indici delle variabili libere
 - $N$ l'insieme degli indici delle variabili vincolate ($\geq 0$)
 
-|               | Primale $\longrightarrow$ / Duale $\longleftarrow$ | Duale / Primale                |               |
-| ------------- | -------------------------------------------------- | ------------------------------ | ------------- |
-| **Obiettivo** | $\min$                                             | $\max$                         | **Obiettivo** |
-| **Vincoli**   | $= b_i, \ i \in I$                                 | $y_i, \ i \in I$, libere       | **Variabili** |
-|               | $\geq b_i, \ i \in J$                              | $y_i, \ i \in J$, $y_i \geq 0$ |               |
-| **Variabili** | $x_j \geq 0, \ j \in N$                            | $\leq c_j, \ j \in N$          | **Vincoli**   |
-|               | $x_j, \ j \in M$, libere                           | $= c_j, \ j \in M$             |               |
+|               | Primale<br>Duale                                                               | Duale<br>Primale                                                                     |               |
+| ------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------- |
+| **Obiettivo** | $\min$                                                                         |                                                                                      | **Obiettivo** |
+| **Vincolo**   | $\begin{array}{l}=b_i, i \in I \\ \geq b_i, i \in J\end{array}$                | $\begin{array}{l}y_i, i \in I, \text{libere} \\ y_i, i \in J, y_i \geq 0\end{array}$ | **Variabili** |
+| **Variabili** | $\begin{array}{l}x_j\geq 0, j \in N \\ x_j, j \in M, \text{libere}\end{array}$ | $\begin{array}{l}\leq c_j, j \in N \\ = c_j, j \in M\end{array}$                     | **Vincoli**   |
 
-[...] sistema la tabella
 ## Costruzione di problemi duali: esempi
 >[!check] Esempio 1
 >Primale:
@@ -3074,6 +3115,8 @@ mensa? ❌💪
 > & y_1 & , & y_2 & & & \geq & 0
 >\end{array}\right.
 >$$
+
+
 
 
 ---

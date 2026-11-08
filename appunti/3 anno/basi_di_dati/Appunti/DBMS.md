@@ -546,9 +546,9 @@ Ma perdendo l'esclusività si perde anche negli indirizzi: posso avere più indi
 
 |              | **Totalità** | **Esclusività** | **Relazioni** |
 | ------------ | ------------ | --------------- | ------------- |
-| **Metodo 1** | ✅            | ❌               | Solo padre    |
+| **Metodo 1** | ✅            | ✅               | Solo padre    |
 | **Metodo 2** | ❌            | ❌               | ✅             |
-| **Metodo 3** | ✅            | ✅               | Solo figli    |
+| **Metodo 3** | ✅            | ❌               | Solo figli    |
 
 # Implementazione 
 Una volta definito lo schema logico si passa all'**implementazione**: lo schema di relazione viene tradotto in istruzioni SQL (*DDL*, Data Definition Language) che creano la base di dati.
@@ -1027,6 +1027,74 @@ $$
 Q = \Pi_{\$1} (\text{Fornitore}) - \text{fornisconoAltri}
 }
 $$
+
+### Minimo e massimo
+L'algebra relazionale non ha operatori di aggregazione (`MIN`, `MAX` esistono in SQL): il minimo si ottiene come negazione, cioè un valore è **minimo** se **non esiste** un valore più piccolo.
+1. Con una join di theta tra due copie della relazione si trovano i valori che **non** sono minimi, cioè quelli per cui esiste un valore minore
+2. Si sottraggono a tutti i valori
+
+*Esempio:* prezzo minimo a cui viene fornita la merce M1 (supponendo che anche F3 fornisca M1 a 6).
+$$
+\displaylines{
+\text{prezziM1} = \Pi_{\$3}\left[\sigma_{\$2 = 'M1'}(\text{Fornitura})\right] \\
+Q = \text{prezziM1}-\Pi_{\$1}\left( \text{prezziM1} \underset{\$1 > \$1}{\bowtie} \text{prezziM1} \right)
+}
+$$
+
+>[!multi-column]
+>
+>>[!check] prezziM1
+>>
+>>| prezzo |
+>>| ------ |
+>>| 10     |
+>>| 8      |
+>>| 6      |
+>
+>>[!check] join $\$1 > \$1$
+>>
+>>| prezzo1 | prezzo2 |
+>>| ------- | ------- |
+>>| 10      | 8       |
+>>| 10      | 6       |
+>>| 8       | 6       |
+>
+>>[!check] Q
+>>
+>>| prezzo |
+>>| ------ |
+>>| 6      |
+
+La proiezione su `$1` prende i prezzi che hanno almeno un prezzo più basso (10 e 8), quindi la sottrazione lascia solo il minimo. Se più forniture hanno lo stesso prezzo minimo, il risultato lo contiene comunque (una sola volta).
+
+Se serve l'intera tupla (es. anche il fornitore che offre il prezzo minimo), il confronto si fa sulle forniture complete e si proietta solo alla fine:
+$$
+\displaylines{
+\text{fornituraM1} = \sigma_{\$2 = 'M1'}(\text{Fornitura}) \\
+Q = \Pi_{\$3}\left[\text{fornituraM1} - \Pi_{\$1, \$2, \$3}\left(\text{fornituraM1} \underset{\$3 > \$ 3}{\bowtie} \text{fornituraM1}\right)\right]
+}
+$$
+
+>[!multi-column]
+>
+>>[!check] join $\$3 > \$3$
+>>
+>>| fornitore | merce | prezzo | fornitore | merce | prezzo |
+>>| --------- | ----- | ------ | --------- | ----- | ------ |
+>>| F1        | M1    | 10     | F2        | M1    | 8      |
+>>| F1        | M1    | 10     | F3        | M1    | 6      |
+>>| F2        | M1    | 8      | F3        | M1    | 6      |
+>
+>>[!check] fornituraM1 $-$ non minimi
+>>
+>>| fornitore | merce | prezzo |
+>>| --------- | ----- | ------ |
+>>| F3        | M1    | 6      |
+
+`Π_{$1,$2,$3}` serve a riportare la join allo schema di `fornituraM1`, altrimenti la sottrazione non è definita. Prima del $\Pi_{\$3}$ finale la tupla dice anche **chi** fornisce al prezzo minimo (F3).
+
+>[!question] Massimo
+>Il **massimo** si ottiene allo stesso modo invertendo la condizione della join: $\text{prezziM1}-\Pi_{\$1}\left( \text{prezziM1} \underset{\$1 < \$1}{\bowtie} \text{prezziM1} \right)$.
 
 ### Quantificazione universale
 *Esempio:* nomi dei fornitori che forniscono **tutte** le merci della marca x.

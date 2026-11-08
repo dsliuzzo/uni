@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="310" viewBox="0 0 760 310">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .l{text-anchor:start} .r{text-anchor:end} .p{fill:#f48fb1} .c{fill:#4dd0e1} </style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="arrowv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b39ddb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- default gateway -->
+ <g stroke="#4dd0e1">
+  <rect x="40" y="20" width="140" height="44" rx="6"/>
+  <rect x="580" y="20" width="140" height="44" rx="6"/>
+  <g stroke-width="1.5" stroke-dasharray="4 5">
+   <line x1="60" y1="64" x2="62" y2="98"/><line x1="160" y1="64" x2="78" y2="98"/>
+   <line x1="600" y1="64" x2="684" y2="98"/><line x1="700" y1="64" x2="698" y2="98"/>
+  </g>
+ </g>
+ <line x1="30" y1="150" x2="366" y2="150"/>
+ <line x1="394" y1="150" x2="730" y2="150"/>
+ <rect x="56" y="106" width="28" height="20" rx="3"/><polyline points="70,126 70,132"/><line x1="60" y1="132" x2="80" y2="132"/><line x1="70" y1="132" x2="70" y2="150"/> <rect x="681" y="104" width="18" height="32" rx="3"/><line x1="686" y1="112" x2="694" y2="112"/><line x1="686" y1="118" x2="694" y2="118"/><line x1="690" y1="136" x2="690" y2="150"/> <ellipse cx="380" cy="120" rx="22" ry="10"/><line x1="372" y1="116" x2="388" y2="124"/><line x1="372" y1="124" x2="388" y2="116"/>
+ <line x1="366" y1="128" x2="366" y2="150"/>
+ <line x1="394" y1="128" x2="394" y2="150"/>
+ <circle cx="215" cy="184" r="9"/>
+ <circle cx="545" cy="184" r="9"/>
+ <g stroke="#b39ddb" marker-end="url(#arrowv)">
+  <line x1="80" y1="202" x2="350" y2="202"/>
+  <line x1="410" y1="202" x2="680" y2="202"/>
+ </g>
+ <rect x="120" y="214" width="190" height="80" rx="6"/>
+ <rect x="450" y="214" width="190" height="80" rx="6"/>
+</g>
+<text class="ts c" x="110" y="33">Default Gateway</text>
+<text class="ts c" x="110" y="51">192.168.10.1</text>
+<text class="ts c" x="650" y="33">Default Gateway</text>
+<text class="ts c" x="650" y="51">192.168.11.1</text>
+<text class="ts p" x="220" y="136">Rete 192.168.10.0/24</text>
+<text class="ts p" x="540" y="136">Rete 192.168.11.0/24</text>
+<text class="ts l" x="78" y="140">.10</text>
+<text class="ts r" x="358" y="140">.1</text>
+<text class="ts l" x="402" y="140">.1</text>
+<text class="ts r" x="682" y="140">.90</text>
+<text class="ts" x="70" y="166">MAC 00082C785852</text>
+<text class="ts r" x="362" y="166">MAC 00000C87654A</text>
+<text class="ts l" x="398" y="166">MAC 00000CAB22A7</text>
+<text class="ts" x="690" y="166">MAC 009A8744B8C2</text>
+<text class="ts" x="215" y="184">1</text>
+<text class="ts" x="545" y="184">2</text>
+<text class="ts l" x="136" y="228">MAC-D</text><text class="ts l" x="190" y="228">00000C87654A</text>
+<text class="ts l" x="136" y="246">MAC-S</text><text class="ts l" x="190" y="246">00082C785852</text>
+<text class="ts l" x="136" y="264">IP-D</text><text class="ts l" x="190" y="264">192.168.11.90</text>
+<text class="ts l" x="136" y="282">IP-S</text><text class="ts l" x="190" y="282">192.168.10.10</text>
+<text class="ts l" x="466" y="228">MAC-D</text><text class="ts l" x="520" y="228">009A8744B8C2</text>
+<text class="ts l" x="466" y="246">MAC-S</text><text class="ts l" x="520" y="246">00000CAB22A7</text>
+<text class="ts l" x="466" y="264">IP-D</text><text class="ts l" x="520" y="264">192.168.11.90</text>
+<text class="ts l" x="466" y="282">IP-S</text><text class="ts l" x="520" y="282">192.168.10.10</text>
+</svg>

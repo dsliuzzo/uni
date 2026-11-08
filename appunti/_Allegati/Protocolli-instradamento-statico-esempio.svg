@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="830" height="450" viewBox="0 0 830 450">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .l{text-anchor:start} .r{text-anchor:end} .p{fill:#f48fb1} .o{fill:#ff8a65}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="arrowp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#f48fb1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<g stroke-width="4"><line x1="70" y1="80" x2="560" y2="80" />
+<line x1="40" y1="170" x2="250" y2="170" />
+<line x1="270" y1="170" x2="420" y2="170" />
+<line x1="440" y1="170" x2="580" y2="170" />
+<line x1="40" y1="390" x2="580" y2="390" />
+</g>
+<rect x="76" y="36" width="28" height="20" rx="3"/><line x1="90" y1="56" x2="90" y2="62"/><line x1="80" y1="62" x2="100" y2="62"/><line x1="90" y1="62" x2="90" y2="80"/>
+<line x1="170" y1="80" x2="170" y2="106" />
+<line x1="170" y1="134" x2="170" y2="170" />
+<line x1="320" y1="80" x2="320" y2="106" />
+<line x1="320" y1="134" x2="320" y2="170" />
+<line x1="470" y1="80" x2="470" y2="106" />
+<line x1="470" y1="134" x2="470" y2="170" />
+<polyline points="205,170 205,220 221,220"/><polyline points="249,220 285,220 285,170"/>
+<polyline points="360,170 360,220 381,220"/><polyline points="409,220 450,220 450,170"/>
+<polyline points="90,170 90,290 306,290"/><polyline points="334,290 520,290 520,170"/>
+<line x1="60" y1="170" x2="60" y2="326" />
+<line x1="60" y1="354" x2="60" y2="390" />
+<line x1="560" y1="170" x2="560" y2="326" />
+<line x1="560" y1="354" x2="560" y2="390" />
+<line x1="330" y1="390" x2="330" y2="414" />
+<rect x="316" y="414" width="28" height="20" rx="3"/>
+<g stroke="#ff8a65"><circle cx="170" cy="120" r="14"/><circle cx="320" cy="120" r="14"/><circle cx="470" cy="120" r="14"/><circle cx="235" cy="220" r="14"/><circle cx="395" cy="220" r="14"/><circle cx="320" cy="290" r="14"/><circle cx="60" cy="340" r="14"/><circle cx="560" cy="340" r="14"/></g>
+<g stroke-width="1.5"><line x1="713.1" y1="94.0" x2="656.1" y2="126.5" />
+<line x1="720.0" y1="98.0" x2="720.0" y2="123.0" />
+<line x1="726.9" y1="94.0" x2="783.9" y2="126.5" />
+<line x1="654.6" y1="135.3" x2="680.4" y2="164.7" />
+<line x1="651.2" y1="136.9" x2="663.8" y2="208.1" />
+<line x1="715.4" y1="135.3" x2="689.6" y2="164.7" />
+<line x1="724.6" y1="135.3" x2="750.4" y2="164.7" />
+<line x1="785.4" y1="135.3" x2="759.6" y2="164.7" />
+<line x1="788.8" y1="136.9" x2="776.2" y2="208.1" />
+<line x1="689.3" y1="175.5" x2="715.7" y2="209.5" />
+<line x1="750.7" y1="175.5" x2="724.3" y2="209.5" />
+<line x1="670.7" y1="219.1" x2="713.5" y2="250.3" />
+<line x1="769.3" y1="219.1" x2="726.5" y2="250.3" />
+</g>
+<g stroke-width="2"><rect x="714" y="84" width="12" height="12" rx="2"/><circle cx="650" cy="130" r="6" stroke="#ff8a65"/><circle cx="720" cy="130" r="6" stroke="#ff8a65"/><circle cx="790" cy="130" r="6" stroke="#ff8a65"/><circle cx="685" cy="170" r="6" stroke="#ff8a65"/><circle cx="755" cy="170" r="6" stroke="#ff8a65"/><circle cx="665" cy="215" r="6" stroke="#ff8a65"/><circle cx="720" cy="215" r="6" stroke="#ff8a65"/><circle cx="775" cy="215" r="6" stroke="#ff8a65"/><rect x="714" y="249" width="12" height="12" rx="2"/></g>
+</g>
+<text class="ts o" x="170" y="120">R</text>
+<text class="ts o" x="320" y="120">R</text>
+<text class="ts o" x="470" y="120">R</text>
+<text class="ts o" x="235" y="220">R</text>
+<text class="ts o" x="395" y="220">R</text>
+<text class="ts o" x="320" y="290">R</text>
+<text class="ts o" x="60" y="340">R</text>
+<text class="ts o" x="560" y="340">R</text>
+<text class="t l" x="190" y="120">C</text>
+<text class="t l" x="340" y="120">B</text>
+<text class="t l" x="490" y="120">A</text>
+<text class="t " x="235" y="248">G</text>
+<text class="t " x="395" y="248">D</text>
+<text class="t " x="320" y="318">E</text>
+<text class="t r" x="40" y="340">H</text>
+<text class="t l" x="580" y="340">F</text>
+<text class="t" x="90" y="22">Host X</text>
+<text class="t l" x="352" y="424">Host Y</text>
+<text class="ts" x="480" y="66">Network 1</text>
+<text class="ts l" x="180" y="156">Network 3</text>
+<text class="ts l" x="330" y="156">Network 2</text>
+<text class="ts l" x="480" y="156">Network 4</text>
+<text class="ts" x="200" y="376">Network 5</text>
+<text class="ts l" x="98" y="72">1</text>
+<text class="ts r" x="162" y="93">8</text>
+<text class="ts r" x="312" y="93">3</text>
+<text class="ts r" x="462" y="93">7</text>
+<text class="ts r" x="162" y="152">5</text>
+<text class="ts r" x="312" y="152">1</text>
+<text class="ts r" x="462" y="152">1</text>
+<text class="ts r" x="199" y="192">3</text>
+<text class="ts l" x="291" y="192">6</text>
+<text class="ts r" x="354" y="192">2</text>
+<text class="ts l" x="456" y="192">2</text>
+<text class="ts " x="190" y="304">9</text>
+<text class="ts " x="430" y="304">9</text>
+<text class="ts r" x="54" y="250">1</text>
+<text class="ts r" x="54" y="372">1</text>
+<text class="ts l" x="566" y="250">10</text>
+<text class="ts l" x="566" y="372">4</text>
+<text class="ts l" x="336" y="402">1</text>
+<text class="th" x="720" y="52">Grafo</text>
+<text class="ts" x="720" y="74">X</text>
+<text class="ts" x="642" y="118">C</text>
+<text class="ts" x="734" y="130">B</text>
+<text class="ts" x="798" y="118">A</text>
+<text class="ts" x="671" y="170">G</text>
+<text class="ts" x="769" y="170">D</text>
+<text class="ts" x="651" y="215">H</text>
+<text class="ts" x="720" y="201">E</text>
+<text class="ts" x="789" y="215">F</text>
+<text class="ts" x="720" y="271">Y</text>
+</svg>

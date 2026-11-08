@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="440" height="420" viewBox="0 0 440 420">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} </style>
+<g stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill-opacity="0.35">
+ <path d="M220 220 L220 70 A150 150 0 0 1 220 370 Z" fill="#4a90d9"/>
+ <path d="M220 220 L220 370 A150 150 0 0 1 70 220 Z" fill="#50b37a"/>
+ <path d="M220 220 L70 220 A150 150 0 0 1 113.93 113.93 Z" fill="#e0a23c"/>
+ <path d="M220 220 L113.93 113.93 A150 150 0 0 1 162.60 81.42 Z" fill="#d9605a"/>
+ <path d="M220 220 L162.60 81.42 A150 150 0 0 1 220 70 Z" fill="#9b6fd1"/>
+</g>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round">
+ <line x1="135.6" y1="93.6" x2="124.4" y2="77.0"/>
+ <line x1="190.3" y1="70.9" x2="186.4" y2="51.3"/>
+</g>
+<text class="th" x="295" y="212">A</text><text class="ts" x="295" y="230">50%</text>
+<text class="th" x="156.4" y="275.6">B</text><text class="ts" x="156.4" y="293.6">25%</text>
+<text class="th" x="127.6" y="172.7">C</text><text class="ts" x="127.6" y="190.7">12,5%</text>
+<text class="ts" x="112" y="64">D 6,25%</text>
+<text class="ts" x="184" y="36">E 6,25%</text>
+</svg>

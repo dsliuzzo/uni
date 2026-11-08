@@ -157,7 +157,7 @@ $$
 ## Esercizio 1
 ### A
 ![[prova esame 08.07.2019 es 1]]
-
+![[prova esame 08.07.2019 es 1]]
 ### B
 $$
 \begin{array}{l}
@@ -180,6 +180,71 @@ $$
 \text{Colpo}[\text{incD, incF, incP, incN}] \sqsubseteq_{FK} \text{Incontro}[\text{data, fascia, salaP, salaN}] \\
 \text{Colpo}[\text{colpisce}] \sqsubseteq_{FK} \text{Giocatore}[\text{CF}] \\
 \text{Colpo}[\text{colpito}] \sqsubseteq_{FK} \text{Giocatore}[\text{CF}]
+\end{array}
+$$
+# Prova esame 4 settembre 2018
+## Esercizio 1
+### A
+![[prova esame 04.09.2018 es 1]]
+### B
+$$
+\begin{array}{l}
+\text{Cliente}(\underline{\text{piva}}\text{, nome, residenza}) \\
+\text{Contratto}(\underline{\text{numero, data}}\text{, cliente}) \\
+\text{Contratto}[\text{cliente}] \sqsubseteq_{FK} \text{Cliente}[\text{piva}] \\
+\text{Singolo}(\underline{\text{numero, data}}\text{, localeC, localeI}) \\
+\text{Singolo}[\text{numero, data}] \sqsubseteq_{FK} \text{Contratto}[\text{numero, data}] \\
+\text{Singolo}[\text{localeC, localeI}] \sqsubseteq_{FK} \text{Locale}[\text{comune, indirizzo}] \\
+\text{Periodico}(\underline{\text{numero, data}}\text{, periodicità}) \\
+\text{Periodico}[\text{numero, data}] \sqsubseteq_{FK} \text{Contratto}[\text{numero, data}] \\
+\text{ListaL}(\underline{\text{periodicoN, periodicoD, localeC, localeI}}) \\
+\text{ListaL}[\text{periodicoN, periodicoD}] \sqsubseteq_{FK} \text{Periodico}[\text{numero, data}] \\
+\text{ListaL}[\text{localeC, localeI}] \sqsubseteq_{FK} \text{Locale}[\text{comune, indirizzo}] \\
+\text{Locale}(\underline{\text{comune, indirizzo}}\text{, descrizione}) \\
+\text{Intervento}(\underline{\text{localeC, localeI, data}}\text{, oraI/oraF, }\overset{\text{NULL}}{\text{caposquadraN,}}\overset{\text{NULL}}{\text{caposquadraD}}) \\
+\text{Intervento}[\text{localeC, localeI}] \sqsubseteq_{FK} \text{Locale}[\text{comune, indirizzo}] \\
+\text{Intervento}[\text{caposquadraN, caposquadraD}] \sqsubseteq_{FK} \text{Caposquadra}[\text{nome, dataN}] \\
+\text{Caposquadra}(\underline{\text{nome, dataN}}\text{, dataI}) \\
+\text{Caposquadra}[\text{nome, dataN}] \sqsubseteq_{FK} \text{Operaio}[\text{nome, dataN}] \\
+\text{Semplice}(\underline{\text{nome, dataN}}) \\
+\text{Semplice}[\text{nome, dataN}] \sqsubseteq_{FK} \text{Operaio}[\text{nome, dataN}] \\
+\text{ListaO}(\underline{\text{sempliceN, sempliceD, interventoC, interventoI, interventoD}}) \\
+\text{ListaO}[\text{sempliceN, sempliceD}] \sqsubseteq_{FK} \text{Semplice}[\text{nome, dataN}] \\
+\text{ListaO}[\text{interventoC, interventoI, interventoD}] \sqsubseteq_{FK} \text{Intervento}[\text{localeC, localeI, data}] \\
+\text{Operaio}(\underline{\text{nome, dataN}}) \\
+\text{Variazione}(\underline{\text{operaioN, operaioD, giorno, dataD}}\text{, nuoveO}) \\
+\text{Variazione}[\text{operaioN, operaioD}] \sqsubseteq_{FK} \text{Operaio}[\text{nome, dataN}]
+\end{array}
+$$
+# Prova esame 6 marzo 2018
+## Esercizio 1
+### A
+![[prova esame 06.03.2018 es 1 1]]
+### B
+$$
+\begin{array}{l}
+\text{Rilevazione}(\underline{\text{dataOra, serraId, serraCom, serraCoo}}\text{, valore}) \\
+\text{Rilevazione}[\text{serraId, serraCom, serraCoo}] \sqsubseteq_{FK} \text{Serra}[\text{id, terrenoCom, terrenoCoo}] \\
+\text{Serra}(\underline{\text{id, terrenoCom, terrenoCoo}}\text{, dimensione}) \\
+\text{Serra}[\text{terrenoCom, terrenoCoo}] \sqsubseteq_{FK} \text{Terreno}[\text{comune, coordinate}] \\
+\text{Terreno}(\underline{\text{comune, coordinate}}\text{, estensione}) \\
+\text{Intervento}(\underline{\text{cod}}\text{, data, motivo}) \\
+\text{Installazione}(\underline{\text{intervento}}\text{, materiale, }\overbrace{\text{serraId, serraCom, serraCoo}}^{\text{UNIQUE}}) \\
+\text{Installazione}[\text{intervento}] \sqsubseteq_{FK} \text{Intervento}[\text{cod}] \\
+\text{Installazione}[\text{serraId, serraCom, serraCoo}] \sqsubseteq_{FK} \text{Serra}[\text{id, terrenoCom, terrenoCoo}] \\
+\text{Manutenzione}(\underline{\text{intervento}}\text{, serraId, serraCom, serraCoo}) \\
+\text{Manutenzione}[\text{intervento}] \sqsubseteq_{FK} \text{Intervento}[\text{cod}] \\
+\text{Manutenzione}[\text{serraId, serraCom, serraCoo}] \sqsubseteq_{FK} \text{Serra}[\text{id, terrenoCom, terrenoCoo}] \\
+\text{Outsourcing}(\underline{\text{intervento}}\text{, }\overset{\text{NULL}}{\text{dittaN, }}\overset{\text{NULL}}{\text{dittaI}}) \\
+\text{Outsourcing}[\text{intervento}] \sqsubseteq_{FK} \text{Intervento}[\text{cod}] \\
+\text{Outsourcing}[\text{dittaN, dittaI}] \sqsubseteq_{FK} \text{Ditta}[\text{nome, indirizzo}] \\
+\text{Ditta}(\underline{\text{nome, indirizzo}}) \\
+\text{Interno}(\underline{\text{intervento}}) \\
+\text{Interno}[\text{intervento}] \sqsubseteq_{FK} \text{Intervento}[\text{cod}] \\
+\text{Operaio}(\underline{\text{matr}}\text{, nome}) \\
+\text{Partecipazione}(\underline{\text{operaioM, internoC}}\text{, ruolo}) \\
+\text{Partecipazione}[\text{operaioM}] \sqsubseteq_{FK} \text{Operaio}[\text{matr}] \\
+\text{Partecipazione}[\text{internoC}] \sqsubseteq_{FK} \text{Interno}[\text{intervento}]
 \end{array}
 $$
 
