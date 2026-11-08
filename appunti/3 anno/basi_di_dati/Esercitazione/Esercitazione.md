@@ -253,27 +253,27 @@ $$
 Sia dato il seguente schema di database:
 - $\text{SOTTOSCRIZIONE}(\underline{\text{Cliente}}, \underline{\text{Investimento}}, \text{NumeroQuote})$
 - $\text{INVESTIMENTO}(\underline{\text{Nome}}, \text{SocietàFinanziaria}, \text{TipoInvestimento}, \text{ValoreSingolaQuota})$
-- $\text{SOCIETA\_FINANZIARIA}(\underline{\text{Nome}}, \text{Citta}, \text{AnnoFondazione})$
+- $\text{SOCIETA}(\underline{\text{Nome}}, \text{Citta}, \text{AnnoFondazione})$
 - $\text{CLIENTE}(\underline{\text{CodiceFiscale}}, \text{Nome}, \text{Citta})$
 
 Ed i seguenti vincoli di chiave esterna:
 - $\text{SOTTOSCRIZIONE}[\text{Cliente}] \subseteq_{FK} \text{CLIENTE}[\text{CodiceFiscale}]$
 - $\text{SOTTOSCRIZIONE}[\text{Investimento}] \subseteq_{FK} \text{INVESTIMENTO}[\text{Nome}]$
-- $\text{INVESTIMENTO}[\text{SocietàFinanziaria}] \subseteq_{FK} \text{SOCIETA\_FINANZIARIA}[\text{Nome}]$
+- $\text{INVESTIMENTO}[\text{SocietàFinanziaria}] \subseteq_{FK} \text{SOCIETA}[\text{Nome}]$
 
 1) I clienti della città di Cosenza che hanno sottoscritto un investimento con una società finanziaria fondata nel 1990
 $$
 \begin{array}{l}
 \text{clientiCS} = \sigma_{\$3 = \text{'CS'}} (\text{cliente}) \\
-\text{fondate1990} = \sigma_{\$3 = 1990}(\text{societa\_finanziaria}) \\
-Q = \Pi_{\$4, \$5, \$6}\left\{\left[ \left(\text{sottoscrizione} \underset{\$1 = \$1}{\bowtie} \text{clientiCS}\right) \underset{\$2 = \$1}{\bowtie} \text{investimento}\right] \underset{\$8 = \$1}{\bowtie} \text{fondate1990}\right\}
+\text{fondate1990} = \sigma_{\$3 = 1990}(\text{societa}) \\
+\text{Q1} = \Pi_{\$4, \$5, \$6}\left\{\left[ \left(\text{sottoscrizione} \underset{\$1 = \$1}{\bowtie} \text{clientiCS}\right) \underset{\$2 = \$1}{\bowtie} \text{investimento}\right] \underset{\$8 = \$1}{\bowtie} \text{fondate1990}\right\}
 \end{array}
 $$
 2) I clienti della città di Cosenza che hanno sottoscritto almeno due investimenti
 $$
 \begin{array}{l}
 \text{almeno2inv} = \Pi_{\$1}\left(\text{sottoscrizione} \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} \text{sottoscrizione}\right) \\
-Q = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2inv} \right)
+\text{Q2} = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2inv} \right)
 \end{array}
 $$
 3) I clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie
@@ -281,7 +281,7 @@ $$
 \begin{array}{l}
 \text{sottSoc} = \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento} \\
 \text{almeno2soc} = \Pi_{\$1}\left( \text{sottSoc} \underset{\$1 = \$1 \wedge \$5 \neq \$ 5}{\bowtie} \text{sottSoc} \right) \\
-Q = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2soc} \right)
+\text{Q3} = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2soc} \right)
 \end{array}
 $$
 4) Il nome dei clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie, ciascuna delle quali è curatrice di almeno due investimenti;
@@ -290,24 +290,76 @@ $$
 \text{curatrici2} = \Pi_{\$2}\left( \text{investimento} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{investimento} \right) \\
 \text{sottCur} = \text{sottSoc} \underset{\$5 = \$1}{\bowtie} \text{curatrici2} \\
 \text{pippo} = \Pi_{\$1} \left( \text{sottCur} \underset{\$1 = \$1 \wedge \$5 \neq \$5}{\bowtie} \text{sottCur} \right) \\
-Q = \Pi_{\$2} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{pippo} \right)
+\text{Q4} = \Pi_{\$2} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{pippo} \right)
 \end{array}
 $$
 5) I clienti che hanno sottoscritto almeno un investimento di tipo “obbligazione” curati da società finanziarie di Cosenza
-[...]
+$$
+\begin{array}{l}
+\text{societaCS} = \sigma_{\$2 = \text{'CS'}}(\text{societa}) \\
+\text{invObbCS} = \Pi_{\$1}\left[ \sigma_{\$3 = \text{'obbligazione'}}(\text{investimento}) \underset{\$2 = \$1}{\bowtie} \text{societaCS}\right] \\
+\text{Q5} = \Pi_{\$1}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{invObbCS} \right)
+\end{array}
+$$
 6) I clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
-[...]
+$$
+\begin{array}{l}
+\text{Q6} = \Pi_{\$1}(\text{cliente}) - \Pi_{\$1}\left[ \sigma_{\$6 = \text{'obbligazione'}}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento}\right) \right]
+\end{array}
+$$
 7) Le città dei clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
-[...]
+$$
+\text{Q7} = \Pi_{\$3} \left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{Q6} \right)
+$$
 8) Le città che non hanno nessun cliente che ha sottoscritto almeno un investimenti di tipo “obbligazione”
-[...]
+$$
+\begin{array}{l}
+\text{clienteObb} = \Pi_{\$1}\left[ \sigma_{\$6 = \text{'obbligazione'}}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento}\right) \right] \\
+\text{Q8} = \Pi_{\$3}(\text{cliente}) - \Pi_{\$3}\left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{clienteObb} \right)
+\end{array}
+$$
 9) Le città dei clienti che hanno sottoscritto investimenti, ma non di tipo “obbligazione”
-[...]
+$$
+\begin{array}{l}
+\text{clientiNoObb} = \Pi_{\$1}(\text{sottoscrizione}) - \text{clienteObb} \\
+\text{Q9} = \Pi_{\$3}\left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{clientiNoObb} \right)
+\end{array}
+$$
 10) I clienti che hanno sottoscritto tutti gli investimenti di tipo “obbligazione” curati da società finanziarie di Cosenza.
-[...]
+tutti i clienti - clienti(tutte le possibili coppie (cliente|investimento) - quelle reali)
+$$
+\begin{array}{l}
+\text{clientiNo} = \Pi_{\$1}\left\{[\Pi_{\$1}(\text{cliente}) \times \text{invObbCS}] - \Pi_{\$1, \$2}(\text{sottoscrizione})\right\} \\
+\text{Q10} = \Pi_{\$1}(\text{cliente}) - \text{clientiNo}
+\end{array}
+$$
 11) Coppie di clienti <C1,C2> che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
 [...]
+# Prova esame 8 luglio 2019
+## Esercizio 4
+Sia dato il seguente schema di database:
+- $\text{Tratta}(\underline{\text{codice}}, \text{stazionePartenza}, \text{stazioneDestinazione}, \text{distanza})$
+- $\text{Autobus}(\underline{\text{codice}}, \text{trattaCoperta}, \text{tipologiaAutobus}, \text{data}, \text{durata})$
+- $\text{Stazione}(\underline{\text{codice}}, \text{nome}, \text{città}, \text{nazione})$
 
+con i seguenti vincoli di chiave esterna:
+- $\text{Tratta}[\text{stazionePartenza}] \sqsubseteq_{FK} \text{Stazione}[\text{codice}]$
+- $\text{Tratta}[\text{stazioneDestinazione}] \sqsubseteq_{FK} \text{Stazione}[\text{codice}]$
+- $\text{Autobus}[\text{trattaCoperta}] \sqsubseteq_{FK} \text{Tratta}[\text{codice}]$
+
+1) I nomi delle stazioni della città di Torino
+[...]
+2) I nomi delle stazioni che sono il punto di partenza di almeno due tratte
+[...]
+3) Le tratte coperte da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
+[...]
+4) I nomi delle stazioni che sono il punto di partenza di almeno due tratte, ciascuna delle quali è coperta da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
+[...]
+5) Le tipologie di autobus per le quali almeno un autobus copre una tratta di distanza superiore a 500km
+[...]
+6) Le tipologie di autobus delle quali non esiste alcun autobus che copra una tratta che parte dalla città di Roma e che copre una distanza inferiore a 200 km.
+[...]
+7) Le coppie di stazioni tali che gli insiemi di tipologie di autobus che partono da ciascuna di esse sono uguali.
 # Prova esame 30 giugno 2022
 
 1) I nomi degli scrittori che hanno redatto almeno due articolo di categoria “Cronaca”

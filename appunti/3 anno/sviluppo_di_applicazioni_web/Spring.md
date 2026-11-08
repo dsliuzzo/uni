@@ -1779,17 +1779,4 @@ Se non si configura nulla, Spring crea un solo utente `user` e la password viene
 Using default security password: 087cfc6a-027d-44bc-95d7-cbb3a798a1ea
 ```
 
-
----
-
-
-- Controllers
-- Services
-- Repositories
-- Entities
-mappatura 1 a 1 entities repositories. I services usano più repositories per implementare la logica di business.
-Si usa una logica top bottom, i layer superiori usano gli inferiori, ma mai il contrario
-Il controller funziona mediante chiamate al services, quindi un qualsiasi controller funziona con lo stesso services.
-Il controller prende la richiesta e chiama i metodi sottostanti.
-Il service contiene tutta la parte di logica.
-Conviene iniziare a lavorare al progetto dal layer più basso e andare verso l'alto.
+``
