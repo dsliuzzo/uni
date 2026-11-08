@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="250" viewBox="0 0 700 250">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .l{text-anchor:start} .r{text-anchor:end} .p{fill:#f48fb1} </style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="arrowp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#f48fb1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<g stroke="#4dd0e1"><line x1="266" y1="180" x2="434" y2="180" />
+<line x1="194" y1="180" x2="100" y2="150" />
+<line x1="506" y1="180" x2="600" y2="150" />
+<line x1="194" y1="180" x2="100" y2="180" />
+<line x1="506" y1="180" x2="600" y2="180" />
+<line x1="194" y1="180" x2="100" y2="210" />
+<line x1="506" y1="180" x2="600" y2="210" />
+</g>
+<g stroke="#64b5f6"><ellipse cx="230" cy="180" rx="36" ry="16"/><line x1="218" y1="174" x2="242" y2="186" />
+<line x1="218" y1="186" x2="242" y2="174" />
+</g>
+<g stroke="#64b5f6"><ellipse cx="470" cy="180" rx="36" ry="16"/><line x1="458" y1="174" x2="482" y2="186" />
+<line x1="458" y1="186" x2="482" y2="174" />
+</g>
+<line x1="290" y1="158" x2="410" y2="158" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+</g>
+<text class="th" x="230" y="60">I Know About:</text>
+<text class="ts" x="230" y="82">Network A</text>
+<text class="ts" x="230" y="100">Network B</text>
+<text class="ts" x="230" y="118">Network C</text>
+<text class="th" x="470" y="60">I Know About:</text>
+<text class="ts" x="470" y="82">Network X</text>
+<text class="ts" x="470" y="100">Network Y</text>
+<text class="ts" x="470" y="118">Network Z</text>
+<text class="t" x="350" y="138">Routing Update</text>
+<text class="t" x="350" y="204">Exchanges Network Knowledge</text>
+<text class="th" x="86" y="150">A</text>
+<text class="th" x="614" y="150">X</text>
+<text class="th" x="86" y="180">B</text>
+<text class="th" x="614" y="180">Y</text>
+<text class="th" x="86" y="210">C</text>
+<text class="th" x="614" y="210">Z</text>
+</svg>

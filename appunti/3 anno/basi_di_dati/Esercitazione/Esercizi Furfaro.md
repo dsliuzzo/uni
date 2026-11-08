@@ -420,3 +420,42 @@ $$
 Q =\Pi_{\$ 2} \left[\text{Merce} \underset{\$ 1 = \$ 2}{\bowtie}\left( \text{fornitureOK} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie} \text{fornitureOK}\right)  \right]
 \end{array}
 $$
+2) Città delle marche che producono esattamente due merci fornite da qualche fornitore di CS
+$$
+\begin{array}{l}
+\text{MerciForCS} = \Pi_{\$1,\$3}\left\{\sigma_{\$6=\text{'CS'}}\left[\text{Merce} \underset{\$1=\$5}{\bowtie} \left(\text{Fornitore} \underset{\$1=\$1}{\bowtie} \text{Fornitura}\right)\right]\right\} \\
+\text{Almeno2} = \text{MerciForCS} \underset{\$2=\$2 \,\wedge\, \$1\neq\$1}{\bowtie} \text{MerciForCS} \\
+\text{Almeno3} = \text{Almeno2} \underset{\$2=\$2 \,\wedge\, \$1\neq\$1 \wedge\, \$3\neq\$1}{\bowtie} \text{MerciForCS} \\
+\text{Esatt2} = \Pi_{\$2}(\text{Almeno2}) - \Pi_{\$2}(\text{Almeno3}) \\
+Q = \Pi_{\$2}\left(\text{Marca} \underset{\$1=\$1}{\bowtie} \text{Esatt2}\right)
+\end{array}
+$$
+3) Per ogni nome di merce restituire il prezzo massimo di fornitura della merce (due colonne \[nome merce | prezzo di fornitura] dove il prezzo è il massimo prezzo di fornitura per quella merce)
+$$
+\begin{array}{l}
+\text{Listino} = \Pi_{\$2, \$3}(\text{Fornitura}) \\
+\text{Max} = \text{Listino} - \Pi_{\$1, \$2} \left( \text{Listino} \underset{\$1 = \$1 \wedge \$2 < \$ 2}{\bowtie} \text{Listino}\right) \\
+Q = \Pi_{\$2, \$5}\left( \text{Merce} \underset{\$1 = \$1}{\bowtie} \text{Max}\right)
+\end{array}
+$$
+4) Merci fornite da tutti i fornitori
+$$
+m|\forall f \in \text{Fornitore} : (f,m) \in \text{Fornitura}
+$$
+la proprietà è che tutti i fornitori forniscono $m$ $\equiv$ non esiste un fornitore che non fornisce $m$
+tutte le possibili combinazioni merce|fornitore - quelle che esistono davvero
+$$
+\begin{array}{l}
+\text{MerciNo} = [\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}(\text{Merce})] - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
+\text{MerciSi} = \Pi_{\$ 1}(\text{Merce}) - \Pi_{\$ 2}(\text{MerciNo})
+\end{array}
+$$
+5) Merci di marca $\alpha$ fornite da tutti i fornitori di CS
+$$
+\begin{array}{l}
+\text{Mercia} = \Pi_{\$ 1}[\sigma_{\$ 3 = '\alpha'} (\text{Merce})] \\
+\text{FornitoriCS} = \Pi_{\$ 1}[\sigma_{\$ 3 = 'CS'}(\text{Fornitore})] \\
+\text{MerciNo} = (\text{FornitoriCS} \times \text{Mercia}) - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
+\text{MerciSi} = \text{Mercia} - \Pi_{\$ 2}(\text{MerciNo})
+\end{array}
+$$
