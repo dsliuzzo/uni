@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="600" viewBox="0 0 760 600">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .tt{font-size:18px;font-weight:500} </style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- Class D / Class E -->
+ <rect x="40" y="100" width="130" height="140" rx="6"/>
+ <line x1="40" y1="130" x2="170" y2="130"/>
+ <rect x="40" y="270" width="130" height="70" rx="6"/>
+ <line x1="40" y1="300" x2="170" y2="300"/>
+ <!-- Spring Container -->
+ <rect x="300" y="125" width="180" height="220" rx="6"/>
+ <!-- Class A / B / C -->
+ <rect x="600" y="141" width="120" height="28" rx="4"/>
+ <rect x="600" y="201" width="120" height="28" rx="4"/>
+ <rect x="600" y="306" width="120" height="28" rx="4"/>
+ <!-- classi → container -->
+ <line x1="600" y1="155" x2="414" y2="155" marker-end="url(#arrow)"/>
+ <line x1="600" y1="215" x2="414" y2="215" marker-end="url(#arrow)"/>
+ <line x1="600" y1="320" x2="414" y2="320" marker-end="url(#arrow)"/>
+ <!-- container → campi (@Autowire) -->
+ <line x1="368" y1="155" x2="172" y2="155" marker-end="url(#arrow)"/>
+ <line x1="368" y1="215" x2="172" y2="215" marker-end="url(#arrow)"/>
+ <line x1="368" y1="320" x2="172" y2="320" marker-end="url(#arrow)"/>
+ <!-- gerarchia stereotipi -->
+ <rect x="325" y="415" width="130" height="30" rx="4"/>
+ <rect x="210" y="485" width="120" height="30" rx="4"/>
+ <rect x="335" y="485" width="110" height="30" rx="4"/>
+ <rect x="450" y="485" width="120" height="30" rx="4"/>
+ <rect x="200" y="545" width="140" height="30" rx="4"/>
+ <polyline points="270,485 270,465 510,465 510,485"/>
+ <line x1="390" y1="485" x2="390" y2="465"/>
+ <line x1="390" y1="465" x2="390" y2="448" marker-end="url(#arrow)"/>
+ <line x1="270" y1="545" x2="270" y2="518" marker-end="url(#arrow)"/>
+</g>
+<g fill="none" stroke="#64b5f6" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <rect x="368" y="141" width="44" height="28" rx="4"/>
+ <rect x="368" y="201" width="44" height="28" rx="4"/>
+ <rect x="368" y="306" width="44" height="28" rx="4"/>
+</g>
+<text class="tt" x="380" y="40">Configuration</text>
+<text class="th" x="105" y="115">Class D</text>
+<text class="t" x="105" y="155">- A objA</text>
+<text class="t" x="105" y="215">- B objB</text>
+<text class="th" x="105" y="285">Class E</text>
+<text class="t" x="105" y="320">- C objC</text>
+<text class="ts" x="235" y="141">@Autowire</text>
+<text class="ts" x="235" y="201">@Autowire</text>
+<text class="ts" x="235" y="306">@Autowire</text>
+<text class="t" x="390" y="155">:A</text>
+<text class="t" x="390" y="215">:B</text>
+<text class="t" x="390" y="320">:C</text>
+<text class="t" x="390" y="363">Spring Container</text>
+<text class="t" x="390" y="381">(runtime)</text>
+<text class="ts" x="660" y="125">@Component</text>
+<text class="ts" x="660" y="185">@Component</text>
+<text class="ts" x="660" y="290">@Bean</text>
+<text class="t" x="660" y="155">Class A</text>
+<text class="t" x="660" y="215">Class B</text>
+<text class="t" x="660" y="320">Class C</text>
+<text class="t" x="390" y="430">@Component</text>
+<text class="t" x="270" y="500">@Controller</text>
+<text class="t" x="390" y="500">@Service</text>
+<text class="t" x="510" y="500">@Repository</text>
+<text class="t" x="270" y="560">@RestController</text>
+</svg>
