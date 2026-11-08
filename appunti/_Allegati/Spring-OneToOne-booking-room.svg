@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="180" viewBox="0 0 660 180">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .l{text-anchor:start} </style>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- BOOKING -->
+ <rect x="40" y="20" width="200" height="140" rx="6"/>
+ <line x1="40" y1="50" x2="240" y2="50"/>
+ <!-- ROOM -->
+ <rect x="420" y="20" width="200" height="118" rx="6"/>
+ <line x1="420" y1="50" x2="620" y2="50"/>
+ <!-- ROOM_ID → ID -->
+ <polyline points="240,149 330,149 330,61 420,61"/>
+ <line x1="252" y1="142" x2="252" y2="156"/>
+ <circle cx="397" cy="61" r="5"/>
+ <line x1="410" y1="54" x2="410" y2="68"/>
+</g>
+<text class="th" x="140" y="35">BOOKING</text>
+<text class="ts l" x="52" y="61">ID</text><text class="ts l" x="150" y="61">INTEGER</text>
+<text class="ts l" x="52" y="83">AMOUNT</text><text class="ts l" x="150" y="83">NUMBER</text>
+<text class="ts l" x="52" y="105">CHECK_IN</text><text class="ts l" x="150" y="105">CHAR</text>
+<text class="ts l" x="52" y="127">CHECK_OUT</text><text class="ts l" x="150" y="127">CHAR</text>
+<text class="ts l" x="52" y="149">ROOM_ID</text><text class="ts l" x="150" y="149">INTEGER</text>
+<text class="th" x="520" y="35">ROOM</text>
+<text class="ts l" x="432" y="61">ID</text><text class="ts l" x="530" y="61">INTEGER</text>
+<text class="ts l" x="432" y="83">NUM</text><text class="ts l" x="530" y="83">INTEGER</text>
+<text class="ts l" x="432" y="105">TYPE</text><text class="ts l" x="530" y="105">CHAR</text>
+<text class="ts l" x="432" y="127">FREE</text><text class="ts l" x="530" y="127">CHAR</text>
+<text class="ts" x="266" y="138">1</text>
+<text class="ts" x="372" y="50">0:1</text>
+</svg>
