@@ -1,3 +1,6 @@
+#appunti 
+#web
+
 L'introduzione del WEB fa si che internet passi da piattaforma **accademica** a piattaforma che offre **servizi**, ovvero un contratto che lega due entità (fornitore - utilizzatore).
 I primi servizi erano **monoliti**, ma nel corso del tempo si è pensato di utilizzare delle astrazioni che potessero semplificare il tutto e implementare pagine dinamiche. Questo avviene in quanto nasce la necessità di rendere disponibili applicazioni distribuite sul web con una grossa scalabilità e capace di gestire una grande mole di richieste contemporaneamente le aziende: **enterprise computing** (sviluppo di applicazioni per le aziende).
 # Enterprise Computing

@@ -3182,10 +3182,3 @@ $$
 b^\top \bar{y} \leq c^\top x \qquad \forall x \in \Omega(P)
 $$
 contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata su $\Omega(P)$.
-
-
----
-
-\#programmazione lineare
-##simplesso
-##dualità

@@ -1,8 +1,10 @@
-## Perché Spring
+#appunti 
+#web
+# Perché Spring
 
 Grazie a Spring possiamo concentrarci sulla logica di business del nostro progetto piuttosto di pensare all'implementazione di esso.
 
-Tutto il **codice di contorno** è già implementato da Spring ed è sempre lo stesso in ogni web app: prendere la richiesta HTTP ([[Web#Una richiesta]]), decodificarla, passarla al nostro codice, prendere il risultato (es. una lista di prodotti), trasformarlo in **JSON** e metterlo nel corpo della risposta.
+Tutto il **codice di contorno** è già implementato da Spring ed è sempre lo stesso in ogni web app: prendere la richiesta HTTP ([[Web#Una richiesta|richiesta HTTP]]), decodificarla, passarla al nostro codice, prendere il risultato (es. una lista di prodotti), trasformarlo in **JSON** e metterlo nel corpo della risposta.
 
 >[!check] Esempio
 >L'utente chiede la lista dei prodotti venduti dal venditore X in un certo periodo. Il nostro codice Java elabora la richiesta e a un certo punto fa la `return` di una lista di prodotti. Senza Spring dovremmo poi trasformare la lista in una stringa JSON e agganciarla alla risposta HTTP: questo blocco di operazioni lo fa Spring in automatico.
@@ -52,7 +54,7 @@ I metodi dei repository saranno soprattutto **di interrogazione**.
 3. se entrambi i controlli passano: decrementare la quantità (e il credito dell'utente) e creare una **nuova riga nella tabella ordine**.
 
 >[!attention] AGGIUNTA
->Queste operazioni vanno fatte in modo **atomico**: se una fallisce a metà (es. l'ordine non viene salvato), anche le altre vanno annullate. In Spring si ottiene annotando il metodo del service con `@Transactional` (vedi [[Spring#Transazioni in Spring]]).
+>Queste operazioni vanno fatte in modo **atomico**: se una fallisce a metà (es. l'ordine non viene salvato), anche le altre vanno annullate. In Spring si ottiene annotando il metodo del service con `@Transactional` (vedi [[Spring#Transazioni in Spring|transazioni]]).
 
 Quindi un solo metodo del service (es. `makeOrder` in `PurchaseService`, che chiama un controllo del credito tramite `UserRepository` e `checkProductAvailability`) usa **tre repository** diversi (user, product, order).
 
@@ -79,7 +81,7 @@ Se sto in `PurchaseService` non ci metto un metodo che modifica gli utenti: quel
 
 ## Stereotipi e annotazioni
 
-Le annotazioni sono **a livello di classe**, **di metodo** o **di variabile** e dicono a Spring cosa fare con quell'elemento. Per la teoria vedi [[Spring#Annotazioni]].
+Le annotazioni sono **a livello di classe**, **di metodo** o **di variabile** e dicono a Spring cosa fare con quell'elemento. Per la teoria vedi [[Spring#Annotazioni|annotazioni]].
 
 ### Livello classe: `@Component` e stereotipi
 
@@ -96,7 +98,7 @@ Le annotazioni sono **a livello di classe**, **di metodo** o **di variabile** e 
 - Anche per questi meccanismi Spring è un framework leggero.
 
 >[!attention] Correzione
->Questo "pool" non corrisponde a come funziona davvero Spring. I bean annotati (`@Service`, `@Repository`, `@Controller`…) di default hanno scope **singleton**: il container ne crea **una sola istanza**, all'avvio, e la **condivide** fra tutte le richieste, anche contemporanee (ognuna gira in un suo thread). Non vengono create altre istanze nei picchi né liberate quando il traffico cala. Il vantaggio rispetto al fare `new` a ogni richiesta resta: gli oggetti si creano una volta sola. Vedi [[Spring#Scope dei bean]].
+>Questo "pool" non corrisponde a come funziona davvero Spring. I bean annotati (`@Service`, `@Repository`, `@Controller`…) di default hanno scope **singleton**: il container ne crea **una sola istanza**, all'avvio, e la **condivide** fra tutte le richieste, anche contemporanee (ognuna gira in un suo thread). Non vengono create altre istanze nei picchi né liberate quando il traffico cala. Il vantaggio rispetto al fare `new` a ogni richiesta resta: gli oggetti si creano una volta sola. Vedi [[Spring#Scope dei bean|scope dei bean]].
 
 ### `@Autowired` (livello variabile)
 
@@ -118,23 +120,40 @@ Il prof ha detto che Spring istanzia gli oggetti solo quando servono: se un serv
 >Il codice qui sopra è un esempio mio, non è nelle slide.
 
 >[!attention] Correzione
->Non è così: le dipendenze `@Autowired` vengono iniettate **quando il bean viene creato**, non quando si chiama il metodo che le usa. Di default i bean `singleton` vengono creati tutti **all'avvio** (eager), quindi A, B e C esistono già prima di qualsiasi chiamata. La creazione "solo quando serve" si ottiene solo con `@Lazy` (vedi [[Spring#Quando il container crea il bean]]).
+>Non è così: le dipendenze `@Autowired` vengono iniettate **quando il bean viene creato**, non quando si chiama il metodo che le usa. Di default i bean `singleton` vengono creati tutti **all'avvio** (eager), quindi A, B e C esistono già prima di qualsiasi chiamata. La creazione "solo quando serve" si ottiene solo con `@Lazy` (vedi [[Spring#Quando il container crea il bean|creazione dei bean]]).
 
 ### `@Value` (livello variabile)
 
-Recupera un valore da un file `.properties` (es. `application.properties`) e lo inietta in una variabile (su `application.properties` vedi anche [[Spring#Spring Boot]]).
+Recupera un valore da un file `.properties` (es. `application.properties`) e lo inietta in una variabile (su `application.properties` vedi anche [[Spring#Spring Boot|Spring Boot]]).
 
 Serve per i **parametri di configurazione**: nome dell'app, limiti sulle richieste, numero massimo di prodotti in un ordine, **API key** (es. la chiave di Google Cloud per usare le API di Gemini). Invece di cercarli sparsi nel codice, stanno tutti in un file.
 - Esempio: una software house che vende lo stesso back-end di e-commerce a più clienti, installato sulle loro macchine. Se i parametri sono scritti nel codice, per adattarlo a ogni cliente bisogna spulciare tutte le righe, e basta dimenticarne uno (es. il nome dell'app) per mostrare a un cliente il nome di un altro.
-- Esempio: in sviluppo uso la mia chiave; quando consegno l'applicazione al cliente, lui mette la sua nel file di configurazione senza toccare il codice.
-- La chiave serve al servizio esterno per riconoscere chi fa la richiesta (e scalare il credito; finito il credito, niente più risposte).
+- La **API key** serve al servizio esterno (es. Google) per riconoscere chi fa la richiesta e scalare il credito: finito il credito, niente più risposte.
+
+>[!important] Dove si mette la API key
+>La API key **non va scritta nel codice sorgente**, ma in un **file di configurazione** `.properties` del progetto. Poi la si richiama nel codice con `@Value`.
+>Così in sviluppo uso la chiave della mia software house; quando consegno l'applicazione al cliente, lui mette la sua nel file di configurazione senza toccare il codice.
+
+Come si usa:
+1. nel file `.properties` si scrive la chiave come coppia `nome=valore`;
+2. nella classe che la usa (es. il service che chiama le API di Gemini) si dichiara una variabile d'istanza e la si annota con `@Value`, indicando il nome della proprietà;
+3. all'avvio Spring legge il file, trova il valore e lo mette **in automatico** nella variabile.
+
+```properties
+# application.properties
+gemini.api.key=LA-MIA-CHIAVE
+```
 
 ```java
-@Value("${gemini.api.key}")
-private String apiKey;
+@Service
+public class GeminiService {
+    @Value("${gemini.api.key}")
+    private String apiKey;
+}
 ```
 >[!attention] AGGIUNTA
->La sintassi `${...}` e il nome della proprietà sono un esempio mio, nelle slide non c'è codice per `@Value`.
+>Il codice è un esempio mio: nelle slide non c'è codice per `@Value`, e il prof ha solo detto di annotare la variabile `apiKey` con `@Value` indicando la chiave. La sintassi `${nome.proprietà}` è quella standard di Spring.
+>Se il progetto è su Git, conviene non committare il file con la chiave vera (es. metterlo nel `.gitignore` e lasciare nel repository solo un esempio).
 
 ### `@Valid` (livello variabile)
 
@@ -153,7 +172,7 @@ Le annotazioni dei controller il prof le vedrà quando si parlerà dei controlle
 
 ## Server stateless
 
-Service e controller sono bean **singleton**: la stessa istanza viene usata da tutte le richieste, anche in contemporanea. Quindi il server va progettato **stateless** (vedi anche [[Spring#Scope dei bean]]):
+Service e controller sono bean **singleton**: la stessa istanza viene usata da tutte le richieste, anche in contemporanea. Quindi il server va progettato **stateless** (vedi anche [[Spring#Scope dei bean|scope dei bean]]):
 - una volta soddisfatta una richiesta, il server **non conserva nulla** della sessione dell'utente;
 - non si salvano nelle variabili d'istanza di service e controller informazioni legate a una specifica sessione: sarebbero condivise con tutti gli altri utenti (e le richieste concorrenti si sovrascriverebbero i dati a vicenda);
 - un server **stateful** è molto più pesante: servirebbe un service per ogni utente collegato, con le informazioni della sua sessione in memoria, anche quando l'utente si è già disconnesso e non servono più;
@@ -167,7 +186,7 @@ Con il pattern **DAO** (Data Access Object) una classe si occupa solo dell'acces
 
 ![[Spring-BookDao-uml.svg|center]]
 
-Per accedere a una base di dati senza Spring si usa una libreria come **JDBC**, che fornisce i metodi per collegarsi al DB. La base di dati ha un suo server, raggiungibile tramite un URL: quando configureremo la connessione sarà `localhost`, ma nulla vieta di metterla su un'altra macchina. Bisogna però fare tutto a mano (slide 14; teoria in [[Web#Java Database Connectivity]]):
+Per accedere a una base di dati senza Spring si usa una libreria come **JDBC**, che fornisce i metodi per collegarsi al DB. La base di dati ha un suo server, raggiungibile tramite un URL: quando configureremo la connessione sarà `localhost`, ma nulla vieta di metterla su un'altra macchina. Bisogna però fare tutto a mano (slide 14; teoria in [[Web#Java Database Connectivity|JDBC]]):
 1. aprire la connessione al datasource;
 2. creare il `PreparedStatement` e passargli i parametri;
 3. eseguirlo;
@@ -176,13 +195,13 @@ Per accedere a una base di dati senza Spring si usa una libreria come **JDBC**, 
 6. chiudere la connessione.
 
 >[!question] Osservazione: SQL injection
->Le query si fanno con i **prepared statement** (parametri passati con `?`) e non concatenando stringhe: questo previene gli attacchi di **SQL injection**. Vedi [[Web#Prepared Statement]] e [[Web#SQL injection]].
+>Le query si fanno con i **prepared statement** (parametri passati con `?`) e non concatenando stringhe: questo previene gli attacchi di **SQL injection**. Vedi [[Web#Prepared Statement|prepared statement]] e [[Web#SQL injection|SQL injection]].
 
 Con `JdbcTemplate` (slide 15) si passano query e parametri (`update(...)` per inserire, modificare o eliminare). Serve anche una classe `RowMapper` (es. `BookRowMapper`) che mappa una riga del `ResultSet` su un oggetto `Book`.
 
 Il `ResultSet` è il risultato della query: un cursore che scorre le righe, e per ogni riga si leggono le colonne per nome o per indice (un po' come una mappa colonna → valore).
 
-Tutto questo è codice non legato alla logica applicativa. Con **Spring Data JPA** è **tutto automatico**, grazie al meccanismo delle entity: i repository sono interfacce (es. che estendono `JpaRepository`) di cui Spring genera l'implementazione, quindi non serve più scrivere né il DAO né il mapping (vedi [[Spring#DAO, ORM e Spring Data]]). Spring JDBC con `JdbcTemplate` esiste ancora, ma è l'approccio "manuale". Dopo aver progettato, scrivere entity e repository richiederà poco tempo. Entro la lezione successiva si arriverà a scrivere **zero** codice di interazione con la base di dati.
+Tutto questo è codice non legato alla logica applicativa. Con **Spring Data JPA** è **tutto automatico**, grazie al meccanismo delle entity: i repository sono interfacce (es. che estendono `JpaRepository`) di cui Spring genera l'implementazione, quindi non serve più scrivere né il DAO né il mapping (vedi [[Spring#DAO, ORM e Spring Data|Spring Data]]). Spring JDBC con `JdbcTemplate` esiste ancora, ma è l'approccio "manuale". Dopo aver progettato, scrivere entity e repository richiederà poco tempo. Entro la lezione successiva si arriverà a scrivere **zero** codice di interazione con la base di dati.
 
 ### Chiavi composte
 
@@ -208,9 +227,6 @@ Il prof sconsiglia le **chiavi composte** (es. una tabella con chiave formata da
 >[!attention] AGGIUNTA
 >Per gli attributi semplici il `LAZY` è solo un **suggerimento**: Hibernate lo rispetta solo con il bytecode enhancement attivo, altrimenti carica comunque il campo. Ha senso soprattutto per campi pesanti (testi lunghi, `@Lob`), non per una data.
 - `@Transient`: la variabile d'istanza **non** viene salvata nella base di dati. Esempio: il client manda insieme all'utente un valore che serve in quel momento ma per cui non c'è una colonna nel DB. Serve comunque una variabile nell'entity, altrimenti nel mapping della richiesta sull'oggetto quel valore non saprebbe dove andare. Con `@Transient` Spring lo mette nell'oggetto Java, ma non lo salva.
-
->[!attention] AGGIUNTA
->`@Transient` non è nelle slide: l'ha nominata il prof (nella trascrizione "transient").
 
 ### Relazioni
 
