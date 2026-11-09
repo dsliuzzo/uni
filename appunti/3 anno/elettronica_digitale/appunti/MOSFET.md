@@ -28,7 +28,7 @@ Più è alta la concentrazione di drogante, più portatori liberi ci sono e più
 - Sopra il canale uno strato sottile di **isolante** (ossido di silicio, $SiO_2$, ottenuto ossidando il silicio ad alta temperatura) e sopra ancora l'elettrodo di **gate**.
 
 La struttura gate – ossido – canale è un **metallo / isolante / semiconduttore**: si comporta come un [[Elettrotecnica#Condensatore|condensatore]] con l'ossido come dielettrico.
-
+![[MOSFET-1794234059872.webp|center|555]]
 ## Funzionamento
 Applicando una tensione al gate, il campo elettrico attraverso l'ossido attira nel canale portatori di carica di tipo opposto a quelli del substrato. Se la tensione gate-source supera la **tensione di soglia** ($V_{GS} \geq V_T$) si forma un **canale conduttivo** tra source e drain e può circolare corrente (interruttore **ON**); sotto soglia il canale non esiste (interruttore **OFF**).
 
@@ -67,3 +67,4 @@ Z_{C_L} = \frac{1}{j \omega C_L}
 $$
 In regime statico $\omega = 2 \pi f = 0$, quindi $Z_{C_L} \to \infty$: il condensatore si comporta come un **circuito aperto** e non influenza l'[[Circuiti integrati digitali#Analisi statica|analisi statica]].
 Durante le commutazioni invece $C_L$ deve caricarsi e scaricarsi attraverso le $R_{ON}$ delle reti di pull-up e pull-down: è quindi fondamentale per l'[[Circuiti integrati digitali#Analisi dinamica|analisi dinamica]].
+

@@ -485,11 +485,108 @@ L'ultimo `- coppieNo` è il viceversa
 
 **Query per casa**
 1) conoscere i nomi delle merci di marca $\alpha$ o $\beta$ e il cui nome non è X
+$$
+\Pi_{\$ 2}[\sigma_{\$ 2 \neq 'X' \wedge (\$ 3 = \alpha \vee \$ 3 = \beta)}(\text{Merce})]
+$$
+``` sql
+SELECT nome
+FROM Merce
+WHERE   nome != 'X'
+	AND (marca = 'alpha' OR marca = 'beta')
+```
+
 2) coppie `nomeFornitore|nomeMarca` tali che il fornitore e la marca stanno nella stessa città e il fornitore fornisce almeno una merce di quella marca
+$$
+\Pi_{\$ 2, \$ 7}\left\{ \left[ \text{Fornitore}\underset{\$ 3 = \$ 5}{\bowtie} \left( \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \right] \underset{\$ 1 = \$ 1 \wedge \$ 4 = \$ 2}{\bowtie} \text{Fornitura} \right\}
+$$
+``` sql
+SELECT F.nome, MA.nome
+FROM Fornitore F, Merce ME, Marca MA, Fornitura X
+WHERE   F.citta = MA.sede
+	AND ME.marce = MA.nome
+	AND F.piva = X.fornitore
+	AND ME.cod = X.merca
+```
+
 3) nome delle marche di CS, che producono almeno 2 merci ciascuna delle quali è fornita a più di 10 euro da due fornitori di RC
+$$
+\begin{array}{l}
+\text{fornituraOk} = \Pi_{\$ 1, \$ 2, \$ 3}\left\{ [\sigma_{\$ 3 > 10} (\text{Fornitura})] \underset{\$ 1 = \$ 1}{\bowtie}[\sigma_{\$ 3 = 'RC'}(\text{Fornitore})] \right\} \\
+\text{merceOk} = \Pi_{\$ 1, \$ 3}\left[ \text{Merce} \underset{\$ 1 = \$ 2}{\bowtie} \left( \text{fornituraOk} \underset{\$ 1 \neq \$ 1 \wedge \$ 2 = \$ 2}{\bowtie} \text{fornituraOk} \right) \right] \\
+\text{marcaOk} = \Pi_{\$ 1}\left[ \sigma_{\$ 2 = 'CS'}(\text{Marca}) \underset{\$ 1 = \$ 2}{\bowtie} \left( \text{merceOk} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie} \text{merceOk} \right) \right]
+\end{array}
+$$
+``` sql
+CREATE VIEW fornituraOk(fornitore, merce, prezzo) AS (
+	SELECT X.fornitore AS fornitore, X.merce AS merce, X.prezzo AS prezzo
+	FROM Fornitura AS X, Fornitore AS F
+	WHERE   X.fornitore = F.piva
+		AND X.prezzo > 10
+		AND F.citta = 'RC'
+);
+CREATE VIEW merceOk(cod, marca) AS (
+	SELECT M.cod AS cod, M.marca AS marca
+	FROM Merce AS M, fornituraOk AS F1, fornituraOk AS F2
+	WHERE   F1.fornitore != F2.fornitore
+		AND F1.merce = F2.merce
+		AND M.cod = F1.merce
+);
+
+SELECT MA.nome
+FROM Marca AS MA, merceOk AS M1, merceOk AS M2
+WHERE   MA.sede = 'CS'
+	AND M1.marca = M2.marca
+	AND M1.cod != M2.cod
+	AND MA.nome = M1.marca
+```
+
 4) nomi delle merci che sono fornite da esattamente 2 fornitori di CS
+almeno 2 - almeno 3
+$$
+\begin{array}{l}
+\text{fornituraOk} = \Pi_{\$ 1, \$ 2} \left[ \sigma_{\$ 6 = 'CS'}\left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore}\right) \right] \\
+\text{almeno2} = \text{fornituraOk} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie}\text{fornituraOk} \\
+\text{almeno3} = \text{almeno2} \underset{\$2 = \$ 2 \wedge \$ 1 \neq \$ 1 \wedge \$ 3 \neq \$ 1}{\bowtie} \text{fornituraOk} \\
+Q = \Pi_{\$ 2}\left\{\text{Merce}\underset{\$ 1 = \$ 1}{\bowtie}[\Pi_{\$ 2}(\text{almeno2}) - \Pi_{\$ 2}(\text{almeno3})]\right\}
+\end{array}
+$$
+``` sql
+CREATE VIEW fornituraOk (fornitore, merce) AS (
+	SELECT X.fornitore AS fornitore, X.merce AS merce
+	FROM Fornitura AS X, Fornitore AS F
+	WHERE   F.citta = 'CS'
+		AND X.fornitore = F.piva
+);
+CREATE VIEW almeno2 (f1, m1, f2, m2) AS (
+	SELECT X1.fornitore AS f1, X1.merce AS m1, X2.fornitore AS f2, X2.merce AS m2
+	FROM fornituraOk AS X1, fornituraOk AS X2
+	WHERE   X1.merce = X2.merce
+		AND X1.fornitore != X2.fornitore
+);
+CREATE VIEW almeno3 (f1,m1,f2,m2,f3,m3) AS (
+	SELECT almeno2.f1 AS f1, almeno2.m1 AS m1, almeno2.f2 AS f2, almeno2.m2 AS m2, X.fornitore AS f3, X.merce AS m3
+	FROM almeno2, fornituraOk AS X
+	WHERE   almeno2.m1 = X.merce
+		AND almeno2.f1 != X.fornitore
+		AND almeno2.f2 != X.fornitore
+);
+CREATE VIEW esatt2 (cod) AS (
+	SELECT almeno2.m1
+	FROM almeno2
+	EXCEPT
+	SELECT almeno3.m1
+	FROM almeno3
+);
+
+SELECT M.nome
+FROM Merce AS M, esatt2
+WHERE M.cod = esatt2.cod;
+```
 5) nomi dei fornitori che non forniscono merci di marca $\alpha$
+
+
 6) nomi dei fornitori che forniscono solo merci di marca $\alpha$
 7) per ogni fornitore di RC restituire il prezzo più basso a cui fornisce qualche merce
 8) merci prodotte a CS che sono fornite da tutti i fornitori
 9) coppi di merci prodotte nella stessa città che sono fornite dallo stesso insieme di fornitori
+
