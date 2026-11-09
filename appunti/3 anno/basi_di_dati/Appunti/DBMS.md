@@ -1133,3 +1133,4 @@ $$
 il fornitore `$1` non fornisce la merce `$2` $\implies$ `FornitoriSI` $= \{F1, F2, F3\} - \{F2, F3\} = \{F1\}$, $Q = \{A\}$.
 
 Con marca $\alpha$ (solo M1): `FornituraNO` $= \{(F3, M1)\}$, `FornitoriSI` $= \{F1, F2\}$, $Q = \{A, B\}$.
+## SQL
