@@ -333,8 +333,15 @@ $$
 \text{Q10} = \Pi_{\$1}(\text{cliente}) - \text{clientiNo}
 \end{array}
 $$
-11) Coppie di clienti <C1,C2> che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
-[...]
+11) Coppie di clienti `<C1,C2>` che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
+tutte le possibili coppie di clienti - clienti che hanno sottoscritto investimenti curati da società finanziarie diverse
+$$
+\begin{array}{l}
+\text{coppieNo} = \left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento} \right) \underset{\$ 5 \neq \$ 5 \wedge \$ 1 \neq \$ 1}{\bowtie} \left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento} \right) \\
+\text{Q11} = \Pi_{\$ 1, \$ 4}(\text{Sottoscrizione} \times \text{Sottoscrizione}) - \Pi_{\$ 1, \$ 8}(\text{coppieNo})
+\end{array}
+$$
+[...] da rivedere
 # Prova esame 8 luglio 2019
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -360,7 +367,44 @@ con i seguenti vincoli di chiave esterna:
 6) Le tipologie di autobus delle quali non esiste alcun autobus che copra una tratta che parte dalla città di Roma e che copre una distanza inferiore a 200 km.
 [...]
 7) Le coppie di stazioni tali che gli insiemi di tipologie di autobus che partono da ciascuna di esse sono uguali.
+[...]
+# Prova esame 24 marzo 2022
+## Esercizio 4
+Sia dato il seguente schema di database:
+- $\text{APPARTAMENTO}(\underline{\text{condominio}}, \underline{\text{interno}}, \text{superficie})$
+- $\text{CONDOMINIO}(\underline{\text{nome}}, \text{indirizzo}, \text{citta})$
+- $\text{INQUILINO}(\underline{\text{codicefiscale}}, \text{nome}, \text{cognome}, \text{città}, \text{età})$
+- $\text{AFFITTO}(\text{inquilino}, \text{appCondominio}, \text{appInterno}, \text{dataInizio}, \text{durataMesi}, \text{importoMensile})$
+
+con i seguenti vincoli di chiave esterna:
+- $\text{APPARTAMENTO}[\text{condominio}] \sqsubseteq_{FK} \text{CONDOMINIO}[\text{nome}]$
+- $\text{AFFITTO}[\text{inquilino}] \sqsubseteq_{FK} \text{INQUILINO}[\text{codicefiscale}]$
+- $\text{AFFITTO}[\text{appCondominio}, \text{appInterno}] \sqsubseteq_{FK} \text{APPARTAMENTO}[\text{condominio}, \text{interno}]$
+
+1) I condomini di Rende che hanno almeno due appartamenti, ciascuno dei quali è stato fittato ad almeno due inquilini diversi nell'anno 2021
+[...]
+2) I condomini di Rende che non hanno affittato alcun appartamento nell'anno 2020
+[...]
+3) I condomini di Rende che hanno affittato appartamenti solo ad inquilini della città di Cosenza
+[...]
+4) Le coppie di nomi di inquilini che hanno affittato lo stesso insieme di appartamenti nella città di Cosenza
+[...]
+
 # Prova esame 30 giugno 2022
+## Esercizio 3
+Sia dato il seguente schema di database:
+- $\text{CATEGORIA}(\underline{\text{id}}, \text{nome}, \text{descrizione})$
+- $\text{SCRITTORE}(\underline{\text{codicefiscale}}, \text{nome}, \text{cognome}, \text{città}, \text{età})$
+- $\text{ACCREDITATO}(\underline{\text{scrittore}}, \underline{\text{categoria}})$
+- $\text{ARTICOLO}(\text{scrittore}, \text{categoria}, \text{titolo}, \text{data})$
+
+con i seguenti vincoli di chiave esterna:
+- $\text{ACCREDITATO}[\text{scrittore}] \sqsubseteq_{FK} \text{SCRITTORE}[\text{codicefiscale}]$
+- $\text{ACCREDITATO}[\text{categoria}] \sqsubseteq_{FK} \text{CATEGORIA}[\text{id}]$
+- $\text{ARTICOLO}[\text{scrittore}] \sqsubseteq_{FK} \text{SCRITTORE}[\text{codicefiscale}]$
+- $\text{ARTICOLO}[\text{categoria}] \sqsubseteq_{FK} \text{CATEGORIA}[\text{id}]$
+
+dove la relazione ACCREDITATO riporta le coppie $S, C$ tali che lo scrittore $S$ è accreditato a scrivere articoli della categoria $C$.
 
 1) I nomi degli scrittori che hanno redatto almeno due articolo di categoria “Cronaca”
 $$
@@ -379,5 +423,5 @@ Q = \Pi_{\$2}\left(\text{categoria} \underset{\$1 = \$2}{\bowtie}\left\{\left[\l
 $$
 3)  Gli scrittori della città di Genova che hanno scritto solo articoli di categorie per le quali non sono accreditati
 [...]
-4) Le coppie di scrittori <S1,S2> che hanno scritto articoli per lo stesso insieme di categorie
+4) Le coppie di scrittori `<S1,S2>` che hanno scritto articoli per lo stesso insieme di categorie
 [...]
