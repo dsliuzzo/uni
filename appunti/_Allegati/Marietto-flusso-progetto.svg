@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="640" viewBox="0 0 860 640">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="60.0" y="20.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="45.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>1  Descrizione (VHDL)</tspan></text>
+<line x1="225.0" y1="60.0" x2="225.0" y2="96.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,88.6 225.0,96.0 228.1,88.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="96.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="121.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>2  Simulazione logica  (t = 0)</tspan></text>
+<line x1="390.0" y1="116.0" x2="430.0" y2="116.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="422.6,119.1 430.0,116.0 422.6,112.9" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="430.0" y="98.0" width="130.0" height="36.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="495.0" y="121.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>3  Corretta?</tspan></text>
+<line x1="225.0" y1="136.0" x2="225.0" y2="172.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,164.6 225.0,172.0 228.1,164.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="172.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="197.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>4  Mapping (sintesi)</tspan></text>
+<line x1="225.0" y1="212.0" x2="225.0" y2="248.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,240.6 225.0,248.0 228.1,240.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="248.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="273.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>5  Simulazione post-sintesi</tspan></text>
+<line x1="390.0" y1="268.0" x2="430.0" y2="268.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="422.6,271.1 430.0,268.0 422.6,264.9" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="430.0" y="250.0" width="130.0" height="36.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="495.0" y="273.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>6  Corretta?</tspan></text>
+<line x1="225.0" y1="288.0" x2="225.0" y2="324.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,316.6 225.0,324.0 228.1,316.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="324.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="349.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>7  Place &amp; Route</tspan></text>
+<line x1="225.0" y1="364.0" x2="225.0" y2="400.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,392.6 225.0,400.0 228.1,392.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="400.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="425.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>8  Simulazione post-P&amp;R</tspan></text>
+<line x1="390.0" y1="420.0" x2="430.0" y2="420.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="422.6,423.1 430.0,420.0 422.6,416.9" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="430.0" y="402.0" width="130.0" height="36.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="495.0" y="425.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>9  Corretta?</tspan></text>
+<line x1="225.0" y1="440.0" x2="225.0" y2="476.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,468.6 225.0,476.0 228.1,468.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="476.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="501.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>10  Layout (ASIC / FPGA)</tspan></text>
+<line x1="225.0" y1="516.0" x2="225.0" y2="552.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="221.9,544.6 225.0,552.0 228.1,544.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="60.0" y="552.0" width="330.0" height="40.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="225.0" y="577.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>Chip in silicio → test post-layout in laboratorio</tspan></text>
+<line x1="390.0" y1="572.0" x2="430.0" y2="572.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="422.6,575.1 430.0,572.0 422.6,568.9" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="430.0" y="554.0" width="130.0" height="36.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="495.0" y="577.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>Funziona?</tspan></text>
+<text x="570.0" y="106.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>NO → torna alla descrizione</tspan></text>
+<text x="570.0" y="258.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>NO → torna al mapping</tspan></text>
+<text x="570.0" y="410.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>NO → torna al P&amp;R</tspan></text>
+<text x="570.0" y="562.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>NO → torna alla descrizione</tspan></text>
+<text x="570.0" y="124.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>SÌ → si prosegue</tspan></text>
+<text x="570.0" y="276.0" font-size="11" text-anchor="start" fill="#b8b8b8"><tspan>(o, se non basta, alla descrizione)</tspan></text>
+</svg>

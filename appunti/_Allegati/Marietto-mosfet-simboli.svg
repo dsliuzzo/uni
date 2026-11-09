@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="240" viewBox="0 0 680 240">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="170.0" y="24.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>NMOS = interruttore di tipo 1</tspan></text>
+<text x="500.0" y="24.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>PMOS = interruttore di tipo 0</tspan></text>
+<line x1="136.0" y1="120.0" x2="154.0" y2="120.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="158.0" y1="102.0" x2="158.0" y2="138.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="164.0" y1="100.0" x2="164.0" y2="110.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="164.0" y1="115.0" x2="164.0" y2="125.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="164.0" y1="130.0" x2="164.0" y2="140.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="164.0" y1="105.0" x2="186.0" y2="105.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="186.0" y1="105.0" x2="186.0" y2="86.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="164.0" y1="135.0" x2="186.0" y2="135.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="186.0" y1="135.0" x2="186.0" y2="154.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="186.0" y1="120.0" x2="164.0" y2="120.0" stroke="#b8b8b8" stroke-width="1.4" stroke-linecap="round"/>
+<polyline points="171.4,116.9 164.0,120.0 171.4,123.1" fill="none" stroke="#b8b8b8" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="196.0" y="90.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>drain</tspan></text>
+<text x="196.0" y="158.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>source</tspan></text>
+<text x="132.0" y="125.0" font-size="13" text-anchor="end" fill="#b8b8b8"><tspan>gate</tspan></text>
+<line x1="466.0" y1="120.0" x2="484.0" y2="120.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="480.0" cy="120.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<line x1="466.0" y1="120.0" x2="476.0" y2="120.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="488.0" y1="102.0" x2="488.0" y2="138.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="494.0" y1="100.0" x2="494.0" y2="110.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="494.0" y1="115.0" x2="494.0" y2="125.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="494.0" y1="130.0" x2="494.0" y2="140.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="494.0" y1="105.0" x2="516.0" y2="105.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="516.0" y1="105.0" x2="516.0" y2="86.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="494.0" y1="135.0" x2="516.0" y2="135.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="516.0" y1="135.0" x2="516.0" y2="154.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="494.0" y1="120.0" x2="516.0" y2="120.0" stroke="#b8b8b8" stroke-width="1.4" stroke-linecap="round"/>
+<polyline points="508.6,123.1 516.0,120.0 508.6,116.9" fill="none" stroke="#b8b8b8" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="526.0" y="90.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>drain</tspan></text>
+<text x="526.0" y="158.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>source</tspan></text>
+<text x="462.0" y="125.0" font-size="13" text-anchor="end" fill="#b8b8b8"><tspan>gate</tspan></text>
+<text x="340.0" y="210.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>il pallino sul gate distingue il PMOS dall'NMOS</tspan></text>
+</svg>

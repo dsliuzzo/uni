@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="280" viewBox="0 0 560 280">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="14.0" y="56.0" font-size="15" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>A</tspan></text>
+<text x="14.0" y="78.0" font-size="15" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>B</tspan></text>
+<text x="2.0" y="134.0" font-size="15" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="10.5" dy="3.8">in</tspan><tspan dy="-3.8"></tspan></text>
+<path d="M 108 40.0 Q 140.4 40.0 162 62 Q 140.4 84.0 108 84.0 Q 119.88 62 108 40.0 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M 100 40.0 Q 111.88 62 100 84.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="20.0" y1="51.0" x2="103.0" y2="51.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="20.0" y1="73.0" x2="103.0" y2="73.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="40.0" cy="51.0" r="3.2" fill="#b8b8b8"/>
+<line x1="40.0" y1="51.0" x2="40.0" y2="189.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="55.0" cy="73.0" r="3.2" fill="#b8b8b8"/>
+<line x1="55.0" y1="73.0" x2="55.0" y2="211.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 100 178.0 H 127.0 A 22.0 22.0 0 0 1 127.0 222.0 H 100 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="40.0" y1="189.0" x2="100.0" y2="189.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="55.0" y1="211.0" x2="100.0" y2="211.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="162.0" y1="62.0" x2="250.0" y2="62.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="250.0" cy="62.0" r="3.2" fill="#b8b8b8"/>
+<text x="230.0" y="52.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>p</tspan></text>
+<path d="M 308 78.0 Q 340.4 78.0 362 100 Q 340.4 122.0 308 122.0 Q 319.88 100 308 78.0 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M 300 78.0 Q 311.88 100 300 122.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="250.0" y1="62.0" x2="250.0" y2="89.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="250.0" y1="89.0" x2="303.0" y2="89.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 290 168.0 H 317.0 A 22.0 22.0 0 0 1 317.0 212.0 H 290 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="250.0" y1="89.0" x2="250.0" y2="179.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="250.0" y1="179.0" x2="290.0" y2="179.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="20.0" y1="140.0" x2="270.0" y2="140.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="270.0" cy="140.0" r="3.2" fill="#b8b8b8"/>
+<line x1="270.0" y1="111.0" x2="270.0" y2="201.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="270.0" y1="111.0" x2="303.0" y2="111.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="270.0" y1="201.0" x2="290.0" y2="201.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 400 168.0 Q 432.4 168.0 454 190 Q 432.4 212.0 400 212.0 Q 411.88 190 400 168.0 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="339.0" y1="190.0" x2="380.0" y2="190.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="380.0" y1="190.0" x2="380.0" y2="179.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="380.0" y1="179.0" x2="404.3" y2="179.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="149.0" y1="200.0" x2="169.0" y2="200.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="169.0" y1="200.0" x2="169.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="169.0" y1="245.0" x2="372.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="372.0" y1="245.0" x2="372.0" y2="201.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="372.0" y1="201.0" x2="404.3" y2="201.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="179.0" y="240.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>g</tspan></text>
+<line x1="362.0" y1="100.0" x2="520.0" y2="100.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="530.0" y="105.0" font-size="15" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>S</tspan></text>
+<line x1="454.0" y1="190.0" x2="520.0" y2="190.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="530.0" y="195.0" font-size="15" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="10.5" dy="3.8">out</tspan><tspan dy="-3.8"></tspan></text>
+</svg>

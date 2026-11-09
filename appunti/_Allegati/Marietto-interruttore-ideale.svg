@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="220" viewBox="0 0 560 220">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="140.0" y="24.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>interruttore chiuso (ON)</tspan></text>
+<text x="420.0" y="24.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>interruttore aperto (OFF)</tspan></text>
+<circle cx="40.0" cy="90.0" r="3.2" fill="#b8b8b8"/>
+<text x="32.0" y="95.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>N</tspan><tspan font-size="9.1" dy="3.2">1</tspan><tspan dy="-3.2"></tspan></text>
+<circle cx="240.0" cy="90.0" r="3.2" fill="#b8b8b8"/>
+<text x="248.0" y="95.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>N</tspan><tspan font-size="9.1" dy="3.2">2</tspan><tspan dy="-3.2"></tspan></text>
+<line x1="40.0" y1="90.0" x2="240.0" y2="90.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="140.0" y="78.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>R</tspan><tspan font-size="8.4" dy="3.0">ON</tspan><tspan dy="-3.0"></tspan><tspan> = 0 Ω  (corto circuito)</tspan></text>
+<text x="140.0" y="150.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>caso ideale</tspan></text>
+<circle cx="320.0" cy="90.0" r="3.2" fill="#b8b8b8"/>
+<text x="312.0" y="95.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>N</tspan><tspan font-size="9.1" dy="3.2">1</tspan><tspan dy="-3.2"></tspan></text>
+<circle cx="520.0" cy="90.0" r="3.2" fill="#b8b8b8"/>
+<text x="528.0" y="95.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>N</tspan><tspan font-size="9.1" dy="3.2">2</tspan><tspan dy="-3.2"></tspan></text>
+<line x1="320.0" y1="90.0" x2="400.0" y2="90.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="440.0" y1="90.0" x2="520.0" y2="90.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="420.0" y="78.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>R</tspan><tspan font-size="8.4" dy="3.0">OFF</tspan><tspan dy="-3.0"></tspan><tspan> = ∞  (circuito aperto)</tspan></text>
+<text x="420.0" y="150.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>caso ideale</tspan></text>
+<text x="280.0" y="200.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>caso reale:  R</tspan><tspan font-size="9.8" dy="3.5">ON</tspan><tspan dy="-3.5"></tspan><tspan> > 0 Ω  e  R</tspan><tspan font-size="9.8" dy="3.5">OFF</tspan><tspan dy="-3.5"></tspan><tspan> &lt; ∞</tspan></text>
+</svg>

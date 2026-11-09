@@ -164,15 +164,33 @@ Dualmente alla AND dobbiamo creare un NOR e negare l'uscita
 $$
 f = \bar{a} \cdot b + a \bar{b}
 $$
+La funzione è **diretta**: applicando le [[#Regole di progettazione|regole di progettazione]] la pull-down è $(\bar a \cdot b) \,\|\, (a \cdot \bar b)$ e la pull-up è la sua duale. Il nodo tra le due reti però vale $\overline{f}$, cioè la **XNOR**: per avere la XOR va aggiunto un **inverter in uscita**.
+
 ![[Circuiti integrati digitali-1792585626485.webp|center|450]]
-tot = 14 interruttori ☠️
-[...] ho fatto un danno, va aggiunto il not alla fine
+Il circuito qui sopra (senza inverter finale) dà in `out` la XNOR. Con l'inverter in uscita il totale è $8 + 2 \cdot 2 + 2 =$ **14 interruttori** ☠️ (8 delle reti, 2 inverter sugli ingressi, 1 inverter in uscita).
+
+>[!check] XOR senza inverter finale
+>Si può risparmiare l'inverter scrivendo la XOR come XNOR negata:
+>$$f = a \oplus b = \overline{\bar a \cdot \bar b + a \cdot b}$$
+>La funzione ora è **negata**, quindi `out` è direttamente il nodo tra le reti: pull-down $(\bar a \,\|\, b)$ in serie a $(a \,\|\, \bar b)$, pull-up $(\bar a \text{ serie } b) \,\|\, (a \text{ serie } \bar b)$. Totale **12 interruttori**.
+>![[Marietto-xor-cmos.svg|center|330]]
+>*(Dagli appunti di Marietto, Decima lezione: si parte dalla XNOR e si scambiano $a \leftrightarrow \bar a$ negli interruttori di una variabile.)*
+
+Tabella degli stati della XOR a 12 interruttori (figura nel riquadro sopra, etichette di Marietto):
+
+| $A$ | $B$ | $Z_1$ | $Z_2$ | $Z_3$ | $Z_4$ | $U_1$ | $U_2$ | $U_3$ | $U_4$ | $out$ |
+|---|---|---|---|---|---|---|---|---|---|---|
+| $0\ V$ | $0\ V$ | OFF | ON | ON | OFF | ON | OFF | OFF | ON | $0\ V$ |
+| $0\ V$ | $V_{DD}$ | OFF | OFF | ON | ON | ON | ON | OFF | OFF | $V_{DD}$ |
+| $V_{DD}$ | $0\ V$ | ON | ON | OFF | OFF | OFF | OFF | ON | ON | $V_{DD}$ |
+| $V_{DD}$ | $V_{DD}$ | ON | OFF | OFF | ON | OFF | ON | ON | OFF | $0\ V$ |
 ## XNOR
 $$
 f = \bar{a} \cdot \bar{b} + a \cdot b
 $$
+Funzione diretta: pull-down $(\bar a \cdot \bar b) \,\|\, (a \cdot b)$, pull-up duale e inverter in uscita (14 interruttori).
 ![[Circuiti integrati digitali-1793024431119.webp|center|450]]
-Possiamo anche averla come [[#XOR]] tutta negata, quindi possiamo togliere l'inverter finale dal circuito della [[#XOR]] ottenendo lo stesso risultato con meno interruttori
+Dualmente a quanto visto per la [[#XOR]], la XNOR è una XOR negata: $f = \overline{\bar a \cdot b + a \cdot \bar b}$. È proprio il primo circuito della [[#XOR]] **senza** inverter finale, che ottiene lo stesso risultato con meno interruttori (12):
 ![[Circuiti integrati digitali-1792585626485.webp|center|450]]
 ## MUX 2:1
 $$
@@ -304,7 +322,8 @@ All'aumentare del numero di ingressi le resistenze in gioco si degradano e l'usc
 Il caso peggiore per lo 0 logico è una porta con gli interruttori in **serie** nella pull-down (come la NAND) e tutti gli ingressi a $V_{DD}$.
 
 **NAND a 2 ingressi:** $V_A = V_B = V_{DD}$
-[...] schema della porta a due ingressi
+![[Circuiti integrati digitali-1792569428894.webp|center|250]]
+Con $A = B = V_{DD}$: $Z_1$, $Z_2$ (parallelo, pull-up) sono aperti → $R_{OFF} \,\|\, R_{OFF} = R_{OFF}/2$; $U_1$, $U_2$ (serie, pull-down) sono chiusi → $2R_{ON}$.
 
 Le due resistenze $R_{ON}$ della pull-down sono in serie, quindi l'uscita, che idealmente è $0\ V$, diventa
 $$
@@ -313,13 +332,20 @@ $$
 e si allontana da $0\ V$ **più che nell'inverter**. Inoltre i due interruttori aperti della pull-up sono in parallelo, quindi la resistenza della pull-up **diminuisce**, mentre quella della pull-down chiusa **aumenta**: ci si allontana dalla condizione di mutua esclusione.
 
 **NAND a 4 ingressi:** $A = B = C = D = V_{DD}$
-[...] grafici
+
+>[!multi-column]
+>
+>>[!blank]
+>>![[Marietto-nand4-cmos.svg|center|260]]
+>
+>>[!blank]
+>>![[Marietto-fanin-1.svg|center|380]]
 
 - la pull-down è la **serie** di 4 resistenze $R_{ON}$
 - la pull-up è il **parallelo** di 4 resistenze $R_{OFF}$
 
 $$
-V_{out} = 4 R_{ON} \cdot I
+V_{out} = 4 R_{ON} \cdot I \qquad I = \frac{V_{DD}}{4 R_{ON} + \frac{R_{OFF}}{4}}
 $$
 Finché $V_{out} < V_{\text{soglia}}$ la porta di carico legge correttamente uno 0 logico. Aumentando il numero di ingressi però $V_{out}$ cresce, fino a un valore che il carico non riesce più a interpretare come 0: c'è quindi un limite sul **valore massimo** che la porta pilota può dare in uscita per rappresentare lo 0.
 
@@ -337,11 +363,27 @@ $$
 $V_{OL}$ dipende dalla topologia della porta pilota, che decidiamo noi, quindi possiamo controllarlo; $V_{IL}$ invece è un **parametro della tecnologia** e non possiamo modificarlo.
 
 #### Problemi sull'1 logico: NOR
-[...] grafici
+>[!question] Osservazione: la NAND sull'1 logico
+>Sulla NAND l'1 logico non dà problemi: con $A = B = C = D = 0\ V$ la pull-up è il **parallelo** di 4 $R_{ON}$ ($R_{ON}/4$) e la pull-down la **serie** di 4 $R_{OFF}$, quindi più ingressi ci sono più $V_{out}$ si avvicina a $V_{DD}$.
+>![[Marietto-fanin-0.svg|center|380]]
+>Il problema dell'1 nasce invece nelle porte con la **serie** nella pull-up.
 
-Dualmente, il caso peggiore per l'1 logico è una porta con gli interruttori in **serie** nella pull-up (come la NOR). Con una NOR a 4 ingressi e $A = B = C = D = 0\ V$ la pull-up è la serie di 4 resistenze $R_{ON}$, quindi
+>[!multi-column]
+>
+>>[!blank]
+>>Dualmente, il caso peggiore per l'1 logico è una porta con gli interruttori in **serie** nella pull-up (come la NOR). Con una NOR a 4 ingressi e $A = B = C = D = 0\ V$:
+>>- la pull-up è la **serie** di 4 resistenze $R_{ON}$
+>>- la pull-down è il **parallelo** di 4 resistenze $R_{OFF}$
+>
+>>[!blank]
+>>![[Circuiti integrati digitali-nor4-fanin.svg|center|220]]
+
+>[!attention] AGGIUNTA
+>La figura della NOR non è negli appunti di Marietto: è il duale del caso NAND con tutti gli ingressi a $V_{DD}$.
+
+Quindi
 $$
-V_{out} = V_{DD} - 4 R_{ON} \cdot I
+V_{out} = V_{DD} - 4 R_{ON} \cdot I \qquad I = \frac{V_{DD}}{4 R_{ON} + \frac{R_{OFF}}{4}}
 $$
 All'aumentare del numero di ingressi $V_{out}$ si allontana dal valore nominale $V_{DD}$.
 
@@ -378,3 +420,140 @@ si definiscono i **margini di rumore**, cioè quanto disturbo può sommarsi al s
 >[!important] Il circuito funziona correttamente solo se **entrambi** i margini sono $> 0$
 
 ## Analisi dinamica
+*Fonte: appunti di Marietto, Dodicesima e Tredicesima lezione (vedi [[Appunti Marietto#Analisi dinamica|analisi dinamica (Marietto)]]).*
+
+Nell'analisi dinamica gli ingressi **variano nel tempo** e si studia cosa succede durante le commutazioni. Come per l'analisi statica si usa l'**inverter**: quello che vale per l'inverter vale per tutti i circuiti logici.
+
+### Tempi di salita e di discesa
+Una forma d'onda **ideale** commuta istantaneamente (tempo di salita nullo); una forma d'onda **reale** impiega un tempo non nullo, che si misura tra il 10% e il 90% del valore massimo.
+
+![[Marietto-forma-onda.svg|center|700]]
+
+>[!multi-column]
+>
+>>[!important] Tempo di salita
+>>Tempo impiegato per passare dal 10% al 90% del valore massimo:
+>>$$t_r = t_2 - t_1 = t_{90\%} - t_{10\%}$$
+>
+>>[!important] Tempo di discesa
+>>Tempo impiegato per passare dal 90% al 10% del valore massimo:
+>>$$t_f = t_4 - t_3 = t_{10\%} - t_{90\%}$$
+>>(in discesa il 10% si raggiunge *dopo* il 90%)
+
+Non è detto che $t_r = t_f$: anzi, in generale $t_r \neq t_f$.
+
+### Capacità di carico
+L'uscita di una porta logica verrà sicuramente usata da un'altra porta logica. Nella situazione più semplice l'uscita di un inverter (**pilota**) entra in un altro inverter (**carico**). Disegnando entrambi con i transistori:
+
+![[Marietto-inverter-capacita-gate.svg|center|650]]
+
+Quando $V_{in} = 0$ il PMOS del pilota è acceso e l'NMOS è spento; l'uscita $O_1$ del pilota è collegata ai **gate** del carico. Sul morsetto di gate si vedono due effetti:
+- un effetto **resistivo**
+- un effetto **capacitivo**: la struttura metallo–ossido–semiconduttore del [[MOSFET]] si comporta come un condensatore tra gate e massa ($C_{gp}$ per il PMOS, $C_{gn}$ per l'NMOS)
+
+Ogni transistore introduce la propria capacità. Per semplificare i calcoli le si concentra in un'**unica capacità**: per il principio di sovrapposizione degli effetti, nell'analisi dinamica $V_{DD}$ va sostituito con la massa, quindi anche il condensatore collegato verso $V_{DD}$ finisce verso massa e le capacità risultano tutte **in parallelo**:
+$$
+C_L = C_{gn} + C_{gp}
+$$
+
+>[!important] Capacità di carico
+>Su ogni nodo si considera un solo condensatore $C_L$, con capacità pari alla **somma delle capacità di gate** delle porte che ricevono quel nodo come ingresso.
+
+Il modello dell'inverter per l'analisi dinamica diventa quindi:
+![[Marietto-inverter-cl.svg|center|400]]
+
+### Tempo di propagazione
+Detto anche **ritardo**, tempo di risposta o di commutazione: è il tempo con cui l'inverter risponde alle sollecitazioni in ingresso.
+
+Consideriamo una commutazione dell'ingresso da $0\ V$ a $V_{DD}$.
+
+**Prima della commutazione** $V_{in}$ è stabilmente a $0\ V$: l'interruttore di tipo 0 è chiuso ($R_{ON}$) e quello di tipo 1 è aperto ($R_{OFF}$). Poiché $R_{OFF} \gg R_{ON}$, $R_{OFF}$ si può sostituire con un circuito aperto. In questo stato $V_{out} = V_{DD}$, cioè $C_L$ è **carica** a $V_{DD}$.
+
+![[Marietto-commutazione-rc.svg|center|600]]
+
+**Durante la commutazione** $V_{in} \uparrow$ fino a $V_{DD}$ e il circuito passa nella condizione opposta: la pull-up si apre, la pull-down si chiude e $C_L$ si **scarica** attraverso la $R_{ON}$ della pull-down, finché $V_{out} = 0\ V$ (a destra in figura).
+
+![[Marietto-potenza-switching.svg|center|700]]
+
+La scarica non è istantanea: dipende dalla **costante di tempo** del circuito $RC$
+$$
+\tau = R_{ON} \cdot C_L \qquad t_{SCAR} = \alpha \cdot \tau
+$$
+Nella commutazione opposta ($V_{in}$ da $V_{DD}$ a $0\ V$) $C_L$ si carica attraverso la $R_{ON}$ della pull-up, con la stessa formula di $\tau$ (assumendo uguali le $R_{ON}$ dei due tipi di interruttore).
+
+>[!important] $t_{pHL}$ e $t_{pLH}$
+>- $t_{pHL}$: tempo che impiega l'uscita a commutare da $V_{DD}$ a $0\ V$ (1 → 0) in risposta a una commutazione dell'ingresso da $0\ V$ a $V_{DD}$
+>- $t_{pLH}$: il duale, uscita da $0\ V$ a $V_{DD}$ (0 → 1)
+>
+>Si misurano tra gli istanti in cui ingresso e uscita attraversano $V_{DD}/2$.
+
+![[Marietto-tempo-propagazione.svg|center|650]]
+
+$$
+t_{pHL} = t'' - t' \qquad t_{pLH} = t_1 - t_0
+$$
+
+Come tempo di ritardo della porta si usa un unico valore, il **massimo** dei due:
+$$
+t_p = \max\{t_{pHL},\ t_{pLH}\}
+$$
+
+>[!bug] Media ≠ ritardo
+>Sui libri si trova spesso $t_p$ come **media** tra $t_{pHL}$ e $t_{pLH}$: secondo il corso è **sbagliato**. Il tempo di ritardo dice con che ritmo si possono mandare variazioni in ingresso al circuito: usando la media e mandando una commutazione ogni $t_p$, si rischia di inviare una nuova variazione prima che l'inverter abbia risposto alla precedente (quella col tempo più lungo).
+
+Il tempo di propagazione fissa quindi la **frequenza di funzionamento** della porta (la frequenza è l'inverso del tempo).
+
+### Fan-out
+>[!important] Fan-out
+>Numero di porte logiche (carichi) pilotate dall'uscita di una porta.
+
+Ogni carico aggiunge le sue capacità di gate, quindi $C_L$ **cresce con il fan-out**. Il primo effetto si vede sul tempo di propagazione:
+$$
+\tau' = R_{ON} \cdot C_L' > \tau \qquad (C_L' > C_L)
+$$
+cioè la porta risponde più lentamente.
+
+![[Marietto-fan-out.svg|center|600]]
+
+### Dissipazione di potenza dinamica
+Insieme al tempo di propagazione è la caratteristica che preoccupa di più i progettisti. Ha due contributi.
+
+#### Potenza di switching
+Quando $V_{in}$ passa da $V_{DD}$ a $0\ V$, $C_L$ si carica dal generatore attraverso $R_{ON}$ (a sinistra nella figura di [[#Tempo di propagazione|sopra]]). Durante la carica $i(t) \neq 0$:
+$$
+i(t) = C_L \cdot \frac{dV_{out}}{dt} \qquad p(t) = V_{DD} \cdot i(t) = V_{DD} \cdot C_L \cdot \frac{dV_{out}}{dt}
+$$
+L'energia erogata dal generatore, con $V_{out}(0) = 0\ V$ e $V_{out}(\infty) = V_{DD}$, è
+$$
+E = \int_{0}^{\infty} V_{DD} \cdot C_L \cdot \frac{dV_{out}}{dt}\, dt = V_{DD} \cdot C_L \int_{0\ V}^{V_{DD}} dV_{out} = C_L \cdot V_{DD}^2
+$$
+Di questa energia **metà** viene dissipata su $R_{ON}$ per effetto Joule durante la carica, l'altra metà resta immagazzinata in $C_L$ e viene dissipata su $R_{ON}$ della pull-down nella scarica successiva:
+$$
+E_C = \frac{1}{2} C_L V_{DD}^2 \qquad E_{LH} = E - E_C = \frac{1}{2} C_L V_{DD}^2 \qquad E_{HL} = E_C = \frac{1}{2} C_L V_{DD}^2
+$$
+L'energia dissipata è quindi la stessa nelle due commutazioni (`archivio/3 anno/elettronica digitale/slide/Approfondimento_CMOS.pdf`, p. 152 della dispensa). In una **commutazione completa** (carica + scarica) si dissipa quindi tutta l'energia erogata:
+$$
+E_{diss} = C_L \cdot V_{DD}^2
+$$
+Dividendo per il periodo $T$ di una commutazione completa ($f = 1/T$):
+
+>[!important] Potenza di switching
+>$$P = \frac{E_{diss}}{T} = f \cdot C_L \cdot V_{DD}^2$$
+
+La potenza dipende quindi da tre fattori:
+- **frequenza** $f$: lineare
+- **capacità di carico** $C_L$, quindi dal **fan-out**: lineare
+- **tensione di alimentazione** $V_{DD}$: **quadratica**
+
+Aumentando il fan-out aumenta $C_L$, quindi la potenza dinamica cresce **linearmente** con il fan-out; l'effetto **quadratico** ce l'ha invece $V_{DD}$: dimezzare la tensione di alimentazione riduce la potenza di switching di 4 volte.
+
+#### Potenza di corto circuito
+Gli interruttori reali sono dispositivi **a soglia**: con tempi di salita e discesa non nulli c'è un intervallo di tensioni d'ingresso in cui **pull-up e pull-down sono entrambe chiuse**, e si dissipa una potenza (temporanea) di **corto circuito**.
+
+![[Marietto-potenza-corto-circuito.svg|center|450]]
+
+Più i fronti sono ripidi (tempi di salita e discesa piccoli), meno incide la potenza di corto circuito.
+
+>[!important] Riassumendo
+>- **Caratteristiche statiche**: dissipazione di potenza statica, fan-in, margini di rumore
+>- **Caratteristiche dinamiche**: tempo di propagazione, fan-out, dissipazione di potenza dinamica (switching + corto circuito)

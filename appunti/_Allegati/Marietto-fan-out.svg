@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="380" viewBox="0 0 700 380">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<polygon points="60.0,57.0 90.0,70.0 60.0,83.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="94.0" cy="70.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<line x1="98.0" y1="70.0" x2="200.0" y2="70.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="200.0" cy="70.0" r="3.2" fill="#b8b8b8"/>
+<text x="190.0" y="60.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>out</tspan></text>
+<line x1="200.0" y1="70.0" x2="200.0" y2="84.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="200.0" y1="84.0" x2="200.0" y2="95.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="188.0" y1="95.0" x2="212.0" y2="95.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="188.0" y1="103.0" x2="212.0" y2="103.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="200.0" y1="103.0" x2="200.0" y2="114.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="200.0" y1="114.0" x2="200.0" y2="120.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="188.0" y1="120.0" x2="212.0" y2="120.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="192.0" y1="124.0" x2="208.0" y2="124.0" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<line x1="196.0" y1="128.0" x2="204.0" y2="128.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<text x="218.0" y="104.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="9.8" dy="3.5">L</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="200.0" y1="70.0" x2="230.0" y2="70.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polygon points="230.0,57.0 260.0,70.0 230.0,83.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="264.0" cy="70.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<polygon points="60.0,227.0 90.0,240.0 60.0,253.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="94.0" cy="240.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<line x1="98.0" y1="240.0" x2="200.0" y2="240.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="200.0" cy="240.0" r="3.2" fill="#b8b8b8"/>
+<text x="190.0" y="230.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>out</tspan></text>
+<line x1="200.0" y1="240.0" x2="200.0" y2="254.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="200.0" y1="254.0" x2="200.0" y2="265.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="188.0" y1="265.0" x2="212.0" y2="265.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="188.0" y1="273.0" x2="212.0" y2="273.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="200.0" y1="273.0" x2="200.0" y2="284.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="200.0" y1="284.0" x2="200.0" y2="290.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="188.0" y1="290.0" x2="212.0" y2="290.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="192.0" y1="294.0" x2="208.0" y2="294.0" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<line x1="196.0" y1="298.0" x2="204.0" y2="298.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<text x="218.0" y="274.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="9.8" dy="3.5">L</tspan><tspan dy="-3.5"></tspan><tspan>'</tspan></text>
+<line x1="200.0" y1="240.0" x2="230.0" y2="240.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="230.0" y1="184.0" x2="230.0" y2="296.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="230.0" y1="184.0" x2="250.0" y2="184.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polygon points="250.0,171.0 280.0,184.0 250.0,197.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="284.0" cy="184.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<path d="M 250 218.0 H 277.0 A 22.0 22.0 0 0 1 277.0 262.0 H 250 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="230.0" y1="296.0" x2="252.0" y2="296.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M 252 274.0 Q 284.4 274.0 306 296 Q 284.4 318.0 252 318.0 Q 263.88 296 252 274.0 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="420.0" y="75.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>fan-out = 1:  τ = R</tspan><tspan font-size="9.1" dy="3.2">ON</tspan><tspan dy="-3.2"></tspan><tspan>·C</tspan><tspan font-size="9.1" dy="3.2">L</tspan><tspan dy="-3.2"></tspan></text>
+<text x="420.0" y="235.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>fan-out = 3:  C</tspan><tspan font-size="9.1" dy="3.2">L</tspan><tspan dy="-3.2"></tspan><tspan>' > C</tspan><tspan font-size="9.1" dy="3.2">L</tspan><tspan dy="-3.2"></tspan></text>
+<text x="420.0" y="257.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>τ' = R</tspan><tspan font-size="9.1" dy="3.2">ON</tspan><tspan dy="-3.2"></tspan><tspan>·C</tspan><tspan font-size="9.1" dy="3.2">L</tspan><tspan dy="-3.2"></tspan><tspan>'  (risposta più lenta)</tspan></text>
+</svg>

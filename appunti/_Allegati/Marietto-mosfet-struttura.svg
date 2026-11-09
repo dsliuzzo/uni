@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="290" viewBox="0 0 560 290">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="80.0" y="90.0" width="400.0" height="150.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<rect x="120.0" y="90.0" width="100.0" height="70.0" rx="4" fill="#b8b8b8" fill-opacity="0.18" stroke="#b8b8b8" stroke-width="2.5"/>
+<rect x="340.0" y="90.0" width="100.0" height="70.0" rx="4" fill="#b8b8b8" fill-opacity="0.18" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="170.0" y="132.0" font-size="18" text-anchor="middle" fill="#b8b8b8"><tspan>N</tspan><tspan font-size="12.6" dy="-7.2">+</tspan><tspan dy="7.2"></tspan></text>
+<text x="390.0" y="132.0" font-size="18" text-anchor="middle" fill="#b8b8b8"><tspan>N</tspan><tspan font-size="12.6" dy="-7.2">+</tspan><tspan dy="7.2"></tspan></text>
+<text x="280.0" y="210.0" font-size="22" text-anchor="middle" fill="#b8b8b8"><tspan>P</tspan></text>
+<rect x="220.0" y="80.0" width="120.0" height="10.0" rx="4" fill="#d9c48a" fill-opacity="0.55" stroke="#b8b8b8" stroke-width="2.5"/>
+<rect x="230.0" y="68.0" width="100.0" height="12.0" rx="4" fill="#b8b8b8" fill-opacity="0.5" stroke="#b8b8b8" stroke-width="2.5"/>
+<line x1="280.0" y1="68.0" x2="280.0" y2="40.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="280.0" cy="40.0" r="3" fill="#b8b8b8"/>
+<text x="280.0" y="32.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>C</tspan></text>
+<line x1="170.0" y1="90.0" x2="170.0" y2="56.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="170.0" cy="56.0" r="3" fill="#b8b8b8"/>
+<text x="170.0" y="48.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>N</tspan><tspan font-size="9.8" dy="3.5">1</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="390.0" y1="90.0" x2="390.0" y2="56.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="390.0" cy="56.0" r="3" fill="#b8b8b8"/>
+<text x="390.0" y="48.0" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>N</tspan><tspan font-size="9.8" dy="3.5">2</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="280.0" y1="240.0" x2="280.0" y2="248.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="280.0" y1="248.0" x2="280.0" y2="254.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="268.0" y1="254.0" x2="292.0" y2="254.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="272.0" y1="258.0" x2="288.0" y2="258.0" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<line x1="276.0" y1="262.0" x2="284.0" y2="262.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<rect x="240.0" y="237.0" width="80.0" height="6.0" rx="4" fill="#b8b8b8" fill-opacity="0.4" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="440.0" y1="90.0" x2="440.0" y2="90.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="500.0" y="86.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>isolante</tspan></text>
+<text x="500.0" y="100.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>SiO</tspan><tspan font-size="8.4" dy="3.0">2</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="492.0" y1="94.0" x2="440.0" y2="84.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="500.0" y="70.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>gate</tspan></text>
+<text x="100.0" y="270.0" font-size="12" text-anchor="start" fill="#b8b8b8"><tspan>body (P) sempre collegato a massa</tspan></text>
+</svg>
