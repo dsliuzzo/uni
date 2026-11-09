@@ -1134,264 +1134,380 @@ il fornitore `$1` non fornisce la merce `$2` $\implies$ `FornitoriSI` $= \{F1, F
 
 Con marca $\alpha$ (solo M1): `FornituraNO` $= \{(F3, M1)\}$, `FornitoriSI` $= \{F1, F2\}$, $Q = \{A, B\}$.
 
+### Coppie con lo stesso insieme
+*Esempio:* **coppie di fornitori** che forniscono **lo stesso insieme** di merci.
+
+Due insiemi sono uguali se ognuno è contenuto nell'altro, quindi la richiesta si riscrive con il $\forall$ e poi con la negazione dell'$\exists$, come nella [[#Quantificazione universale|quantificazione universale]]:
+- coppie $(F', F'')$ tali che **tutte** le merci fornite da $F'$ sono fornite da $F''$ e viceversa
+- $\equiv$ coppie $(F', F'')$ tali che **non esiste** alcuna merce fornita da $F'$ che **non** è fornita da $F''$, e viceversa
+
+>[!bug] Errore
+>Confrontare due copie di `Fornitura` cercando coppie in cui il primo fornitore fornisce una merce e il secondo ne fornisce una **diversa** non funziona. Se F1 e F2 forniscono entrambi $\{M1, M2\}$, le righe $(F1, M1)$ e $(F2, M2)$ formano comunque una coppia con merci diverse, e F1, F2 verrebbero scartati.
+>Se gli insiemi hanno più di un elemento è normale trovare righe con merci diverse: la verifica va fatta sull'**intero insieme**, non su una sola riga.
+
+1. Coppie fornitore - merce **non** fornita: tutte le combinazioni possibili meno quelle che esistono davvero (come in [[#Quantificazione universale|FornituraNO]], ma senza filtro sulla marca)
+$$
+\text{FornituraNo} = \left[\Pi_{\$1}(\text{Fornitore}) \times \Pi_{\$1}(\text{Merce})\right] - \Pi_{\$1, \$2}(\text{Fornitura})
+$$
+2. Coppie da scartare: si prolunga ogni fornitura con le righe di `FornituraNo` **sulla stessa merce**
+$$
+\text{coppieNo} = \Pi_{\$1, \$4}\left( \text{Fornitura} \underset{\$2 = \$2}{\bowtie} \text{FornituraNo} \right)
+$$
+La join ha 5 colonne: `$1` è il fornitore $F'$ che fornisce la merce `$2`, `$4` è il fornitore $F''$ che **non** la fornisce. Quindi $(F', F'') \in \text{coppieNo}$ se $F'$ fornisce almeno una merce che $F''$ non fornisce.
+3. Tutte le coppie di fornitori, meno quelle in `coppieNo` e meno quelle in `coppieNo` invertite (il *viceversa*)
+$$
+Q = \left\{\left[\Pi_{\$1}(\text{Fornitore}) \underset{\$1 < \$1}{\bowtie} \Pi_{\$1}(\text{Fornitore})\right] - \text{coppieNo}\right\} - \Pi_{\$2, \$1}(\text{coppieNo})
+$$
+- la condizione $\$1 < \$1$ esclude le coppie $(F, F)$ e tiene una sola tra $(F', F'')$ e $(F'', F')$
+- la prima sottrazione scarta $(F', F'')$ se $F'$ fornisce qualcosa che $F''$ non fornisce
+- la seconda scarta $(F', F'')$ se è $F''$ a fornire qualcosa che $F'$ non fornisce: in `coppieNo` questa coppia compare come $(F'', F')$, per questo va invertita con $\Pi_{\$2, \$1}$
+
+>[!check] Esempio
+>Supponiamo che F1 e F2 forniscano entrambi M1 e M2, e che F3 non fornisca nulla.
+>
+>>[!multi-column]
+>>
+>>>[!blank] Fornitura
+>>>
+>>>| fornitore | merce |
+>>>| --------- | ----- |
+>>>| F1        | M1    |
+>>>| F1        | M2    |
+>>>| F2        | M1    |
+>>>| F2        | M2    |
+>>
+>>>[!blank] FornituraNo
+>>>
+>>>| fornitore | merce |
+>>>| --------- | ----- |
+>>>| F3        | M1    |
+>>>| F3        | M2    |
+>>
+>>>[!blank] coppieNo
+>>>
+>>>| $F'$ | $F''$ |
+>>>| ---- | ----- |
+>>>| F1   | F3    |
+>>>| F2   | F3    |
+>
+>Le coppie con $\$1 < \$1$ sono $(F1, F2)$, $(F1, F3)$, $(F2, F3)$. La prima sottrazione toglie $(F1, F3)$ e $(F2, F3)$, la seconda non toglie nulla (in $\Pi_{\$2,\$1}(\text{coppieNo})$ ci sono $(F3, F1)$ e $(F3, F2)$), quindi $Q = \{(F1, F2)\}$.
+>
+>Con l'istanza degli appunti (F1 fornisce M1, M2 e F2 solo M1) invece $(F1, F2) \in \text{coppieNo}$, perché F1 fornisce M2 e F2 no, e $Q$ è vuota.
+
+>[!attention] AGGIUNTA
+>Due fornitori che non forniscono nulla hanno lo stesso insieme di merci (quello vuoto), quindi la query li restituisce come coppia. Non compaiono mai in `Fornitura`, quindi nessuno dei due può essere il primo elemento di una riga di `coppieNo` e nessuna delle due sottrazioni scarta la coppia.
+
 ## SQL
-Structured Query Language (linguaggio di interrogazione strutturato).
-Non è un linguaggio imperativo, ma è un linguaggio che si avvicina all'[[#Algebre relazionale]].
-Sono strutturate: hanno tutte la stessa forma, la query va organizzata sempre allo stesso modo. È una organizzazione in clausole, ogni clausola descrive una caratteristica della query.
+**Structured Query Language** (linguaggio di interrogazione strutturato).
+Non è un linguaggio imperativo, ma un linguaggio dichiarativo che si avvicina all'[[#Algebre relazionale|algebra relazionale]].
 
-- `SELECT` indica cosa vogliamo visualizzare
-``` SQL
-SELECT 3, "ciao", 2*4+1; -- viene creata una tupla con i valori 3, "ciao" e 9 e viene mostrata a schermo
+Le query sono **strutturate**: hanno tutte la stessa forma e vanno organizzate sempre allo stesso modo, in **clausole**. Ogni clausola descrive una caratteristica della query.
+
+>[!important] Struttura di una query
+>```sql
+>SELECT ...  -- cosa visualizzare        (proiezione)
+>FROM ...    -- da quali tabelle          (prodotto cartesiano)
+>WHERE ...;  -- quali righe tenere        (selezione)
+>```
+>- l'ordine delle clausole è **prestabilito** e deve essere sempre questo
+>- l'ordine in cui scriviamo le clausole **non** corrisponde all'ordine in cui vengono svolte dal DBMS
+>- il delimitatore predefinito `;` indica la fine di un comando
+
+### SELECT e FROM
+`SELECT` indica cosa vogliamo visualizzare. Senza `FROM` mostra dei valori costanti:
+```sql
+SELECT 3, 'ciao', 2*4+1; -- crea e mostra una tupla con i valori 3, 'ciao' e 9
 ```
-- `FROM` per prelevare qualcosa da una tabella invece di mostrare valori costanti dobbiamo indicare la tabella
-``` sql
-SELECT piva, nome
-FROM Fornitore; -- restituisce una tabella che ha le colonne della SELECT dalla tabella Fornitore
-```
-$$
-\Pi_{\$ 1, \$ 2}(\text{Fornitore})
-$$
 
-| piva | nome |
-| ---- | ---- |
-|      |      |
+Per prelevare i valori da una tabella dobbiamo indicarla nella `FROM`: il risultato è una tabella con le colonne indicate nella `SELECT`.
 
-Se volessimo visualizzare tutte le colonne di una tabella possiamo usare `*`
-``` sql
+>[!check] Esempio
+>Partita IVA e nome dei fornitori.
+>$$\Pi_{\$1, \$2}(\text{Fornitore})$$
+>```sql
+>SELECT piva, nome
+>FROM Fornitore;
+>```
+>
+>| piva | nome |
+>| ---- | ---- |
+>| F1   | A    |
+>| F2   | B    |
+>| F3   | C    |
+
+Per visualizzare tutte le colonne di una tabella si usa `*`:
+```sql
 SELECT *
 FROM Fornitore;
 ```
 
-| piva | nome | citta |
-| ---- | ---- | ----- |
-|      |      |       |
-- `WHERE` solo le righe che rispettano una determinata proprietà ([[#Operatore di selezione]])
-``` sql
-SELECT *
-FROM Fornitore
-WHERE citta = 'CS'
-	OR nome != 'A';
-```
-$$
-\sigma_{\$ 3 = 'CS' \vee \$ 2 = 'A'}(\text{Fornitore})
-$$
-Essendo structured l'ordine delle istruzione è prestabilito e deve essere sempre questo.
-l'ordine in cui scriviamo le cose non corrisponde all'ordine in cui vengono svolte dal DBMS.
-Quando nella `WHERE` indichiamo un attributo conviene inserire come prefisso la tabella da cui selezioniamo l'attributo per evitare problemi derivati da omonimie.
-``` sql
-SELECT *
-FROM Fornitore
-WHERE Fornitore.citta = 'CS'
-	OR Fornitore.nome != 'A';
-```
-il $\neq$ dipende dal DBMS, potrebbe essere `!=` o `<>` o altri.
-Il delimitatore predefinito `;` indica la fine di un comando
-Se i nomi delle tabelle sono troppo lunghe possiamo effettuare una ridenominazione locale, che ci permetterà di richiamare la tabella con un nome diverso all'interno della query
-``` sql
+>[!attention] AGGIUNTA - Duplicati
+>A differenza della [[#Operatore di proiezione|proiezione]], `SELECT` **non elimina i duplicati**: il risultato può contenere più volte la stessa riga. Per eliminarli si usa `SELECT DISTINCT`.
+>```sql
+>SELECT DISTINCT citta
+>FROM Fornitore;  -- CS, RC (senza DISTINCT: CS, RC, CS)
+>```
+
+### WHERE
+`WHERE` tiene solo le righe che rispettano una determinata proprietà ([[#Operatore di selezione|selezione]]). Le condizioni si combinano con `AND`, `OR`, `NOT`.
+
+>[!check] Esempio
+>Fornitori che stanno a CS oppure che non si chiamano A.
+>$$\sigma_{\$3 = \text{'CS'} \,\vee\, \$2 \neq \text{'A'}}(\text{Fornitore})$$
+>```sql
+>SELECT *
+>FROM Fornitore
+>WHERE Fornitore.citta = 'CS'
+>	OR Fornitore.nome != 'A';
+>```
+
+- Quando indichiamo un attributo conviene usare come **prefisso** la tabella da cui lo prendiamo (`Fornitore.citta`), per evitare problemi dovuti alle omonimie.
+- Il simbolo di $\neq$ dipende dal DBMS: potrebbe essere `!=`, `<>` o altro.
+
+### Ridenominazione (AS)
+Se i nomi delle tabelle sono troppo lunghi possiamo effettuare una **ridenominazione locale**, che ci permette di richiamare la tabella con un nome diverso all'interno della query:
+```sql
 SELECT *
 FROM Fornitore AS F
 WHERE F.citta = 'CS'
 	OR F.nome != 'A';
 ```
-cerchiamo consistenza, se usiamo il prefisso per indicare la tabella di origine dell'attributo, lo usiamo ovunque, anche nella `SELECT`.
+Cerchiamo consistenza: se usiamo il prefisso per indicare la tabella di origine dell'attributo, lo usiamo ovunque, anche nella `SELECT`.
 
-L'operatore di ridenominazione `AS` può essere situato anche nella `SELECT`
-``` sql
+`AS` si può usare anche nella `SELECT`: il risultato avrà come intestazione della colonna il nome indicato dopo `AS`.
+```sql
 SELECT F.nome AS nomeForn
 FROM Fornitore AS F
 WHERE F.citta = 'CS';
 ```
-Il risultato di questa query avrà come intestazione della tabella il nome indicato dopo `AS`.
-La keyword `AS` non è necessaria, lo spazio è sufficiente:
-``` sql
+La keyword `AS` non è necessaria, basta lo spazio:
+```sql
 SELECT F.nome nomeForn
 FROM Fornitore F
 WHERE F.citta = 'CS';
 ```
 
-*es.*
-nome delle merci la cui marca è $\alpha$ oppure $\beta$ e l'intestazione della colonna è `nomeMerce`
-$$
-\Pi_{\$ 2}[\sigma_{\$ 3 = \alpha \vee \$ 3 = \beta}(\text{Merce})]
-$$
-``` sql
-SELECT M.nome AS nomeMerce
-FROM Merce AS M
-WHERE M.marca = 'alpha'
-	OR M.marca = 'beta';
-```
+>[!check] Esempio
+>Nomi delle merci la cui marca è $\alpha$ oppure $\beta$, con intestazione della colonna `nomeMerce`.
+>$$\Pi_{\$2}\left[\sigma_{\$3 = \text{'}\alpha\text{'} \,\vee\, \$3 = \text{'}\beta\text{'}}(\text{Merce})\right]$$
+>```sql
+>SELECT M.nome AS nomeMerce
+>FROM Merce AS M
+>WHERE M.marca = 'alpha'
+>	OR M.marca = 'beta';
+>```
+>
+>| nomeMerce |
+>| --------- |
+>| x         |
+>| y         |
 
-Operatore join e prodotto cartesiano
-In sql esiste l'operatore di join, ma si usa raramente, è piuttosto verboso.
-Le query si riformulano trasformando la join in una selezione di prodotto cartesiano
+### Join e prodotto cartesiano
+In SQL esiste l'operatore di join, ma si usa raramente perché è piuttosto verboso. Le query si riformulano trasformando la join in una **selezione di un prodotto cartesiano** ([[#Prodotto cartesiano|relazione con la join]]):
+- le tabelle elencate nella `FROM` separate da virgola formano il **prodotto cartesiano**
+- le condizioni di join vanno nella `WHERE`
 
-*es.* nomi dei fornitori che forniscono la merce `M1`
-$$
-\Pi_{\$ 5} \left[ \sigma_{\$ 2 = 'M 1'}(\text{Fornitura}) \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore}\right]
-$$
-riscriviamola come prodotto cartesiano
-$$
-\Pi_{\$ 5}[\sigma_{\$ 2 = 'M 1' \wedge \$ 1 = \$ 4}(\text{Fornitura} \times \text{Fornitore})]
-$$
-``` sql
-SELECT F.nome
-FROM Fornitura AS X, Fornitore AS F
-WHERE X.merce = 'M1'
-	AND F.piva = X.fornitore;
-```
-questi 3 operatori fanno selezione, proiezione, join e prodotto cartesiano.
+Quindi le tre clausole `SELECT`, `FROM`, `WHERE` bastano a esprimere selezione, proiezione, join e prodotto cartesiano.
 
-L'ordine del risultato dipende dall'ordine della SELECT, non dall'ordine del FROM.
-Non esiste la notazione posizionale, ma solo nominale.
+>[!question] Osservazione
+>- In SQL **non esiste la notazione posizionale**, ma solo quella nominale.
+>- L'ordine delle colonne del risultato dipende dall'ordine nella `SELECT`, non da quello nella `FROM`.
 
-*es.* coppie `nomeFornitore|nomeMerce` tali che il fornitore fornisce la merce
-$$
-\begin{array}{l}
-\Pi_{\$ 5, \$ 8}\left[ \left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore} \right) \underset{\$ 2 = \$ 1}{\bowtie} \text{Merce} \right] \\
-\Pi_{\$ 5, \$ 8}\{\sigma_{\$ 1 = \$ 4 \wedge \$ 2 = \$ 7}[(\text{Fornitura} \times \text{Fornitore}) \times \text{Merce}]\}
-\end{array}
-$$
-``` sql
-SELECT F.nome AS nomeFornitore, M.nome AS nomeMerce
-FROM Fornitura AS X, Fornitore AS F, Merce AS M
-WHERE X.fornitore = F.piva
-	AND X.merce = M.cod;
-```
+>[!check] Esempio
+>Nomi dei fornitori che forniscono la merce M1.
+>$$\Pi_{\$5} \left[ \sigma_{\$2 = \text{'M1'}}(\text{Fornitura}) \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right]$$
+>riscritta come prodotto cartesiano
+>$$\Pi_{\$5}\left[\sigma_{\$2 = \text{'M1'} \,\wedge\, \$1 = \$4}(\text{Fornitura} \times \text{Fornitore})\right]$$
+>```sql
+>SELECT F.nome
+>FROM Fornitura AS X, Fornitore AS F
+>WHERE X.merce = 'M1'
+>	AND F.piva = X.fornitore;
+>```
+>
+>| nome |
+>| ---- |
+>| A    |
+>| B    |
 
-*es.* nomi dei fornitori che forniscono almeno due merci
-$$
-\Pi_{\$ 2}\left[ \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie}\left( \text{Fornitura} \underset{\$ 1 = \$ 1 \wedge \$ 2 \neq \$ 2}{\bowtie} \text{Fornitura} \right) \right]
-$$
-``` sql
-SELECT F.nome 
-FROM Fornitore AS F, Fornitura AS X1, Fornitura AS X2
-WHERE X1.fornitore = X2.fornitore
-	AND X1.merce != X2.merce
-	AND F.piva = X1.fornitore;
-```
-in questo caso è necessaria la ridenominazione.
+>[!check] Esempio
+>Coppie `nomeFornitore|nomeMerce` tali che il fornitore fornisce la merce.
+>$$\displaylines{
+>\Pi_{\$5, \$8}\left[ \left( \text{Fornitura} \underset{\$1 = \$1}{\bowtie} \text{Fornitore} \right) \underset{\$2 = \$1}{\bowtie} \text{Merce} \right] \\
+>\Pi_{\$5, \$8}\left\{\sigma_{\$1 = \$4 \,\wedge\, \$2 = \$7}\left[(\text{Fornitura} \times \text{Fornitore}) \times \text{Merce}\right]\right\}
+>}$$
+>```sql
+>SELECT F.nome AS nomeFornitore, M.nome AS nomeMerce
+>FROM Fornitura AS X, Fornitore AS F, Merce AS M
+>WHERE X.fornitore = F.piva
+>	AND X.merce = M.cod;
+>```
+>
+>| nomeFornitore | nomeMerce |
+>| ------------- | --------- |
+>| A             | x         |
+>| A             | y         |
+>| B             | x         |
 
-Esiste anche l'operatore di sottrazione `EXCEPT`
-va messo tra due query e restituisce l'insieme delle tuple che stanno nella prima query e non nella seconda
+Quando la stessa tabella compare più volte nella `FROM` la ridenominazione è **necessaria**, per distinguere le copie.
 
-*es.* piva dei fornitori che non forniscono merci
-tutti i fornitori - fornitori che forniscono qualcosa
-$$
-\Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{Fornitura})
-$$
-``` sql
-SELECT piva AS fornitore
-FROM Fornitore
+>[!check] Esempio
+>Nomi dei fornitori che forniscono almeno due merci ([[#Almeno 2|almeno 2]]).
+>$$\Pi_{\$2}\left[ \text{Fornitore} \underset{\$1 = \$1}{\bowtie}\left( \text{Fornitura} \underset{\$1 = \$1 \,\wedge\, \$2 \neq \$2}{\bowtie} \text{Fornitura} \right) \right]$$
+>```sql
+>SELECT F.nome
+>FROM Fornitore AS F, Fornitura AS X1, Fornitura AS X2
+>WHERE X1.fornitore = X2.fornitore
+>	AND X1.merce != X2.merce
+>	AND F.piva = X1.fornitore;
+>```
+>Senza `DISTINCT` il risultato contiene A due volte, una per la coppia (M1, M2) e una per (M2, M1).
 
-EXCEPT
+### EXCEPT e UNION
+Gli [[#Operatori insiemistici|operatori insiemistici]] si mettono **tra due query**: ogni operando va tradotto separatamente.
+- `EXCEPT`: sottrazione, restituisce le tuple che stanno nel risultato della prima query e non in quello della seconda
+- `UNION`: unione
 
-SELECT fornitore
-FROM Fornitura;
-```
-Dobbiamo tradurre separatamente i due operandi.
-In un DBMS darebbe errore, gli operandi non sono esattamente **compatibili**, i nomi degli attributi sono diversi.
-Da un insieme di arance non possiamo togliere patate ✨.
-È necessario ridenominare gli attributi.
-Non basta che sia uguale l'arità degli operandi, ma anche i nomi delle colonne devono corrispondere.
+>[!important] Compatibilità
+>Gli operandi devono essere **compatibili**: non basta che abbiano la stessa arità, anche i **nomi delle colonne** devono corrispondere. Se sono diversi bisogna ridenominare gli attributi con `AS`.
+>Da un insieme di arance non possiamo togliere patate ✨.
 
-`UNION`
-*es.* piva dei fornitori che stanno a RC o che forniscono la merce M1
-$$
-\Pi_{\$ 1} [\sigma_{\$ 3 = 'RC'}(\text{Fornitore})] \cup \Pi_{\$ 1}[\sigma_{\$ 2 = 'M 1'}(\text{Fornitura})]
-$$
-``` sql
-SELECT piva
-FROM Fornitore
-WHERE citta = 'RC'
+>[!attention] AGGIUNTA - Dubbio
+>Nei DBMS più diffusi (PostgreSQL, MySQL, Oracle) gli operandi di `EXCEPT`/`UNION` vengono confrontati **per posizione**: devono avere lo stesso numero di colonne con tipi compatibili, e il risultato prende i nomi delle colonne della prima query. Ridenominare resta comunque la convenzione del corso, ed è utile per la leggibilità.
 
-UNION
+>[!check] Esempio
+>Partita IVA dei fornitori che non forniscono merci: tutti i fornitori meno quelli che forniscono qualcosa.
+>$$\Pi_{\$1}(\text{Fornitore}) - \Pi_{\$1}(\text{Fornitura})$$
+>```sql
+>SELECT piva AS fornitore
+>FROM Fornitore
+>
+>EXCEPT
+>
+>SELECT fornitore
+>FROM Fornitura;
+>```
+>
+>| fornitore |
+>| --------- |
+>| F3        |
 
-SELECT fornitore AS piva
-FROM Fornitura
-WHERE merce = 'M1';
-```
+>[!check] Esempio
+>Partita IVA dei fornitori che stanno a RC oppure che forniscono la merce M1.
+>$$\Pi_{\$1} \left[\sigma_{\$3 = \text{'RC'}}(\text{Fornitore})\right] \cup \Pi_{\$1}\left[\sigma_{\$2 = \text{'M1'}}(\text{Fornitura})\right]$$
+>```sql
+>SELECT piva
+>FROM Fornitore
+>WHERE citta = 'RC'
+>
+>UNION
+>
+>SELECT fornitore AS piva
+>FROM Fornitura
+>WHERE merce = 'M1';
+>```
+>
+>| piva |
+>| ---- |
+>| F1   |
+>| F2   |
 
-
-Creazione delle viste in SQL (risultati intermedi)
-Si possono creare delle **view** e sono oggetti del database, che vanno creati esattamente come le tabelle
-``` sql
-CREATE VIEW FornitoreNessunaMerce(piva) AS (
-SELECT piva
-FROM Fornitore
-EXCEPT
-SELECT fornitore AS piva
-FROM Fornitura
+### Viste
+Le **viste** (*view*) sono il corrispondente SQL delle variabili usate in algebra relazionale per i risultati intermedi. Sono **oggetti del database** e si creano esattamente come le tabelle:
+```sql
+CREATE VIEW NomeVista(attributo1, attributo2, ...) AS (
+	query
 );
 ```
-*es.* nomi dei fornitori che non forniscono nessuna merce
-``` sql
-SELECT F.nome
-FROM FornitoreNessunaMerce AS N, Fornitore F
-WHERE N.piva = F.piva
-```
+Una volta creata, una vista si usa nella `FROM` come una qualsiasi tabella.
 
+>[!check] Esempio
+>Nomi dei fornitori che non forniscono nessuna merce.
+>```sql
+>CREATE VIEW FornitoreNessunaMerce(piva) AS (
+>	SELECT piva
+>	FROM Fornitore
+>
+>	EXCEPT
+>
+>	SELECT fornitore AS piva
+>	FROM Fornitura
+>);
+>
+>SELECT F.nome
+>FROM FornitoreNessunaMerce AS N, Fornitore AS F
+>WHERE N.piva = F.piva;
+>```
+>
+>| nome |
+>| ---- |
+>| C    |
 
+>[!check] Esempio
+>Nomi dei fornitori che forniscono [[#Esattamente k e al più k|esattamente una]] merce: forniscono almeno 1 meno forniscono almeno 2.
+>$$\displaylines{
+>\text{esatt1} = \Pi_{\$1}(\text{Fornitura}) - \Pi_{\$1}\left( \text{Fornitura} \underset{\$1 = \$1 \,\wedge\, \$2 \neq \$2}{\bowtie} \text{Fornitura} \right) \\
+>Q = \Pi_{\$3}\left( \text{esatt1} \underset{\$1 = \$1}{\bowtie} \text{Fornitore}\right)
+>}$$
+>```sql
+>CREATE VIEW esatt1(piva) AS (
+>	SELECT X.fornitore AS piva
+>	FROM Fornitura AS X
+>
+>	EXCEPT
+>
+>	SELECT X1.fornitore AS piva
+>	FROM Fornitura AS X1, Fornitura AS X2
+>	WHERE X1.fornitore = X2.fornitore
+>		AND X1.merce != X2.merce
+>);
+>
+>SELECT F.nome
+>FROM Fornitore AS F, esatt1
+>WHERE F.piva = esatt1.piva;
+>```
+>
+>| nome |
+>| ---- |
+>| B    |
 
-*es.* calcolare i fornitori che forniscono esattamente una merce, di questi fornitori restituiamo il nome
-forniscono almeno 1 - forniscono almeno 2
-$$
-\begin{array}{l}
-\text{esatt1} = \Pi_{\$ 1}(\text{Fornitura}) - \Pi_{\$ 1}\left( \text{Fornitura} \underset{\$ 1 = \$ 1 \wedge \$ 2 \neq \$ 2}{\bowtie} \text{Fornitura} \right) \\
-Q = \Pi_{\$ 3}\left( \text{esatt1} \underset{\$ 1 = \$ 1}{\bowtie}  \text{Fornitore}\right)
-\end{array}
-$$
-``` sql
-CREATE VIEW esatt1(piva) (
-SELECT X.fornitore AS piva
-FROM Fornitura AS X
-
-EXCEPT
-
-SELECT X1.fornitore AS piva
-FROM Fornitura X1, Fornitura X2
-WHERE X1.fornitore = X2.fornitore
-	AND X1.merce != X2.merce
-);
-
-SELECT F.nome
-FROM Fornitore AS F, esatt1
-WHERE F.piva = esatt1.piva;
-```
-
-
-*es.* nomi dei fornitori che forniscono tutte le merci fornite dalla marca $\alpha$
-nomi dei fornitori tali che non esiste alcuna merce di marca $\alpha$ non fornita da loro
-$$
-\begin{array}{l}
-\text{FornituraANo}= \{\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}[\sigma_{\$ 3 = \alpha}(\text{Merce})]\} - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
-\text{FornitoriSi} = \Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{FornituraANo}) \\
-Q = \Pi_{\$ 2}\left( \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie}\text{FornitoriSi} \right)
-\end{array}
-$$
-``` sql
-CREATE VIEW FornituraANo(fornitore, merce) (
-SELECT F.piva AS fornitore, M.cod AS merce
-FROM Fornitore F, Merce M
-WHERE M.marca = 'alpha'
-
-EXCEPT
-
-SELECT fornitore, merce
-FROM Fornitura
-);
-
-CREATE VIEW FornitoriSi(piva) (
-SELECT piva
-FROM Fornitore
-
-EXCEPT
-
-SELECT fornitore AS piva
-FROM FornituraANo
-);
-
-SELECT F.nome
-FROM Fornitore AS F, FornitoriSi AS FS
-WHERE F.piva = FS.piva
-```
+>[!check] Esempio
+>Nomi dei fornitori che forniscono **tutte** le merci prodotte dalla marca $\alpha$ ([[#Quantificazione universale|quantificazione universale]]), cioè i fornitori per cui non esiste alcuna merce di marca $\alpha$ che non forniscono.
+>$$\displaylines{
+>\text{FornituraANo}= \left\{\Pi_{\$1}(\text{Fornitore}) \times \Pi_{\$1}\left[\sigma_{\$3 = \text{'}\alpha\text{'}}(\text{Merce})\right]\right\} - \Pi_{\$1, \$2}(\text{Fornitura}) \\
+>\text{FornitoriSi} = \Pi_{\$1}(\text{Fornitore}) - \Pi_{\$1}(\text{FornituraANo}) \\
+>Q = \Pi_{\$2}\left( \text{Fornitore} \underset{\$1 = \$1}{\bowtie}\text{FornitoriSi} \right)
+>}$$
+>```sql
+>CREATE VIEW FornituraANo(fornitore, merce) AS (
+>	SELECT F.piva AS fornitore, M.cod AS merce
+>	FROM Fornitore AS F, Merce AS M
+>	WHERE M.marca = 'alpha'
+>
+>	EXCEPT
+>
+>	SELECT fornitore, merce
+>	FROM Fornitura
+>);
+>
+>CREATE VIEW FornitoriSi(piva) AS (
+>	SELECT piva
+>	FROM Fornitore
+>
+>	EXCEPT
+>
+>	SELECT fornitore AS piva
+>	FROM FornituraANo
+>);
+>
+>SELECT F.nome
+>FROM Fornitore AS F, FornitoriSi AS FS
+>WHERE F.piva = FS.piva;
+>```
+>Il prodotto cartesiano `Fornitore F, Merce M` senza condizioni di join genera tutte le coppie fornitore - merce di marca $\alpha$.
+>
+>| nome |
+>| ---- |
+>| A    |
+>| B    |
 
