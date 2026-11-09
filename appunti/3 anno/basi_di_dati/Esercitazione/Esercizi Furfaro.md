@@ -442,12 +442,13 @@ $$
 $$
 m|\forall f \in \text{Fornitore} : (f,m) \in \text{Fornitura}
 $$
-la proprietà è che tutti i fornitori forniscono $m$ $\equiv$ non esiste un fornitore che non fornisce $m$
-tutte le possibili combinazioni merce|fornitore - quelle che esistono davvero
+la proprietà è che tutti i fornitori forniscono $m$ $\equiv$ non esiste alcun fornitore che non fornisce $m$
+il complemento di fornitura mi restituisce chi non è fornito
+merci - (tutte le possibili combinazioni merce|fornitore - quelle che esistono davvero)
 $$
 \begin{array}{l}
-\text{MerciNo} = [\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}(\text{Merce})] - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
-\text{MerciSi} = \Pi_{\$ 1}(\text{Merce}) - \Pi_{\$ 2}(\text{MerciNo})
+\text{FornituraNo} = [\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}(\text{Merce})] - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
+\text{MerciSi} = \Pi_{\$ 1}(\text{Merce}) - \Pi_{\$ 2}(\text{FornituraNo})
 \end{array}
 $$
 5) Merci di marca $\alpha$ fornite da tutti i fornitori di CS
@@ -459,3 +460,25 @@ $$
 \text{MerciSi} = \text{Mercia} - \Pi_{\$ 2}(\text{MerciNo})
 \end{array}
 $$
+# Esercizi 5
+1) coppie di fornitori che forniscono lo stesso insieme di merci
+$\equiv$ coppie di fornitori tali che **tutte** le merci fornite da $F'$ sono fornite da $F''$ e viceversa
+$\equiv$ coppie di fornitori tali che **non esiste** alcuna merce fornita da $F'$ che **non** è fornita da $F''$ e viceversa
+$$
+\begin{array}{l}
+\text{coppieNo} = \Pi_{\$ 1, \$ 4}\left( \text{Fornitura} \underset{\$ 2 = \$ 2}{\bowtie} \text{FornituraNo} \right) \\
+Q = \left[ \Pi_{\$ 1}(\text{Fornitore}) \underset{\$ 1 < \$ 1}{\bowtie} \Pi_{\$ 1}(\text{Fornitore}) - \text{coppieNo} \right] - \Pi_{\$ 2, \$ 1}(\text{coppieNo})
+\end{array}
+$$
+Fornitura join Fornitura trova coppie di fornitori tali che il primo fornisce una merce, il secondo fornisce una merce diversa
+```
+F1 M1
+F1 M2
+F2 M1
+F2 M2
+```
+Se l'insieme è formato da elementi diversi è normale trovare coppie che forniscono cose diverse, ma la verifica va fatta sull'intero insieme, non solo su una.
+L'ultimo `- coppieNo` è il viceversa
+`FornituraNo` restituisce le coppie fornitore|merce non presenti in `Fornitura`
+`CoppieNo` restituisce la join se la merce è uguale
+`Q` restituisce tutte le possibili coppie di fornitori tranne quelli presenti in `CoppieNo` (anche con il viceversa)

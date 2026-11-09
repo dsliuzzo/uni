@@ -3033,7 +3033,7 @@ Indichiamo con
 
 |               | Primale<br>Duale                                                               | Duale<br>Primale                                                                     |               |
 | ------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ | ------------- |
-| **Obiettivo** | $\min$                                                                         |                                                                                      | **Obiettivo** |
+| **Obiettivo** | $\min$                                                                         | $\max$                                                                               | **Obiettivo** |
 | **Vincolo**   | $\begin{array}{l}=b_i, i \in I \\ \geq b_i, i \in J\end{array}$                | $\begin{array}{l}y_i, i \in I, \text{libere} \\ y_i, i \in J, y_i \geq 0\end{array}$ | **Variabili** |
 | **Variabili** | $\begin{array}{l}x_j\geq 0, j \in N \\ x_j, j \in M, \text{libere}\end{array}$ | $\begin{array}{l}\leq c_j, j \in N \\ = c_j, j \in M\end{array}$                     | **Vincoli**   |
 
