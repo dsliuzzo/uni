@@ -1133,4 +1133,265 @@ $$
 il fornitore `$1` non fornisce la merce `$2` $\implies$ `FornitoriSI` $= \{F1, F2, F3\} - \{F2, F3\} = \{F1\}$, $Q = \{A\}$.
 
 Con marca $\alpha$ (solo M1): `FornituraNO` $= \{(F3, M1)\}$, `FornitoriSI` $= \{F1, F2\}$, $Q = \{A, B\}$.
+
 ## SQL
+Structured Query Language (linguaggio di interrogazione strutturato).
+Non è un linguaggio imperativo, ma è un linguaggio che si avvicina all'[[#Algebre relazionale]].
+Sono strutturate: hanno tutte la stessa forma, la query va organizzata sempre allo stesso modo. È una organizzazione in clausole, ogni clausola descrive una caratteristica della query.
+
+- `SELECT` indica cosa vogliamo visualizzare
+``` SQL
+SELECT 3, "ciao", 2*4+1; -- viene creata una tupla con i valori 3, "ciao" e 9 e viene mostrata a schermo
+```
+- `FROM` per prelevare qualcosa da una tabella invece di mostrare valori costanti dobbiamo indicare la tabella
+``` sql
+SELECT piva, nome
+FROM Fornitore; -- restituisce una tabella che ha le colonne della SELECT dalla tabella Fornitore
+```
+$$
+\Pi_{\$ 1, \$ 2}(\text{Fornitore})
+$$
+
+| piva | nome |
+| ---- | ---- |
+|      |      |
+
+Se volessimo visualizzare tutte le colonne di una tabella possiamo usare `*`
+``` sql
+SELECT *
+FROM Fornitore;
+```
+
+| piva | nome | citta |
+| ---- | ---- | ----- |
+|      |      |       |
+- `WHERE` solo le righe che rispettano una determinata proprietà ([[#Operatore di selezione]])
+``` sql
+SELECT *
+FROM Fornitore
+WHERE citta = 'CS'
+	OR nome != 'A';
+```
+$$
+\sigma_{\$ 3 = 'CS' \vee \$ 2 = 'A'}(\text{Fornitore})
+$$
+Essendo structured l'ordine delle istruzione è prestabilito e deve essere sempre questo.
+l'ordine in cui scriviamo le cose non corrisponde all'ordine in cui vengono svolte dal DBMS.
+Quando nella `WHERE` indichiamo un attributo conviene inserire come prefisso la tabella da cui selezioniamo l'attributo per evitare problemi derivati da omonimie.
+``` sql
+SELECT *
+FROM Fornitore
+WHERE Fornitore.citta = 'CS'
+	OR Fornitore.nome != 'A';
+```
+il $\neq$ dipende dal DBMS, potrebbe essere `!=` o `<>` o altri.
+Il delimitatore predefinito `;` indica la fine di un comando
+Se i nomi delle tabelle sono troppo lunghe possiamo effettuare una ridenominazione locale, che ci permetterà di richiamare la tabella con un nome diverso all'interno della query
+``` sql
+SELECT *
+FROM Fornitore AS F
+WHERE F.citta = 'CS'
+	OR F.nome != 'A';
+```
+cerchiamo consistenza, se usiamo il prefisso per indicare la tabella di origine dell'attributo, lo usiamo ovunque, anche nella `SELECT`.
+
+L'operatore di ridenominazione `AS` può essere situato anche nella `SELECT`
+``` sql
+SELECT F.nome AS nomeForn
+FROM Fornitore AS F
+WHERE F.citta = 'CS';
+```
+Il risultato di questa query avrà come intestazione della tabella il nome indicato dopo `AS`.
+La keyword `AS` non è necessaria, lo spazio è sufficiente:
+``` sql
+SELECT F.nome nomeForn
+FROM Fornitore F
+WHERE F.citta = 'CS';
+```
+
+*es.*
+nome delle merci la cui marca è $\alpha$ oppure $\beta$ e l'intestazione della colonna è `nomeMerce`
+$$
+\Pi_{\$ 2}[\sigma_{\$ 3 = \alpha \vee \$ 3 = \beta}(\text{Merce})]
+$$
+``` sql
+SELECT M.nome AS nomeMerce
+FROM Merce AS M
+WHERE M.marca = 'alpha'
+	OR M.marca = 'beta';
+```
+
+Operatore join e prodotto cartesiano
+In sql esiste l'operatore di join, ma si usa raramente, è piuttosto verboso.
+Le query si riformulano trasformando la join in una selezione di prodotto cartesiano
+
+*es.* nomi dei fornitori che forniscono la merce `M1`
+$$
+\Pi_{\$ 5} \left[ \sigma_{\$ 2 = 'M 1'}(\text{Fornitura}) \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore}\right]
+$$
+riscriviamola come prodotto cartesiano
+$$
+\Pi_{\$ 5}[\sigma_{\$ 2 = 'M 1' \wedge \$ 1 = \$ 4}(\text{Fornitura} \times \text{Fornitore})]
+$$
+``` sql
+SELECT F.nome
+FROM Fornitura AS X, Fornitore AS F
+WHERE X.merce = 'M1'
+	AND F.piva = X.fornitore;
+```
+questi 3 operatori fanno selezione, proiezione, join e prodotto cartesiano.
+
+L'ordine del risultato dipende dall'ordine della SELECT, non dall'ordine del FROM.
+Non esiste la notazione posizionale, ma solo nominale.
+
+*es.* coppie `nomeFornitore|nomeMerce` tali che il fornitore fornisce la merce
+$$
+\begin{array}{l}
+\Pi_{\$ 5, \$ 8}\left[ \left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore} \right) \underset{\$ 2 = \$ 1}{\bowtie} \text{Merce} \right] \\
+\Pi_{\$ 5, \$ 8}\{\sigma_{\$ 1 = \$ 4 \wedge \$ 2 = \$ 7}[(\text{Fornitura} \times \text{Fornitore}) \times \text{Merce}]\}
+\end{array}
+$$
+``` sql
+SELECT F.nome AS nomeFornitore, M.nome AS nomeMerce
+FROM Fornitura AS X, Fornitore AS F, Merce AS M
+WHERE X.fornitore = F.piva
+	AND X.merce = M.cod;
+```
+
+*es.* nomi dei fornitori che forniscono almeno due merci
+$$
+\Pi_{\$ 2}\left[ \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie}\left( \text{Fornitura} \underset{\$ 1 = \$ 1 \wedge \$ 2 \neq \$ 2}{\bowtie} \text{Fornitura} \right) \right]
+$$
+``` sql
+SELECT F.nome 
+FROM Fornitore AS F, Fornitura AS X1, Fornitura AS X2
+WHERE X1.fornitore = X2.fornitore
+	AND X1.merce != X2.merce
+	AND F.piva = X1.fornitore;
+```
+in questo caso è necessaria la ridenominazione.
+
+Esiste anche l'operatore di sottrazione `EXCEPT`
+va messo tra due query e restituisce l'insieme delle tuple che stanno nella prima query e non nella seconda
+
+*es.* piva dei fornitori che non forniscono merci
+tutti i fornitori - fornitori che forniscono qualcosa
+$$
+\Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{Fornitura})
+$$
+``` sql
+SELECT piva AS fornitore
+FROM Fornitore
+
+EXCEPT
+
+SELECT fornitore
+FROM Fornitura;
+```
+Dobbiamo tradurre separatamente i due operandi.
+In un DBMS darebbe errore, gli operandi non sono esattamente **compatibili**, i nomi degli attributi sono diversi.
+Da un insieme di arance non possiamo togliere patate ✨.
+È necessario ridenominare gli attributi.
+Non basta che sia uguale l'arità degli operandi, ma anche i nomi delle colonne devono corrispondere.
+
+`UNION`
+*es.* piva dei fornitori che stanno a RC o che forniscono la merce M1
+$$
+\Pi_{\$ 1} [\sigma_{\$ 3 = 'RC'}(\text{Fornitore})] \cup \Pi_{\$ 1}[\sigma_{\$ 2 = 'M 1'}(\text{Fornitura})]
+$$
+``` sql
+SELECT piva
+FROM Fornitore
+WHERE citta = 'RC'
+
+UNION
+
+SELECT fornitore AS piva
+FROM Fornitura
+WHERE merce = 'M1';
+```
+
+
+Creazione delle viste in SQL (risultati intermedi)
+Si possono creare delle **view** e sono oggetti del database, che vanno creati esattamente come le tabelle
+``` sql
+CREATE VIEW FornitoreNessunaMerce(piva) AS (
+SELECT piva
+FROM Fornitore
+EXCEPT
+SELECT fornitore AS piva
+FROM Fornitura
+);
+```
+*es.* nomi dei fornitori che non forniscono nessuna merce
+``` sql
+SELECT F.nome
+FROM FornitoreNessunaMerce AS N, Fornitore F
+WHERE N.piva = F.piva
+```
+
+
+
+*es.* calcolare i fornitori che forniscono esattamente una merce, di questi fornitori restituiamo il nome
+forniscono almeno 1 - forniscono almeno 2
+$$
+\begin{array}{l}
+\text{esatt1} = \Pi_{\$ 1}(\text{Fornitura}) - \Pi_{\$ 1}\left( \text{Fornitura} \underset{\$ 1 = \$ 1 \wedge \$ 2 \neq \$ 2}{\bowtie} \text{Fornitura} \right) \\
+Q = \Pi_{\$ 3}\left( \text{esatt1} \underset{\$ 1 = \$ 1}{\bowtie}  \text{Fornitore}\right)
+\end{array}
+$$
+``` sql
+CREATE VIEW esatt1(piva) (
+SELECT X.fornitore AS piva
+FROM Fornitura AS X
+
+EXCEPT
+
+SELECT X1.fornitore AS piva
+FROM Fornitura X1, Fornitura X2
+WHERE X1.fornitore = X2.fornitore
+	AND X1.merce != X2.merce
+);
+
+SELECT F.nome
+FROM Fornitore AS F, esatt1
+WHERE F.piva = esatt1.piva;
+```
+
+
+*es.* nomi dei fornitori che forniscono tutte le merci fornite dalla marca $\alpha$
+nomi dei fornitori tali che non esiste alcuna merce di marca $\alpha$ non fornita da loro
+$$
+\begin{array}{l}
+\text{FornituraANo}= \{\Pi_{\$ 1}(\text{Fornitore}) \times \Pi_{\$ 1}[\sigma_{\$ 3 = \alpha}(\text{Merce})]\} - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
+\text{FornitoriSi} = \Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{FornituraANo}) \\
+Q = \Pi_{\$ 2}\left( \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie}\text{FornitoriSi} \right)
+\end{array}
+$$
+``` sql
+CREATE VIEW FornituraANo(fornitore, merce) (
+SELECT F.piva AS fornitore, M.cod AS merce
+FROM Fornitore F, Merce M
+WHERE M.marca = 'alpha'
+
+EXCEPT
+
+SELECT fornitore, merce
+FROM Fornitura
+);
+
+CREATE VIEW FornitoriSi(piva) (
+SELECT piva
+FROM Fornitore
+
+EXCEPT
+
+SELECT fornitore AS piva
+FROM FornituraANo
+);
+
+SELECT F.nome
+FROM Fornitore AS F, FornitoriSi AS FS
+WHERE F.piva = FS.piva
+```
+
