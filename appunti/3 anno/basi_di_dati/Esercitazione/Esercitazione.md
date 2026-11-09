@@ -355,17 +355,79 @@ con i seguenti vincoli di chiave esterna:
 - $\text{Autobus}[\text{trattaCoperta}] \sqsubseteq_{FK} \text{Tratta}[\text{codice}]$
 
 1) I nomi delle stazioni della città di Torino
-[...]
+$$
+\text{Q1} = \Pi_{\$ 2}[\sigma_{\$ 3 = \text{'Torino'}}(\text{Stazione})]
+$$
+``` sql
+SELECT nome
+FROM Stazione
+WHERE citta = 'Torino'
+```
 2) I nomi delle stazioni che sono il punto di partenza di almeno due tratte
-[...]
+$$
+\text{Q2} = \Pi_{\$ 2}\left[ \text{Stazione} \underset{\$ 1 = \$ 2}{\bowtie} \left( \text{Tratta} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie}\text{Tratta} \right) \right]
+$$
+``` sql
+SELECT S.nome
+FROM Stazione S, Tratta T1, Tratta T2
+WHERE   T1.stazionePartenza = T2.stazionePartenza
+	AND T1.codice != T2.codice
+	AND S.codice = T1.stazionePartenza
+```
+
 3) Le tratte coperte da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
-[...]
+$$
+\text{Q3} = \Pi_{\$ 1}\left[ \text{Tratta} \underset{\$ 1 = \$ 2 \wedge \$ 1 = \$ 7}{\bowtie} \left( \text{Autobus} \underset{\$ 1 \neq \$ 1 \wedge \$ 3 = \$ 3}{\bowtie} \text{Autobus}\right) \right]
+$$
+``` sql
+SELECT T.codice
+FROM Tratta T, Autobus A1, Autobus A2
+WHERE   A1.codice != A2.codice
+	AND A1.tipologiaAutobus = A2.tipologiaAutobus
+	AND T.codice = A1.trattaCoperta
+	AND T.codice = A2.trattaCoperta
+```
+
 4) I nomi delle stazioni che sono il punto di partenza di almeno due tratte, ciascuna delle quali è coperta da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
-[...]
+$$
+\begin{array}{l}
+\text{TrattaOk} = \Pi_{\$ 1, \$ 2}\left[ \text{Tratta} \underset{\$ 1 = \$ 2 \wedge \$ 1 = \$ 7}{\bowtie} \left( \text{Autobus} \underset{\$ 1 \neq \$ 1 \wedge \$ 3 = \$ 3}{\bowtie} \text{Autobus}\right) \right]\\
+\text{Q4} = \Pi_{\$ 2}\left[ \text{Stazione} \underset{\$ 1 = \$ 2}{\bowtie} \left( \text{TrattaOk} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie}\text{TrattaOk} \right) \right]
+\end{array}
+$$
+``` sql
+CREATE VIEW TrattaOk (codice, stazionePartenza) AS (
+	SELECT T.codice, T.stazionePartenza
+	FROM Tratta T, Autobus A1, Autobus A2
+	WHERE   A1.codice != A2.codice
+		AND A1.tipologiaAutobus = A2.tipologiaAutobus
+		AND T.codice = A1.trattaCoperta
+		AND T.codice = A2.trattaCoperta
+);
+
+SELECT S.nome
+FROM Stazione S, TrattaOk T1, TrattaOk T2
+WHERE   T1.stazionePartenza = T2.stazionePartenza
+	AND T1.codice != T2.codice
+	AND S.codice = T1.stazionePartenza
+```
+
+
 5) Le tipologie di autobus per le quali almeno un autobus copre una tratta di distanza superiore a 500km
-[...]
+$$
+\text{Q5} = \Pi_{\$ 3}\left\{\text{Autobus} \underset{\$ 2 = \$ 1}{\bowtie} [\sigma_{\$ 4 > 500}(\text{Tratta})]\right\}
+$$
+``` sql
+SELECT A.tipologia
+FROM Autobus AS A, Tratta AS T
+WHERE   A.trattaCoperta = T.
+```
+
+
 6) Le tipologie di autobus delle quali non esiste alcun autobus che copra una tratta che parte dalla città di Roma e che copre una distanza inferiore a 200 km.
 [...]
+
+
 7) Le coppie di stazioni tali che gli insiemi di tipologie di autobus che partono da ciascuna di esse sono uguali.
 [...]
 # Prova esame 24 marzo 2022

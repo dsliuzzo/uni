@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="150.0" y="24.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>V</tspan><tspan font-size="10.5" dy="3.8">in</tspan><tspan dy="-3.8"></tspan><tspan> = V</tspan><tspan font-size="10.5" dy="3.8">DD</tspan><tspan dy="-3.8"></tspan></text>
+<line x1="190.0" y1="60.0" x2="190.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="60.0" y1="60.0" x2="190.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="60.0" y1="60.0" x2="60.0" y2="145.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="60.0" cy="160.0" r="15" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="60.0" y="157.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>+</tspan></text>
+<text x="60.0" y="170.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>−</tspan></text>
+<text x="39.0" y="165.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="9.8" dy="3.5">DD</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="60.0" y1="175.0" x2="60.0" y2="320.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="60.0" y1="320.0" x2="190.0" y2="320.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="190.0,60.0 190.0,68.0 197.0,73.3 183.0,84.0 197.0,94.7 183.0,105.3 197.0,116.0 183.0,126.7 190.0,132.0 190.0,140.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="204.0" y="105.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>R'</tspan><tspan font-size="9.1" dy="3.2">OFF</tspan><tspan dy="-3.2"></tspan></text>
+<circle cx="190.0" cy="170.0" r="3.2" fill="#b8b8b8"/>
+<line x1="190.0" y1="140.0" x2="190.0" y2="170.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="190.0" y1="170.0" x2="240.0" y2="170.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="244.0" cy="170.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="252.0" y="175.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>out</tspan></text>
+<line x1="190.0" y1="170.0" x2="190.0" y2="190.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="190.0,170.0 190.0,178.0 197.0,183.3 183.0,194.0 197.0,204.7 183.0,215.3 197.0,226.0 183.0,236.7 190.0,242.0 190.0,250.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="204.0" y="215.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>R</tspan><tspan font-size="9.1" dy="3.2">ON</tspan><tspan dy="-3.2"></tspan></text>
+<line x1="190.0" y1="250.0" x2="190.0" y2="320.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="80.0" y1="52.0" x2="120.0" y2="52.0" stroke="#b8b8b8" stroke-width="1.4" stroke-linecap="round"/>
+<polyline points="112.6,55.1 120.0,52.0 112.6,48.9" fill="none" stroke="#b8b8b8" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="100.0" y="44.0" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>I'</tspan><tspan font-size="9.1" dy="3.2">DD</tspan><tspan dy="-3.2"></tspan></text>
+<text x="480.0" y="24.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>V</tspan><tspan font-size="10.5" dy="3.8">in</tspan><tspan dy="-3.8"></tspan><tspan> = 0 V</tspan></text>
+<line x1="520.0" y1="60.0" x2="520.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="390.0" y1="60.0" x2="520.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="390.0" y1="60.0" x2="390.0" y2="145.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="390.0" cy="160.0" r="15" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="390.0" y="157.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>+</tspan></text>
+<text x="390.0" y="170.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>−</tspan></text>
+<text x="369.0" y="165.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="9.8" dy="3.5">DD</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="390.0" y1="175.0" x2="390.0" y2="320.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="390.0" y1="320.0" x2="520.0" y2="320.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="520.0,60.0 520.0,68.0 527.0,73.3 513.0,84.0 527.0,94.7 513.0,105.3 527.0,116.0 513.0,126.7 520.0,132.0 520.0,140.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="534.0" y="105.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>R'</tspan><tspan font-size="9.1" dy="3.2">ON</tspan><tspan dy="-3.2"></tspan></text>
+<circle cx="520.0" cy="170.0" r="3.2" fill="#b8b8b8"/>
+<line x1="520.0" y1="140.0" x2="520.0" y2="170.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="520.0" y1="170.0" x2="570.0" y2="170.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="574.0" cy="170.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="582.0" y="175.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>out</tspan></text>
+<line x1="520.0" y1="170.0" x2="520.0" y2="190.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="520.0,170.0 520.0,178.0 527.0,183.3 513.0,194.0 527.0,204.7 513.0,215.3 527.0,226.0 513.0,236.7 520.0,242.0 520.0,250.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="534.0" y="215.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>R</tspan><tspan font-size="9.1" dy="3.2">OFF</tspan><tspan dy="-3.2"></tspan></text>
+<line x1="520.0" y1="250.0" x2="520.0" y2="320.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="410.0" y1="52.0" x2="450.0" y2="52.0" stroke="#b8b8b8" stroke-width="1.4" stroke-linecap="round"/>
+<polyline points="442.6,55.1 450.0,52.0 442.6,48.9" fill="none" stroke="#b8b8b8" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="430.0" y="44.0" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>I'</tspan><tspan font-size="9.1" dy="3.2">DD</tspan><tspan dy="-3.2"></tspan></text>
+<text x="320.0" y="350.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>la corrente non è nulla: P</tspan><tspan font-size="9.8" dy="3.5">DD</tspan><tspan dy="-3.5"></tspan><tspan> = I'</tspan><tspan font-size="9.8" dy="3.5">DD</tspan><tspan dy="-3.5"></tspan><tspan>·V</tspan><tspan font-size="9.8" dy="3.5">DD</tspan><tspan dy="-3.5"></tspan><tspan> ≠ 0</tspan></text>
+</svg>

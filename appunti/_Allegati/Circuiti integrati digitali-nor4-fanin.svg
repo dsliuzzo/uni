@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="290" viewBox="0 0 300 290">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="150.0" y="22.0" font-size="13" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>NOR, a = b = c = d = 0 V</tspan></text>
+<line x1="160.0" y1="50.0" x2="160.0" y2="70.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="160.0,70.0 160.0,78.0 167.0,82.5 153.0,91.5 167.0,100.5 153.0,109.5 167.0,118.5 153.0,127.5 160.0,132.0 160.0,140.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="174.0" y="110.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>4R</tspan><tspan font-size="9.1" dy="3.2">ON</tspan><tspan dy="-3.2"></tspan></text>
+<circle cx="160.0" cy="160.0" r="3.2" fill="#b8b8b8"/>
+<line x1="160.0" y1="140.0" x2="160.0" y2="160.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="160.0" y1="160.0" x2="220.0" y2="160.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="226.0" y="165.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>out</tspan></text>
+<polyline points="160.0,160.0 160.0,168.0 167.0,172.5 153.0,181.5 167.0,190.5 153.0,199.5 167.0,208.5 153.0,217.5 160.0,222.0 160.0,230.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="174.0" y="200.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>R</tspan><tspan font-size="9.1" dy="3.2">OFF</tspan><tspan dy="-3.2"></tspan><tspan>/4</tspan></text>
+<line x1="160.0" y1="230.0" x2="160.0" y2="256.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="148.0" y1="256.0" x2="172.0" y2="256.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="152.0" y1="260.0" x2="168.0" y2="260.0" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<line x1="156.0" y1="264.0" x2="164.0" y2="264.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="160.0" y1="50.0" x2="100.0" y2="50.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="100.0" y1="50.0" x2="100.0" y2="125.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="100.0" cy="140.0" r="15" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="100.0" y="137.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>+</tspan></text>
+<text x="100.0" y="150.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>−</tspan></text>
+<text x="79.0" y="145.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="9.8" dy="3.5">DD</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="100.0" y1="155.0" x2="100.0" y2="264.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="100.0" y1="264.0" x2="160.0" y2="264.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

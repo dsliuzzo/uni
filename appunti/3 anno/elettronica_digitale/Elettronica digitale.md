@@ -5,6 +5,7 @@
 [[Porte logiche]]
 [[VHDL]]
 [[MOSFET]]
+[[Appunti Marietto]]
 ## Discretizzazione del segnale
 ![[Elettronica digitale-1790023683012.webp|center|378]]
 Per rendere discreto un segnale analogico dobbiamo effettuare due operazioni:

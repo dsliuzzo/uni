@@ -1,0 +1,215 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="470" viewBox="0 0 840 470">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="100.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="133.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">7</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">0</tspan><tspan dy="6.0"></tspan></text>
+<line x1="120.0" y1="24.0" x2="120.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="116.9,52.6 120.0,60.0 123.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="120.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="146.0" y1="24.0" x2="146.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="142.9,52.6 146.0,60.0 149.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="146.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="100.0" y1="85.0" x2="86.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="93.4,81.9 86.0,85.0 93.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="133.0" y1="110.0" x2="133.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="133.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<rect x="180.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="213.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">6</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">0</tspan><tspan dy="6.0"></tspan></text>
+<line x1="200.0" y1="24.0" x2="200.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="196.9,52.6 200.0,60.0 203.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="200.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="226.0" y1="24.0" x2="226.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="222.9,52.6 226.0,60.0 229.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="226.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="180.0" y1="85.0" x2="166.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="173.4,81.9 166.0,85.0 173.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="213.0" y1="110.0" x2="213.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="213.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<rect x="260.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="293.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">5</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">0</tspan><tspan dy="6.0"></tspan></text>
+<line x1="280.0" y1="24.0" x2="280.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="276.9,52.6 280.0,60.0 283.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="280.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="306.0" y1="24.0" x2="306.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="302.9,52.6 306.0,60.0 309.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="306.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="260.0" y1="85.0" x2="246.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="253.4,81.9 246.0,85.0 253.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="293.0" y1="110.0" x2="293.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="293.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<rect x="340.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="373.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">4</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">0</tspan><tspan dy="6.0"></tspan></text>
+<line x1="360.0" y1="24.0" x2="360.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="356.9,52.6 360.0,60.0 363.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="360.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="386.0" y1="24.0" x2="386.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="382.9,52.6 386.0,60.0 389.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="386.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="340.0" y1="85.0" x2="326.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="333.4,81.9 326.0,85.0 333.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="373.0" y1="110.0" x2="373.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="373.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<rect x="490.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="523.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">3</tspan><tspan dy="-3.8"></tspan></text>
+<line x1="510.0" y1="24.0" x2="510.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="506.9,52.6 510.0,60.0 513.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="510.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">3</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="536.0" y1="24.0" x2="536.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="532.9,52.6 536.0,60.0 539.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="536.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">3</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="490.0" y1="85.0" x2="476.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="483.4,81.9 476.0,85.0 483.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="523.0" y1="110.0" x2="523.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="523.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">3</tspan><tspan dy="-3.0"></tspan></text>
+<rect x="570.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="603.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">2</tspan><tspan dy="-3.8"></tspan></text>
+<line x1="590.0" y1="24.0" x2="590.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="586.9,52.6 590.0,60.0 593.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="590.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">2</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="616.0" y1="24.0" x2="616.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="612.9,52.6 616.0,60.0 619.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="616.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">2</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="570.0" y1="85.0" x2="556.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="563.4,81.9 556.0,85.0 563.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="603.0" y1="110.0" x2="603.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="603.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">2</tspan><tspan dy="-3.0"></tspan></text>
+<rect x="650.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="683.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">1</tspan><tspan dy="-3.8"></tspan></text>
+<line x1="670.0" y1="24.0" x2="670.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="666.9,52.6 670.0,60.0 673.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="670.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">1</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="696.0" y1="24.0" x2="696.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="692.9,52.6 696.0,60.0 699.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="696.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">1</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="650.0" y1="85.0" x2="636.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="643.4,81.9 636.0,85.0 643.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="683.0" y1="110.0" x2="683.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="683.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">1</tspan><tspan dy="-3.0"></tspan></text>
+<rect x="730.0" y="60.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="763.0" y="90.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">0</tspan><tspan dy="-3.8"></tspan></text>
+<line x1="750.0" y1="24.0" x2="750.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="746.9,52.6 750.0,60.0 753.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="750.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">0</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="776.0" y1="24.0" x2="776.0" y2="60.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="772.9,52.6 776.0,60.0 779.1,52.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="776.0" y="18.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">0</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="730.0" y1="85.0" x2="716.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="723.4,81.9 716.0,85.0 723.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="763.0" y1="110.0" x2="763.0" y2="122.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="763.0" y="136.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">0</tspan><tspan dy="-3.0"></tspan></text>
+<rect x="100.0" y="220.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="133.0" y="250.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">7</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">1</tspan><tspan dy="6.0"></tspan></text>
+<line x1="120.0" y1="184.0" x2="120.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="116.9,212.6 120.0,220.0 123.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="120.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="146.0" y1="184.0" x2="146.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="142.9,212.6 146.0,220.0 149.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="146.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="100.0" y1="245.0" x2="86.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="93.4,241.9 86.0,245.0 93.4,248.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="133.0" y1="270.0" x2="133.0" y2="282.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="133.0" y="296.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<rect x="180.0" y="220.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="213.0" y="250.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">6</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">1</tspan><tspan dy="6.0"></tspan></text>
+<line x1="200.0" y1="184.0" x2="200.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="196.9,212.6 200.0,220.0 203.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="200.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="226.0" y1="184.0" x2="226.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="222.9,212.6 226.0,220.0 229.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="226.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="180.0" y1="245.0" x2="166.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="173.4,241.9 166.0,245.0 173.4,248.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="213.0" y1="270.0" x2="213.0" y2="282.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="213.0" y="296.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<rect x="260.0" y="220.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="293.0" y="250.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">5</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">1</tspan><tspan dy="6.0"></tspan></text>
+<line x1="280.0" y1="184.0" x2="280.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="276.9,212.6 280.0,220.0 283.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="280.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="306.0" y1="184.0" x2="306.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="302.9,212.6 306.0,220.0 309.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="306.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="260.0" y1="245.0" x2="246.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="253.4,241.9 246.0,245.0 253.4,248.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="293.0" y1="270.0" x2="293.0" y2="282.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="293.0" y="296.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<rect x="340.0" y="220.0" width="66.0" height="50.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="373.0" y="250.0" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>FA</tspan><tspan font-size="10.5" dy="3.8">4</tspan><tspan dy="-3.8"></tspan><tspan font-size="10.5" dy="-6.0">1</tspan><tspan dy="6.0"></tspan></text>
+<line x1="360.0" y1="184.0" x2="360.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="356.9,212.6 360.0,220.0 363.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="360.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>A</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="386.0" y1="184.0" x2="386.0" y2="220.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="382.9,212.6 386.0,220.0 389.1,212.6" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="386.0" y="178.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>B</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan></text>
+<line x1="340.0" y1="245.0" x2="326.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="333.4,241.9 326.0,245.0 333.4,248.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="373.0" y1="270.0" x2="373.0" y2="282.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="373.0" y="296.0" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<line x1="406.0" y1="85.0" x2="416.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="420.0" y="90.0" font-size="14" text-anchor="start" fill="#b8b8b8"><tspan>0</tspan></text>
+<line x1="406.0" y1="245.0" x2="416.0" y2="245.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="420.0" y="250.0" font-size="14" text-anchor="start" fill="#b8b8b8"><tspan>1</tspan></text>
+<line x1="822.0" y1="85.0" x2="796.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="803.4,81.9 796.0,85.0 803.4,88.1" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="810.0" y="78.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="9.8" dy="3.5">0</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="490.0" y1="85.0" x2="470.0" y2="85.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="470.0" cy="85.0" r="3.2" fill="#b8b8b8"/>
+<text x="464.0" y="74.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="9.8" dy="3.5">4</tspan><tspan dy="-3.5"></tspan></text>
+<polygon points="70.0,330.0 100.0,344.0 100.0,376.0 70.0,390.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="79.0" y="350.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>0</tspan></text>
+<text x="79.0" y="380.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>1</tspan></text>
+<line x1="58.0" y1="345.0" x2="70.0" y2="345.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="56.0" y="349.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="8.4" dy="3.0">8</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<line x1="58.0" y1="375.0" x2="70.0" y2="375.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="56.0" y="379.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>C</tspan><tspan font-size="8.4" dy="3.0">8</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<line x1="100.0" y1="360.0" x2="120.0" y2="360.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="124.0" y="365.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="9.8" dy="3.5">8</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="85.0" y1="383.0" x2="85.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="85.0" cy="425.0" r="3.2" fill="#b8b8b8"/>
+<polygon points="160.0,330.0 190.0,344.0 190.0,376.0 160.0,390.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="169.0" y="350.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>0</tspan></text>
+<text x="169.0" y="380.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>1</tspan></text>
+<line x1="148.0" y1="345.0" x2="160.0" y2="345.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="146.0" y="349.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<line x1="148.0" y1="375.0" x2="160.0" y2="375.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="146.0" y="379.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">7</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<line x1="190.0" y1="360.0" x2="210.0" y2="360.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="214.0" y="365.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="9.8" dy="3.5">7</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="175.0" y1="383.0" x2="175.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="175.0" cy="425.0" r="3.2" fill="#b8b8b8"/>
+<polygon points="250.0,330.0 280.0,344.0 280.0,376.0 250.0,390.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="259.0" y="350.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>0</tspan></text>
+<text x="259.0" y="380.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>1</tspan></text>
+<line x1="238.0" y1="345.0" x2="250.0" y2="345.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="236.0" y="349.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<line x1="238.0" y1="375.0" x2="250.0" y2="375.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="236.0" y="379.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">6</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<line x1="280.0" y1="360.0" x2="300.0" y2="360.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="304.0" y="365.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="9.8" dy="3.5">6</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="265.0" y1="383.0" x2="265.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="265.0" cy="425.0" r="3.2" fill="#b8b8b8"/>
+<polygon points="340.0,330.0 370.0,344.0 370.0,376.0 340.0,390.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="349.0" y="350.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>0</tspan></text>
+<text x="349.0" y="380.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>1</tspan></text>
+<line x1="328.0" y1="345.0" x2="340.0" y2="345.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="326.0" y="349.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<line x1="328.0" y1="375.0" x2="340.0" y2="375.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="326.0" y="379.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">5</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<line x1="370.0" y1="360.0" x2="390.0" y2="360.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="394.0" y="365.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="9.8" dy="3.5">5</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="355.0" y1="383.0" x2="355.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="355.0" cy="425.0" r="3.2" fill="#b8b8b8"/>
+<polygon points="430.0,330.0 460.0,344.0 460.0,376.0 430.0,390.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="439.0" y="350.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>0</tspan></text>
+<text x="439.0" y="380.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>1</tspan></text>
+<line x1="418.0" y1="345.0" x2="430.0" y2="345.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="416.0" y="349.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">0</tspan><tspan dy="4.8"></tspan></text>
+<line x1="418.0" y1="375.0" x2="430.0" y2="375.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="416.0" y="379.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="8.4" dy="3.0">4</tspan><tspan dy="-3.0"></tspan><tspan font-size="8.4" dy="-4.8">1</tspan><tspan dy="4.8"></tspan></text>
+<line x1="460.0" y1="360.0" x2="480.0" y2="360.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="484.0" y="365.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>S</tspan><tspan font-size="9.8" dy="3.5">4</tspan><tspan dy="-3.5"></tspan></text>
+<line x1="445.0" y1="383.0" x2="445.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="445.0" cy="425.0" r="3.2" fill="#b8b8b8"/>
+<line x1="470.0" y1="85.0" x2="470.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="470.0" y1="425.0" x2="85.0" y2="425.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="470.0" y="448.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>selettore dei multiplexer = C</tspan><tspan font-size="9.1" dy="3.2">4</tspan><tspan dy="-3.2"></tspan></text>
+</svg>

@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<circle cx="70.0" cy="60.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="70.0" y="65.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="190.0" cy="60.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="190.0" y="65.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="310.0" cy="60.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="310.0" y="65.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="70.0" cy="180.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="70.0" y="185.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="190.0" cy="180.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="190.0" y="185.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="310.0" cy="180.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="310.0" y="185.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="70.0" cy="300.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="70.0" y="305.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="190.0" cy="300.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="190.0" y="305.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<circle cx="310.0" cy="300.0" r="26" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="310.0" y="305.0" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Si</tspan></text>
+<ellipse cx="130.0" cy="60" rx="28" ry="9" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="124.0" cy="60.0" r="3" fill="#b8b8b8"/>
+<circle cx="136.0" cy="60.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="70" cy="120.0" rx="9" ry="28" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="70.0" cy="114.0" r="3" fill="#b8b8b8"/>
+<circle cx="70.0" cy="126.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="250.0" cy="60" rx="28" ry="9" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="244.0" cy="60.0" r="3" fill="#b8b8b8"/>
+<circle cx="256.0" cy="60.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="190" cy="120.0" rx="9" ry="28" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="190.0" cy="114.0" r="3" fill="#b8b8b8"/>
+<circle cx="190.0" cy="126.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="310" cy="120.0" rx="9" ry="28" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="310.0" cy="114.0" r="3" fill="#b8b8b8"/>
+<circle cx="310.0" cy="126.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="130.0" cy="180" rx="28" ry="9" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="124.0" cy="180.0" r="3" fill="#b8b8b8"/>
+<circle cx="136.0" cy="180.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="70" cy="240.0" rx="9" ry="28" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="70.0" cy="234.0" r="3" fill="#b8b8b8"/>
+<circle cx="70.0" cy="246.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="250.0" cy="180" rx="28" ry="9" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="244.0" cy="180.0" r="3" fill="#b8b8b8"/>
+<circle cx="256.0" cy="180.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="190" cy="240.0" rx="9" ry="28" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="190.0" cy="234.0" r="3" fill="#b8b8b8"/>
+<circle cx="190.0" cy="246.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="310" cy="240.0" rx="9" ry="28" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="310.0" cy="234.0" r="3" fill="#b8b8b8"/>
+<circle cx="310.0" cy="246.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="130.0" cy="300" rx="28" ry="9" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="124.0" cy="300.0" r="3" fill="#b8b8b8"/>
+<circle cx="136.0" cy="300.0" r="3" fill="#b8b8b8"/>
+<ellipse cx="250.0" cy="300" rx="28" ry="9" fill="none" stroke="#b8b8b8" stroke-width="1.4"/>
+<circle cx="244.0" cy="300.0" r="3" fill="#b8b8b8"/>
+<circle cx="256.0" cy="300.0" r="3" fill="#b8b8b8"/>
+<text x="210.0" y="345.0" font-size="12" text-anchor="middle" fill="#b8b8b8"><tspan>ogni atomo condivide un elettrone con ciascuno dei 4 vicini (legami covalenti)</tspan></text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="220" viewBox="0 0 560 220">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<path d="M 110 25.0 H 140.0 A 45.0 45.0 0 0 1 140.0 115.0 H 110 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="189.0" cy="70.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<line x1="60.0" y1="43.0" x2="110.0" y2="43.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="54.0" y="47.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>a</tspan></text>
+<line x1="60.0" y1="57.0" x2="110.0" y2="57.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="54.0" y="61.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>b</tspan></text>
+<line x1="60.0" y1="83.0" x2="110.0" y2="83.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="54.0" y="87.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>c</tspan></text>
+<line x1="60.0" y1="97.0" x2="110.0" y2="97.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="54.0" y="101.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>d</tspan></text>
+<line x1="193.0" y1="70.0" x2="280.0" y2="70.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="250.0" cy="70.0" r="3.2" fill="#b8b8b8"/>
+<text x="262.0" y="52.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>out</tspan></text>
+<polygon points="280.0,57.0 310.0,70.0 280.0,83.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="314.0" cy="70.0" r="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<line x1="318.0" y1="70.0" x2="460.0" y2="70.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="470.0" y="75.0" font-size="15" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>f</tspan></text>
+<path d="M 60 120 Q 60 140 90 140 H 173.0 Q 193.0 140 193.0 120" fill="none" stroke="#b8b8b8" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="126.5" y="165.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>porta pilota (driver)</tspan></text>
+<path d="M 270 110 Q 270 130 290 130 H 340 Q 360 130 360 110" fill="none" stroke="#b8b8b8" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="315.0" y="155.0" font-size="13" text-anchor="middle" fill="#b8b8b8"><tspan>carico (load)</tspan></text>
+</svg>

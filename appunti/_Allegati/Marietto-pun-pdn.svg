@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="330" height="330" viewBox="0 0 330 330">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<line x1="150.0" y1="40.0" x2="150.0" y2="32.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="138.0" y1="32.0" x2="162.0" y2="32.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<text x="166.0" y="32.0" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="9.1" dy="3.2">DD</tspan><tspan dy="-3.2"></tspan></text>
+<rect x="80.0" y="40.0" width="140.0" height="80.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="150.0" y="76.5" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Rete di</tspan></text>
+<text x="150.0" y="93.5" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>pull-up</tspan></text>
+<text x="70.0" y="85.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-weight="bold"><tspan>PUN</tspan></text>
+<text x="230.0" y="85.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>interruttori di tipo 0</tspan></text>
+<line x1="150.0" y1="120.0" x2="150.0" y2="140.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="150.0" cy="140.0" r="3.2" fill="#b8b8b8"/>
+<line x1="150.0" y1="140.0" x2="280.0" y2="140.0" stroke="#b8b8b8" stroke-width="2.5" stroke-dasharray="5 4" stroke-linecap="round"/>
+<text x="285.0" y="145.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>uscita</tspan></text>
+<line x1="150.0" y1="140.0" x2="150.0" y2="160.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<rect x="80.0" y="160.0" width="140.0" height="80.0" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="150.0" y="196.5" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>Rete di</tspan></text>
+<text x="150.0" y="213.5" font-size="14" text-anchor="middle" fill="#b8b8b8"><tspan>pull-down</tspan></text>
+<text x="70.0" y="205.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-weight="bold"><tspan>PDN</tspan></text>
+<text x="230.0" y="205.0" font-size="13" text-anchor="start" fill="#b8b8b8"><tspan>interruttori di tipo 1</tspan></text>
+<line x1="150.0" y1="240.0" x2="150.0" y2="260.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="150.0" y1="260.0" x2="150.0" y2="266.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="138.0" y1="266.0" x2="162.0" y2="266.0" stroke="#b8b8b8" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="142.0" y1="270.0" x2="158.0" y2="270.0" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<line x1="146.0" y1="274.0" x2="154.0" y2="274.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

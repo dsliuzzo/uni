@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="240" viewBox="0 0 480 240">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="14.0" y="59.0" font-size="15" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>A</tspan></text>
+<text x="14.0" y="81.0" font-size="15" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>B</tspan></text>
+<text x="14.0" y="155.0" font-size="15" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>C</tspan></text>
+<path d="M 70 43.0 H 97.0 A 22.0 22.0 0 0 1 97.0 87.0 H 70 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="20.0" y1="54.0" x2="70.0" y2="54.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="44.0" cy="76.0" r="3.2" fill="#b8b8b8"/>
+<line x1="20.0" y1="76.0" x2="70.0" y2="76.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="119.0" y1="65.0" x2="170.0" y2="65.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="170.0" cy="65.0" r="3.2" fill="#b8b8b8"/>
+<text x="150.0" y="55.0" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>S1</tspan></text>
+<path d="M 270 118.0 Q 302.4 118.0 324 140 Q 302.4 162.0 270 162.0 Q 281.88 140 270 118.0 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="20.0" y1="151.0" x2="274.3" y2="151.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="170.0" y1="65.0" x2="170.0" y2="129.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="170.0" y1="129.0" x2="274.3" y2="129.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="324.0" y1="140.0" x2="420.0" y2="140.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="430.0" y="145.0" font-size="15" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>O1</tspan></text>
+<path d="M 278 183.0 Q 310.4 183.0 332 205 Q 310.4 227.0 278 227.0 Q 289.88 205 278 183.0 Z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M 270 183.0 Q 281.88 205 270 227.0" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="170.0" y1="65.0" x2="170.0" y2="194.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="170.0" cy="129.0" r="3.2" fill="#b8b8b8"/>
+<line x1="170.0" y1="194.0" x2="273.0" y2="194.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="44.0" y1="76.0" x2="44.0" y2="216.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="44.0" y1="216.0" x2="273.0" y2="216.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="332.0" y1="205.0" x2="420.0" y2="205.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="430.0" y="210.0" font-size="15" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>O2</tspan></text>
+</svg>

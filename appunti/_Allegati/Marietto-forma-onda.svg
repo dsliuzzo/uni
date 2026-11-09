@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 900 320">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<text x="150.0" y="20.0" font-size="13" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>IDEALE</tspan></text>
+<line x1="40.0" y1="230.0" x2="340.0" y2="230.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<polyline points="332.6,233.1 340.0,230.0 332.6,226.9" fill="none" stroke="#b8b8b8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="40.0" y1="230.0" x2="40.0" y2="40.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<polyline points="43.1,47.4 40.0,40.0 36.9,47.4" fill="none" stroke="#b8b8b8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="344.0" y="246.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>t</tspan></text>
+<text x="46.0" y="36.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="9.8" dy="3.5">in</tspan><tspan dy="-3.5"></tspan></text>
+<text x="34.0" y="100.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="8.4" dy="3.0">DD</tspan><tspan dy="-3.0"></tspan></text>
+<text x="34.0" y="234.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>0 V</tspan></text>
+<path d="M 40 230 H 80 V 100 H 160 V 230 H 220 V 100 H 300 V 230" fill="none" stroke="#b8b8b8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="40.0" y1="100.0" x2="330.0" y2="100.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="4 4" stroke-linecap="round"/>
+<text x="630.0" y="20.0" font-size="13" text-anchor="middle" fill="#b8b8b8" font-weight="bold"><tspan>REALE</tspan></text>
+<line x1="440.0" y1="230.0" x2="870.0" y2="230.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<polyline points="862.6,233.1 870.0,230.0 862.6,226.9" fill="none" stroke="#b8b8b8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="440.0" y1="230.0" x2="440.0" y2="40.0" stroke="#b8b8b8" stroke-width="1.6" stroke-linecap="round"/>
+<polyline points="443.1,47.4 440.0,40.0 436.9,47.4" fill="none" stroke="#b8b8b8" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="874.0" y="246.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>t</tspan></text>
+<text x="446.0" y="36.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="9.8" dy="3.5">in</tspan><tspan dy="-3.5"></tspan></text>
+<text x="434.0" y="100.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="8.4" dy="3.0">DD</tspan><tspan dy="-3.0"></tspan></text>
+<text x="434.0" y="234.0" font-size="12" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>0 V</tspan></text>
+<text x="434.0" y="117.0" font-size="11" text-anchor="end" fill="#b8b8b8"><tspan>90%</tspan></text>
+<text x="434.0" y="221.0" font-size="11" text-anchor="end" fill="#b8b8b8"><tspan>10%</tspan></text>
+<text x="434.0" y="169.0" font-size="11" text-anchor="end" fill="#b8b8b8" font-style="italic"><tspan>V</tspan><tspan font-size="7.7" dy="2.8">DD</tspan><tspan dy="-2.8"></tspan><tspan>/2</tspan></text>
+<path d="M 440 230 H 500 L 590 100 H 680 L 770 230 H 860" fill="none" stroke="#b8b8b8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="440.0" y1="217.0" x2="860.0" y2="217.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="4 4" stroke-linecap="round"/>
+<line x1="440.0" y1="165.0" x2="860.0" y2="165.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="4 4" stroke-linecap="round"/>
+<line x1="440.0" y1="113.0" x2="860.0" y2="113.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="4 4" stroke-linecap="round"/>
+<line x1="509.0" y1="217.0" x2="509.0" y2="244.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 3" stroke-linecap="round"/>
+<line x1="581.0" y1="113.0" x2="581.0" y2="244.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 3" stroke-linecap="round"/>
+<line x1="689.0" y1="113.0" x2="689.0" y2="244.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 3" stroke-linecap="round"/>
+<line x1="761.0" y1="217.0" x2="761.0" y2="244.0" stroke="#b8b8b8" stroke-width="1" stroke-dasharray="3 3" stroke-linecap="round"/>
+<text x="509.0" y="258.0" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>t</tspan><tspan font-size="7.7" dy="2.8">10%</tspan><tspan dy="-2.8"></tspan></text>
+<text x="587.0" y="272.0" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>t</tspan><tspan font-size="7.7" dy="2.8">90%</tspan><tspan dy="-2.8"></tspan></text>
+<text x="683.0" y="272.0" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>t</tspan><tspan font-size="7.7" dy="2.8">90%</tspan><tspan dy="-2.8"></tspan></text>
+<text x="761.0" y="258.0" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic"><tspan>t</tspan><tspan font-size="7.7" dy="2.8">10%</tspan><tspan dy="-2.8"></tspan></text>
+<text x="440.0" y="304.0" font-size="12" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>t</tspan><tspan font-size="8.4" dy="3.0">SAL</tspan><tspan dy="-3.0"></tspan><tspan> = t</tspan><tspan font-size="8.4" dy="3.0">90%</tspan><tspan dy="-3.0"></tspan><tspan> − t</tspan><tspan font-size="8.4" dy="3.0">10%</tspan><tspan dy="-3.0"></tspan></text>
+<text x="660.0" y="304.0" font-size="12" text-anchor="start" fill="#b8b8b8" font-style="italic"><tspan>t</tspan><tspan font-size="8.4" dy="3.0">DIS</tspan><tspan dy="-3.0"></tspan><tspan> = t</tspan><tspan font-size="8.4" dy="3.0">10%</tspan><tspan dy="-3.0"></tspan><tspan> − t</tspan><tspan font-size="8.4" dy="3.0">90%</tspan><tspan dy="-3.0"></tspan></text>
+</svg>
