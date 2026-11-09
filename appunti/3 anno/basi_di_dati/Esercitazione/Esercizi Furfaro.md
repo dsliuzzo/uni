@@ -482,3 +482,14 @@ L'ultimo `- coppieNo` è il viceversa
 `FornituraNo` restituisce le coppie fornitore|merce non presenti in `Fornitura`
 `CoppieNo` restituisce la join se la merce è uguale
 `Q` restituisce tutte le possibili coppie di fornitori tranne quelli presenti in `CoppieNo` (anche con il viceversa)
+
+**Query per casa**
+1) conoscere i nomi delle merci di marca $\alpha$ o $\beta$ e il cui nome non è X
+2) coppie `nomeFornitore|nomeMarca` tali che il fornitore e la marca stanno nella stessa città e il fornitore fornisce almeno una merce di quella marca
+3) nome delle marche di CS, che producono almeno 2 merci ciascuna delle quali è fornita a più di 10 euro da due fornitori di RC
+4) nomi delle merci che sono fornite da esattamente 2 fornitori di CS
+5) nomi dei fornitori che non forniscono merci di marca $\alpha$
+6) nomi dei fornitori che forniscono solo merci di marca $\alpha$
+7) per ogni fornitore di RC restituire il prezzo più basso a cui fornisce qualche merce
+8) merci prodotte a CS che sono fornite da tutti i fornitori
+9) coppi di merci prodotte nella stessa città che sono fornite dallo stesso insieme di fornitori
