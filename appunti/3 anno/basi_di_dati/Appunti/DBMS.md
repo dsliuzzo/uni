@@ -1194,9 +1194,6 @@ $$
 >
 >Con l'istanza degli appunti (F1 fornisce M1, M2 e F2 solo M1) invece $(F1, F2) \in \text{coppieNo}$, perché F1 fornisce M2 e F2 no, e $Q$ è vuota.
 
->[!attention] AGGIUNTA
->Due fornitori che non forniscono nulla hanno lo stesso insieme di merci (quello vuoto), quindi la query li restituisce come coppia. Non compaiono mai in `Fornitura`, quindi nessuno dei due può essere il primo elemento di una riga di `coppieNo` e nessuna delle due sottrazioni scarta la coppia.
-
 ## SQL
 **Structured Query Language** (linguaggio di interrogazione strutturato).
 Non è un linguaggio imperativo, ma un linguaggio dichiarativo che si avvicina all'[[#Algebre relazionale|algebra relazionale]].

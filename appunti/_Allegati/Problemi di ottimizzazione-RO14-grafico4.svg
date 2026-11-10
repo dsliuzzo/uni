@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="550" height="450" viewBox="0 0 550 450">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowv" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<g stroke="#b8b8b8" stroke-width="1" stroke-opacity="0.2">
+<line x1="50" y1="400" x2="50" y2="50"/>
+<line x1="100" y1="400" x2="100" y2="50"/>
+<line x1="150" y1="400" x2="150" y2="50"/>
+<line x1="200" y1="400" x2="200" y2="50"/>
+<line x1="250" y1="400" x2="250" y2="50"/>
+<line x1="300" y1="400" x2="300" y2="50"/>
+<line x1="350" y1="400" x2="350" y2="50"/>
+<line x1="400" y1="400" x2="400" y2="50"/>
+<line x1="450" y1="400" x2="450" y2="50"/>
+<line x1="500" y1="400" x2="500" y2="50"/>
+<line x1="50" y1="400" x2="500" y2="400"/>
+<line x1="50" y1="350" x2="500" y2="350"/>
+<line x1="50" y1="300" x2="500" y2="300"/>
+<line x1="50" y1="250" x2="500" y2="250"/>
+<line x1="50" y1="200" x2="500" y2="200"/>
+<line x1="50" y1="150" x2="500" y2="150"/>
+<line x1="50" y1="100" x2="500" y2="100"/>
+<line x1="50" y1="50" x2="500" y2="50"/>
+</g>
+<polygon points="50,200 250,200 300,250 350,350 350,400 50,400" fill="#5b9bd5" fill-opacity="0.25" stroke="none"/>
+<polyline points="50,200 250,200 300,250 350,350 350,400" fill="none" stroke="#5b9bd5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<line x1="40" y1="200" x2="520" y2="200" marker-end="url(#arrow)"/>
+<line x1="350" y1="410" x2="350" y2="30" marker-end="url(#arrow)"/>
+</g>
+<line x1="350" y1="200" x2="450" y2="125.0" stroke="#e07b6a" stroke-width="2.5" stroke-linecap="round" marker-end="url(#arrowv)"/>
+<circle cx="300" cy="250" r="5" fill="#e5c07b"/>
+<text class="ts" x="50" y="214">-6</text>
+<text class="ts" x="100" y="214">-5</text>
+<text class="ts" x="150" y="214">-4</text>
+<text class="ts" x="200" y="214">-3</text>
+<text class="ts" x="250" y="214">-2</text>
+<text class="ts" x="300" y="214">-1</text>
+<text class="ts" x="400" y="214">1</text>
+<text class="ts" x="450" y="214">2</text>
+<text class="ts" x="500" y="214">3</text>
+<text class="ts" x="338" y="400">-4</text>
+<text class="ts" x="338" y="350">-3</text>
+<text class="ts" x="338" y="300">-2</text>
+<text class="ts" x="338" y="250">-1</text>
+<text class="ts" x="338" y="150">1</text>
+<text class="ts" x="338" y="100">2</text>
+<text class="ts" x="338" y="50">3</text>
+<text class="ts" x="340" y="214">0</text>
+<text class="t" x="536" y="200">y<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+<text class="t" x="350" y="16">y<tspan baseline-shift="sub" font-size="10">2</tspan></text>
+<text class="t" style="text-anchor:end" x="288" y="250">ȳ = (−1, −1)ᵀ</text>
+<text class="ts" style="fill:#e07b6a;text-anchor:start" x="458" y="115.0">(8, 6)</text>
+</svg>

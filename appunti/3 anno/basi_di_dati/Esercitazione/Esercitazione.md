@@ -334,14 +334,7 @@ $$
 \end{array}
 $$
 11) Coppie di clienti `<C1,C2>` che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
-tutte le possibili coppie di clienti - clienti che hanno sottoscritto investimenti curati da società finanziarie diverse
-$$
-\begin{array}{l}
-\text{coppieNo} = \left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento} \right) \underset{\$ 5 \neq \$ 5 \wedge \$ 1 \neq \$ 1}{\bowtie} \left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento} \right) \\
-\text{Q11} = \Pi_{\$ 1, \$ 4}(\text{Sottoscrizione} \times \text{Sottoscrizione}) - \Pi_{\$ 1, \$ 8}(\text{coppieNo})
-\end{array}
-$$
-[...] da rivedere
+[...]
 # Prova esame 8 luglio 2019
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -361,7 +354,7 @@ $$
 ``` sql
 SELECT nome
 FROM Stazione
-WHERE citta = 'Torino'
+WHERE citta = 'Torino';
 ```
 2) I nomi delle stazioni che sono il punto di partenza di almeno due tratte
 $$
@@ -372,7 +365,7 @@ SELECT S.nome
 FROM Stazione S, Tratta T1, Tratta T2
 WHERE   T1.stazionePartenza = T2.stazionePartenza
 	AND T1.codice != T2.codice
-	AND S.codice = T1.stazionePartenza
+	AND S.codice = T1.stazionePartenza;
 ```
 
 3) Le tratte coperte da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
@@ -385,7 +378,7 @@ FROM Tratta T, Autobus A1, Autobus A2
 WHERE   A1.codice != A2.codice
 	AND A1.tipologiaAutobus = A2.tipologiaAutobus
 	AND T.codice = A1.trattaCoperta
-	AND T.codice = A2.trattaCoperta
+	AND T.codice = A2.trattaCoperta;
 ```
 
 4) I nomi delle stazioni che sono il punto di partenza di almeno due tratte, ciascuna delle quali è coperta da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
@@ -409,23 +402,46 @@ SELECT S.nome
 FROM Stazione S, TrattaOk T1, TrattaOk T2
 WHERE   T1.stazionePartenza = T2.stazionePartenza
 	AND T1.codice != T2.codice
-	AND S.codice = T1.stazionePartenza
+	AND S.codice = T1.stazionePartenza;
 ```
 
 
-5) Le tipologie di autobus per le quali almeno un autobus copre una tratta di distanza superiore a 500km
+5) Le tipologie di autobus per le quali almeno un autobus copre una tratta di distanza superiore a 500 km
 $$
 \text{Q5} = \Pi_{\$ 3}\left\{\text{Autobus} \underset{\$ 2 = \$ 1}{\bowtie} [\sigma_{\$ 4 > 500}(\text{Tratta})]\right\}
 $$
 ``` sql
 SELECT A.tipologia
 FROM Autobus AS A, Tratta AS T
-WHERE   A.trattaCoperta = T.
+WHERE   A.trattaCoperta = T.codice
+	AND T.distanza > 500;
 ```
 
 
 6) Le tipologie di autobus delle quali non esiste alcun autobus che copra una tratta che parte dalla città di Roma e che copre una distanza inferiore a 200 km.
-[...]
+$$
+\begin{array}{l}
+\text{autobusNo} = \Pi_{\$ 1, \$ 3}\left\{\text{Autobus} \underset{\$ 2 = \$ 1}{\bowtie} [\sigma_{\$ 4 < 200 \wedge \$ 2 = \text{'Roma'}}(\text{Tratta})]\right\} \\
+\text{Q6} = \Pi_{\$ 2} [\Pi_{\$ 1, \$ 3}(\text{Autobus}) - \text{AutobusNo}]
+\end{array}
+$$
+``` sql
+CREATE VIEW autobusSi (codice, tipologiaAutobus) AS (
+	SELECT codice, tipologiaAutobus
+	FROM Autobus
+	
+	EXCEPT
+	
+	SELECT A.codice, A.tipologiaAutobus
+	FROM Autobus AS A, Tratta AS T
+	WHERE   A.trattaCoperta = T.codice
+		AND T.distanza < 200
+		AND T.stazionePartenza = 'Roma'
+);
+
+SELECT tipologiaAutobus
+FROM autobusSi
+```
 
 
 7) Le coppie di stazioni tali che gli insiemi di tipologie di autobus che partono da ciascuna di esse sono uguali.
