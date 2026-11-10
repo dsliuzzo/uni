@@ -3201,30 +3201,28 @@ $$
 b^\top \bar{y} \leq c^\top x \qquad \forall x \in \Omega(P)
 $$
 contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata su $\Omega(P)$.
-
-$\downarrow$ [...]
-problema della terminazione sull'algoritmo del simplesso
-concentriamoci sulla seconda fase dell'algoritmo
-l'algoritmo esplora soluzioni di base ammissibili
-man mano che si sposta la soluzione obiettivo non peggiora
-quando siamo in corrispondenza di sba non degeneri il passaggio ad una nuova soluzione la funzione obiettivo migliora strettamente (questa osservazione porta tra l'altro alla condizione necessaria di ottimo)
-questa è la condizione facile: se presenta soluzioni tutte non degeneri ogni volta che trova un vertice l'algoritmo
-- se non  soddisfatta la condizione di arresto si sposta e la funzione obiettivo scende strettamente e non ci ripassiamo più da questo vertice, i vertici sono in numero finito, quindi al più l'algoritmo tocca tutti quanti i vertici
-- se il problema è inferiormente illimitato trova una direzione che consente di scendere, ma non trova più vertici, quindi possiamo certificare l'illimitatezza
-Il problema nasce nel momento in cui ci sono sba degeneri
-In corrispondenza di una sba degenere la regola consente di non ripassare dalla soluzione già esplorata
-l'algoritmo se non passa mai da quella soluzione allora passerà (per la regola di bland) da una base tale per cui $\bar{\delta} > 0$ che ci consente di scendere
-prima o poi trova una base ottima in corrispondenza del quale i coefficienti di costo ridotto non negativi
-prima di questo dovremmo dimostrare che esiste una base che consente di avere coefficienti di costo non negativi
-Il criterio di arresto per ottimalità è sulla non negatività dei coefficienti di costo ridotto
-quando siamo all'ottimo e l'ottimo è degenere dovremmo trovare la base giusta in un numero finito di passi
-dobbiamo dimostrare che
-- la base esiste
-- prima o poi la troviamo (= dimostrare che la regola di bland funziona)
-quando la soluzione ottima è non degenere siamo tranquilli sulla condizione di non negatività dei coefficienti
-in corrispondenza di ottimo non degenere esiste una base che ha coefficienti non negativi
-$\uparrow$ [...]
 ### Dualità forte
+>[!question] Studio della terminazione dell'algoritmo del simplesso
+>La [[#Seconda fase dell'algoritmo del simplesso|seconda fase]] dell'algoritmo si occupa della sua terminazione. In questa fase l'algoritmo esplora soluzioni di base ammissibili. Man mano che si sposta la funzione obiettivo non peggiora.
+>In corrispondenza di SBA non degeneri il passaggio ad una nuova soluzione la funzione obiettivo migliora strettamente (questa osservazione porta tra l'altro alla [[#Condizione necessaria di ottimalità|condizione necessaria di ottimo]]).
+>
+>1. Se presenta soluzioni tutte non degeneri ogni volta che trova un vertice l'algoritmo
+>	- se non è soddisfatta la [[#Condizione sufficiente di ottimalità|condizione di arresto]] si sposta: la funzione obiettivo scende strettamente e l'algoritmo non passa più da questo vertice. I vertici sono in numero finito, quindi al più l'algoritmo tocca tutti quanti i vertici;
+>	- se il problema è inferiormente illimitato trova una direzione che consente di diminuire la funzione obiettivo, ma non trova più vertici, quindi possiamo certificare l'[[#Problema illimitato inferiormente|illimitatezza]].
+>
+>Il problema nasce nel momento in cui ci sono [[#Soluzione degenere|SBA degeneri]].
+>
+>2. In corrispondenza di una SBA degenere può essere $\bar{\delta} = 0$: la base cambia ma il punto resta lo stesso e la funzione obiettivo non scende ([[#Soluzioni di base ammissibili degeneri|cambio di base degenere]]). L'argomento del punto 1 non vale più e l'algoritmo rischia di ciclare tra basi diverse dello stesso vertice. La [[#Regola di Bland|regola di Bland]] garantisce che non si ripassi mai da una **base** già esplorata; poiché le basi sono in numero finito, dopo un numero finito di cambi degeneri l'algoritmo può:
+>	- trovare una base con $\hat{c}_N \geq 0$ e si arresta per ottimalità;
+>	- trovare una base tale per cui $\bar{\delta} > 0$: si sposta su un nuovo vertice e la funzione obiettivo scende strettamente, come nel punto 1;
+>	- trovare una direzione che certifica l'illimitatezza.
+>
+>Il [[#Condizione sufficiente di ottimalità|criterio di arresto per ottimalità]] è sulla non negatività dei coefficienti di costo ridotto $\hat{c}_N \geq 0$.
+>- Se la soluzione ottima è **non degenere**, il vertice è descritto da un'unica base e per la [[#Condizione necessaria di ottimalità|condizione necessaria]] questa ha $\hat{c}_N \geq 0$: l'algoritmo, arrivato lì, si arresta.
+>- Se la soluzione ottima è **degenere**, lo stesso vertice è descritto da più basi e alcune possono avere coefficienti di costo ridotto negativi pur essendo il punto ottimo. L'algoritmo deve allora trovare la base giusta in un numero finito di cambi di base degeneri. Bisogna dimostrare che:
+>	- la base esiste, cioè che tra le basi del vertice ottimo ce n'è almeno una con $\hat{c}_N \geq 0$;
+>	- prima o poi la troviamo, cioè che la [[#Regola di Bland|regola di Bland]] funziona.
+
 >[!info] Teorema di dualità forte
 >Sia data la seguente coppia di problemi duali:
 >$$
