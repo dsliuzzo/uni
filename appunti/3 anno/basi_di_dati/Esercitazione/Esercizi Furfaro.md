@@ -20,7 +20,6 @@
 | F1        | M2            | 5      |
 | F2        | M1            | 8      |
 
-
 | **Marca** |          |
 | --------- | -------- |
 | **nome**  | **sede** |
@@ -497,13 +496,13 @@ WHERE   nome != 'X'
 
 2) coppie `nomeFornitore|nomeMarca` tali che il fornitore e la marca stanno nella stessa città e il fornitore fornisce almeno una merce di quella marca
 $$
-\Pi_{\$ 2, \$ 7}\left\{ \left[ \text{Fornitore}\underset{\$ 3 = \$ 5}{\bowtie} \left( \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \right] \underset{\$ 1 = \$ 1 \wedge \$ 4 = \$ 2}{\bowtie} \text{Fornitura} \right\}
+\Pi_{\$ 2, \$ 7}\left\{ \left[ \text{Fornitore}\underset{\$ 3 = \$ 8}{\bowtie} \left( \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \right] \underset{\$ 1 = \$ 1 \wedge \$ 4 = \$ 2}{\bowtie} \text{Fornitura} \right\}
 $$
 ``` sql
 SELECT F.nome, MA.nome
 FROM Fornitore F, Merce ME, Marca MA, Fornitura X
 WHERE   F.citta = MA.sede
-	AND ME.marce = MA.nome
+	AND ME.marca = MA.nome
 	AND F.piva = X.fornitore
 	AND ME.cod = X.merca
 ```
@@ -583,10 +582,114 @@ FROM Merce AS M, esatt2
 WHERE M.cod = esatt2.cod;
 ```
 5) nomi dei fornitori che non forniscono merci di marca $\alpha$
+$$
+\begin{array}{l}
+\text{FornitoriNo} = \Pi_{\$ 4, \$ 5, \$ 6}\left[ \left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore} \right)\underset{\$ 2 = \$ 1}{\bowtie} \sigma_{\$ 3 = \alpha}(\text{Merce})\right]\\
+\text{Q5} = \Pi_{\$ 2}(\text{Fornitore} - \text{FornitoriNo})
+\end{array}
+$$
+``` sql
+CREATE VIEW FornitoreSi (piva, nome, citta) AS (
+	SELECT *
+	FROM Fornitore
+	
+	EXCEPT
+	
+	SELECT F.*
+	FROM Fornitura X, Fornitore F, Merce M
+	WHERE   X.fornitore = F.piva
+		AND X.merce = M.cod
+		AND M.marca = 'alpha'
+);
 
+SELECT nome
+FROM FornitoreSi
+```
 
 6) nomi dei fornitori che forniscono solo merci di marca $\alpha$
-7) per ogni fornitore di RC restituire il prezzo più basso a cui fornisce qualche merce
-8) merci prodotte a CS che sono fornite da tutti i fornitori
-9) coppi di merci prodotte nella stessa città che sono fornite dallo stesso insieme di fornitori
+$$
+\begin{array}{l}
+\text{FornitoriNo} = \Pi_{\$ 4, \$ 5, \$ 6}\left[ \left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitore} \right)\underset{\$ 2 = \$ 1}{\bowtie} \sigma_{\$ 3 \neq \alpha}(\text{Merce})\right]\\
+\text{Q6} = \Pi_{\$ 2}(\text{Fornitore} - \text{FornitoriNo})
+\end{array}
+$$
+``` sql
+CREATE VIEW FornitoreSi (piva, nome, citta) AS (
+	SELECT *
+	FROM Fornitore
+	
+	EXCEPT
+	
+	SELECT F.*
+	FROM Fornitura X, Fornitore F, Merce M
+	WHERE   X.fornitore = F.piva
+		AND X.merce = M.cod
+		AND M.marca != 'alpha'
+);
 
+SELECT nome
+FROM FornitoreSi
+```
+
+7) per ogni fornitore di RC restituire il prezzo più basso a cui fornisce qualche merce
+$$
+\begin{array}{l}
+\text{fornituraRC} = \Pi_{\$ 1, \$ 3}\left[ \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie}\sigma_{\$ 3 = 'RC'}(\text{Fornitore}) \right] \\
+\text{Q7} = \text{fornituraRC} - \Pi_{\$ 1, \$ 2}\left( \text{fornituraRC} \underset{\$ 1 = \$ 1  \wedge \$ 2 > \$ 2}{\bowtie} \text{fornituraRC}\right)
+\end{array}
+$$
+``` sql
+CREATE VIEW fornituraRC (fornitore, prezzo) AS (
+	SELECT X.fornitore AS fornitore, X.prezzo AS prezzo
+	FROM Fornitura X, Fornitore F
+	WHERE   X.fornitore = F.piva
+		AND F.citta = 'RC'
+);
+
+SELECT *
+FROM fornituraRC
+
+EXCEPT
+
+SELECT X1.fornitore AS fornitore, X1.prezzo AS prezzo
+FROM fornituraRC AS X1, fornituraRC AS X2
+WHERE   X1.fornitore = X2.fornitore
+	AND X1.prezzo > X2.prezzo
+```
+
+8) merci prodotte a CS che sono fornite da tutti i fornitori
+`fornitoreNo` = fornitore tale che esiste qualche merce di CS che non fornisce = complementare di fornituraCS
+`MerceCS-fornitoreNo`
+$$
+\begin{array}{l}
+\text{MerceCS} = \Pi_{\$ 1}\left[ \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \sigma_{\$ 2 = 'CS'}(\text{Marca}) \right] \\
+\text{FornituraNo} = \Pi_{\$ 1, \$ 4}(\text{Fornitore} \times \text{MerceCS}) - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\
+\text{Q8} = \text{MerceCS} - \Pi_{\$ 2}(\text{FornituraNo})
+\end{array}
+$$
+``` sql
+CREATE VIEW FornituraNo (fornitore, merce) AS (
+	SELECT F.piva AS fornitore, M.cod AS merce
+	FROM Fornitore F, Merce M, Marca MA
+	WHERE   MA.sede = 'CS'
+		AND M.marca = MA.nome
+	
+	EXCEPT
+	
+	SELECT fornitore, merce
+	FROM Fornitura
+);
+
+SELECT M.cod AS merce
+FROM Merce AS M, Marca MA
+WHERE   M.marca = MA.nome
+	AND MA.sede = 'CS'
+	
+EXCEPT
+
+SELECT merce
+FROM FornituraNo
+```
+
+9) coppie di merci prodotte nella stessa città che sono fornite dallo stesso insieme di fornitori
+[...]

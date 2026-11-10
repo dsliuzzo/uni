@@ -3117,15 +3117,30 @@ mensa? ❌💪
 >$$
 
 
-
-
----
 ## Teoremi di dualità
+$$
+(P)\begin{cases}
+\min & c^\top x \\
+&\left.\begin{array}{rl}
+Ax & = b \\
+x & \geq 0
+\end{array}\right\} \Omega(P)
+\end{cases} \hspace{8ex}
+(D)\begin{cases}
+\max & c^\top x \\
+&\left.\begin{array}{rl}
+A^\top y & \leq c 
+\end{array}\right\} \Omega(D)
+\end{cases}
+$$
+### Dualità debole
 >[!info] Teorema di dualità debole
 >Dati un problema di programmazione lineare in forma standard e il suo duale, per ogni $x \in \Omega(P)$ e ogni $y \in \Omega(D)$ vale:
 >$$
 >b^\top y \leq c^\top x
 >$$
+
+La costruzione del duale si basa su questo teorema
 
 #dimostrazione
 Siano $\bar{x} \in \Omega(P)$ e $\bar{y} \in \Omega(D)$:
@@ -3148,6 +3163,7 @@ che è la tesi, per la commutatività del prodotto scalare.
 >$$
 >b^\top \bar{y} \leq c^\top x^* \ \ \forall \bar{y} \in \Omega(D), \qquad b^\top y^* \leq c^\top \bar{x} \ \ \forall \bar{x} \in \Omega(P), \qquad b^\top y^* \leq c^\top x^*
 >$$
+>Se esistono gli ottimi sono legati dalla relazione $b^\top y^* \leq c^\top x^*$
 >- Quindi le due funzioni obiettivo
 >$$
 >z(x) = c^\top x \qquad w(y) = b^\top y
@@ -3158,13 +3174,19 @@ che è la tesi, per la commutatività del prodotto scalare.
 >$$
 >viene detta **gap di dualità**.
 
+$\downarrow$[...]
+sofisticato
+Se il problema di minimo fosse illimitato inferiormente il problema di massimo è inammissibile.
+Se $c^\top x - b^\top y = 0$ vuol dire che abbiamo trovato l'ottimo, per entrambi i problemi (**condizione sufficiente di ottimo** (non necessaria), senza usare soluzioni di base, non coinvolge i vertici).
+I due corollari si intuiscono da ragionamenti sui l'osservazione $\uparrow$ dal punto 2 e dal punto 3
+$\uparrow$[...]
+
 >[!info] Corollario 1
 >Per ogni coppia di problemi duali $(P)$ e $(D)$:
 >$$
 >\bar{x} \in \Omega(P), \quad \bar{y} \in \Omega(D), \quad b^\top \bar{y} = c^\top \bar{x}
 >$$
->$$\Downarrow$$
->$\bar{x}$ è soluzione ottima di $(P)$ e $\bar{y}$ è soluzione ottima di $(D)$.
+>$\implies \bar{x}$ è soluzione ottima di $(P)$ e $\bar{y}$ è soluzione ottima di $(D)$.
 
 #dimostrazione
 Per assurdo. Supponiamo che $\bar{y}$ non sia ottima per $(D)$. Allora deve esistere una $\tilde{y} \in \Omega(D)$ tale che $b^\top \tilde{y} > b^\top \bar{y}$. Ciò implica che
@@ -3182,3 +3204,524 @@ $$
 b^\top \bar{y} \leq c^\top x \qquad \forall x \in \Omega(P)
 $$
 contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata su $\Omega(P)$.
+
+$\downarrow$ [...]
+problema della terminazione sull'algoritmo del simplesso
+concentriamoci sulla seconda fase dell'algoritmo
+l'algoritmo esplora soluzioni di base ammissibili
+man mano che si sposta la soluzione obiettivo non peggiora
+quando siamo in corrispondenza di sba non degeneri il passaggio ad una nuova soluzione la funzione obiettivo migliora strettamente (questa osservazione porta tra l'altro alla condizione necessaria di ottimo)
+questa è la condizione facile: se presenta soluzioni tutte non degeneri ogni volta che trova un vertice l'algoritmo
+- se non  soddisfatta la condizione di arresto si sposta e la funzione obiettivo scende strettamente e non ci ripassiamo più da questo vertice, i vertici sono in numero finito, quindi al più l'algoritmo tocca tutti quanti i vertici
+- se il problema è inferiormente illimitato trova una direzione che consente di scendere, ma non trova più vertici, quindi possiamo certificare l'illimitatezza
+Il problema nasce nel momento in cui ci sono sba degeneri
+In corrispondenza di una sba degenere la regola consente di non ripassare dalla soluzione già esplorata
+l'algoritmo se non passa mai da quella soluzione allora passerà (per la regola di bland) da una base tale per cui $\bar{\delta} > 0$ che ci consente di scendere
+prima o poi trova una base ottima in corrispondenza del quale i coefficienti di costo ridotto non negativi
+prima di questo dovremmo dimostrare che esiste una base che consente di avere coefficienti di costo non negativi
+Il criterio di arresto per ottimalità è sulla non negatività dei coefficienti di costo ridotto
+quando siamo all'ottimo e l'ottimo è degenere dovremmo trovare la base giusta in un numero finito di passi
+dobbiamo dimostrare che
+- la base esiste
+- prima o poi la troviamo (= dimostrare che la regola di bland funziona)
+quando la soluzione ottima è non degenere siamo tranquilli sulla condizione di non negatività dei coefficienti
+in corrispondenza di ottimo non degenere esiste una base che ha coefficienti non negativi
+$\uparrow$ [...]
+### Dualità forte
+>[!info] Teorema di dualità forte
+>Sia data la seguente coppia di problemi duali:
+>$$
+>(P)\begin{cases}
+>\min & c^\top x \\
+>s.t. & Ax = b \\
+>& x \geq 0
+>\end{cases}
+>\qquad
+>(D)\begin{cases}
+>\max & b^\top y \\
+>s.t. & A^\top y \leq c
+>\end{cases}
+>$$
+>Se $(P)$ ammette ottimo finito, allora $(D)$ ammette ottimo finito ed i valori delle funzioni obiettivo all'ottimo coincidono:
+>$$
+>c^\top x^* = b^\top y^*
+>$$
+
+Si può dimostrare anche viceversa (invertendo primale e duale, passando in forma standard $(D)$).
+
+#dimostrazione
+Per ipotesi il problema $(P)$ ha soluzione ottima; quindi, per il [[#Teorema fondamentale della PL in forma standard|teorema fondamentale della PL]] (2° enunciato), esiste una soluzione ottima di base. Sia essa $x^*$:
+$$
+x^* = \begin{pmatrix} x^*_B \\ x^*_N \end{pmatrix} = \begin{pmatrix} B^{-1}b \\ 0 \end{pmatrix}
+$$
+con valore di funzione obiettivo
+$$
+z^* = c^\top x^* = c_B^\top \left(B^{-1}b\right)
+$$
+$\downarrow$ [...]
+Distinguiamo due casi
+- $x^*$ è non degenere $\hat{c}^\top_N \geq 0^\top$
+- $x^*$ degenere $\exists B \hat{c}^\top_N \geq 0^\top$ (esiste una base che prima o poi l'algoritmo troverà)
+pur non avendolo detto nelle hp del sistema
+$\uparrow$ [...]
+
+Senza perdita di generalità, si può assumere che valga:
+$$
+\hat{c}_N^\top = c_N^\top - c_B^\top B^{-1}N \geq 0
+$$
+Infatti, se la soluzione di base ottima è non degenere, i [[#Espressione della funzione obbiettivo e costi ridotti|costi ridotti]] sono necessariamente non negativi; se è degenere, la condizione $\hat{c}_N^\top \geq 0$ vale per almeno una delle basi che corrispondono ad $x^*$ (terminazione finita dell'algoritmo del simplesso).
+
+Sia $y^* \in \mathbb{R}^m$ e poniamo:
+$$
+y^* := \left(B^\top\right)^{-1} c_B \iff y^{*\top} := c_B^\top B^{-1}
+$$
+Per costruzione, si ha:
+$$
+c^\top x^* = c_B^\top \left(B^{-1}b\right) = c_B^\top B^{-1} b = y^{*\top} b = b^\top y^*
+$$
+Partizionando la matrice $A$ ed il vettore $c$ rispetto alla base ottimale per il problema $(P)$, il sistema di vincoli duali si scrive:
+$$
+\begin{bmatrix} B^\top \\ N^\top \end{bmatrix} y \leq \begin{pmatrix} c_B \\ c_N \end{pmatrix}
+\iff
+\begin{cases}
+B^\top y \leq c_B \\
+N^\top y \leq c_N
+\end{cases}
+$$
+Sostituendo al generico vettore $y$ il vettore $y^*$ si ottiene:
+$$
+\begin{cases}
+y^{*\top} B \leq c_B^\top \\
+y^{*\top} N \leq c_N^\top
+\end{cases}
+\iff
+\begin{cases}
+c_B^\top B^{-1} B \leq c_B^\top \\
+c_B^\top B^{-1} N \leq c_N^\top
+\end{cases}
+\iff
+\begin{cases}
+c_B^\top \leq c_B^\top \\
+0 \leq c_N^\top - c_B^\top B^{-1} N
+\end{cases}
+$$
+Il vettore $y^*$ soddisfa i vincoli del primo gruppo per uguaglianza, quelli del secondo gruppo grazie alla condizione di ottimalità; pertanto $y^*$ è ammissibile per $(D)$, e quindi ottimo per il corollario della dualità debole.
+
+### Approfondimenti
+Per ogni base $B$ di $A$ cui corrisponde una soluzione ammissibile di base $\bar{x}$ per $(P)$:
+$$
+\bar{x} = \begin{pmatrix} \bar{x}_B \\ \bar{x}_N \end{pmatrix} = \begin{pmatrix} B^{-1}b \\ 0 \end{pmatrix}
+$$
+è sempre possibile costruire il vettore
+$$
+\bar{y} = \left(B^\top\right)^{-1} c_B \quad \text{tale che} \quad c^\top \bar{x} = b^\top \bar{y}
+$$
+- $\bar{x}_B$ è l'unica soluzione del sistema $Bx_B = b$
+- $\bar{y}$ è l'unica soluzione del sistema $B^\top y = c_B$
+
+Consideriamo la coppia di soluzioni $\bar{x}$ e $\bar{y}$:
+$$
+c^\top \bar{x} = b^\top \bar{y} \implies \bar{y} \text{ è } \textbf{superottima} \text{ per } (D)
+$$
+Infatti, essendo $\bar{x} \in \Omega(P)$, per il teorema di dualità debole si ha:
+$$
+b^\top y \leq c^\top \bar{x} = b^\top \bar{y} \qquad \forall y \in \Omega(D)
+$$
+ma $\bar{y}$ potrebbe essere non ammissibile per $(D)$.
+In realtà, la dimostrazione evidenzia che
+$$
+\bar{y} \in \Omega(D) \iff \hat{c}_N \geq 0 \iff \bar{x} \text{ è ottima per } (P)
+$$
+
+Il vettore $\bar{y}$ soddisfa per uguaglianza i vincoli in $(D)$ corrispondenti alla base $B$, ed i costi ridotti associati alla base $B$ in $(P)$ sono le slack dei rimanenti vincoli duali valutate in $\bar{y}$.
+Introducendo nei vincoli duali le variabili di slack denotate con $\sigma_B$ e $\sigma_N$, il sistema in forma standard diventa:
+$$
+\begin{cases}
+B^\top y + \sigma_B = c_B \\
+N^\top y + \sigma_N = c_N
+\end{cases}
+$$
+Si verifica che per $\sigma_B = 0$ si ottiene:
+$$
+\begin{array}{rcccl}
+y & = & \left(B^\top\right)^{-1} c_B & = & \bar{y} \\
+\sigma_N & = & c_N - N^\top \left(B^\top\right)^{-1} c_B & = & \hat{c}_N
+\end{array}
+$$
+$\bar{y}$ è detto il **vettore complementare** di $\bar{x}$.
+
+>[!important] Riformulazione
+>L'enunciato del teorema di dualità forte può essere riformulato come segue:
+>- per ogni coppia di problemi duali, l'uno ha **ottimo finito** se e solo se l'altro ha ottimo finito.
+>
+>Inoltre, il corollario della dualità debole assicura che:
+>- per ogni coppia di problemi duali, se uno è **illimitato**, allora l'altro è **inammissibile**.
+
+Cosa si può dire del duale di un problema inammissibile?
+
+| $\min$ \ $\max$             | Ottimo finito | Illimitato superior. | Inamm. |
+| --------------------------- | ------------- | -------------------- | ------ |
+| **Ottimo finito**           | Sì            | No                   | No     |
+| **Illimitato inferior.**    | No            | No                   | Sì     |
+| **Inamm.**                  | No            | Sì                   | Sì     |
+
+#### Interpretazione della soluzione duale
+Consideriamo la coppia primale-duale
+$$
+(P)\begin{cases}
+\min & c^\top x \\
+s.t. & Ax = b \\
+& x \geq 0
+\end{cases}
+\qquad
+(D)\begin{cases}
+\max & b^\top y \\
+s.t. & A^\top y \leq c
+\end{cases}
+$$
+e indichiamo con $x^*$ e $y^*$ le soluzioni ottime per $(P)$ e $(D)$.
+Perturbiamo il termine noto $b_i$ di una quantità $\Delta$, e consideriamo la coppia primale-duale
+$$
+(P_\Delta)\begin{cases}
+\min & c^\top x \\
+s.t. & Ax = b + \Delta e_i \\
+& x \geq 0
+\end{cases}
+\qquad
+(D_\Delta)\begin{cases}
+\max & (b + \Delta e_i)^\top y \\
+s.t. & A^\top y \leq c
+\end{cases}
+$$
+e indichiamo con $x^*(\Delta)$ la soluzione ottima per $(P_\Delta)$.
+
+Se $x^*$ è non degenere ($B^{-1}b > 0$), per valori sufficientemente piccoli di $\Delta$ la base corrispondente rimane ammissibile per $(P)$, cioè $B^{-1}(b + \Delta e_i) > 0$.
+I coefficienti di costo ridotto non risentono della perturbazione, pertanto la soluzione $y^*$ costruita come
+$$
+y^{*\top} = c_B^\top B^{-1}
+$$
+soddisfa
+$$
+c^\top x^*(\Delta) = (b + \Delta e_i)^\top y^* = b^\top y^* + \Delta e_i^\top y^* = c^\top x^* + \Delta y^*_i
+$$
+da cui otteniamo che
+$$
+y^*_i = \frac{c^\top x^*(\Delta) - c^\top x^*}{\Delta}
+$$
+cioè $y^*_i$ rappresenta la **variazione della funzione obiettivo** corrispondente alla variazione unitaria del termine noto $i$-esimo.
+
+## Esempi teoremi di dualità
+>[!check] Esempio 1
+>Consideriamo il problema:
+>$$
+>(P)\left\{\begin{array}{lrcrcr}
+>\min & x_1 \\
+> & x_1 & + & x_2 & \geq & 1 \\
+> & -x_1 & - & x_2 & \geq & 1 \\
+> & x_1 & , & x_2 & \geq & 0
+>\end{array}\right.
+>$$
+>$(P)$ è inammissibile, perché i suoi vincoli sono contraddittori.
+>Formuliamo il duale simmetrico
+>$$
+>(D)\left\{\begin{array}{lrcrcr}
+>\max & y_1 & + & y_2 \\
+> & y_1 & - & y_2 & \leq & 1 \\
+> & y_1 & - & y_2 & \leq & 0 \\
+> & y_1 & , & y_2 & \geq & 0
+>\end{array}\right.
+>$$
+>$\Omega(D)$ è un poliedro illimitato all'interno del quale la funzione obiettivo può crescere indefinitamente, cioè $(D)$ è superiormente illimitato.
+
+>[!check] Esempio 2
+>Consideriamo il problema:
+>$$
+>(P)\left\{\begin{array}{lrcrcr}
+>\min & x_1 \\
+> & x_1 & + & x_2 & \geq & 1 \\
+> & -x_1 & - & x_2 & \geq & 1
+>\end{array}\right.
+>$$
+>$(P)$ è inammissibile, perché i suoi vincoli sono contraddittori.
+>Formuliamo il duale
+>$$
+>(D)\left\{\begin{array}{lrcrcr}
+>\max & y_1 & + & y_2 \\
+> & y_1 & - & y_2 & = & 1 \\
+> & y_1 & - & y_2 & = & 0 \\
+> & y_1 & , & y_2 & \geq & 0
+>\end{array}\right.
+>$$
+>$\Omega(D)$ è vuoto in quanto il sistema dei vincoli è incompatibile, quindi $(D)$ è inammissibile.
+
+>[!check] Esempio 3
+>$$
+>(P)\left\{\begin{array}{lrcrcr}
+>\min & -2x_1 & - & 3x_2 \\
+> & x_1 & + & 2x_2 & \leq & 8 \\
+> & x_1 & + & x_2 & \leq & 6 \\
+> & x_1 & , & x_2 & \geq & 0
+>\end{array}\right.
+>\qquad
+>(P_{fs})\left\{\begin{array}{lrcrcrcrcr}
+>\min & -2x_1 & - & 3x_2 \\
+> & x_1 & + & 2x_2 & + & x_3 & & & = & 8 \\
+> & x_1 & + & x_2 & & & + & x_4 & = & 6 \\
+> & x_1 & , & x_2 & , & x_3 & , & x_4 & \geq & 0
+>\end{array}\right.
+>$$
+>Il duale di $(P_{fs})$ è
+>$$
+>(D)\left\{\begin{array}{lrcrcr}
+>\max & 8y_1 & + & 6y_2 \\
+> & y_1 & + & y_2 & \leq & -2 \\
+> & 2y_1 & + & y_2 & \leq & -3 \\
+> & y_1 & & & \leq & 0 \\
+> & & & y_2 & \leq & 0
+>\end{array}\right.
+>$$
+>
+>**Base $B = \{2, 4\}$, $N = \{1, 3\}$**
+>![[Problemi di ottimizzazione-RO14-grafico1.svg|center|500]]
+>Rispetto agli indici $B = \{2, 4\}$ e $N = \{1, 3\}$ abbiamo
+>$$
+>B = \begin{pmatrix} 2 & 1 \\ 1 & 0 \end{pmatrix} \qquad N = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}
+>$$
+>Quindi
+>$$
+>c_B = (-3, 0)^\top \qquad c_N = (-2, 0)^\top \qquad B^{-1} = \begin{pmatrix} 1/2 & 0 \\ -1/2 & 1 \end{pmatrix}
+>$$
+>e la corrispondente soluzione di base
+>$$
+>\bar{x}_B = B^{-1}b = (4, 2)^\top \qquad \bar{x}_N = (0, 0)^\top
+>$$
+>cioè $\bar{x} = (0, 4, 0, 2)^\top$ è ammissibile con $c^\top \bar{x} = -12$.
+>Costruiamo la soluzione $\bar{y}$ complementare a $\bar{x}$:
+>$$
+>\bar{y}^\top = c_B^\top B^{-1} = (-3/2, 0)
+>$$
+>con $b^\top \bar{y} = -12$.
+>![[Problemi di ottimizzazione-RO14-grafico2.svg|center|460]]
+>
+>**Base $B = \{1, 2\}$, $N = \{3, 4\}$**
+>![[Problemi di ottimizzazione-RO14-grafico3.svg|center|500]]
+>Rispetto agli indici $B = \{1, 2\}$ e $N = \{3, 4\}$ abbiamo
+>$$
+>B = \begin{pmatrix} 1 & 2 \\ 1 & 1 \end{pmatrix} \qquad N = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+>$$
+>Quindi
+>$$
+>c_B = (-2, -3)^\top \qquad c_N = (0, 0)^\top \qquad B^{-1} = \begin{pmatrix} -1 & 2 \\ 1 & -1 \end{pmatrix}
+>$$
+>e la corrispondente soluzione di base
+>$$
+>\bar{x}_B = B^{-1}b = (4, 2)^\top \qquad \bar{x}_N = (0, 0)^\top
+>$$
+>cioè $\bar{x} = (4, 2, 0, 0)^\top$ è ammissibile con $c^\top \bar{x} = -14$.
+>Costruiamo la soluzione $\bar{y}$ complementare a $\bar{x}$:
+>$$
+>\bar{y}^\top = c_B^\top B^{-1} = (-1, -1)
+>$$
+>con $b^\top \bar{y} = -14$.
+>![[Problemi di ottimizzazione-RO14-grafico4.svg|center|460]]
+
+---
+## Relazioni di complementarietà
+### Teorema degli scarti complementari
+>[!info] Teorema degli scarti complementari
+>Data la coppia di problemi duali:
+>$$
+>(P)\begin{cases}
+>\min & c^\top x \\
+>s.t. & Ax \geq b \\
+>& x \geq 0
+>\end{cases}
+>\qquad
+>(D)\begin{cases}
+>\max & b^\top y \\
+>s.t. & A^\top y \leq c \\
+>& y \geq 0
+>\end{cases}
+>$$
+>Le soluzioni $x \in \Omega(P)$ e $y \in \Omega(D)$ sono ottimali, rispettivamente per $(P)$ e $(D)$, se e solo se esse soddisfano le seguenti **relazioni di complementarietà**:
+>$$
+>\begin{cases}
+>x^\top (c - A^\top y) = 0 \\
+>(Ax - b)^\top y = 0
+>\end{cases}
+>$$
+
+#dimostrazione
+Riformuliamo i problemi $(P)$ e $(D)$ in forma standard, con vettori delle variabili ausiliarie $s$ e $\sigma$:
+$$
+(P)\begin{cases}
+\min & c^\top x \\
+s.t. & Ax - s = b \\
+& x \geq 0 \\
+& s \geq 0
+\end{cases}
+\qquad
+(D)\begin{cases}
+\max & b^\top y \\
+s.t. & A^\top y + \sigma = c \\
+& y \geq 0 \\
+& \sigma \geq 0
+\end{cases}
+$$
+L'ammissibilità di $x$ e $y$ consente di scrivere:
+$$
+\begin{array}{ll}
+x \geq 0 & y \geq 0 \\
+s = Ax - b \geq 0 \qquad & \sigma = c - A^\top y \geq 0
+\end{array}
+$$
+Le relazioni di complementarietà tra $x$ ed $y$ possono essere riscritte come:
+$$
+\begin{cases}
+x^\top \sigma = 0 \\
+s^\top y = 0
+\end{cases}
+$$
+Per ogni coppia di soluzioni ammissibili $x \in \Omega(P)$ e $y \in \Omega(D)$, il teorema di dualità debole assicura che il gap di dualità è non negativo
+$$
+c^\top x - b^\top y \geq 0
+$$
+Vale inoltre:
+$$
+x \text{ ottimale per } (P) \text{ e } y \text{ ottimale per } (D) \iff c^\top x - b^\top y = 0
+$$
+- $(\Rightarrow)$: dualità forte
+- $(\Leftarrow)$: corollario della dualità debole
+
+Se dimostriamo che il soddisfacimento delle relazioni di complementarietà tra $x$ ed $y$ equivale all'annullamento del gap di dualità, il teorema è dimostrato.
+Osserviamo che
+$$
+c^\top x = \left(A^\top y + \sigma\right)^\top x = y^\top Ax + \sigma^\top x
+$$
+$$
+b^\top y = (Ax - s)^\top y = (Ax)^\top y - s^\top y
+$$
+da cui si ottiene:
+$$
+c^\top x - b^\top y = y^\top (Ax) + \sigma^\top x - (Ax)^\top y + s^\top y = \sigma^\top x + s^\top y
+$$
+Pertanto, ricordando che $x$, $y$, $s$ e $\sigma$ sono tutte non negative, si ottiene:
+$$
+c^\top x - b^\top y = 0 \iff \sigma^\top x + s^\top y = 0 \iff \begin{cases}
+\sigma^\top x = 0 \\
+s^\top y = 0
+\end{cases}
+$$
+
+#### Approfondimenti
+Le relazioni di complementarietà impongono che:
+- a **variabili positive** di un problema corrispondono **vincoli attivi** nel suo duale;
+- a **vincoli non attivi** di un problema corrispondono **variabili nulle** nel suo duale.
+
+Infatti,
+$$
+x^\top (c - A^\top y) = x^\top \sigma = 0 \iff \sum_{j=1}^n x_j \sigma_j = 0 \iff x_j \cdot \sigma_j = 0 \quad \forall j = 1, \dots, n
+$$
+$$
+(Ax - b)^\top y = s^\top y = 0 \iff \sum_{i=1}^m s_i y_i = 0 \iff s_i \cdot y_i = 0 \quad \forall i = 1, \dots, m
+$$
+Pertanto le relazioni di complementarietà sono soddisfatte se e solo se:
+$$
+\begin{array}{ll}
+\forall j = 1, \dots, n & x_j = 0 \text{ oppure } \sigma_j = 0 \\
+\forall i = 1, \dots, m & y_i = 0 \text{ oppure } s_i = 0
+\end{array}
+$$
+- I vettori $x$ ed $y$ vengono detti tra loro **complementari** se essi soddisfano le relazioni di complementarietà.
+- Se il problema $(P)$ è in forma standard, le relazioni di complementarietà si riducono a:
+$$
+x^\top (c - A^\top y) = 0
+$$
+da cui è facile verificare che il vettore $y^* = (B^\top)^{-1} c_B$ ([[#Dualità forte|dimostrazione del teorema di dualità forte]]) è il vettore complementare della soluzione ottima di base $x^*$
+$$
+x^{*\top}(c - A^\top y^*) = x_B^{*\top}\left(c_B - B^\top (B^\top)^{-1} c_B\right) + x_N^{*\top}\left(c_N - N^\top (B^\top)^{-1} c_B\right) = 0
+$$
+
+Per lo stesso motivo, ogni vettore
+$$
+\bar{y} = \left(B^\top\right)^{-1} c_B
+$$
+costruito rispetto alla base ammissibile $B$ di $A$, è complementare alla soluzione ammissibile di base
+$$
+\bar{x} = \begin{pmatrix} \bar{x}_B \\ \bar{x}_N \end{pmatrix} = \begin{pmatrix} B^{-1}b \\ 0 \end{pmatrix}
+$$
+e le corrispondenti funzioni obiettivo coincidono.
+
+>[!info] Condizione necessaria e sufficiente di ottimalità
+>Sia $(P)$ un problema di PL, $(D)$ il suo duale, e sia $x \in \Omega(P)$.
+>$$
+>x \text{ è soluzione ottima per } (P)
+>$$
+>$$\Updownarrow$$
+>$$
+>\exists y \in \Omega(D) \text{ tale che } x \text{ ed } y \text{ sono complementari}
+>$$
+
+#dimostrazione
+- $(\Rightarrow)$ Se $x$ è ottima per $(P)$, per il teorema di dualità forte esiste $y$ ottima (e quindi ammissibile) per $(D)$, e, per la condizione necessaria del teorema degli scarti complementari, $x$ ed $y$ sono complementari.
+- $(\Leftarrow)$ Se esiste $y$ ammissibile per $(D)$ e complementare di $x$, per la condizione sufficiente del teorema degli scarti complementari $x$ è ottima per $(P)$ e $y$ è ottima per $(D)$.
+
+Data una soluzione ammissibile $\bar{x}$ per $(P)$, è possibile stabilire se $\bar{x}$ sia o no soluzione ottima per $(P)$.
+
+>[!important] Test di ottimalità
+>Considerando la coppia primale-duale simmetrica, si impone il soddisfacimento delle relazioni di complementarietà risolvendo
+>$$
+>\begin{cases}
+>A_j^\top y = c_j & \forall j \in \{1, \dots, n\} : \bar{x}_j > 0 \\
+>y_i = 0 & \forall i \in \{1, \dots, m\} : a_i^\top \bar{x} > b_i
+>\end{cases}
+>$$
+>e indicando con $\bar{y} \in \mathbb{R}^m$ una sua soluzione. Sono possibili i seguenti casi:
+>1. il sistema è incompatibile $\implies$ $\bar{x}$ non è soluzione ottima per $(P)$;
+>2. $\bar{y} \notin \Omega(D)$ $\implies$ $\bar{x}$ non è soluzione ottima per $(P)$;
+>3. $\bar{y} \in \Omega(D)$ $\implies$ $\bar{x}$ è soluzione ottima per $(P)$.
+
+Data una soluzione ottima $x^*$ per $(P)$, è possibile determinare la soluzione ottima $y^*$ per $(D)$.
+
+>[!important] Determinazione dell'ottimo duale
+>Considerando la coppia primale-duale simmetrica, si impone il soddisfacimento delle relazioni di complementarietà risolvendo
+>$$
+>\begin{cases}
+>A_j^\top y = c_j & \forall j \in \{1, \dots, n\} : x^*_j > 0 \\
+>y_i = 0 & \forall i \in \{1, \dots, m\} : a_i^\top x^* > b_i
+>\end{cases}
+>$$
+>In tal caso, il sistema ammetterà sempre almeno una soluzione $y^* \in \Omega(D)$, come garantito dalla condizione necessaria di ottimalità; inoltre, per il teorema degli scarti complementari $y^*$ è soluzione ottima per $(D)$.
+
+## Esercizi su PL e dualità
+>[!check] Esercizio 1
+>Si consideri il problema
+>$$
+>(P)\left\{\begin{array}{lrcrcrcrcrcr}
+>\min & 6x_1 & + & 6x_2 & - & 12x_3 \\
+> & -2x_1 & + & 2x_2 & - & 2x_3 & - & x_4 & & & = & 2 \\
+> & -3x_1 & + & x_2 & + & 3x_3 & & & + & x_5 & = & 1 \\
+> & x_1 & , & x_2 & , & x_3 & , & x_4 & , & x_5 & \geq & 0
+>\end{array}\right.
+>$$
+>per il quale è noto che la base $B = \{2, 5\}$ è ammissibile.
+>1. Risolvere $(P)$ a partire dalla base $B$;
+>2. Risolvere il duale $(D)$ di $(P)$ mediante la teoria della dualità;
+>3. Verificare i risultati mediante la risoluzione grafica di $(D)$.
+
+>[!check] Esercizio 2
+>Si consideri il seguente problema di PL
+>$$
+>(P)\left\{\begin{array}{lrcrcr}
+>\max & 3x_1 & + & 6x_2 \\
+> & x_1 & + & 2x_2 & \leq & 12 \\
+> & x_1 & - & 2x_2 & \leq & 4 \\
+> & -3x_1 & + & 2x_2 & \leq & 4 \\
+> & x_1 & , & x_2 & \geq & 0
+>\end{array}\right.
+>$$
+>e siano assegnati i punti $x^{(1)} = (0, 2)^\top$, $x^{(2)} = (0, 6)^\top$ e $x^{(3)} = (4, 4)^\top$.
+>1. Stabilire se i punti assegnati sono soluzioni ammissibili, soluzioni di base, soluzioni ottime per $(P)$;
+>2. Determinare una soluzione ottima di base per il problema $(P)$;
+>3. Risolvere il problema duale $(D)$ mediante la teoria della dualità;
+>4. Verificare la correttezza dei risultati ottenuti tramite l'analisi grafica del problema $(P)$.
