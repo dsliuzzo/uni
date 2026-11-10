@@ -3185,6 +3185,8 @@ Da queste osservazioni è possibile trarre nuove conclusioni descritte formalmen
 >$$
 >$\implies \bar{x}$ è soluzione ottima di $(P)$ e $\bar{y}$ è soluzione ottima di $(D)$.
 
+^b8e6e1
+
 #dimostrazione
 Per assurdo. Supponiamo che $\bar{y}$ non sia ottima per $(D)$. Allora deve esistere una $\tilde{y} \in \Omega(D)$ tale che $b^\top \tilde{y} > b^\top \bar{y}$. Ciò implica che
 $$
@@ -3222,6 +3224,7 @@ contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata
 >- Se la soluzione ottima è **degenere**, lo stesso vertice è descritto da più basi e alcune possono avere coefficienti di costo ridotto negativi pur essendo il punto ottimo. L'algoritmo deve allora trovare la base giusta in un numero finito di cambi di base degeneri. Bisogna dimostrare che:
 >	- la base esiste, cioè che tra le basi del vertice ottimo ce n'è almeno una con $\hat{c}_N \geq 0$;
 >	- prima o poi la troviamo, cioè che la [[#Regola di Bland|regola di Bland]] funziona.
+^terminazione-simplesso
 
 >[!info] Teorema di dualità forte
 >Sia data la seguente coppia di problemi duali:
@@ -3241,6 +3244,7 @@ contraddicendo l'ipotesi che la funzione $c^\top x$ sia inferiormente illimitata
 >$$
 >c^\top x^* = b^\top y^*
 >$$
+>Questo teorema lega strettamente $(P)$ e $(D)$, garantendo l'esistenza dell'ottimo finito di entrambi i problemi
 
 Si può dimostrare anche viceversa (invertendo primale e duale, passando in forma standard $(D)$).
 
@@ -3253,99 +3257,41 @@ con valore di funzione obiettivo
 $$
 z^* = c^\top x^* = c_B^\top \left(B^{-1}b\right)
 $$
-$\downarrow$ [...]
-Distinguiamo due casi
-- $x^*$ è non degenere $\hat{c}^\top_N \geq 0^\top$
-- $x^*$ degenere $\exists B \hat{c}^\top_N \geq 0^\top$ (esiste una base che prima o poi l'algoritmo troverà)
-pur non avendolo detto nelle hp del sistema
-$\uparrow$ [...]
+Distinguiamo due casi:
+- $x^*$ è **non degenere**: per la [[#Condizione necessaria di ottimalità|condizione necessaria]] i [[#Espressione della funzione obbiettivo e costi ridotti|costi ridotti]] sono necessariamente non negativi, $\hat{c}_N^\top \geq 0^\top$;
+- $x^*$ è **degenere**: esiste almeno una base $B$ tra quelle che corrispondono ad $x^*$ per cui $\hat{c}_N^\top \geq 0^\top$, e prima o poi l'algoritmo la trova ([[#^terminazione-simplesso|terminazione finita dell'algoritmo del simplesso]]).
 
-Senza perdita di generalità, si può assumere che valga:
+Di conseguenza, senza perdita di generalità, si può assumere che valga:
 $$
 \hat{c}_N^\top = c_N^\top - c_B^\top B^{-1}N \geq 0
 $$
-Infatti, se la soluzione di base ottima è non degenere, i [[#Espressione della funzione obbiettivo e costi ridotti|costi ridotti]] sono necessariamente non negativi; se è degenere, la condizione $\hat{c}_N^\top \geq 0$ vale per almeno una delle basi che corrispondono ad $x^*$ (terminazione finita dell'algoritmo del simplesso).
-
-$\downarrow$ [...]
-$$
-c^\top x^* = c_B^\top B^{-1} b
-$$
-$c^\top x^*$ è uno scalare di conseguenza anche $c_B^\top B^{-1}b$ lo è
-$c_B^\top$ è un vettore a $m$ componenti
-$(B^{-1} b)$ è un vettore a $m$ componenti
-ma svolgendo invece $(c_B^\top B^{-1})$ è un vettore riga a $m$ componenti
-chiamiamo $y^{*\top} = c_B^\top B^{-1} = (B^{-1})^\top c_B$
-$$
-c^\top x^* = y^{*\top} b
-$$
-i valori di funzione obiettivo sono uguali
-Essendo $x^*$ ottima e di conseguenza ammissibile e avendo trovato l'uguaglianza, per il corollario 1 del teorema debole potremmo concludere l'ottimalità, ma non abbiamo considerato l'ammissibilità di $y^*$.
-I vincoli del problema duale
-$$
-A^\top y \leq c
-$$
-risolviamoli con l'uguaglianza che abbiamo trovato e verifichiamo i vincoli
-$$
-\begin{array}{rl}
-A^\top &= (B | N)^\top \\
-&= \binom{B^\top}{N^\top}
-\end{array}
-$$
-Di conseguenza partizioniamo anche il vettore $c$
-$$
-\binom{B^\top}{N^\top} y \leq \binom{c_B}{c_N}
-$$
-e otteniamo il seguente sistema
-$$
-\begin{cases}
-B^\top y \leq c_B \\
-N^\top y \leq c_N
-\end{cases}
-$$
-ricordando che $y^{*\top} = (B^{-1})^\top c_B = c_B^\top B^{-1}$
-$$
-\begin{cases}
-y^\top B \leq c_B^\top \\
-y^\top N \leq c_N^\top
-\end{cases}
-$$
-
-sostituiamo $y^*$ al posto di $y$
-$$
-\begin{cases}
-c_B^\top B^{-1} B \leq c_B^\top \\
-c_B^\top B^{-1}N \leq c_N^\top
-\end{cases}
-$$
-verifichiamo se la $y^*$ soddisfa le uguaglianze
-il primo gruppo di diseguaglianze $c_B^\top B^{-1} B \leq c_B^\top$ è soddisfatta per uguaglianza
-per la seconda $c_N^\top - c_B^\top B^{-1}N \geq 0$ che non sono altro che i coefficienti di costo ridotto, che sono maggiori di 0 $\uparrow$.
-
-Avendo verificato questo possiamo usare il corollario 1 del teorema debole per affermare che:
-Se $(P)$ ammette ottimo finito, allora $(D)$ ammette ottimo finito ed i valori delle funzioni obiettivo all'ottimo coincidono
-
-verifica come ho scritto $y^*$ e $y^{*\top}$
-$\uparrow$ [...]
-
-
 Sia $y^* \in \mathbb{R}^m$ e poniamo:
 $$
 y^* := \left(B^\top\right)^{-1} c_B \iff y^{*\top} := c_B^\top B^{-1}
 $$
+Per ora $y^*$ è solo un candidato (ad essere soluzione ottima del problema $(D)$), costruito a partire dalla base ottima di $(P)$: ne verificheremo **ammissibilità** e **ottimalità** per $(D)$.
+
 Per costruzione, si ha:
 $$
 c^\top x^* = c_B^\top \left(B^{-1}b\right) = c_B^\top B^{-1} b = y^{*\top} b = b^\top y^*
 $$
+Il prodotto $c_B^\top B^{-1} b$ è uno scalare (come $c^\top x^*$) e si può raggruppare in due modi:
+- $c_B^\top \left(B^{-1}b\right)$: prodotto scalare tra due vettori a $m$ componenti, $c_B$ e $x^*_B = B^{-1}b$;
+- $\left(c_B^\top B^{-1}\right) b$: il primo fattore è un vettore riga a $m$ componenti, cioè proprio $y^{*\top}$, che moltiplica $b$.
+
+Quindi i valori delle funzioni obiettivo di $(P)$ e $(D)$ coincidono.
+Essendo $x^*$ ottima, e quindi ammissibile, per il [[#^b8e6e1|corollario 1 della dualità debole]] potremmo già concludere l'**ottimalità** di entrambe, ma manca ancora da verificare che $y^*$ sia **ammissibile** per $(D)$.
+
 Partizionando la matrice $A$ ed il vettore $c$ rispetto alla base ottimale per il problema $(P)$, il sistema di vincoli duali si scrive:
 $$
-\begin{bmatrix} B^\top \\ N^\top \end{bmatrix} y \leq \begin{pmatrix} c_B \\ c_N \end{pmatrix}
+A^\top y \leq c \iff (B|N)^\top y \leq c \iff \binom{B^\top}{N^\top} y \leq \binom{c_B}{c_N}
 \iff
 \begin{cases}
 B^\top y \leq c_B \\
 N^\top y \leq c_N
 \end{cases}
 $$
-Sostituendo al generico vettore $y$ il vettore $y^*$ si ottiene:
+Sostituendo al generico vettore $y$ il vettore $y^* = c_B^\top B^{-1}$ si ottiene:
 $$
 \begin{cases}
 y^{*\top} B \leq c_B^\top \\
@@ -3359,11 +3305,13 @@ c_B^\top B^{-1} N \leq c_N^\top
 \iff
 \begin{cases}
 c_B^\top \leq c_B^\top \\
-0 \leq c_N^\top - c_B^\top B^{-1} N
+0 \leq c_N^\top - c_B^\top B^{-1} N = \hat{c}_N^\top
 \end{cases}
 $$
-Il vettore $y^*$ soddisfa i vincoli del primo gruppo per uguaglianza, quelli del secondo gruppo grazie alla condizione di ottimalità; pertanto $y^*$ è ammissibile per $(D)$, e quindi ottimo per il corollario della dualità debole.
+Il vettore $y^*$ soddisfa i vincoli del primo gruppo per uguaglianza, quelli del secondo gruppo grazie alla condizione di ottimalità; pertanto $y^*$ è **ammissibile** per $(D)$, e quindi ottimo per il [[#^b8e6e1|corollario 1 della dualità debole]].
 
+Avendo verificato questo possiamo affermare che:
+Se $(P)$ ammette ottimo finito, allora $(D)$ ammette ottimo finito ed i valori delle funzioni obiettivo all'ottimo coincidono.
 ### Approfondimenti
 Per ogni base $B$ di $A$ cui corrisponde una soluzione ammissibile di base $\bar{x}$ per $(P)$:
 $$
@@ -3457,7 +3405,7 @@ $$
 perturbando i vincoli del primale perturbiamo la funzione obiettivo del duale, non sui suoi vincoli.
 
 Indichiamo con $x^*(\Delta)$ la soluzione ottima per $(P_\Delta)$.
-Se $x^*$ è non degenere ($B^{-1}b > 0$), per valori sufficientemente piccoli di $\Delta$ la base corrispondente rimane ammissibile per $(P)$, cioè $B^{-1}(b + \Delta e_i) > 0$.
+Se $x^*$ è non degenere ($B^{-1}b > 0$), per valori sufficientemente piccoli di $\Delta$ la base corrispondente rimane ammissibile per $(P_\Delta)$, cioè $B^{-1}(b + \Delta e_i) > 0$.
 I coefficienti di costo ridotto non risentono della perturbazione, pertanto la soluzione $y^*$ costruita come
 $$
 y^{*\top} = c_B^\top B^{-1}
@@ -3613,13 +3561,14 @@ cioè $y^*_i$ rappresenta la **variazione della funzione obiettivo** corrisponde
 >\end{cases}
 >$$
 >Le due relazioni sono prodotti scalari tra due vettori non negativi, pari a 0.
->Complementarietà $\equiv$ ortogonalità.
->Stiamo dicendo che il vettore $x^\top$ è ortognale al vettore $(c-A^\top y)$
->e che il vettore $(Ax - b)^\top$ è ortogonale a $y$.
+>Complementarietà $\equiv$ ortogonalità: stiamo dicendo che $x \perp (c-A^\top y)$ e $(Ax - b) \perp y$.
 >$$
->\sum_{i=1}^n \underbrace{\underbrace{a_i}_{\geq 0} \underbrace{b}_{\geq 0}}_{\geq 0} = 0
+>\sum_{j=1}^n \underbrace{x_j}_{\geq 0}\,\underbrace{(c - A^\top y)_j}_{\geq 0} = 0
 >$$
->Ne deriva che almeno una delle due componenti è nulla
+>Ne deriva che almeno una delle due componenti è nulla: una somma di termini non negativi è nulla solo se **ogni termine** è nullo. Quindi per ogni $j$ almeno uno tra $x_j$ e $(c - A^\top y)_j$ è nullo, e lo stesso vale per ogni $i$ nella seconda relazione (almeno uno tra $(Ax-b)_i$ e $y_i$ è nullo).
+
+
+
 
 ---
 
