@@ -3175,7 +3175,6 @@ che è la tesi, per la commutatività del prodotto scalare.
 >viene detta **gap di dualità**.
 
 $\downarrow$[...]
-sofisticato
 Se il problema di minimo fosse illimitato inferiormente il problema di massimo è inammissibile.
 Se $c^\top x - b^\top y = 0$ vuol dire che abbiamo trovato l'ottimo, per entrambi i problemi (**condizione sufficiente di ottimo** (non necessaria), senza usare soluzioni di base, non coinvolge i vertici).
 I due corollari si intuiscono da ragionamenti sui l'osservazione $\uparrow$ dal punto 2 e dal punto 3
@@ -3618,7 +3617,7 @@ cioè $y^*_i$ rappresenta la **variazione della funzione obiettivo** corrisponde
 >\end{cases}
 >$$
 >Le due relazioni sono prodotti scalari tra due vettori non negativi, pari a 0.
->Complementarietà $\quiv$ ortogonalità.
+>Complementarietà $\equiv$ ortogonalità.
 >Stiamo dicendo che il vettore $x^\top$ è ortognale al vettore $(c-A^\top y)$
 >e che il vettore $(Ax - b)^\top$ è ortogonale a $y$.
 >$$
