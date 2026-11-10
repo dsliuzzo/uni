@@ -3459,8 +3459,9 @@ s.t. & Ax = b + \Delta e_i \\
 s.t. & A^\top y \leq c
 \end{cases}
 $$
-e indichiamo con $x^*(\Delta)$ la soluzione ottima per $(P_\Delta)$.
+perturbando i vincoli del primale perturbiamo la funzione obiettivo del duale, non sui suoi vincoli.
 
+Indichiamo con $x^*(\Delta)$ la soluzione ottima per $(P_\Delta)$.
 Se $x^*$ è non degenere ($B^{-1}b > 0$), per valori sufficientemente piccoli di $\Delta$ la base corrispondente rimane ammissibile per $(P)$, cioè $B^{-1}(b + \Delta e_i) > 0$.
 I coefficienti di costo ridotto non risentono della perturbazione, pertanto la soluzione $y^*$ costruita come
 $$
@@ -3591,11 +3592,11 @@ cioè $y^*_i$ rappresenta la **variazione della funzione obiettivo** corrisponde
 >con $b^\top \bar{y} = -14$.
 >![[Problemi di ottimizzazione-RO14-grafico4.svg|center|460]]
 
----
 ## Relazioni di complementarietà
 ### Teorema degli scarti complementari
 >[!info] Teorema degli scarti complementari
->Data la coppia di problemi duali:
+>**Condizione necessaria e sufficiente di ottimo**
+>Data la [[#Coppia primale-duale simmetrica]]:
 >$$
 >(P)\begin{cases}
 >\min & c^\top x \\
@@ -3616,6 +3617,16 @@ cioè $y^*_i$ rappresenta la **variazione della funzione obiettivo** corrisponde
 >(Ax - b)^\top y = 0
 >\end{cases}
 >$$
+>Le due relazioni sono prodotti scalari tra due vettori non negativi, pari a 0.
+>Complementarietà $\quiv$ ortogonalità.
+>Stiamo dicendo che il vettore $x^\top$ è ortognale al vettore $(c-A^\top y)$
+>e che il vettore $(Ax - b)^\top$ è ortogonale a $y$.
+>$$
+>\sum_{i=1}^n \underbrace{\underbrace{a_i}_{\geq 0} \underbrace{b}_{\geq 0}}_{\geq 0} = 0
+>$$
+>Ne deriva che almeno una delle due componenti è nulla
+
+---
 
 #dimostrazione
 Riformuliamo i problemi $(P)$ e $(D)$ in forma standard, con vettori delle variabili ausiliarie $s$ e $\sigma$:
