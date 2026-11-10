@@ -3271,6 +3271,68 @@ $$
 $$
 Infatti, se la soluzione di base ottima è non degenere, i [[#Espressione della funzione obbiettivo e costi ridotti|costi ridotti]] sono necessariamente non negativi; se è degenere, la condizione $\hat{c}_N^\top \geq 0$ vale per almeno una delle basi che corrispondono ad $x^*$ (terminazione finita dell'algoritmo del simplesso).
 
+$\downarrow$ [...]
+$$
+c^\top x^* = c_B^\top B^{-1} b
+$$
+$c^\top x^*$ è uno scalare di conseguenza anche $c_B^\top B^{-1}b$ lo è
+$c_B^\top$ è un vettore a $m$ componenti
+$(B^{-1} b)$ è un vettore a $m$ componenti
+ma svolgendo invece $(c_B^\top B^{-1})$ è un vettore riga a $m$ componenti
+chiamiamo $y^{*\top} = c_B^\top B^{-1} = (B^{-1})^\top c_B$
+$$
+c^\top x^* = y^{*\top} b
+$$
+i valori di funzione obiettivo sono uguali
+Essendo $x^*$ ottima e di conseguenza ammissibile e avendo trovato l'uguaglianza, per il corollario 1 del teorema debole potremmo concludere l'ottimalità, ma non abbiamo considerato l'ammissibilità di $y^*$.
+I vincoli del problema duale
+$$
+A^\top y \leq c
+$$
+risolviamoli con l'uguaglianza che abbiamo trovato e verifichiamo i vincoli
+$$
+\begin{array}{rl}
+A^\top &= (B | N)^\top \\
+&= \binom{B^\top}{N^\top}
+\end{array}
+$$
+Di conseguenza partizioniamo anche il vettore $c$
+$$
+\binom{B^\top}{N^\top} y \leq \binom{c_B}{c_N}
+$$
+e otteniamo il seguente sistema
+$$
+\begin{cases}
+B^\top y \leq c_B \\
+N^\top y \leq c_N
+\end{cases}
+$$
+ricordando che $y^{*\top} = (B^{-1})^\top c_B = c_B^\top B^{-1}$
+$$
+\begin{cases}
+y^\top B \leq c_B^\top \\
+y^\top N \leq c_N^\top
+\end{cases}
+$$
+
+sostituiamo $y^*$ al posto di $y$
+$$
+\begin{cases}
+c_B^\top B^{-1} B \leq c_B^\top \\
+c_B^\top B^{-1}N \leq c_N^\top
+\end{cases}
+$$
+verifichiamo se la $y^*$ soddisfa le uguaglianze
+il primo gruppo di diseguaglianze $c_B^\top B^{-1} B \leq c_B^\top$ è soddisfatta per uguaglianza
+per la seconda $c_N^\top - c_B^\top B^{-1}N \geq 0$ che non sono altro che i coefficienti di costo ridotto, che sono maggiori di 0 $\uparrow$.
+
+Avendo verificato questo possiamo usare il corollario 1 del teorema debole per affermare che:
+Se $(P)$ ammette ottimo finito, allora $(D)$ ammette ottimo finito ed i valori delle funzioni obiettivo all'ottimo coincidono
+
+verifica come ho scritto $y^*$ e $y^{*\top}$
+$\uparrow$ [...]
+
+
 Sia $y^* \in \mathbb{R}^m$ e poniamo:
 $$
 y^* := \left(B^\top\right)^{-1} c_B \iff y^{*\top} := c_B^\top B^{-1}
@@ -3323,6 +3385,7 @@ Consideriamo la coppia di soluzioni $\bar{x}$ e $\bar{y}$:
 $$
 c^\top \bar{x} = b^\top \bar{y} \implies \bar{y} \text{ è } \textbf{superottima} \text{ per } (D)
 $$
+(è uscita fuori dalla regione ammissibile dal lato in cui la funzione obiettivo cresce).
 Infatti, essendo $\bar{x} \in \Omega(P)$, per il teorema di dualità debole si ha:
 $$
 b^\top y \leq c^\top \bar{x} = b^\top \bar{y} \qquad \forall y \in \Omega(D)
@@ -3337,6 +3400,9 @@ Il vettore $\bar{y}$ soddisfa per uguaglianza i vincoli in $(D)$ corrispondenti 
 Introducendo nei vincoli duali le variabili di slack denotate con $\sigma_B$ e $\sigma_N$, il sistema in forma standard diventa:
 $$
 \begin{cases}
+B^\top y \leq c_B \\
+N^\top y \leq c_N
+\end{cases} \implies \begin{cases}
 B^\top y + \sigma_B = c_B \\
 N^\top y + \sigma_N = c_N
 \end{cases}
@@ -3359,11 +3425,11 @@ $\bar{y}$ è detto il **vettore complementare** di $\bar{x}$.
 
 Cosa si può dire del duale di un problema inammissibile?
 
-| $\min$ \ $\max$             | Ottimo finito | Illimitato superior. | Inamm. |
-| --------------------------- | ------------- | -------------------- | ------ |
-| **Ottimo finito**           | Sì            | No                   | No     |
-| **Illimitato inferior.**    | No            | No                   | Sì     |
-| **Inamm.**                  | No            | Sì                   | Sì     |
+| $\min$ \ $\max$              | Ottimo finito | Illimitato superioriormente | Inammissibile |
+| ---------------------------- | ------------- | --------------------------- | ------------- |
+| **Ottimo finito**            | Sì            | No                          | No            |
+| **Illimitato inferiormente** | No            | No                          | Sì            |
+| **Inammissibile**            | No            | Sì                          | Sì            |
 
 #### Interpretazione della soluzione duale
 Consideriamo la coppia primale-duale

@@ -57,3 +57,15 @@ strong, .cm-strong {
     --callout-icon: waypoints;
 }
 
+
+
+/* ============================================================
+ *  TABELLE CENTRATE (lettura + live preview)
+ *  ============================================================ */
+/* In live preview la tabella sta in un .table-wrapper largo quanto la tabella
+ * (width: fit-content), quindi si centra il wrapper, non la tabella. */
+.markdown-preview-view table,
+.markdown-source-view.mod-cm6 .cm-table-widget .table-wrapper {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
