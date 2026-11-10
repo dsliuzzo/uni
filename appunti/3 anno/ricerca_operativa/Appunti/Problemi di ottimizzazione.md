@@ -3174,11 +3174,9 @@ che è la tesi, per la commutatività del prodotto scalare.
 >$$
 >viene detta **gap di dualità**.
 
-$\downarrow$[...]
-Se il problema di minimo fosse illimitato inferiormente il problema di massimo è inammissibile.
-Se $c^\top x - b^\top y = 0$ vuol dire che abbiamo trovato l'ottimo, per entrambi i problemi (**condizione sufficiente di ottimo** (non necessaria), senza usare soluzioni di base, non coinvolge i vertici).
-I due corollari si intuiscono da ragionamenti sui l'osservazione $\uparrow$ dal punto 2 e dal punto 3
-$\uparrow$[...]
+Da queste osservazioni è possibile trarre nuove conclusioni descritte formalmente nei successivi due corollari:
+1. **Condizione sufficiente di ottimo**: se $c^\top x - b^\top y = 0 \implies b^\top y =c^\top x$ vuol dire che abbiamo trovato l'ottimo, per entrambi i problemi (senza usare soluzioni di base, non coinvolge i vertici);
+2. Dalla disuguaglianza $b^\top \bar{y} \leq c^\top x^* \ \forall \bar{y} \in \Omega(D)$ ne deriva che se il problema di minimo è illimitato inferiormente $c^\top x^* = - \infty$, di conseguenza il problema di massimo (il cui valore obiettivo deve essere $\leq -\infty$) non ammette soluzione finita: è **inammissibile** (stiamo cercando il massimo di un problema il cui upper bound è $-\infty$)
 
 >[!info] Corollario 1
 >Per ogni coppia di problemi duali $(P)$ e $(D)$:
