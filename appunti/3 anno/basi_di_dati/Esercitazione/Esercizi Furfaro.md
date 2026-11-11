@@ -692,4 +692,58 @@ FROM FornituraNo
 ```
 
 9) coppie di merci prodotte nella stessa città che sono fornite dallo stesso insieme di fornitori
-[...]
+
+%%
+Interpretazione insiemistica - non ha senso, la stessa merce non può essere prodotta da marche diverse (e quindi in città diverse)
+`coppieNo1` le coppie di merci prodotte in città diverse
+tutte le possibili coppie merce|città di produzione - quelle che esistono davvero
+coppie merce|merce che sono prodotte in insiemi di città diverse
+$$
+\begin{array}{l}
+\text{mcNo} = \Pi_{\$ 1, \$ 5}(\text{Merce} \times \text{Marca}) - \Pi_{\$ 1, \$ 5}\left( \text{Merce}\underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \\[2ex]
+\text{coppieNo1} = \Pi_{\$ 1, \$ 6}\left[ \left( \text{Merce}\underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \underset{\$ 5 = \$ 2}{\bowtie} \text{fcNo} \right]
+\end{array}
+$$
+%%
+
+Interpretazione esistenziale
+coppie $(m_{1}|m_{2})$ tali che la marca che produce $m_{1}$ ha sede $c$ e la marca che produce $m_{2}$ ha sede $c$
+$$
+\begin{array}{l}
+\text{mc} = \Pi_{\$ 1, \$ 5}\left( \text{Merce} \underset{\$ 3 = \$ 1}{\bowtie} \text{Marca} \right) \\[2ex]
+\text{mmSede} = \Pi_{\$ 1, \$ 3}\left( \text{mc} \underset{\$ 1 < \$ 1 \wedge \$ 2 = \$ 2}{\bowtie} \text{mc} \right)
+\end{array}
+$$
+
+`coppieNo` le coppie merci fornite da insiemi di fornitori diversi
+tutte le possibili coppie fornitore|merce - quelle che esistono davvero
+coppie $(m_{1}|m_{2})$ tali che $m_{1}$ è in `Fornitura` ed $m_{2}$ è in `mfNo` e il fornitore è uguale
+$$
+\begin{array}{l}
+\text{fmNo} = \Pi_{\$ 1, \$ 4}(\text{Fornitura} \times \text{Merce}) - \Pi_{\$ 1, \$ 2}(\text{Fornitura}) \\[2ex]
+\text{coppieNo} = \Pi_{\$ 2, \$ 5}\left( \text{Fornitura} \underset{\$ 1 = \$ 1}{\bowtie} \text{fmNo}\right)
+\end{array}
+$$
+query finale coppie di merci prodotte nello stesso posto - merci fornite da insiemi di fornitori diversi
+$$
+\text{Q9} = (\text{mmSede} - \text{coppieNo}) - \Pi_{\$ 2, \$ 1}(\text{coppieNo})
+$$
+
+``` sql
+CREATE VIEW mmSede (m1, m2) AS (
+	SELECT M1.cod AS m1, M2.cod AS m2
+	FROM Merce M1, Marca MA1, Merce M2, Marca MA2
+	WHERE   M1.marca = MA1.nome
+		AND M2.marca = MA2.nome
+		AND M1.cod < M2.cod
+		AND M1.marca = M2.marca
+);
+
+CREATE VIEW fmNo (f, m) AS (
+	SELECT 
+);
+
+CREA VIEW coppieNo (m1, m2) AS (
+	SELECT 
+);
+```

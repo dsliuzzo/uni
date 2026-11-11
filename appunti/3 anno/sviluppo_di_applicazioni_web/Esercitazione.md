@@ -1,6 +1,6 @@
 #appunti 
 #web
-# Perché Spring
+# Spring
 
 Grazie a Spring possiamo concentrarci sulla logica di business del nostro progetto piuttosto di pensare all'implementazione di esso.
 
@@ -11,11 +11,11 @@ Tutto il **codice di contorno** è già implementato da Spring ed è sempre lo s
 
 Noi faremo dei **servizi REST**: un URL che, chiamato (anche dal browser), restituisce delle informazioni. Differenza con il web "classico": non chiedo una pagina web, ma **una risorsa**, e il server risponde con quella risorsa. Le **API** che offriremo saranno quindi una lista di URL che rispondono con le informazioni richieste.
 
-Spring (slide 3) è implementato in Java, si integra bene con molti strumenti (es. **Maven**, lo strumento di build automation visto nella lezione precedente) ed è ricco di librerie (es. per l'accesso alle basi di dati). È un framework **leggero**: c'è comunque l'overhead della JVM, ma ha ottime performance.
+Spring è implementato in Java, si integra bene con molti strumenti (es. **Maven**, lo strumento di build automation visto nella lezione precedente) ed è ricco di librerie (es. per l'accesso alle basi di dati). È un framework **leggero**: c'è comunque l'overhead della JVM, ma ha ottime performance.
 
 ## Come strutturare un server
 
-Un server è diviso in 4 layer (slide 5), che nel progetto diventano 4 package: `myapp.entities`, `myapp.repositories`, `myapp.services`, `myapp.controllers`. La stessa struttura si userà anche con **FastAPI**, un framework Python "concorrente" di Spring che si vedrà più avanti.
+Un server è diviso in 4 layer, che nel progetto diventano 4 package: `myapp.entities`, `myapp.repositories`, `myapp.services`, `myapp.controllers`. La stessa struttura si userà anche con **FastAPI**, un framework Python "concorrente" di Spring che si vedrà più avanti.
 - **Controllers**
   Interfaccia con il client (UI): espongono le API **REST**. Prendono la richiesta e chiamano i metodi dei services, senza contenere logica.
 - **Services**
@@ -79,17 +79,17 @@ Se sto in `PurchaseService` non ci metto un metodo che modifica gli utenti: quel
 - Se il backend è progettato bene, si implementa molto più in fretta del front-end (esperienza del prof: ~2 giorni contro ~10). Non perché ci siano meno cose da fare, ma perché ci sono meno righe di codice: la parte che porta via più tempo è l'interfaccia grafica.
 - Sull'AI: non è sbagliato usarla, ma va **usata bene**. Il progetto lo facciamo noi, e all'AI si fanno scrivere le funzioni banali (20 righe che poi si rileggono e si correggono). Un progetto interamente generato è fatto male dietro le quinte, si può manutenere solo continuando a chiedere all'AI (che costa) e, se l'AI non riesce a correggere un errore, non si sa dove cercarlo.
 
-## Stereotipi e annotazioni
+### Stereotipi e annotazioni
 
-Le annotazioni sono **a livello di classe**, **di metodo** o **di variabile** e dicono a Spring cosa fare con quell'elemento. Per la teoria vedi [[Spring#Annotazioni|annotazioni]].
+Le annotazioni sono **a livello di classe**, **di metodo** o **di variabile** e dicono a Spring cosa fare con quell'elemento. Per la teoria vedi [[Spring#Annotazioni|annotazioni]]. Qui ci sono quelle usate in tutti i layer; `@Valid` sta in [[#Entity|entity]] e `@CookieValue` in [[#Controllers|controllers]].
 
-### Livello classe: `@Component` e stereotipi
+#### Livello classe: `@Component` e stereotipi
 
 - `@Component` è lo stereotipo "padre": tecnicamente si potrebbe annotare ogni classe con `@Component` e funzionerebbe.
-- Conviene però usare la specializzazione giusta: `@Controller` (o `@RestController`) per i controller, `@Service` per i services, `@Repository` per i repositories. Usare `@Component` al posto di `@Service` non dà errori, ma `@Service` è più leggibile (slide 7). `@Repository` invece aggiunge anche un comportamento: traduce le eccezioni del database in eccezioni di Spring (`DataAccessException`).
+- Conviene però usare la specializzazione giusta: `@Controller` (o `@RestController`) per i controller, `@Service` per i services, `@Repository` per i repositories. Usare `@Component` al posto di `@Service` non dà errori, ma `@Service` è più leggibile. `@Repository` invece aggiunge anche un comportamento: traduce le eccezioni del database in eccezioni di Spring (`DataAccessException`).
 
 ![[Spring-configuration-autowire.svg|center]]
-(slide 10; nella slide c'è scritto `@Registry`, ma è `@Repository`)
+(nella slide c'è scritto `@Registry`, ma è `@Repository`)
 
 **Perché annotare?** Perché gli oggetti di controller, service e repository **non li istanziamo noi** (niente `new`): li gestisce Spring.
 - Istanziare un oggetto ha un costo; Spring tiene in memoria gli oggetti già creati e li **riusa** invece di crearne di nuovi.
@@ -100,7 +100,7 @@ Le annotazioni sono **a livello di classe**, **di metodo** o **di variabile** e 
 >[!attention] Correzione
 >Questo "pool" non corrisponde a come funziona davvero Spring. I bean annotati (`@Service`, `@Repository`, `@Controller`…) di default hanno scope **singleton**: il container ne crea **una sola istanza**, all'avvio, e la **condivide** fra tutte le richieste, anche contemporanee (ognuna gira in un suo thread). Non vengono create altre istanze nei picchi né liberate quando il traffico cala. Il vantaggio rispetto al fare `new` a ogni richiesta resta: gli oggetti si creano una volta sola. Vedi [[Spring#Scope dei bean|scope dei bean]].
 
-### `@Autowired` (livello variabile)
+#### `@Autowired` (livello variabile)
 
 Con `@Autowired` chiediamo a Spring di **iniettare** l'oggetto di cui abbiamo bisogno (es. il repository dentro il service), senza istanziarlo noi. È il meccanismo della [[Spring#Dependency Injection e IoC|Dependency Injection]].
 
@@ -122,7 +122,7 @@ Il prof ha detto che Spring istanzia gli oggetti solo quando servono: se un serv
 >[!attention] Correzione
 >Non è così: le dipendenze `@Autowired` vengono iniettate **quando il bean viene creato**, non quando si chiama il metodo che le usa. Di default i bean `singleton` vengono creati tutti **all'avvio** (eager), quindi A, B e C esistono già prima di qualsiasi chiamata. La creazione "solo quando serve" si ottiene solo con `@Lazy` (vedi [[Spring#Quando il container crea il bean|creazione dei bean]]).
 
-### `@Value` (livello variabile)
+#### `@Value` (livello variabile)
 
 Recupera un valore da un file `.properties` (es. `application.properties`) e lo inietta in una variabile (su `application.properties` vedi anche [[Spring#Spring Boot|Spring Boot]]).
 
@@ -155,22 +155,7 @@ public class GeminiService {
 >Il codice è un esempio mio: nelle slide non c'è codice per `@Value`, e il prof ha solo detto di annotare la variabile `apiKey` con `@Value` indicando la chiave. La sintassi `${nome.proprietà}` è quella standard di Spring.
 >Se il progetto è su Git, conviene non committare il file con la chiave vera (es. metterlo nel `.gitignore` e lasciare nel repository solo un esempio).
 
-### `@Valid` (livello variabile)
-
-Serve per la **validazione dei campi**.
-- Nelle entity si mettono dei **vincoli** sui singoli attributi: lunghezza massima di una stringa (es. max 10 caratteri), che un campo corrisponda a una **regex** (es. quella dell'email), ecc.
-- Nel controller si annota con `@Valid` il parametro ricevuto (es. un `User`): Spring verifica in automatico **ogni vincolo** e, se uno non è rispettato, lancia un'eccezione. Così non serve scrivere a mano una serie di `if` di controllo.
-
->[!attention] AGGIUNTA
->Le annotazioni dei vincoli sono, ad esempio, `@Size(max = 10)` e `@Pattern(regexp = "...")` o `@Email` (Jakarta Bean Validation). Non sono nelle slide e il prof non ha detto i nomi esatti.
-
-### `@CookieValue` (livello variabile)
-
-Serve per **leggere** informazioni salvate nel **browser** dell'utente tramite cookie: associa un parametro del metodo al valore di un cookie HTTP inviato dal client (slide 9). Per **scrivere** un cookie invece lo si aggiunge alla risposta HTTP, non si usa `@CookieValue`. Il prof l'ha solo nominata, rimandando a un esempio.
-
-Le annotazioni dei controller il prof le vedrà quando si parlerà dei controller.
-
-## Server stateless
+### Server stateless
 
 Service e controller sono bean **singleton**: la stessa istanza viene usata da tutte le richieste, anche in contemporanea. Quindi il server va progettato **stateless** (vedi anche [[Spring#Scope dei bean|scope dei bean]]):
 - una volta soddisfatta una richiesta, il server **non conserva nulla** della sessione dell'utente;
@@ -178,30 +163,7 @@ Service e controller sono bean **singleton**: la stessa istanza viene usata da t
 - un server **stateful** è molto più pesante: servirebbe un service per ogni utente collegato, con le informazioni della sua sessione in memoria, anche quando l'utente si è già disconnesso e non servono più;
 - quindi nelle variabili d'istanza di service e controller non ci sarà nulla (a parte le dipendenze iniettate): ci saranno solo metodi da chiamare.
 
-## Accesso ai dati
-
-### DAO e JDBC
-
-Con il pattern **DAO** (Data Access Object) una classe si occupa solo dell'accesso ai dati: inserimento, aggiornamento, eliminazione e ricerca. Esempio della slide 13: entity `Book` (isbn, author, title) e interfaccia `BookDao` (`insert`, `update`, `delete`, `findByISBN`, `findAllBooks`, `bookCount`).
-
-![[Spring-BookDao-uml.svg|center]]
-
-Per accedere a una base di dati senza Spring si usa una libreria come **JDBC**, che fornisce i metodi per collegarsi al DB. La base di dati ha un suo server, raggiungibile tramite un URL: quando configureremo la connessione sarà `localhost`, ma nulla vieta di metterla su un'altra macchina. Bisogna però fare tutto a mano (slide 14; teoria in [[Web#Java Database Connectivity|JDBC]]):
-1. aprire la connessione al datasource;
-2. creare il `PreparedStatement` e passargli i parametri;
-3. eseguirlo;
-4. estrarre i risultati dal `ResultSet`;
-5. gestire le eccezioni;
-6. chiudere la connessione.
-
->[!question] Osservazione: SQL injection
->Le query si fanno con i **prepared statement** (parametri passati con `?`) e non concatenando stringhe: questo previene gli attacchi di **SQL injection**. Vedi [[Web#Prepared Statement|prepared statement]] e [[Web#SQL injection|SQL injection]].
-
-Con `JdbcTemplate` (slide 15) si passano query e parametri (`update(...)` per inserire, modificare o eliminare). Serve anche una classe `RowMapper` (es. `BookRowMapper`) che mappa una riga del `ResultSet` su un oggetto `Book`.
-
-Il `ResultSet` è il risultato della query: un cursore che scorre le righe, e per ogni riga si leggono le colonne per nome o per indice (un po' come una mappa colonna → valore).
-
-Tutto questo è codice non legato alla logica applicativa. Con **Spring Data JPA** è **tutto automatico**, grazie al meccanismo delle entity: i repository sono interfacce (es. che estendono `JpaRepository`) di cui Spring genera l'implementazione, quindi non serve più scrivere né il DAO né il mapping (vedi [[Spring#DAO, ORM e Spring Data|Spring Data]]). Spring JDBC con `JdbcTemplate` esiste ancora, ma è l'approccio "manuale". Dopo aver progettato, scrivere entity e repository richiederà poco tempo. Entro la lezione successiva si arriverà a scrivere **zero** codice di interazione con la base di dati.
+## Entity
 
 ### Chiavi composte
 
@@ -215,7 +177,7 @@ Il prof sconsiglia le **chiavi composte** (es. una tabella con chiave formata da
 >[!tip] Consiglio del prof
 >Usate sempre **id numerici auto-increment** come chiave.
 
-### Entity
+### Annotazioni dell'entity
 
 - `@Entity`: dice a Spring che la classe è un'entity.
 - `@Table`: indica la tabella a cui fa riferimento. Se il nome della tabella si ricava da quello della classe (classe `User` in CamelCase → tabella `user` in minuscolo; con Spring Boot `OrderItem` → `order_item`), Spring la trova da solo. Se è diverso va specificato con `@Table(name = "...")`. Esempio: in PostgreSQL `user` è una parola riservata, quindi la tabella si potrebbe chiamare `user_`.
@@ -242,7 +204,7 @@ Se un utente ha una lista di ordini o un carrello (un'altra tabella), lo si mett
 
 #### `@OneToOne`
 
-Esempio della slide 18: `Booking` (id, amount, check_in, check_out, room_id) e `Room` (id, num, type, free). Una prenotazione riguarda una stanza, una stanza ha 0 o 1 prenotazione.
+Esempio delle slide: `Booking` (id, amount, check_in, check_out, room_id) e `Room` (id, num, type, free). Una prenotazione riguarda una stanza, una stanza ha 0 o 1 prenotazione.
 
 ![[Spring-OneToOne-booking-room.svg|center]]
 
@@ -263,17 +225,17 @@ private Booking booking;
 
 #### `@ManyToOne`
 
-Esempio della slide 20: rubrica telefonica gestita da più persone. Un utente ha tanti contatti, ogni `Contact` appartiene a un solo `User`, quindi in `Contact` c'è `@ManyToOne private User user;`. Spring capisce da solo che la variabile `user`, di tipo `User`, corrisponde alla tabella `user`. Senza `@JoinColumn`, la colonna della chiave esterna ha il nome di default `user_id` (nome della variabile + `_` + nome della chiave primaria referenziata). Quando prendo un contatto, ho anche l'utente che l'ha creato.
+Esempio delle slide: rubrica telefonica gestita da più persone. Un utente ha tanti contatti, ogni `Contact` appartiene a un solo `User`, quindi in `Contact` c'è `@ManyToOne private User user;`. Spring capisce da solo che la variabile `user`, di tipo `User`, corrisponde alla tabella `user`. Senza `@JoinColumn`, la colonna della chiave esterna ha il nome di default `user_id` (nome della variabile + `_` + nome della chiave primaria referenziata). Quando prendo un contatto, ho anche l'utente che l'ha creato.
 
 #### `@OneToMany`
 
-Esempio della slide 21: una nazione ha più città, una città appartiene a una sola nazione.
+Esempio delle slide: una nazione ha più città, una città appartiene a una sola nazione.
 - In `City` c'è `@ManyToOne` con `@JoinColumn(name = "country_id")`. Qui la `@JoinColumn` serve perché la variabile si chiama `parentCountry` (più sensato in Java): il nome di default sarebbe `parent_country_id`, mentre la colonna è `country_id`. Nell'esempio di `Contact` non serviva perché la colonna ha già il nome di default (`user_id`).
 - In `Country` non c'è più una singola variabile ma una **lista** di città (`Set<City> cities`), con `@OneToMany(mappedBy = "parentCountry")`: `mappedBy` indica la variabile di `City` che mappa la relazione.
 
 #### `@ManyToMany`
 
-Esempio della slide 22: un cliente può partecipare a più eventi e un evento ha più clienti. C'è la tabella di relazione `EVENT_CUSTOMER` (customer_id, event_id).
+Esempio delle slide: un cliente può partecipare a più eventi e un evento ha più clienti. C'è la tabella di relazione `EVENT_CUSTOMER` (customer_id, event_id).
 
 ![[Spring-ManyToMany-customer-event.svg|center]]
 
@@ -294,3 +256,508 @@ Nell'esempio la relazione è mappata **solo dal lato `Customer`**: in `Event` no
 
 >[!question] Osservazione
 >Le liste `@ManyToMany` sono LAZY di default, quindi anche mappandola in `Event` (bidirezionale, con `mappedBy = "events"`) i partecipanti verrebbero caricati solo se usati. Mappare la relazione da un solo lato resta comunque una scelta più semplice, se dall'altro lato non serve.
+
+### Validazione dei campi: `@Valid`
+
+Serve per la **validazione dei campi**.
+- Nelle entity si mettono dei **vincoli** sui singoli attributi: lunghezza massima di una stringa (es. max 10 caratteri), che un campo corrisponda a una **regex** (es. quella dell'email), ecc.
+- Nel controller si annota con `@Valid` il parametro ricevuto (es. un `User`): Spring verifica in automatico **ogni vincolo** e, se uno non è rispettato, lancia un'eccezione. Così non serve scrivere a mano una serie di `if` di controllo.
+
+>[!attention] AGGIUNTA
+>Le annotazioni dei vincoli sono, ad esempio, `@Size(max = 10)` e `@Pattern(regexp = "...")` o `@Email` (Jakarta Bean Validation). Non sono nelle slide e il prof non ha detto i nomi esatti.
+
+## Repositories
+
+### Senza Spring Data: DAO e JDBC
+
+Con il pattern **DAO** (Data Access Object) una classe si occupa solo dell'accesso ai dati: inserimento, aggiornamento, eliminazione e ricerca. Esempio delle slide: entity `Book` (isbn, author, title) e interfaccia `BookDao` (`insert`, `update`, `delete`, `findByISBN`, `findAllBooks`, `bookCount`).
+
+![[Spring-BookDao-uml.svg|center]]
+
+Per accedere a una base di dati senza Spring si usa una libreria come **JDBC**, che fornisce i metodi per collegarsi al DB. La base di dati ha un suo server, raggiungibile tramite un URL: quando configureremo la connessione sarà `localhost`, ma nulla vieta di metterla su un'altra macchina. Bisogna però fare tutto a mano (teoria in [[Web#Java Database Connectivity|JDBC]]):
+1. aprire la connessione al datasource;
+2. creare il `PreparedStatement` e passargli i parametri;
+3. eseguirlo;
+4. estrarre i risultati dal `ResultSet`;
+5. gestire le eccezioni;
+6. chiudere la connessione.
+
+>[!question] Osservazione: SQL injection
+>Le query si fanno con i **prepared statement** (parametri passati con `?`) e non concatenando stringhe: questo previene gli attacchi di **SQL injection**. Vedi [[Web#Prepared Statement|prepared statement]] e [[Web#SQL injection|SQL injection]].
+
+Con `JdbcTemplate` si passano query e parametri (`update(...)` per inserire, modificare o eliminare). Serve anche una classe `RowMapper` (es. `BookRowMapper`) che mappa una riga del `ResultSet` su un oggetto `Book`.
+
+Il `ResultSet` è il risultato della query: un cursore che scorre le righe, e per ogni riga si leggono le colonne per nome o per indice (un po' come una mappa colonna → valore).
+
+Tutto questo è codice non legato alla logica applicativa. Con **Spring Data JPA** è **tutto automatico**, grazie al meccanismo delle entity: i repository sono interfacce (es. che estendono `JpaRepository`) di cui Spring genera l'implementazione, quindi non serve più scrivere né il DAO né il mapping (vedi [[Spring#DAO, ORM e Spring Data|Spring Data]]). Spring JDBC con `JdbcTemplate` esiste ancora, ma è l'approccio "manuale". Dopo aver progettato, scrivere entity e repository richiederà poco tempo. Entro la lezione successiva si arriverà a scrivere **zero** codice di interazione con la base di dati.
+
+### Spring Data: il repository come interfaccia
+
+Un repository è un'**interfaccia** che estende `CrudRepository` (o una sua sottointerfaccia) di Spring Data. Non serve implementarla: Spring genera da solo l'implementazione dei metodi.
+
+```java
+public interface ContactRepository extends CrudRepository<Contact, Long> {
+}
+```
+I due parametri generici sono il tipo dell'**entity** (`Contact`) e il tipo della sua **chiave primaria** (`Long`).
+
+Il fulcro di Spring Data sono `@Repository` e `CrudRepository`:
+- `@Repository` fa da **marker**: identifica le interfacce che comunicano con la sorgente dati;
+- `CrudRepository` fornisce già le operazioni **CRUD** (Create, Read, Update, Delete): ad esempio per inserire un dato esiste già il metodo `save`, senza scriverlo.
+
+>[!attention] AGGIUNTA
+>In Spring Data il vero marker è l'interfaccia `Repository<T, ID>` (radice della gerarchia, vedi sotto): un'interfaccia che la estende viene riconosciuta e implementata anche senza annotarla. L'annotazione `@Repository` sulle classi serve soprattutto a tradurre le eccezioni del DB (vedi [[#Livello classe: `@Component` e stereotipi|stereotipi]]).
+
+Il comportamento si può estendere in due modi: con i **query method** (si dichiara solo la firma del metodo, vedi sotto) oppure implementando esplicitamente dei metodi custom.
+
+### Entity attached e non attached
+
+Nel codice lavoriamo con oggetti entity. Un'entity può essere:
+- **attached**: è collegata alla base di dati, quindi ogni modifica all'oggetto si ripercuote sul database. Un'entity diventa attached quando la **preleviamo dal DB** (es. con un `findBy...`). Alla fine del metodo transazionale le modifiche vengono trasmesse alla base di dati **in automatico**, senza chiamare altro;
+- **non attached**: non è collegata al DB. È il caso di un oggetto creato con `new` e poi manipolato: per salvarlo bisogna chiamare **esplicitamente** il metodo del repository (es. `save`, che lo rende persistente).
+
+>[!attention] AGGIUNTA
+>In JPA si chiamano entity **managed** (gestite dal persistence context) e **detached** / **new**. Il salvataggio automatico alla fine del metodo avviene solo se il metodo è **transazionale** (`@Transactional`, vedi [[#Services|services]]): al commit Hibernate controlla quali entity managed sono cambiate (*dirty checking*) e fa le `UPDATE`.
+
+### Gerarchia delle interfacce
+
+- `PagingAndSortingRepository` estende `CrudRepository`;
+- `JpaRepository` estende `PagingAndSortingRepository` (e `QueryByExampleExecutor`).
+
+![[Spring-gerarchia-repository.webp|center|500]]
+
+| Interfaccia | Cosa aggiunge | Metodi principali (dal diagramma della slide) |
+| --- | --- | --- |
+| `Repository` | radice della gerarchia (riquadro in alto nel diagramma): nessun metodo | — (solo quelli che dichiariamo noi, come negli esempi con `extends Repository<User, Long>`) |
+| `CrudRepository` | operazioni CRUD: creare, leggere, aggiornare ed eliminare record senza definire i propri metodi | `save`, `save(Iterable)`, `findOne(ID)`, `exists(ID)`, `findAll()`, `findAll(Iterable<ID>)`, `count()`, `delete(ID)`, `delete(T)`, `delete(Iterable)`, `deleteAll()` |
+| `PagingAndSortingRepository` | recupero delle entity con **paginazione** e **ordinamento** | `findAll(Sort)`, `findAll(Pageable)` → `Page<T>` |
+| `JpaRepository` | funzionalità specifiche di JPA | `flush()`, `saveAndFlush`, `deleteInBatch`, `deleteAllInBatch`, `getOne(ID)`; `findAll` restituisce `List` invece di `Iterable` |
+
+>[!attention] AGGIUNTA
+>Il diagramma della slide è di una versione vecchia di Spring Data. Nelle versioni attuali alcuni nomi sono cambiati: `findOne(ID)` → `findById(ID)` (restituisce un `Optional<T>`), `exists(ID)` → `existsById`, `delete(ID)` → `deleteById`, `save(Iterable)` → `saveAll`. Inoltre da Spring Data 3 `PagingAndSortingRepository` non estende più `CrudRepository`, ma `JpaRepository` le estende entrambe, quindi per noi non cambia nulla: estendendo `JpaRepository` si hanno tutti i metodi.
+
+### Query method e JPQL
+
+La "magia" di Spring Data sono i **query method**: basta **dichiarare** un metodo nell'interfaccia, rispettando le regole sintattiche della documentazione, e Spring costruisce la query a partire dal **nome del metodo**.
+
+```java
+List<Contact> findByUserId(long userId);
+```
+viene convertito da Spring Data JPA in **JPQL**:
+```sql
+select c from Contact c where c.user.id = ?
+```
+
+Un altro esempio, con più condizioni:
+```java
+public interface UserRepository extends Repository<User, Long> {
+    List<User> findByEmailAddressAndLastname(String emailAddress, String lastname);
+}
+```
+```sql
+select u from User u where u.emailAddress = ?1 and u.lastname = ?2
+```
+`?1`, `?2` sono i parametri, nell'ordine in cui compaiono nella firma del metodo.
+
+**JPQL** (Java Persistence Query Language) è un linguaggio di interrogazione simile a SQL, ma lavora sulle **entity** e non sulle tabelle:
+- permette di accedere ai campi con la **dot notation** di Java (`c.user.username`). In SQL, se accedo a un campo che non è la chiave (es. lo username dell'utente invece del suo id), devo fare una **join** tra le tabelle;
+- fornisce un'**interfaccia comune** a DBMS diversi: si scrive sempre in JPQL, ed è il driver/provider a tradurre nel dialetto SQL del database specifico.
+
+>[!check] Esempio: dot notation vs join
+>```sql
+>-- JPQL
+>select c from Contact c where c.user.username = ?1
+>-- SQL equivalente
+>select c.* from contact c join user u on c.user_id = u.id where u.username = ?
+>```
+
+>[!attention] AGGIUNTA
+>L'esempio con `username` è mio, costruito da quello che ha detto il prof; il query method corrispondente sarebbe `findByUserUsername(String username)`.
+
+#### Keyword dei query method
+
+Con `x` si indica l'entity:
+
+| Keyword | Esempio | JPQL |
+| --- | --- | --- |
+| `And` | `findByLastnameAndFirstname` | `… where x.lastname = ?1 and x.firstname = ?2` |
+| `Or` | `findByLastnameOrFirstname` | `… where x.lastname = ?1 or x.firstname = ?2` |
+| `Is`, `Equals` | `findByFirstname`, `findByFirstnameIs`, `findByFirstnameEquals` | `… where x.firstname = ?1` |
+| `Between` | `findByStartDateBetween` | `… where x.startDate between ?1 and ?2` |
+| `LessThan` | `findByAgeLessThan` | `… where x.age < ?1` |
+| `LessThanEqual` | `findByAgeLessThanEqual` | `… where x.age <= ?1` |
+| `GreaterThan` | `findByAgeGreaterThan` | `… where x.age > ?1` |
+| `GreaterThanEqual` | `findByAgeGreaterThanEqual` | `… where x.age >= ?1` |
+| `After` | `findByStartDateAfter` | `… where x.startDate > ?1` |
+| `Before` | `findByStartDateBefore` | `… where x.startDate < ?1` |
+| `IsNull` | `findByAgeIsNull` | `… where x.age is null` |
+| `IsNotNull`, `NotNull` | `findByAge(Is)NotNull` | `… where x.age not null` |
+| `Like` | `findByFirstnameLike` | `… where x.firstname like ?1` |
+| `NotLike` | `findByFirstnameNotLike` | `… where x.firstname not like ?1` |
+| `StartingWith` | `findByFirstnameStartingWith` | `… where x.firstname like ?1` (parametro con `%` in coda) |
+| `EndingWith` | `findByFirstnameEndingWith` | `… where x.firstname like ?1` (parametro con `%` in testa) |
+| `Containing` | `findByFirstnameContaining` | `… where x.firstname like ?1` (parametro racchiuso tra `%`) |
+| `OrderBy` | `findByAgeOrderByLastnameDesc` | `… where x.age = ?1 order by x.lastname desc` |
+| `Not` | `findByLastnameNot` | `… where x.lastname <> ?1` |
+| `In` | `findByAgeIn(Collection<Age> ages)` | `… where x.age in ?1` |
+| `NotIn` | `findByAgeNotIn(Collection<Age> ages)` | `… where x.age not in ?1` |
+| `True` | `findByActiveTrue()` | `… where x.active = true` |
+| `False` | `findByActiveFalse()` | `… where x.active = false` |
+| `IgnoreCase` | `findByFirstnameIgnoreCase` | `… where UPPER(x.firstname) = UPPER(?1)` |
+
+>[!question] Osservazione: `Like` e simili
+>Con `Like` il `%` lo deve mettere chi chiama il metodo dentro il parametro (es. `"Ma%"`). Con `StartingWith`, `EndingWith` e `Containing` invece lo aggiunge Spring: si passa solo `"Ma"`.
+
+### `@Query`
+
+Se la query non si riesce a costruire con un query method, **non** serve implementare il metodo a mano: si scrive la query JPQL direttamente sul metodo con `@Query`.
+
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    @Query("select u from User u where u.emailAddress = ?1")
+    User findByEmailAddress(String emailAddress);
+}
+```
+
+Quando serve:
+- la query è troppo complessa per una keyword (es. a lezione: la **ricerca dinamica di un prodotto**, con parametri opzionali);
+- il parser del nome del metodo non supporta la keyword che si vuole usare;
+- il nome del metodo diventerebbe inutilmente lungo e brutto.
+
+In più la query sta nell'interfaccia del repository, legata al metodo che la esegue, e la classe di dominio (l'entity) resta libera da informazioni sulla persistenza.
+
+#### Dove si definiscono le query
+
+Una query si può definire in tre modi:
+1. **dal nome del metodo** (query method, automatico);
+2. con **`@Query`** sul metodo del repository;
+3. come **named query**, associata all'entity con un nome:
+   - in un **file XML**:
+     ```xml
+     <named-query name="User.findByLastname">
+       <query>select u from User u where u.lastname = ?1</query>
+     </named-query>
+     ```
+   - con l'annotazione **`@NamedQuery`** sull'entity:
+     ```java
+     @Entity
+     @NamedQuery(name = "User.findByEmailAddress",
+       query = "select u from User u where u.emailAddress = ?1")
+     public class User { }
+     ```
+
+>[!tip] Consiglio
+>La via preferibile è definire la query **direttamente nel repository** (con `@Query` o con il nome del metodo).
+
+#### Esempi
+
+**Like**: il `%` si può mettere nella query stessa. Qui cerca gli utenti il cui nome **finisce** con il parametro:
+```java
+@Query("select u from User u where u.firstname like %?1")
+List<User> findByFirstnameEndsWith(String firstname);
+```
+
+**Query native**: con `nativeQuery = true` la query è scritta in **SQL** del DBMS (sulle tabelle e colonne, non sulle entity), quindi si perde la portabilità di JPQL.
+```java
+@Query(value = "SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?1", nativeQuery = true)
+User findByEmailAddress(String emailAddress);
+```
+>[!attention] AGGIUNTA
+>Nella slide il parametro è `?0`, ma in JPA i parametri posizionali partono da `?1`.
+
+**Parametri con nome** (`@Param`): al posto di `?1`, `?2` si usano nomi (`:firstname`), associati ai parametri del metodo con `@Param`. Così l'ordine dei parametri nella firma non conta.
+```java
+@Query("select u from User u where u.firstname = :firstname or u.lastname = :lastname")
+User findByLastnameOrFirstname(@Param("lastname") String lastname,
+                               @Param("firstname") String firstname);
+```
+
+**Query di modifica**: per `update` (con `set`) e `delete` si aggiunge `@Modifying`. Il metodo restituisce il numero di righe modificate.
+```java
+@Modifying
+@Query("update User u set u.firstname = ?1 where u.lastname = ?2")
+int setFixedFirstnameFor(String firstname, String lastname);
+```
+>[!attention] AGGIUNTA
+>Una query `@Modifying` deve girare dentro una transazione: va chiamata da un metodo `@Transactional` (vedi [[#Services|services]]).
+
+#### Paginazione
+
+Un risultato **paginato** è un risultato diviso in **pagine**: quando una query restituisce troppi risultati (es. una ricerca su un e-commerce), invece di mandarli tutti insieme se ne manda una pagina alla volta.
+
+Si fa a livello di repository passando un parametro `Pageable` e restituendo una `Page`:
+```java
+public interface UserRepository extends Repository<User, Long> {
+    @QueryHints(value = { @QueryHint(name = "name", value = "value")},
+                forCounting = false)
+    Page<User> findByLastname(String lastname, Pageable pageable);
+}
+```
+Nell'oggetto `Pageable` si mettono i parametri della paginazione (numero della pagina, quanti elementi per pagina, ordinamento): cambiandoli cambia il risultato restituito.
+
+>[!attention] AGGIUNTA
+>Un `Pageable` si crea ad esempio con `PageRequest.of(0, 20, Sort.by("lastname"))` (prima pagina, 20 elementi, ordinati per cognome). La `Page` restituita contiene, oltre agli elementi, il numero totale di elementi e di pagine. `@QueryHints` non serve per paginare: passa dei suggerimenti al provider JPA, e `forCounting = false` dice di non applicarli alla query che conta il totale.
+
+### Specifications
+
+Una **specification** è una condizione (un predicato della `where`) scritta in Java, riusabile e **combinabile** con altre.
+
+Esempio detto a lezione: si vuole dare uno **sconto** ai clienti registrati da più di due anni. Si definisce una specification `isLongTermCustomer` che verifica la condizione sul cliente. Si potrebbe fare anche solo con una query, ma con la specification la condizione ha un nome e si può combinare con altre.
+
+```java
+public class CustomerSpecs {
+    public static Specification<Customer> isLongTermCustomer() {
+        return new Specification<Customer>() {
+            public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query,
+                                         CriteriaBuilder builder) {
+                LocalDate date = new LocalDate().minusYears(2);
+                // createdAt < oggi - 2 anni
+                return builder.lessThan(root.get(Customer_.createdAt), date);
+            }
+        };
+    }
+
+    public static Specification<Customer> hasSalesOfMoreThan(MonetaryAmount value) {
+        // ... analoga
+    }
+}
+```
+
+```java
+// where costruita con la specification
+List<Customer> customers = customerRepository.findAll(isLongTermCustomer());
+
+// specification combinate (qui in OR)
+MonetaryAmount amount = new MonetaryAmount(200.0, Currencies.DOLLAR);
+List<Customer> customers = customerRepository.findAll(
+    where(isLongTermCustomer()).or(hasSalesOfMoreThan(amount)));
+```
+
+>[!attention] AGGIUNTA
+>Per avere `findAll(Specification)` il repository deve estendere anche `JpaSpecificationExecutor<Customer>`. Le specification sono un modo comodo anche per la ricerca dinamica con parametri opzionali: si aggiunge una condizione solo se il parametro è presente.
+
+### `@Lock`
+
+Il **locking** serve a impedire, con accessi concorrenti:
+- le **letture sporche**: leggere dati di un'altra transazione non ancora sottoposti a commit;
+- le **letture non ripetibili**: rileggere un dato e trovarlo cambiato (o eliminato) da un'altra transazione prima che la lettura sia terminata.
+
+Si mette `@Lock` sul metodo del repository, sia su un query method sia ridichiarando un metodo CRUD già esistente:
+```java
+interface UserRepository extends Repository<User, Long> {
+    // query method
+    @Lock(LockModeType.READ)
+    List<User> findByLastname(String lastname);
+
+    // ridichiarazione di un metodo CRUD
+    @Lock(LockModeType.READ)
+    List<User> findAll();
+}
+```
+Teoria su tipi di lock (ottimistici e pessimistici) in [[Spring#Transazioni in Spring|transazioni]].
+
+>[!attention] AGGIUNTA
+>`LockModeType.READ` equivale a `OPTIMISTIC`. Il lock funziona solo dentro una transazione attiva.
+
+### Configurazione del database: `application.yaml`
+
+Con un database **embedded** come H2 non serve configurare nulla: fa tutto `spring-boot-starter-data-jpa`. Con DBMS "veri" (MySQL, PostgreSQL, Oracle DB, MS SQL Server) bisogna dire a Spring qual è la fonte dati: URL, username, password, driver e dialetto.
+
+Nel progetto il file `application.properties` **va eliminato** e si crea un `application.yaml`. Il contenuto è lo stesso (le proprietà dell'applicazione), ma il `.yaml` ha una struttura più pulita: le proprietà sono raggruppate per gerarchia invece di ripetere il prefisso (`spring.datasource.…`) a ogni riga.
+
+>[!multi-column]
+>
+>>[!blank]
+>>`application.properties`
+>>```properties
+>>spring.datasource.password=***
+>>spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+>>spring.datasource.username=***
+>>spring.datasource.url=jdbc:mysql://localhost:3306/orders
+>>spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
+>>```
+>
+>>[!blank]
+>>`application.yaml`
+>>```yaml
+>>spring:
+>>  datasource:
+>>    password: '***'
+>>    driver-class-name: com.mysql.jdbc.Driver
+>>    username: '***'
+>>    url: jdbc:mysql://localhost:3306/orders
+>>  jpa:
+>>    database-platform: org.hibernate.dialect.MySQL5Dialect
+>>```
+
+Nella slide l'URL ha anche dei parametri (`?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false`); `orders` è il nome del database.
+
+Anche i valori del `.yaml` si leggono nel codice con `@Value` (vedi sopra), con la stessa sintassi `${spring.datasource.username}`.
+
+>[!attention] AGGIUNTA
+>In YAML l'indentazione si fa **solo con spazi**: i tab non sono ammessi e danno errore all'avvio.
+
+## Services
+
+Nel layer dei services va implementata la **logica di business** della web app: i services si appoggiano ai metodi dei repository (per accedere ai dati persistenti e modificarli) e forniscono i risultati al livello superiore, i controller.
+
+```java
+package com.space.scanner.alien.service;
+import [...]
+
+@Service
+public class AlienService {
+    @Autowired                        // iniettato da Spring, niente new
+    private AlienRepository alienRepository;
+    @Autowired
+    Planet planet;
+
+    // crea l'entity, ne imposta i campi e la salva
+    public void addAlien(String name, String race) {
+        Alien a = new Alien();
+        a.setName(name);
+        a.setRace(race);
+        a.setPlanet(planet.getName());
+        alienRepository.save(a);      // entity non attached: save esplicito
+    }
+
+    // si limita a "wrappare" un metodo del repository
+    public List<Alien> getAliens() {
+        return alienRepository.findByPlanet(planet.getName());
+    }
+
+    public List<Alien> getAliens(String race) {
+        return alienRepository.findByPlanetAndRace(planet.getName(), race);
+    }
+}
+```
+
+>[!important] Wrappare anche i metodi banali
+>Vanno wrappati nel service anche i metodi dei repository che non aggiungono nulla (come `getAliens`): il controller deve chiamare **solo** metodi dei services, mai direttamente quelli dei livelli sottostanti. Così se cambia la logica si modifica solo il service, e il codice resta aggiornabile (vedi [[#Come strutturare un server|regola delle chiamate tra layer]]).
+
+### `@Transactional`
+
+`@Transactional` si mette a livello di **classe** (tutti i metodi diventano transazionali) o di **metodo**. Ha diverse proprietà per controllare la transazione o il rapporto con altre transazioni in corso:
+- `readOnly`: con `true` il metodo esegue solo query di selezione; con `false` può fare anche `update`, `insert` e `delete`. Default: `false`;
+- `rollbackFor` / `noRollbackFor`: per quali eccezioni fare (o non fare) il rollback. Di default Spring fa il rollback per le `RuntimeException` e le altre eccezioni **non controllate**;
+- `isolation`: quanto una transazione è isolata dal lavoro delle altre;
+- `propagation`: cosa succede se un metodo transazionale viene chiamato quando esiste già una transazione.
+
+Tabella completa degli attributi in [[Spring#Transazioni in Spring|transazioni]].
+
+>[!attention] AGGIUNTA
+>Quindi per le eccezioni **controllate** (checked, es. una propria `CreditoInsufficienteException extends Exception`) di default **non** c'è rollback: va chiesto con `rollbackFor = CreditoInsufficienteException.class`.
+
+#### Propagazione
+
+Definisce la relazione tra le transazioni:
+
+| Tipo | Comportamento |
+| --- | --- |
+| `REQUIRED` (default) | il codice gira sempre in una transazione: riutilizza quella esistente o ne crea una nuova |
+| `REQUIRES_NEW` | il codice gira sempre in una **nuova** transazione; quella corrente, se esiste, viene sospesa |
+| `SUPPORTS` | se esiste una transazione attiva la usa, altrimenti esegue senza transazione |
+| `MANDATORY` | se esiste una transazione attiva la usa, altrimenti Spring lancia un'eccezione |
+| `NEVER` | Spring lancia un'eccezione se esiste una transazione attiva |
+| `NOT_SUPPORTED` | sospende la transazione corrente, se esiste, ed esegue senza transazione |
+| `NESTED` | se esiste una transazione crea un **punto di salvataggio**: se la logica lancia un'eccezione si torna indietro fino a quel punto. Se non c'è nessuna transazione funziona come `REQUIRED` |
+
+#### Isolamento
+
+Definisce il "contratto" sui dati tra le transazioni:
+
+| Livello | Comportamento |
+| --- | --- |
+| `READ_UNCOMMITTED` | consente le letture sporche |
+| `READ_COMMITTED` | non consente le letture sporche |
+| `REPEATABLE_READ` | se una riga viene letta due volte nella stessa transazione, il risultato è sempre lo stesso |
+| `SERIALIZABLE` | esegue le transazioni in sequenza |
+
+>[!attention] AGGIUNTA
+>`SERIALIZABLE` non vuol dire che il DBMS le esegue davvero una alla volta: garantisce che il risultato sia **equivalente** a un'esecuzione in sequenza. Il default di Spring è `Isolation.DEFAULT`, cioè il livello di default del DBMS.
+
+>[!important] Requisito del progetto
+>Il progetto deve avere una **parte transazionale**. Esempio: in un e-commerce più utenti accedono in contemporanea alle stesse risorse. Se due utenti comprano ciascuno un'unità di un prodotto di cui ne è rimasta una sola, deve essere garantito il corretto funzionamento: uno dei due acquisti va a buon fine, l'altro no.
+
+>[!attention] AGGIUNTA
+>`@Transactional` da solo rende l'acquisto atomico, ma non basta per due acquisti **concorrenti**: entrambi potrebbero leggere "quantità = 1" prima che l'altro la decrementi. Serve anche un lock sul prodotto, ad esempio `@Lock(LockModeType.PESSIMISTIC_WRITE)` sul metodo del repository che lo legge, oppure un campo `@Version` nell'entity (lock ottimistico). Vedi [[Spring#Transazioni in Spring|transazioni]].
+
+## Controllers
+
+Il controller è l'ultimo layer: modella il comportamento dell'applicazione rendendo disponibili i metodi a chi la usa, tramite un'interfaccia web HTML oppure tramite **servizi REST**. A noi interessano i **REST controller**.
+
+>[!question] Servizi REST
+>Ipotizziamo un e-commerce con un'applicazione mobile e un sito web: sono i **client** (front-end).
+>Il **back-end** è un server che contiene l'applicazione (Spring / Spring Boot o FastAPI, il DB, la sicurezza…).
+>Back-end e front-end comunicano tramite i **servizi REST**: il server fornisce $n$ **endpoint**, cioè dei "ganci" a cui l'app mobile o il browser si collegano per prelevare informazioni. La comunicazione usa il protocollo **HTTP**: il client chiama l'endpoint, il server calcola la risposta e la restituisce.
+>Chiamare un servizio REST $\equiv$ collegarsi a un sito web: la differenza sta nella richiesta, che ha dei parametri nell'URL o nel body, ad esempio
+>`http://<nome_server>/search?<param>=<valore>`
+>Arrivata al server, la richiesta passa al controller, poi a services, repositories ed entities, e infine viene creata la risposta da rimandare al client.
+
+### `@RequestMapping` e `@GetMapping`
+
+- `@RequestMapping` sulla classe indica l'**URL** che porta a quel controller. Poi l'URL si può specializzare sui singoli metodi.
+- `@GetMapping`: quando si creano i metodi bisogna associarli al **metodo HTTP** che useranno; `@GetMapping` associa il metodo alle richieste `GET`.
+
+>[!attention] AGGIUNTA
+>Per gli altri metodi HTTP ci sono `@PostMapping`, `@PutMapping`, `@DeleteMapping` e `@PatchMapping`. Ad esempio con `@RequestMapping("/products")` sulla classe e `@GetMapping("/search")` sul metodo, il metodo risponde a `GET /products/search`.
+
+### `@CookieValue` (livello variabile)
+
+Serve per **leggere** informazioni salvate nel **browser** dell'utente tramite cookie: associa un parametro del metodo al valore di un cookie HTTP inviato dal client. Per **scrivere** un cookie invece lo si aggiunge alla risposta HTTP, non si usa `@CookieValue`. Il prof l'ha solo nominata, rimandando a un esempio.
+
+### Cosa può ritornare un controller
+
+I metodi del controller possono restituire:
+
+- **`Model`**: serve per passare i dati dal model alla view. Il metodo riceve un `Model`, ci aggiunge gli attributi e restituisce il **nome della pagina** (template):
+
+>[!multi-column]
+>
+>>[!blank]
+>>```java
+>>@Controller
+>>@RequestMapping("/")
+>>public class SalutiController {
+>>
+>>  @GetMapping
+>>  public String unSaluto(Model model) {
+>>    model.addAttribute("nome", "David");
+>>    return "ciao-mondo";
+>>  }
+>>}
+>>```
+>
+>>[!blank]
+>>```html
+>><!DOCTYPE html>
+>><html xmlns:th="http://www.thymeleaf.org">
+>><head>
+>>  <title>Pagina dei saluti</title>
+>></head>
+>><body>
+>>  <h1>Ciao Mondo! Sono <span th:text="${nome}"></span>...</h1>
+>></body>
+>></html>
+>>```
+
+- **`ModelAndView`**: come il `Model`, ma nello stesso oggetto si specifica anche la pagina di destinazione:
+```java
+@GetMapping
+public ModelAndView unSaluto() {
+    return new ModelAndView("ciao-mondo", "nome", "David");
+}
+```
+
+>[!attention] AGGIUNTA
+>La pagina HTML è un template **Thymeleaf**, un motore di template lato server integrato con Spring: gli attributi `th:*` (es. `th:text`) vengono elaborati dal server prima di inviare la pagina, e `${nome}` legge l'attributo `nome` messo nel model. La stringa restituita (`"ciao-mondo"`) è il nome del file, cercato in `src/main/resources/templates/ciao-mondo.html`.
+
+### Pagina generata dal server vs servizi REST
+
+Con `Model` / `ModelAndView` il server prende la richiesta HTTP, inserisce gli attributi nel model, genera il codice **HTML** della pagina e lo manda al client. A ogni nuova chiamata HTTP la pagina viene **rigenerata da zero** e reinviata.
+
+Con un servizio REST invece il server restituisce solo i **dati**: la pagina sul client resta fissa e viene aggiornata solo la parte che serve, fino alla chiamata successiva. È quello che si fa con una **chiamata AJAX**.
+![[Esercitazione-1794331268291.webp|89]]
+
+>[!attention] AGGIUNTA
+>Per i servizi REST si usa `@RestController` (= `@Controller` + `@ResponseBody`): l'oggetto restituito dal metodo (es. una `List<Product>`) non è il nome di una pagina, ma viene convertito in **JSON** e messo nel corpo della risposta, come visto all'[[#Spring|inizio]].

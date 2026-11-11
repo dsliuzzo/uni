@@ -145,14 +145,6 @@ $$
 \end{array}
 $$
 
-
-# Prova esame 24 marzo 2022
-## Esercizio 4
-- I condomini di Rende che hanno almeno due appartamenti, ciascuno dei quali è stato fittato ad almeno due inquini diversi nell'anno 2021
-- I condomini di Rende che non hanno affittato alcun appartamento nell'anno 2020
-- I condomini di Rende che hanno affittato appartamenti solo ad inquilini della città di Cosenza
-- Le coppie di nomi di inquilini che hanno affittato lo stesso insieme di appartamenti nella città di Cosenza
-
 # Prova esame 8 luglio 2019
 ## Esercizio 1
 ### A
@@ -264,77 +256,139 @@ Ed i seguenti vincoli di chiave esterna:
 1) I clienti della città di Cosenza che hanno sottoscritto un investimento con una società finanziaria fondata nel 1990
 $$
 \begin{array}{l}
-\text{clientiCS} = \sigma_{\$3 = \text{'CS'}} (\text{cliente}) \\
-\text{fondate1990} = \sigma_{\$3 = 1990}(\text{societa}) \\
+\text{clientiCS} = \sigma_{\$3 = \text{'CS'}} (\text{cliente}) \\[2ex]
+\text{fondate1990} = \sigma_{\$3 = 1990}(\text{societa}) \\[2ex]
 \text{Q1} = \Pi_{\$4, \$5, \$6}\left\{\left[ \left(\text{sottoscrizione} \underset{\$1 = \$1}{\bowtie} \text{clientiCS}\right) \underset{\$2 = \$1}{\bowtie} \text{investimento}\right] \underset{\$8 = \$1}{\bowtie} \text{fondate1990}\right\}
 \end{array}
 $$
+``` sql
+SELECT 
+FROM Sottoscrizione AS Sott, Clienti AS C, Investimento AS I, Societa AS Soc
+WHERE   Sott.Cliente = C.CodiceFiscale
+	AND Sott.Investimento = I.Nome
+	AND I.SocietaFinanziaria = Soc.Nome
+	AND C.citta = 'Cosenza'
+	AND Soc.AnnoFondazione = 1990;
+```
+
 2) I clienti della città di Cosenza che hanno sottoscritto almeno due investimenti
 $$
 \begin{array}{l}
-\text{almeno2inv} = \Pi_{\$1}\left(\text{sottoscrizione} \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} \text{sottoscrizione}\right) \\
+\text{almeno2inv} = \Pi_{\$1}\left(\text{sottoscrizione} \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} \text{sottoscrizione}\right) \\[2ex]
 \text{Q2} = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2inv} \right)
 \end{array}
 $$
+%%sql%%
 3) I clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie
 $$
 \begin{array}{l}
-\text{sottSoc} = \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento} \\
-\text{almeno2soc} = \Pi_{\$1}\left( \text{sottSoc} \underset{\$1 = \$1 \wedge \$5 \neq \$ 5}{\bowtie} \text{sottSoc} \right) \\
+\text{sottSoc} = \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento} \\[2ex]
+\text{almeno2soc} = \Pi_{\$1}\left( \text{sottSoc} \underset{\$1 = \$1 \wedge \$5 \neq \$ 5}{\bowtie} \text{sottSoc} \right) \\[2ex]
 \text{Q3} = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2soc} \right)
 \end{array}
 $$
+%%sql%%
 4) Il nome dei clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie, ciascuna delle quali è curatrice di almeno due investimenti;
 $$
 \begin{array}{l}
-\text{curatrici2} = \Pi_{\$2}\left( \text{investimento} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{investimento} \right) \\
-\text{sottCur} = \text{sottSoc} \underset{\$5 = \$1}{\bowtie} \text{curatrici2} \\
-\text{pippo} = \Pi_{\$1} \left( \text{sottCur} \underset{\$1 = \$1 \wedge \$5 \neq \$5}{\bowtie} \text{sottCur} \right) \\
+\text{curatrici2} = \Pi_{\$2}\left( \text{investimento} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{investimento} \right) \\[2ex]
+\text{sottCur} = \text{sottSoc} \underset{\$5 = \$1}{\bowtie} \text{curatrici2} \\[2ex]
+\text{pippo} = \Pi_{\$1} \left( \text{sottCur} \underset{\$1 = \$1 \wedge \$5 \neq \$5}{\bowtie} \text{sottCur} \right) \\[2ex]
 \text{Q4} = \Pi_{\$2} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{pippo} \right)
 \end{array}
 $$
+%%sql%%
 5) I clienti che hanno sottoscritto almeno un investimento di tipo “obbligazione” curati da società finanziarie di Cosenza
 $$
 \begin{array}{l}
-\text{societaCS} = \sigma_{\$2 = \text{'CS'}}(\text{societa}) \\
-\text{invObbCS} = \Pi_{\$1}\left[ \sigma_{\$3 = \text{'obbligazione'}}(\text{investimento}) \underset{\$2 = \$1}{\bowtie} \text{societaCS}\right] \\
+\text{societaCS} = \sigma_{\$2 = \text{'CS'}}(\text{societa}) \\[2ex]
+\text{invObbCS} = \Pi_{\$1}\left[ \sigma_{\$3 = \text{'obbligazione'}}(\text{investimento}) \underset{\$2 = \$1}{\bowtie} \text{societaCS}\right] \\[2ex]
 \text{Q5} = \Pi_{\$1}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{invObbCS} \right)
 \end{array}
 $$
+%%sql%%
 6) I clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
 $$
 \begin{array}{l}
 \text{Q6} = \Pi_{\$1}(\text{cliente}) - \Pi_{\$1}\left[ \sigma_{\$6 = \text{'obbligazione'}}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento}\right) \right]
 \end{array}
 $$
+%%sql%%
 7) Le città dei clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
 $$
 \text{Q7} = \Pi_{\$3} \left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{Q6} \right)
 $$
+%%sql%%
 8) Le città che non hanno nessun cliente che ha sottoscritto almeno un investimenti di tipo “obbligazione”
 $$
 \begin{array}{l}
-\text{clienteObb} = \Pi_{\$1}\left[ \sigma_{\$6 = \text{'obbligazione'}}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento}\right) \right] \\
+\text{clienteObb} = \Pi_{\$1}\left[ \sigma_{\$6 = \text{'obbligazione'}}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento}\right) \right] \\[2ex]
 \text{Q8} = \Pi_{\$3}(\text{cliente}) - \Pi_{\$3}\left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{clienteObb} \right)
 \end{array}
 $$
+%%sql%%
 9) Le città dei clienti che hanno sottoscritto investimenti, ma non di tipo “obbligazione”
 $$
 \begin{array}{l}
-\text{clientiNoObb} = \Pi_{\$1}(\text{sottoscrizione}) - \text{clienteObb} \\
+\text{clientiNoObb} = \Pi_{\$1}(\text{sottoscrizione}) - \text{clienteObb} \\[2ex]
 \text{Q9} = \Pi_{\$3}\left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{clientiNoObb} \right)
 \end{array}
 $$
+%%sql%%
 10) I clienti che hanno sottoscritto tutti gli investimenti di tipo “obbligazione” curati da società finanziarie di Cosenza.
 tutti i clienti - clienti(tutte le possibili coppie (cliente|investimento) - quelle reali)
 $$
 \begin{array}{l}
-\text{clientiNo} = \Pi_{\$1}\left\{[\Pi_{\$1}(\text{cliente}) \times \text{invObbCS}] - \Pi_{\$1, \$2}(\text{sottoscrizione})\right\} \\
+\text{clientiNo} = \Pi_{\$1}\left\{[\Pi_{\$1}(\text{cliente}) \times \text{invObbCS}] - \Pi_{\$1, \$2}(\text{sottoscrizione})\right\} \\[2ex]
 \text{Q10} = \Pi_{\$1}(\text{cliente}) - \text{clientiNo}
 \end{array}
 $$
+%%sql%%
 11) Coppie di clienti `<C1,C2>` che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
-[...]
+trovo tutte le coppie $(c|s)$ tali che il cliente $c$ non ha sottoscritto investimenti curati dalla società $s$
+$$ \text{csNo} = [\Pi_{\$ 1}(\text{Cliente}) \times \Pi_{\$ 1} (\text{Societa})] - \Pi_{\$ 1, \$ 5} \left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento}\right) $$
+trovo le coppie di clienti $(c_{1}|c_{2})$ tali che $c_{1}$ ha sottoscritto qualche investimento curato da una società che non cura alcun investimento di $c_{2}$
+$$
+\text{coppieNo} = \Pi_{\$ 1, \$ 8}\left[\left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento} \right) \underset{\$ 5 = \$ 2}{\bowtie} \text{csNo}\right]
+$$
+tutte le possibili coppie di clienti (meno quelle con cliente uguale o coppia già presente con posizione invertita) a cui sottraggo `coppieNo` (due volte per il viceversa)
+$$
+\text{Q11} = \left[ \Pi_{\$ 1, \$ 4}\left( \text{Cliente} \underset{\$ 1 < \$ 1}{\bowtie} \text{Cliente}\right) - \text{coppieNo} \right] - \Pi_{\$ 2, \$ 1}(\text{CoppieNo})
+$$
+``` sql
+CREATE VIEW csNo (cliente, societa) AS (
+	SELECT C.CodiceFiscale AS cliente, S.nome AS societa
+	FROM Cliente AS C, Societa AS S
+	
+	EXCEPT
+	
+	SELECT S.cliente AS cliente, I.societaFinanziaria AS societa
+	FROM Sottoscrizione AS S, Investimento AS I
+	WHERE S.investimento = I.nome
+);
+
+CREATE VIEW coppieNo (c1, c2) AS (
+	SELECT S.cliente AS c1, csNo.cliente AS c2
+	FROM Sottoscrizione AS S, Investimento AS I, csNo
+	WHERE   S.investimento = I.nome
+		AND I.societaFinanziaria = csNo.societa
+);
+
+SELECT C1.codiceFiscale AS c1, C2.codiceFiscale AS c2
+FROM Cliente AS C1, Cliente AS C2
+WHERE C1.codiceFiscale < C2.codiceFiscale
+
+EXCEPT
+
+SELECT *
+FROM coppieNo
+
+EXCEPT
+
+SELECT coppieNo.c2, coppieNo.c1
+FROM coppieNo
+```
+
 # Prova esame 8 luglio 2019
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -384,7 +438,7 @@ WHERE   A1.codice != A2.codice
 4) I nomi delle stazioni che sono il punto di partenza di almeno due tratte, ciascuna delle quali è coperta da almeno due autobus di uguale tipologia (NB: una stazione è coperta da una tratta se ne è stazione di partenza o di destinazione).
 $$
 \begin{array}{l}
-\text{TrattaOk} = \Pi_{\$ 1, \$ 2}\left[ \text{Tratta} \underset{\$ 1 = \$ 2 \wedge \$ 1 = \$ 7}{\bowtie} \left( \text{Autobus} \underset{\$ 1 \neq \$ 1 \wedge \$ 3 = \$ 3}{\bowtie} \text{Autobus}\right) \right]\\
+\text{TrattaOk} = \Pi_{\$ 1, \$ 2}\left[ \text{Tratta} \underset{\$ 1 = \$ 2 \wedge \$ 1 = \$ 7}{\bowtie} \left( \text{Autobus} \underset{\$ 1 \neq \$ 1 \wedge \$ 3 = \$ 3}{\bowtie} \text{Autobus}\right) \right] \\[2ex]
 \text{Q4} = \Pi_{\$ 2}\left[ \text{Stazione} \underset{\$ 1 = \$ 2}{\bowtie} \left( \text{TrattaOk} \underset{\$ 2 = \$ 2 \wedge \$ 1 \neq \$ 1}{\bowtie}\text{TrattaOk} \right) \right]
 \end{array}
 $$
@@ -421,7 +475,7 @@ WHERE   A.trattaCoperta = T.codice
 6) Le tipologie di autobus delle quali non esiste alcun autobus che copra una tratta che parte dalla città di Roma e che copre una distanza inferiore a 200 km.
 $$
 \begin{array}{l}
-\text{autobusNo} = \Pi_{\$ 1, \$ 3}\left\{\text{Autobus} \underset{\$ 2 = \$ 1}{\bowtie} [\sigma_{\$ 4 < 200 \wedge \$ 2 = \text{'Roma'}}(\text{Tratta})]\right\} \\
+\text{autobusNo} = \Pi_{\$ 1, \$ 3}\left\{\text{Autobus} \underset{\$ 2 = \$ 1}{\bowtie} [\sigma_{\$ 4 < 200 \wedge \$ 2 = \text{'Roma'}}(\text{Tratta})]\right\} \\[2ex]
 \text{Q6} = \Pi_{\$ 2} [\Pi_{\$ 1, \$ 3}(\text{Autobus}) - \text{AutobusNo}]
 \end{array}
 $$
@@ -445,7 +499,51 @@ FROM autobusSi
 
 
 7) Le coppie di stazioni tali che gli insiemi di tipologie di autobus che partono da ciascuna di esse sono uguali.
-[...]
+tutte le coppie $(s|t)$ tali che dalla stazione $s$ non partono autobus di tipologia $t$
+$$
+\text{stNo} = \Pi_{\$ 1, \$ 7}(\text{Stazione} \times \text{Autobus}) - \Pi_{\$ 2, \$ 7} \left( \text{Tratta} \underset{\$ 1 = \$ 2}{\bowtie} \text{Autobus} \right)
+$$
+trovo le coppie di stazioni $(s_{1}|s_{2})$ tali che da $s_{1}$ parte una tipologia di autobus che non parte da $s_{2}$
+$$
+\text{coppieNo} = \Pi_{\$ 7, \$ 10}\left[ \left( \text{Autobus} \underset{\$ 2 = \$ 1}{\bowtie} \text{Tratta} \right) \underset{\$ 3 = \$ 2}{\bowtie} \text{stNo}\right]
+$$
+tutte le possibili coppie di stazioni - quelle presenti in `coppieNo` due volte
+$$
+\text{Q7} = \left[ \Pi_{\$ 1, \$ 5}\left( \text{Stazione} \underset{\$ 1 < \$ 1}{\bowtie} \text{Stazione} \right)- \text{coppieNo} \right] - \Pi_{\$ 2, \$ 1} (\text{coppieNo})
+$$
+``` sql
+CREATE VIEW stNo (stazione, tipo) AS (
+	SELECT S.codice AS stazione, A.tipologiaAutobus AS tipo
+	FROM Stazione AS S, Autobus AS A
+	
+	EXCEPT
+	
+	SELECT T.stazionePartenza AS stazione, A.tipologiaAutobus AS tipo
+	FROM Tratta AS T, Autobus AS A
+	WHERE T.codice = A.trattaCoperta
+);
+
+CREATE VIEW coppieNo (s1, s2) AS (
+	SELECT T.stazionePartenza AS s1, stNo.stazione AS s2
+	FROM Autobus AS A, Tratta AS T, stNo
+	WHERE   A.trattaCoperta = T.codice
+		AND A.tipologiaAutobus = stNo.tipologia
+):
+
+SELECT St1.codice AS s1, St2.codice AS s2
+FROM Stazione AS St1, Stazione AS St2
+WHERE St1.codice < St2.codice
+
+EXCEPT
+
+SELECT *
+FROM coppieNo
+
+EXCEPT
+
+SELECT s2, s1
+FROM coppieNo
+```
 # Prova esame 24 marzo 2022
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -460,13 +558,45 @@ con i seguenti vincoli di chiave esterna:
 - $\text{AFFITTO}[\text{appCondominio}, \text{appInterno}] \sqsubseteq_{FK} \text{APPARTAMENTO}[\text{condominio}, \text{interno}]$
 
 1) I condomini di Rende che hanno almeno due appartamenti, ciascuno dei quali è stato fittato ad almeno due inquilini diversi nell'anno 2021
-[...]
+$$
+\begin{array}{l}
+\text{AFFITTO2021} = \sigma_{\$4 = 2021}(\text{AFFITTO}) \\[2ex]
+\text{INQUILINIDIV} = \Pi_{\$2, \$3}\left(\text{AFFITTO2021} \underset{\$2 = \$2 \wedge \$3 = \$3 \wedge \$1 \neq \$1}{\bowtie} \text{AFFITTO2021}\right) \\[2ex]
+\text{COND} = \Pi_{\$1}\left(\text{INQUILINIDIV} \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} \text{INQUILINIDIV}\right) \\[2ex]
+\text{Q1} = \Pi_{\$2, \$3, \$4}\left(\text{COND} \underset{\$1 = \$1}{\bowtie} \sigma_{\$3 = \text{'RENDE'}}(\text{CONDOMINIO})\right)
+\end{array}
+$$
+%%sql%%
+
 2) I condomini di Rende che non hanno affittato alcun appartamento nell'anno 2020
-[...]
+$$
+\begin{array}{l}
+\text{AFFITTO2020} = \Pi_{\$2}\left[\sigma_{\$4 = 2020}(\text{AFFITTO})\right] \\[2ex]
+\text{Q2} = \Pi_{\$1}\left(\sigma_{\$3 = \text{'RENDE'}}(\text{CONDOMINIO})\right) - \text{AFFITTO2020}
+\end{array}
+$$
+%%sql%%
+
 3) I condomini di Rende che hanno affittato appartamenti solo ad inquilini della città di Cosenza
-[...]
+$$
+\begin{array}{l}
+\text{INQNOCOS} = \text{INQUILINO} - \sigma_{\$4 = \text{'CS'}}(\text{INQUILINO}) \\[2ex]
+\text{ALTRI} = \Pi_{\$12, \$13, \$14}\left[\left(\text{AFFITTO} \underset{\$1 = \$1}{\bowtie} \text{INQNOCOS}\right) \underset{\$2 = \$1}{\bowtie} \text{CONDOMINIO}\right] \\[2ex]
+\text{Q3} = \sigma_{\$3 = \text{'RENDE'}}(\text{CONDOMINIO}) - \text{ALTRI}
+\end{array}
+$$
+%%sql%%
+
 4) Le coppie di nomi di inquilini che hanno affittato lo stesso insieme di appartamenti nella città di Cosenza
-[...]
+$$
+\begin{array}{l}
+\text{icNo} = \left\{ \Pi_{\$ 1}(\text{Inquilino}) \times \Pi_{\$ 1, \$ 2}\left[ \text{Appartamento} \underset{\$ 1 = \$ 1}{\bowtie}\sigma_{\$ 3 = \text{'CS'}}(\text{Condominio}) \right] \right\} - \Pi_{\$ 1, \$ 2, \$ 3}(\text{Affitto}) \\[2ex]
+\text{coppieNo} = \Pi_{\$ 1, \$ 7} \left( \text{Affitto} \underset{\$ 2 = \$ 2 \wedge \$ 3 = \$ 3}{\bowtie} \text{icNo} \right) \\[2ex]
+\text{coppieSi} = \left[ \Pi_{\$ 1, \$ 6} \left( \text{Inquilino} \underset{\$ 1 < \$ 1}{\bowtie} \text{Inquilino} \right) - \text{coppieNo} \right] - \Pi_{\$ 2, \$ 1}(\text{coppieNo}) \\[2ex]
+\text{Q4} = \Pi_{\$ 2,\$ 9} \left[ \text{Inquilino} \underset{\$ 1 = \$ 2}{\bowtie}\left( \text{coppieSi} \underset{\$ 1 = \$ 1}{\bowtie} \text{Inquilino} \right) \right]
+\end{array}
+$$
+%%sql%%
 
 # Prova esame 30 giugno 2022
 ## Esercizio 3
@@ -487,19 +617,36 @@ dove la relazione ACCREDITATO riporta le coppie $S, C$ tali che lo scrittore $S$
 1) I nomi degli scrittori che hanno redatto almeno due articolo di categoria “Cronaca”
 $$
 \begin{array}{l}
-\text{artC} = \Pi_{\$1, \$2, \$3, \$4}\left[\sigma_{\$6 = \text{'cronaca'}}\left( \text{articolo} \underset{\$2 = \$1}{\bowtie} \text{categoria} \right)\right] \\
+\text{artC} = \Pi_{\$1, \$2, \$3, \$4}\left[\sigma_{\$6 = \text{'cronaca'}}\left( \text{articolo} \underset{\$2 = \$1}{\bowtie} \text{categoria} \right)\right] \\[2ex]
 Q = \Pi_{\$2}\left[\text{scrittori} \underset{\$1 = \$1}{\bowtie}\left(\text{artC} \underset{\$ 1 = \$ 1 \wedge \$2 \neq \$2}{\bowtie} \text{artC}\right)\right]
 \end{array}
 $$
+%%sql%%
+
 2)  I nomi delle categorie di cui esiste una coppia di articoli redatti da scrittori diversi accreditati per tale categoria, dove ciascuno di tali scrittori ha scritto articoli di almeno due categorie differenti nell'anno 2018
 $$
 \begin{array}{l}
-\text{catDiff2018} = \Pi_{\$1}\left\{[\sigma_{\$4 = 2018}(\text{articolo})] \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} [\sigma_{\$4 = 2018}(\text{articolo})]\right\} \\
-\text{acc2018} = \Pi_{\$1, \$2}\left( \text{accreditato} \underset{\$1 = \$1}{\bowtie} \text{catDiff2018}\right) \\
+\text{catDiff2018} = \Pi_{\$1}\left\{[\sigma_{\$4 = 2018}(\text{articolo})] \underset{\$1 = \$1 \wedge \$2 \neq \$2}{\bowtie} [\sigma_{\$4 = 2018}(\text{articolo})]\right\} \\[2ex]
+\text{acc2018} = \Pi_{\$1, \$2}\left( \text{accreditato} \underset{\$1 = \$1}{\bowtie} \text{catDiff2018}\right) \\[2ex]
 Q = \Pi_{\$2}\left(\text{categoria} \underset{\$1 = \$2}{\bowtie}\left\{\left[\left(\text{articolo} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{articolo}\right) \underset{\$1 = \$1 \wedge \$2 = \$2}{\bowtie} \text{acc2018}\right] \underset{\$5 = \$1 \wedge \$6 = \$2}{\bowtie} \text{acc2018}\right\}\right)
 \end{array}
 $$
-3)  Gli scrittori della città di Genova che hanno scritto solo articoli di categorie per le quali non sono accreditati
-[...]
+%%sql%%
+
+3) Gli scrittori della città di Genova che hanno scritto solo articoli di categorie per le quali non sono accreditati
+scrittori della città di genova - scrittori che hanno scritto articoli di categorie per le quali sono accreditati
+$$
+\text{Q3} = \Pi_{\$ 1}[\sigma_{\$ 4 = \text{'Genova'}}(\text{Scrittore})] - \Pi_{\$ 1} \left( \text{Articolo} \underset{\$ 1 = \$ 1 \wedge \$ 2 = \$ 2}{\bowtie} \text{Accreditato} \right)
+$$
+%%sql%%
+
+
 4) Le coppie di scrittori `<S1,S2>` che hanno scritto articoli per lo stesso insieme di categorie
-[...]
+$$
+\begin{array}{l}
+\text{scNo} = \Pi_{\$ 1, \$ 7} (\text{Scrittore} \times \text{Articolo}) - \Pi_{\$ 1, \$ 2}(\text{Articolo}) \\[2ex]
+\text{coppieNo} = \Pi_{\$ 1, 5}\left( \text{Articolo} \underset{\$ 2 = \$ 2}{\bowtie} \text{scNo} \right) \\[2ex]
+\text{Q4} = \left[ \Pi_{\$ 1, \$ 6}\left( \text{Scrittore} \underset{\$ 1 < \$ 1}{\bowtie} \text{Scrittore} \right) - \text{coppieNo} \right] - \Pi_{\$ 2, \$ 1}(\text{coppieNo})
+\end{array}
+$$
+%%sql%%
