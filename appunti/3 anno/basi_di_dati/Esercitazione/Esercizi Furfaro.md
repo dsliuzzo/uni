@@ -736,14 +736,35 @@ CREATE VIEW mmSede (m1, m2) AS (
 	WHERE   M1.marca = MA1.nome
 		AND M2.marca = MA2.nome
 		AND M1.cod < M2.cod
-		AND M1.marca = M2.marca
+		AND MA1.sede = MA2.sede
 );
 
 CREATE VIEW fmNo (f, m) AS (
-	SELECT 
+	SELECT X.fornitore AS f, M.cod AS m
+	FROM Fornitura AS X, Merce AS M
+	
+	EXCEPT
+	
+	SELECT fornitore AS f, merce AS m
+	FROM Fornitura
 );
 
-CREA VIEW coppieNo (m1, m2) AS (
-	SELECT 
+CREATE VIEW coppieNo (m1, m2) AS (
+	SELECT X.merce AS m1, fmNo.m AS m2
+	FROM Fornitura AS X, fmNo
+	WHERE X.fornitore = fmNo.f
 );
+
+SELECT *
+FROM mmSede
+
+EXCEPT
+
+SELECT m1, m2
+FROM coppieNo
+
+EXCEPT
+
+SELECT m2, m1
+FROM coppieNo
 ```

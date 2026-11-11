@@ -503,6 +503,23 @@ $$
 
 Il tempo di propagazione fissa quindi la **frequenza di funzionamento** della porta (la frequenza è l'inverso del tempo).
 
+### Perché NMOS nella pull-down e PMOS nella pull-up
+*Fonte: `archivio/3 anno/elettronica digitale/slide/Approfondimento_CMOS.pdf`, pp. 162–164.*
+
+Il motivo sta nella carica e nella scarica di $C_L$. Un MOSFET conduce solo finché $|V_{GS}| \geq |V_T|$ ($V_T$ = tensione di soglia), e il **source** è il terminale verso cui va la carica, quindi durante il transitorio può essere proprio l'uscita.
+
+>[!multi-column]
+>
+>>[!important] NMOS (tipo 1)
+>>- **Scarica** $C_L$ (pull-down): gate a $V_{DD}$, source a massa → $V_{GS} = V_{DD}$ costante, resta acceso fino a $V_{out} = 0\ V$. Lo **0 non è degradato**.
+>>- **Carica** $C_L$: il source è l'uscita → $V_{GS} = V_{DD} - V_{out}$ cala man mano, e quando $V_{GS} < V_T$ si spegne. L'uscita si ferma a $V_{DD} - V_T$: **1 degradato**.
+>
+>>[!important] PMOS (tipo 0)
+>>- **Carica** $C_L$ (pull-up): gate a $0\ V$, source a $V_{DD}$ → $V_{GS} = -V_{DD}$ costante, resta acceso fino a $V_{out} = V_{DD}$. L'**1 non è degradato**.
+>>- **Scarica** $C_L$: il source è l'uscita → $|V_{GS}| = V_{out}$ cala man mano, e per scaricare correttamente servirebbe $|V_{GS}| \geq |V_T|$: si spegne quando $V_{out} = |V_T|$. **0 degradato**.
+
+Per questo nella **pull-down** (che deve portare l'uscita a $0\ V$) si usano gli **NMOS** e nella **pull-up** (che deve portarla a $V_{DD}$) i **PMOS**.
+
 ### Fan-out
 >[!important] Fan-out
 >Numero di porte logiche (carichi) pilotate dall'uscita di una porta.
@@ -514,6 +531,11 @@ $$
 cioè la porta risponde più lentamente.
 
 ![[Marietto-fan-out.svg|center|600]]
+
+>[!important] Perché il fan-out è limitato
+>Aumentando il fan-out cresce $C_L$, e questo peggiora:
+>- il **tempo di risposta**: $\tau = R_{ON} \cdot C_L$ cresce
+>- la **dissipazione di potenza dinamica**: $P = f \cdot C_L \cdot V_{DD}^2$ cresce (vedi sotto)
 
 ### Dissipazione di potenza dinamica
 Insieme al tempo di propagazione è la caratteristica che preoccupa di più i progettisti. Ha due contributi.
@@ -547,6 +569,9 @@ La potenza dipende quindi da tre fattori:
 
 Aumentando il fan-out aumenta $C_L$, quindi la potenza dinamica cresce **linearmente** con il fan-out; l'effetto **quadratico** ce l'ha invece $V_{DD}$: dimezzare la tensione di alimentazione riduce la potenza di switching di 4 volte.
 
+>[!question] Osservazione: limite fisico su $V_{DD}$
+>Conviene quindi abbassare $V_{DD}$, ma c'è un **limite fisico**: abbassandola ci si avvicina alla **tensione di soglia** degli interruttori (sia degli NMOS sia dei PMOS), e diventa difficile discriminare in modo netto lo stato aperto/chiuso.
+
 #### Potenza di corto circuito
 Gli interruttori reali sono dispositivi **a soglia**: con tempi di salita e discesa non nulli c'è un intervallo di tensioni d'ingresso in cui **pull-up e pull-down sono entrambe chiuse**, e si dissipa una potenza (temporanea) di **corto circuito**.
 
@@ -557,23 +582,5 @@ Più i fronti sono ripidi (tempi di salita e discesa piccoli), meno incide la po
 >[!important] Riassumendo
 >- **Caratteristiche statiche**: dissipazione di potenza statica, fan-in, margini di rumore
 >- **Caratteristiche dinamiche**: tempo di propagazione, fan-out, dissipazione di potenza dinamica (switching + corto circuito)
-
-
-
-$P = f \cdot C_L \cdot V_{DD}^2$
-limite fisico di tensione di alimentazione -> ci avviciniamo alla tensione di soglia -> ho difficoltà a discriminare in maniera netta lo stato di funzionamento aperto/chiuso
-Sia nel PMOS che nell'NMOS
-
-motivazioni per cui il fan out è limitato
-limiti legati alla dissipazione di potenza dinamica e al tempo di risposta
-
-riassumendo
-analisi statica e dinamica
-
-il progettista si comporterà di conseguenza se deve ottimizzare la frequenza o la dissipazione di potenza
-
-condizione per far scaricare correttamente la capacità al PMOS
-scarico della capacità
-
-motivazioni per usare NMOS nel pull down e PMOS nel pull up (centra con la scarica di capacità)
-
+>
+>Frequenza e potenza sono legate ($P = f \cdot C_L \cdot V_{DD}^2$): il progettista sceglie di conseguenza se deve **ottimizzare la frequenza** (velocità) o la **dissipazione di potenza**.
