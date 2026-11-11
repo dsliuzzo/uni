@@ -557,3 +557,23 @@ Più i fronti sono ripidi (tempi di salita e discesa piccoli), meno incide la po
 >[!important] Riassumendo
 >- **Caratteristiche statiche**: dissipazione di potenza statica, fan-in, margini di rumore
 >- **Caratteristiche dinamiche**: tempo di propagazione, fan-out, dissipazione di potenza dinamica (switching + corto circuito)
+
+
+
+$P = f \cdot C_L \cdot V_{DD}^2$
+limite fisico di tensione di alimentazione -> ci avviciniamo alla tensione di soglia -> ho difficoltà a discriminare in maniera netta lo stato di funzionamento aperto/chiuso
+Sia nel PMOS che nell'NMOS
+
+motivazioni per cui il fan out è limitato
+limiti legati alla dissipazione di potenza dinamica e al tempo di risposta
+
+riassumendo
+analisi statica e dinamica
+
+il progettista si comporterà di conseguenza se deve ottimizzare la frequenza o la dissipazione di potenza
+
+condizione per far scaricare correttamente la capacità al PMOS
+scarico della capacità
+
+motivazioni per usare NMOS nel pull down e PMOS nel pull up (centra con la scarica di capacità)
+
