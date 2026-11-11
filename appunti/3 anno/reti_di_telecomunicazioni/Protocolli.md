@@ -1009,6 +1009,14 @@ Gli indirizzi privati sono assegnati all'interno della rete dal router (che fa d
 >Traduce gli indirizzi **privati in pubblici**; è implementato da un dispositivo di livello 3. Così non si saturano gli indirizzi: c'è 1 indirizzo pubblico associato a tutti i dispositivi che comunicano con l'esterno, e su richiesta gli indirizzi vengono tradotti.
 
 Es. gli indirizzi di casa sono di solito di classe C, del tipo `192.168.1.x`.
+#### Indirizzi dinamici
+%%
+Un dispositivo che non è connesso ad una rete non mantiene occupato il suo indirizzo. L'indirizzo quindi viene assegnato dinamicamente da DHCP (dall'operatore)
+l'operatore che gestisce il server DHCP ha un certo slot di indirizzi che assegna dinamicamente e che assegna in leasing
+se non vengono trasmessi dati per un certo periodo di tempo l'indirizzo torna nel pool di indirizzi disponibili, pronto ad essere assegnato ad altri dispositivi.
+In questo modo con meno indirizzi posso rappresentare più utenti.
+Si ha un fattore di contemporaneità del 10/15%.
+%%
 ### Instradamento
 >[!important] Instradamento
 >L'**instradamento** è una funzione di **natura logica** che ha lo scopo di **guidare l'informazione** di utente verso la **destinazione** desiderata.
