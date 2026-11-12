@@ -1009,7 +1009,7 @@ Gli indirizzi privati sono assegnati all'interno della rete dal router (che fa d
 >Traduce gli indirizzi **privati in pubblici**; è implementato da un dispositivo di livello 3. Così non si saturano gli indirizzi: c'è 1 indirizzo pubblico associato a tutti i dispositivi che comunicano con l'esterno, e su richiesta gli indirizzi vengono tradotti.
 
 Es. gli indirizzi di casa sono di solito di classe C, del tipo `192.168.1.x`.
-#### Indirizzi dinamici
+#### Indirizzamento dinamico
 %%
 Un dispositivo che non è connesso ad una rete non mantiene occupato il suo indirizzo. L'indirizzo quindi viene assegnato dinamicamente da DHCP (dall'operatore)
 l'operatore che gestisce il server DHCP ha un certo slot di indirizzi che assegna dinamicamente e che assegna in leasing
@@ -1234,34 +1234,19 @@ Si tende a evitare che un host rilanci datagrammi non diretti a sé stesso: se l
 6. Altrimenti verifica se in tabella c'è almeno `Net_id`; in tal caso instrada come indicato (se `Subnet_id` ha dimensione zero i passi 5 e 6 coincidono).
 7. Altrimenti, se è specificata una strada di default, invia il datagramma al default router.
 8. Altrimenti dichiara un errore di instradamento, notificandolo agli strati superiori di X, e scarta il datagramma.
-#### Aggiornamento delle tabelle di routing
+#### Instradamento statico
 Le tabelle di routing possono essere costruite in modo **statico** o **dinamico**.
->[!multi-column]
+>[!important] Instradamento statico
+>Le tabelle sono **definite manualmente** dal gestore di rete e restano invariate fino al suo intervento successivo.
+>Si usano negli **host** e nei **router di piccole dimensioni**, in zone della inter-rete relativamente **stabili** (sia per configurazione fisica che per tipo e carico di traffico).
 >
->>[!important] Instradamento statico
->>Le tabelle sono **definite manualmente** dal gestore di rete e restano invariate fino al suo intervento successivo.
->>Si usano negli **host** e nei **router di piccole dimensioni**, in zone della inter-rete relativamente **stabili** (sia per configurazione fisica che per tipo e carico di traffico).
->>
->>Gli algoritmi di routing statici (**non adattativi**, deterministici) usano **criteri fissi** di instradamento:
->>- tra ogni coppia origine–destinazione si individua un **unico cammino permanente**
->>- l'instradamento cambia **solo se cambia la topologia** della rete
->>- la scelta del cammino è **indipendente dal carico** istantaneo sulla rete
->>
->>**Vantaggi**: semplicità implementativa.
->>**Svantaggi**: scarsa flessibilità.
+>Gli algoritmi di routing statici (**non adattativi**, deterministici) usano **criteri fissi** di instradamento:
+>- tra ogni coppia origine–destinazione si individua un **unico cammino permanente**
+>- l'instradamento cambia **solo se cambia la topologia** della rete
+>- la scelta del cammino è **indipendente dal carico** istantaneo sulla rete
 >
->>[!important] Instradamento dinamico
->>Le tabelle sono **calcolate dinamicamente** in funzione della **topologia** della rete e dello **stato dei link**.
->>
->>Gli algoritmi di routing dinamici (**adattativi**, non deterministici) usano criteri adattativi: si adattano alle **variazioni di topologia e di traffico** in rete.
->>
->>**Vantaggi**: migliorano le prestazioni e contribuiscono al controllo della congestione.
->>**Svantaggi**:
->>- decisione di instradamento più complessa → aumenta il carico elaborativo nei router
->>- richiedono lo scambio di informazioni sullo stato della rete tra i nodi (algoritmi distribuiti): è traffico aggiuntivo, ma più informazioni si scambiano e più spesso, migliori sono le scelte di routing
->>- rischio di **oscillazioni** (reazioni troppo rapide) o di **inefficacia** (reazioni troppo lente)
->>- rischio di effetti collaterali (es. **loop**)
->>- parte della banda del canale viene usato per il mantenimento della topologia
+>**Vantaggi**: semplicità implementativa.
+>**Svantaggi**: scarsa flessibilità.
 
 I due tipi di instradamento possono convivere. Ad oggi l'instradamento statico ha senso solo in alcune porzioni di rete molto limitate
 
@@ -1279,25 +1264,142 @@ I due tipi di instradamento possono convivere. Ad oggi l'instradamento statico h
 >| 5 | F | G | H | F | H | - | H | - | A |
 
 
-%%
-**Instradamento dinamico**
-All'accensione un host/router **inizializza** la sua tabella di routing con le informazioni contenute in una memoria di massa o interrogando opportuni server.
+
+#### Instradamento dinamico
+>[!important] Instradamento dinamico
+>Le tabelle sono **calcolate dinamicamente** in funzione della **topologia** della rete e dello **stato dei link**.
+>
+>Gli algoritmi di routing dinamici (**adattativi**, non deterministici) usano criteri adattativi: si adattano alle **variazioni di topologia e di traffico** in rete.
+>
+>**Vantaggi**: migliorano le prestazioni e contribuiscono al controllo della congestione.
+>**Svantaggi**:
+>- decisione di instradamento più complessa → aumenta il carico elaborativo nei router
+>- richiedono lo scambio di informazioni sullo stato della rete tra i nodi (algoritmi distribuiti): è traffico aggiuntivo, ma più informazioni si scambiano e più spesso, migliori sono le scelte di routing (overhead maggiore)
+>- rischio di **oscillazioni** (reazioni troppo rapide) o di **inefficacia** (reazioni troppo lente). Non è detto che tutti gli algoritmi usati dai protocolli garantiscono una convergenza immediata, potrebbe esserci un transitorio. Nel transitorio potrebbero essere prese delle decisioni sbagliate prima di arrivare a regime.
+>- rischio di effetti collaterali (es. **loop**). Nonostrante la creazione di alberi ricoprenti, il calcolo potrebbe essere effettuato su dei dati che non rispecchiano lo stato effettivo della rete. Incoerenza tra momento in cui facciamo il calcolo e la dinamica reale della rete (più veloce). Si creano quindi delle **incoerenze**
+>- parte della banda del canale viene usato per il mantenimento della topologia
+
+All'accensione un host/router **inizializza** la sua tabella di routing con le informazioni contenute in una memoria di massa o interrogando opportuni server (**warm up**).
 In seguito ogni router **aggiorna** o incrementa le informazioni di instradamento dialogando con gli altri router tramite i **protocolli di routing**, che sono implementati nei router e si occupano di:
 - acquisire automaticamente nuove informazioni di instradamento (esaminando lo stato della rete a intervalli regolari)
 - comunicare le informazioni aggiornate agli altri router, che aggiornano le tabelle di conseguenza
+(a prescindere dal tipo di protocollo [[#link state]] o [[#distance vector]], i dati degli adiacenti possono sempre essere aggiornate nell'immediato)
 
 Le tabelle vanno aggiornate **continuamente** (anche a intervalli di pochi secondi), perché:
 - Internet non è stabile: nuovi host e sottoreti vengono aggiunti ed eliminati di frequente, e molti percorsi diventano disponibili o no (in caso di guasti alcuni cammini non sono utilizzabili)
-- lo stato di occupazione delle risorse di rete varia continuamente
+- lo stato di occupazione delle risorse di rete varia continuamente: anche se la topologia (nodi e link) resta la stessa, il **traffico** cambia, e con metriche più complesse del semplice numero di hop (es. metriche legate al traffico) cambiano anche le priorità tra i cammini, che vanno quindi ricalcolati
 
 >[!check] Esempio (instradamento dinamico)
 >![[Protocolli-instradamento-dinamico-esempio.svg|center|600]]
+>I router A, B e C dialogano tramite il **protocollo di routing**: ciascuno prende alcune righe della propria tabella di routing, le codifica in pacchetti e le invia ai router vicini. Il vicino usa queste informazioni per costruire il proprio grafo della rete e calcolare i percorsi ottimali verso gli altri nodi, aggiornando così la sua tabella.
 
 I protocolli di routing sono usati dai router per determinare il percorso verso le reti **non direttamente connesse**; ne esistono diversi, ciascuno con caratteristiche più o meno vantaggiose.
 
 ![[Protocolli-routing-update.svg|center|650]]
+Terminata la fase iniziale (warm up), il router non si basa più solo sulla sua **percezione diretta** (le reti a cui è collegato): sono i vicini a fargli conoscere il resto della rete. Quando riceve una nuova informazione di instradamento (es. «posso raggiungere una nuova rete»), la **propaga ai propri vicini**, che sapranno così di poter inoltrare a lui i pacchetti destinati a quella rete.
+#### Sistemi autonomi
+L'organizzazione di Internet è **gerarchica** (per scalabilità) e **disomogenea**: i sistemi autonomi permettono di gestire questa struttura. Internet può essere vista come un insieme di sistemi autonomi distinti interconnessi, di pari livello o a livelli diversi, e negli anni sono nati protocolli di instradamento pensati per lavorare su questa suddivisione.
 
-%%
+>[!important] Sistema autonomo (AS)
+>Un **sistema autonomo** (AS) è una porzione di rete (insieme di host, router e sottoreti) amministrata da un **unico gestore**.
+>- **interior router**: instradano i messaggi all'interno dell'AS
+>- **exterior router**: instradano i messaggi tra AS diversi
+
+L'AS è libero di scegliere qualsiasi protocollo di routing (uno o più) da usare tra i suoi router interni. Il protocollo può quindi essere diverso da un AS all'altro, e un AS può avere più algoritmi di instradamento, uno per l'interno e uno verso gli altri AS; di conseguenza anche le tabelle possono essere diverse per le destinazioni interne ed esterne.
+
+**RFC 1930**
+Anche se un AS usa diversi IGP e diverse metriche, verso gli altri AS appare come se avesse un **unico piano di routing interno** coerente e presenta un quadro consistente delle reti che può raggiungere.
+
+>[!important] In sintesi
+>Un AS è un **gruppo connesso di uno o più prefissi IP** assegnati a uno o più operatori di rete, che ha una **politica di routing unica e chiaramente definita**.
+>Il termine *prefix* equivale a [[#Subnetting|CIDR block]]: si può pensare semplicemente come un gruppo di una o più reti.
+
+Per **politica di routing** si intende il modo in cui vengono fatte le scelte di routing; è lo scambio di informazioni di routing **tra gli AS** a essere soggetto a politiche di routing.
+- Le politiche non si configurano per ogni prefisso, ma per **gruppi di prefissi**, e questi gruppi sono proprio gli AS.
+- Senza eccezioni, un AS **deve avere una sola** politica di routing.
+
+L'AS sceglie la propria politica per lo scambio di informazioni con il resto della rete: decide quali informazioni di routing **accettare** e quali **inoltrare**, cioè come gestire il traffico verso l'esterno (es. quali AS attraversare per raggiungere una destinazione remota).
+Gli AS sono identificati da un **AS number**, assegnato da RIPE/InterNIC e univoco a livello mondiale. Un AS può contenere uno o più **domini di routing**.
+
+![[Protocolli-AS-domini.svg|center|600]]
+
+>[!important] Border router
+>Tutti i nodi dell'AS devono essere raggiungibili con **percorsi interni**; per raggiungere un nodo esterno si passa dai router "di confine" (**border router**), in cui sono implementate le politiche di routing scelte dall'AS.
+>Il border router possiede le rotte verso i sistemi esterni, quindi deve avere protocolli di instradamento sia **interni** che **esterni**.
+
+- Ogni AS affida a uno o più dei suoi router interni il ruolo di border router, con lo scopo di **informare il mondo esterno** della sua topologia.
+- I border router di un AS comunicano con i border router degli altri AS, che tipicamente usano protocolli di routing interno diversi tra loro.
+
+>[!question] Osservazione
+>Avere tabelle di instradamento diverse per protocolli di instradamento diversi migliora la **scalabilità**: se tutti avessero tutto, il numero di righe nelle tabelle esploderebbe. I domini hanno tabelle proprie, i router di frontiera mantengono solo le informazioni verso l'esterno e l'effetto di propagazione degli aggiornamenti rimane **confinato all'AS**.
+
+>[!important] IGP ed EGP
+>- **Interior Gateway Protocols** (IGP): gestiscono le informazioni di instradamento sui cammini **all'interno** di un AS e la raccolta dei dati da inviare ai core router
+>- **Exterior Gateway Protocols** (EGP): gestiscono le informazioni sui cammini che coinvolgono **più di un AS**
+>
+>I messaggi di tutti i protocolli di routing viaggiano dentro datagrammi IP.
+
+>[!check] Esempio
+>![[Protocolli-AS-domini-IGP-EGP.svg|center|780]]
+>I protocolli dell'esempio sono protocolli **standardizzati**: tra gli IGP ci sono quelli *distance vector* (RIP, RIPv2, IGRP, E-IGRP) e quelli *link state* (OSPF), tra gli EGP c'è BGP.
+
+#### Grafi
+Per la teoria dei grafi vedi gli appunti di ASD: [[Strutture dati#Grafi|grafi]] e [[Algoritmi#Prim - minimo albero ricoprente|albero ricoprente]].
+
+Rispetto agli appunti di ASD, nelle slide ci sono queste precisazioni.
+
+**Grafo e rete**
+Una qualsiasi rete a pacchetto può essere modellata come un **grafo orientato e pesato**: i **nodi** sono i commutatori e/o router, i **rami** sono le linee trasmissive. L'**instradamento** di un pacchetto equivale alla **ricerca di un cammino** nel grafo associato alla rete. Il grafo che rappresenta la rete viene costruito dall'algoritmo, e da questo si determina il sottografo di costo minimo, che dà il percorso ottimale.
+
+>[!important] Ordine e dimensione
+>Dato un grafo $G(V,E)$:
+>- $|V|$ (numero di nodi) è l'**ordine** del grafo
+>- $|E|$ (numero di rami) è la **dimensione** del grafo
+
+>[!multi-column]
+>
+>>[!important] Rami paralleli
+>>Due rami incidenti sulla stessa coppia di vertici.
+>
+>>[!important] Loop
+>>Ramo incidente su un solo vertice.
+>
+>>[!important] Grafo semplice
+>>Grafo senza loop né rami paralleli.
+
+>[!important] Distanza e lunghezza
+>- **distanza** tra due nodi $i$ e $j$: il **minimo numero di rami** di un cammino tra $i$ e $j$
+>- **lunghezza** di un cammino (in un grafo pesato): la **somma dei pesi** dei rami del cammino
+>
+>>[!attention] Attenzione
+>>In ASD la "distanza" è invece il [[Strutture dati#Costo di un cammino|costo]] del cammino minimo, cioè la somma dei pesi: qui corrisponde alla **lunghezza minima**.
+
+Quindi:
+- **cammino a minima distanza** → grafo **non pesato** (*minimum hop count*: ogni hop vale 1)
+- **cammino a minima lunghezza** → grafo **pesato** (costo, congestione, capacità, ecc.)
+
+>[!check] Esempio
+>![[Protocolli-grafo-distanza-lunghezza.svg|center|370]]
+>Il cammino a distanza minima e quello a lunghezza minima non sempre coincidono:
+>- distanza minima tra V1 e V6: $(V_1, V_3, V_6)$, 2 rami (lunghezza $5+5=10$)
+>- lunghezza minima tra V1 e V6: $(V_1, V_4, V_5, V_6)$, lunghezza $1+1+2=4$ (3 rami)
+
+>[!question] Osservazione
+>Non tutte le metriche si sommano lungo il cammino: dipende se la metrica è **cumulativa** o no (metriche *concave* e *convesse*). Se il peso è la **banda** e voglio il percorso che la massimizza, sommare le bande non ha senso: la banda del cammino è quella del ramo più lento, quindi si guarda il **minimo**.
+
+>[!important] Albero (come grafo)
+>Un grafo semplice è un **albero** se:
+>- tra ogni coppia di nodi $i$ e $j$ esiste un **unico cammino semplice**
+>- detto $N$ il numero di nodi, ha $N-1$ rami ed è **connesso e senza cicli**
+>
+>Un nodo qualsiasi può essere scelto come **radice** (livello 0); i nodi adiacenti alla radice stanno al I livello, quelli adiacenti ai nodi del I livello al II, e così via. Ogni nodo tranne la radice ha un solo **padre**, ogni nodo ha zero o più **figli**, un nodo senza figli è una **foglia**.
+
+>[!important] Sottografo
+>Un **sottografo** di $G(V,E)$ si ottiene scegliendo un sottoinsieme di rami e di nodi di $G$, includendo per ogni ramo scelto i nodi su cui è incidente.
+
+Uno **spanning tree** (albero ricoprente) di $G$ è un sottografo che è un albero e include tutti i nodi di $G$: si ottiene rimuovendo archi in modo da eliminare i cicli, creando così una **topologia logica** che ignora alcuni archi. Lo spanning tree di un grafo **non è unico**.
+
+%% da aggiungere Dijkstra e Bellman-Ford%%
 ## ARP e RARP
 >[!protocollo] ARP e RARP
 >**ARP** (Address Resolution Protocol, RFC 826) e **RARP** (Reverse Address Resolution Protocol, RFC 903) sono protocolli di supporto a [[#IP]] che si occupano della **traduzione degli indirizzi**:
