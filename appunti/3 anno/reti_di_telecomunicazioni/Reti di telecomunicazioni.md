@@ -357,4 +357,4 @@ La differenza con il modello ISO/OSI è che il modello TCP/IP è molto più prat
 
 
 instradamento statico
-39-
+39-fino alla fine
