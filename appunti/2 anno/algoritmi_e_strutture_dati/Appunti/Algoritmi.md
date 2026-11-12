@@ -186,6 +186,8 @@ I nodi dell'albero sono gli stessi del grafo e gli archi sono un sottoinsieme de
 >>[!question] Osservazione
 >>$\lambda$ non è proprio uguale, ha un dominio diverso, è una restrizione della funzione sui grafi
 
+^albero-ricoprente
+
 Il nostro obbiettivo quindi è trovare un albero ricoprente che costi il meno possibile.
 Per ogni albero creato possiamo calcolare quanto spendiamo per crearlo:
 $$

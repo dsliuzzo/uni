@@ -1010,13 +1010,11 @@ Gli indirizzi privati sono assegnati all'interno della rete dal router (che fa d
 
 Es. gli indirizzi di casa sono di solito di classe C, del tipo `192.168.1.x`.
 #### Indirizzamento dinamico
-%%
-Un dispositivo che non è connesso ad una rete non mantiene occupato il suo indirizzo. L'indirizzo quindi viene assegnato dinamicamente da DHCP (dall'operatore)
-l'operatore che gestisce il server DHCP ha un certo slot di indirizzi che assegna dinamicamente e che assegna in leasing
-se non vengono trasmessi dati per un certo periodo di tempo l'indirizzo torna nel pool di indirizzi disponibili, pronto ad essere assegnato ad altri dispositivi.
-In questo modo con meno indirizzi posso rappresentare più utenti.
-Si ha un fattore di contemporaneità del 10/15%.
-%%
+Un dispositivo non connesso alla rete non tiene occupato il suo indirizzo: gli indirizzi vengono assegnati **dinamicamente** dal server **DHCP** gestito dall'operatore.
+- l'operatore dispone di un **pool** di indirizzi, che assegna ai dispositivi in **leasing** (cioè per un tempo limitato)
+- se per un certo periodo non vengono trasmessi dati, l'indirizzo torna nel pool ed è pronto per essere assegnato a un altro dispositivo
+
+In questo modo con **meno indirizzi** si servono **più utenti**, perché non sono tutti connessi nello stesso momento: si considera un **fattore di contemporaneità** del 10–15%.
 ### Instradamento
 >[!important] Instradamento
 >L'**instradamento** è una funzione di **natura logica** che ha lo scopo di **guidare l'informazione** di utente verso la **destinazione** desiderata.
@@ -1262,9 +1260,6 @@ I due tipi di instradamento possono convivere. Ad oggi l'instradamento statico h
 >| 3 | D | G | - | G | - | H | - | - | B |
 >| 4 | - | D | A | - | - | - | D | G | A |
 >| 5 | F | G | H | F | H | - | H | - | A |
-
-
-
 #### Instradamento dinamico
 >[!important] Instradamento dinamico
 >Le tabelle sono **calcolate dinamicamente** in funzione della **topologia** della rete e dello **stato dei link**.
@@ -1302,24 +1297,22 @@ L'organizzazione di Internet è **gerarchica** (per scalabilità) e **disomogene
 
 >[!important] Sistema autonomo (AS)
 >Un **sistema autonomo** (AS) è una porzione di rete (insieme di host, router e sottoreti) amministrata da un **unico gestore**.
->- **interior router**: instradano i messaggi all'interno dell'AS
->- **exterior router**: instradano i messaggi tra AS diversi
+>- **router interni**: instradano i messaggi all'interno dell'AS
+>- **router di frontiera**: instradano i messaggi tra AS diversi
 
 L'AS è libero di scegliere qualsiasi protocollo di routing (uno o più) da usare tra i suoi router interni. Il protocollo può quindi essere diverso da un AS all'altro, e un AS può avere più algoritmi di instradamento, uno per l'interno e uno verso gli altri AS; di conseguenza anche le tabelle possono essere diverse per le destinazioni interne ed esterne.
 
-**RFC 1930**
 Anche se un AS usa diversi IGP e diverse metriche, verso gli altri AS appare come se avesse un **unico piano di routing interno** coerente e presenta un quadro consistente delle reti che può raggiungere.
 
 >[!important] In sintesi
 >Un AS è un **gruppo connesso di uno o più prefissi IP** assegnati a uno o più operatori di rete, che ha una **politica di routing unica e chiaramente definita**.
->Il termine *prefix* equivale a [[#Subnetting|CIDR block]]: si può pensare semplicemente come un gruppo di una o più reti.
 
 Per **politica di routing** si intende il modo in cui vengono fatte le scelte di routing; è lo scambio di informazioni di routing **tra gli AS** a essere soggetto a politiche di routing.
 - Le politiche non si configurano per ogni prefisso, ma per **gruppi di prefissi**, e questi gruppi sono proprio gli AS.
 - Senza eccezioni, un AS **deve avere una sola** politica di routing.
 
 L'AS sceglie la propria politica per lo scambio di informazioni con il resto della rete: decide quali informazioni di routing **accettare** e quali **inoltrare**, cioè come gestire il traffico verso l'esterno (es. quali AS attraversare per raggiungere una destinazione remota).
-Gli AS sono identificati da un **AS number**, assegnato da RIPE/InterNIC e univoco a livello mondiale. Un AS può contenere uno o più **domini di routing**.
+Gli AS sono identificati da un **AS number**, univoco a livello mondiale. Un AS può contenere uno o più **domini di routing**.
 
 ![[Protocolli-AS-domini.svg|center|600]]
 
@@ -1346,7 +1339,7 @@ Gli AS sono identificati da un **AS number**, assegnato da RIPE/InterNIC e univo
 #### Grafi
 Per la teoria dei grafi vedi gli appunti di ASD: [[Strutture dati#Grafi|grafi]] e [[Algoritmi#Prim - minimo albero ricoprente|albero ricoprente]].
 
-Rispetto agli appunti di ASD, nelle slide ci sono queste precisazioni.
+Rispetto agli appunti di ASD, nelle slide ci sono queste precisazioni:
 
 **Grafo e rete**
 Una qualsiasi rete a pacchetto può essere modellata come un **grafo orientato e pesato**: i **nodi** sono i commutatori e/o router, i **rami** sono le linee trasmissive. L'**instradamento** di un pacchetto equivale alla **ricerca di un cammino** nel grafo associato alla rete. Il grafo che rappresenta la rete viene costruito dall'algoritmo, e da questo si determina il sottografo di costo minimo, che dà il percorso ottimale.
@@ -1386,6 +1379,9 @@ Quindi:
 
 >[!question] Osservazione
 >Non tutte le metriche si sommano lungo il cammino: dipende se la metrica è **cumulativa** o no (metriche *concave* e *convesse*). Se il peso è la **banda** e voglio il percorso che la massimizza, sommare le bande non ha senso: la banda del cammino è quella del ramo più lento, quindi si guarda il **minimo**.
+>**Widest path** (cammino più largo): è il cammino che **massimizza il minimo** delle bande dei rami (problema *max-min*):
+>$$B(P) = \min_{\ell \in P} b(\ell) \qquad P^* = \arg\max_{P} B(P)$$
+>Si risolve con una variante di Dijkstra: invece di "sommo i pesi e scelgo il cammino col totale **minimo**", si fa "prendo il **minimo** lungo il cammino e scelgo il cammino col valore **massimo**".
 
 >[!important] Albero (come grafo)
 >Un grafo semplice è un **albero** se:
@@ -1397,7 +1393,7 @@ Quindi:
 >[!important] Sottografo
 >Un **sottografo** di $G(V,E)$ si ottiene scegliendo un sottoinsieme di rami e di nodi di $G$, includendo per ogni ramo scelto i nodi su cui è incidente.
 
-Uno **spanning tree** (albero ricoprente) di $G$ è un sottografo che è un albero e include tutti i nodi di $G$: si ottiene rimuovendo archi in modo da eliminare i cicli, creando così una **topologia logica** che ignora alcuni archi. Lo spanning tree di un grafo **non è unico**.
+Uno **spanning tree** ([[Algoritmi#^albero-ricoprente|albero ricoprente]]) di $G$ è un sottografo che è un albero e include tutti i nodi di $G$: si ottiene rimuovendo archi in modo da eliminare i cicli, creando così una **topologia logica** che ignora alcuni archi. Lo spanning tree di un grafo **non è unico**.
 
 %% da aggiungere Dijkstra e Bellman-Ford%%
 ## ARP e RARP
