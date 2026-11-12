@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .tr{font-size:11px} .th{font-size:14px;font-weight:500} .l{text-anchor:start} </style>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+<ellipse cx="320" cy="210" rx="300" ry="180" stroke="#81c784"/>
+<ellipse cx="330" cy="110" rx="130" ry="72" stroke="#4dd0e1"/>
+<ellipse cx="185" cy="270" rx="115" ry="70" stroke="#f48fb1"/>
+<ellipse cx="455" cy="270" rx="115" ry="70" stroke="#e6c35c"/>
+<g stroke-width="1.5"><line x1="286.0" y1="94.2" x2="359.0" y2="88.8" />
+<line x1="359.0" y1="95.6" x2="306.0" y2="132.4" />
+<line x1="370.9" y1="97.0" x2="374.1" y2="131.0" />
+<line x1="306.0" y1="140.0" x2="364.0" y2="140.0" />
+<line x1="379.3" y1="149.0" x2="395.7" y2="183.0" />
+<line x1="411.0" y1="196.2" x2="494.0" y2="227.8" />
+<line x1="391.0" y1="201.0" x2="329.0" y2="263.0" />
+<line x1="494.0" y1="240.8" x2="431.0" y2="291.2" />
+<line x1="505.0" y1="241.0" x2="505.0" y2="291.0" />
+<line x1="431.0" y1="300.0" x2="494.0" y2="300.0" />
+<line x1="331.0" y1="275.1" x2="409.0" y2="296.9" />
+<line x1="199.0" y1="231.0" x2="121.0" y2="252.0" />
+<line x1="202.5" y1="237.0" x2="157.5" y2="291.0" />
+<line x1="211.9" y1="237.0" x2="223.1" y2="291.0" />
+<line x1="161.0" y1="300.0" x2="214.0" y2="300.0" />
+<line x1="221.0" y1="232.4" x2="309.0" y2="267.6" />
+</g>
+<g stroke-width="2"><rect x="264" y="86" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="359" y="79" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="284" y="131" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="364" y="131" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="389" y="183" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="494" y="223" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="409" y="291" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="494" y="291" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="309" y="263" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="199" y="219" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="99" y="246" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="139" y="291" width="22" height="18" rx="4" stroke="#ffb74d"/>
+<rect x="214" y="291" width="22" height="18" rx="4" stroke="#ffb74d"/>
+</g>
+</g>
+<text class="tr" x="275" y="95">R</text>
+<text class="tr" x="370" y="88">R</text>
+<text class="tr" x="295" y="140">R</text>
+<text class="tr" x="375" y="140">R</text>
+<text class="tr" x="400" y="192">R</text>
+<text class="tr" x="505" y="232">R</text>
+<text class="tr" x="420" y="300">R</text>
+<text class="tr" x="505" y="300">R</text>
+<text class="tr" x="320" y="272">R</text>
+<text class="tr" x="210" y="228">R</text>
+<text class="tr" x="110" y="255">R</text>
+<text class="tr" x="150" y="300">R</text>
+<text class="tr" x="225" y="300">R</text>
+<text class="t" x="330" y="58">Dominio C</text>
+<text class="t" x="185" y="322">Dominio A</text>
+<text class="t" x="455" y="322">Dominio B</text>
+<text class="th" style="fill:#81c784" x="110" y="132">Autonomous</text>
+<text class="th" style="fill:#81c784" x="110" y="150">System</text>
+</svg>
