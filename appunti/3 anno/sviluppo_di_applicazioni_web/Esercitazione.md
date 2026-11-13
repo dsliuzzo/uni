@@ -498,6 +498,9 @@ Nell'oggetto `Pageable` si mettono i parametri della paginazione (numero della p
 >[!attention] AGGIUNTA
 >Un `Pageable` si crea ad esempio con `PageRequest.of(0, 20, Sort.by("lastname"))` (prima pagina, 20 elementi, ordinati per cognome). La `Page` restituita contiene, oltre agli elementi, il numero totale di elementi e di pagine. `@QueryHints` non serve per paginare: passa dei suggerimenti al provider JPA, e `forCounting = false` dice di non applicarli alla query che conta il totale.
 
+
+L'uso della paginazione da controller e service è in [[#Paginazione nel controller|paginazione nel controller]].
+
 ### Specifications
 
 Una **specification** è una condizione (un predicato della `where`) scritta in Java, riusabile e **combinabile** con altre.
@@ -704,7 +707,35 @@ Il controller è l'ultimo layer: modella il comportamento dell'applicazione rend
 
 ### `@CookieValue` (livello variabile)
 
-Serve per **leggere** informazioni salvate nel **browser** dell'utente tramite cookie: associa un parametro del metodo al valore di un cookie HTTP inviato dal client. Per **scrivere** un cookie invece lo si aggiunge alla risposta HTTP, non si usa `@CookieValue`. Il prof l'ha solo nominata, rimandando a un esempio.
+Serve per **leggere** informazioni salvate nel **browser** dell'utente tramite cookie: associa un parametro del metodo al valore di un cookie HTTP inviato dal client. Per **scrivere** un cookie invece lo si aggiunge alla risposta HTTP, non si usa `@CookieValue`.
+
+I **cookie** sono piccole informazioni memorizzate dal server nel browser dell'utente (slide 78). Il server imposta i cookie quando restituisce la risposta a una richiesta del browser; il browser li memorizza e li rimanda con la richiesta successiva allo stesso server. Si usano per la gestione delle sessioni, il monitoraggio degli utenti e per memorizzare le preferenze.
+
+>[!multi-column]
+>
+>>[!blank] Scrivere un cookie
+>>```java
+>>@GetMapping("/change-username")
+>>public String setCookie(HttpServletResponse response) {
+>>  // create a cookie
+>>  Cookie cookie = new Cookie("username", "Jovan");
+>>  // add cookie to response
+>>  response.addCookie(cookie);
+>>  return "Username is changed!";
+>>}
+>>```
+>
+>>[!blank] Leggere un cookie
+>>```java
+>>@GetMapping("/")
+>>public String readCookie(
+>>    @CookieValue(value = "username", defaultValue = "Atta") String username) {
+>>  return "Hey! My username is " + username;
+>>}
+>>```
+
+>[!important] Solo informazioni non sensibili
+>I cookie stanno sul client, che può **modificarli o manometterli**: ci vanno solo informazioni del client che non sono sensibili, e di cui non importa se vengono cambiate.
 
 ### Cosa può ritornare un controller
 
@@ -752,6 +783,9 @@ public ModelAndView unSaluto() {
 >[!attention] AGGIUNTA
 >La pagina HTML è un template **Thymeleaf**, un motore di template lato server integrato con Spring: gli attributi `th:*` (es. `th:text`) vengono elaborati dal server prima di inviare la pagina, e `${nome}` legge l'attributo `nome` messo nel model. La stringa restituita (`"ciao-mondo"`) è il nome del file, cercato in `src/main/resources/templates/ciao-mondo.html`.
 
+>[!question] Osservazione
+>`Model` e `ModelAndView` sono l'**approccio legacy**: il server genera la pagina HTML. Oggi si usano i servizi REST, che restituiscono solo i dati (vedi sotto).
+
 ### Pagina generata dal server vs servizi REST
 
 Con `Model` / `ModelAndView` il server prende la richiesta HTTP, inserisce gli attributi nel model, genera il codice **HTML** della pagina e lo manda al client. A ogni nuova chiamata HTTP la pagina viene **rigenerata da zero** e reinviata.
@@ -761,3 +795,313 @@ Con un servizio REST invece il server restituisce solo i **dati**: la pagina sul
 
 >[!attention] AGGIUNTA
 >Per i servizi REST si usa `@RestController` (= `@Controller` + `@ResponseBody`): l'oggetto restituito dal metodo (es. una `List<Product>`) non è il nome di una pagina, ma viene convertito in **JSON** e messo nel corpo della risposta, come visto all'[[#Spring|inizio]].
+
+### Controller e REST API
+
+I controller sono la vera anima del paradigma MVC (slide 73): sono il componente **invocato direttamente dai client** e possono esistere anche senza Model e View. Smartphone, PC e tablet chiamano le **REST API** del server, che a loro volta lavorano sul database.
+
+### REST
+
+Caratteristiche di **REST** (*REpresentational State Transfer*, slide 75):
+- l'astrazione principale è la **risorsa**;
+- si evitano le azioni (es. `add`): per definire le API si usano **nomi, non verbi**;
+- ogni risorsa ha un **URI** (*Uniform Resource Identifier*);
+- ogni risorsa ha una sua **rappresentazione** (XML, HTML, JSON, TEXT) che ne identifica lo stato attuale;
+- REST usa i **verbi HTTP** per codificare le operazioni sulle risorse:
+
+| Metodo HTTP | Operazione |
+|---|---|
+| `POST` | crea una risorsa (CREATE) |
+| `GET` | legge una risorsa (READ) |
+| `PUT` | aggiorna una risorsa (UPDATE) |
+| `DELETE` | elimina una risorsa (DELETE) |
+
+>[!question] Osservazione
+>A livello pratico un servizio REST si può chiamare sempre con una `GET`, anche per creare un utente, e funziona. Le linee guida però dicono di usare il verbo giusto: un servizio *create user* deve essere una `POST`. Con il metodo HTTP diciamo **cosa stiamo facendo** con il servizio REST.
+>- La `POST` ha un **payload maggiore**: se devo inserire un'informazione che può essere abbastanza grande, la mando con una `POST`, perché con la `GET` potrebbe non entrare.
+
+>[!attention] AGGIUNTA
+>Il limite della `GET` dipende dal fatto che i dati viaggiano **nell'URL** (query string), e browser e server accettano URL di lunghezza limitata. La `POST` invece li mette nel **body** della richiesta.
+
+### Esempio: `AlienService` e `AlienController`
+
+Il service dell'esempio (slide 76 della versione delle slide di Claudia: nella versione di Davide non c'è):
+```java
+package com.space.scanner.alien.service;
+import [...]
+
+@Service
+public class AlienService {
+  @Autowired
+  private AlienRepository alienRepository;
+  @Autowired
+  Planet planet;
+
+  public void addAlien(String name, String race) {
+    Alien a = new Alien();
+    a.setName(name);
+    a.setRace(race);
+    a.setPlanet(planet.getName());
+    alienRepository.save(a);
+  }
+
+  public List<Alien> getAliens() {
+    return alienRepository.findByPlanet(planet.getName());
+  }
+
+  public List<Alien> getAliens(String race) {
+    return alienRepository.findByPlanetAndRace(planet.getName(), race);
+  }
+}
+```
+
+Il controller che espone il CRUD sugli alieni (slide 76):
+```java
+// CREATE
+@PostMapping("")
+Alien createAlien(@Valid @RequestBody Alien newAlien) {
+  return alienService.createAlien(newAlien);
+}
+// READ
+@GetMapping("/{id}")
+public @ResponseBody Alien getAlien(@PathVariable String id) {
+  return alienService.getAlien(id);
+}
+// UPDATE
+@PutMapping("/{id}")
+public @ResponseBody Alien updateAlien(@PathVariable String id,
+                                       @Valid @RequestBody Alien newAlien) {
+  return alienService.updateAlien(id, newAlien);
+}
+// DELETE
+@DeleteMapping("/{id}")
+void deleteAlien(@PathVariable String id) {
+  alienService.deleteAlien(id);
+}
+```
+- `@PostMapping`, `@GetMapping`, `@PutMapping`, `@DeleteMapping` **sostituiscono e specializzano** `@RequestMapping`.
+- `@Valid @RequestBody`: l'oggetto JSON nel payload della richiesta viene convertito in un'**entità del dominio**, applicando le regole di validazione scritte nell'entità.
+
+>[!attention] AGGIUNTA
+>Nelle slide la classe del controller non c'è: si suppone annotata con `@RestController` e `@RequestMapping` (es. `@RequestMapping("/alien")`). Con `@RestController` il `@ResponseBody` sui metodi non serve, perché è già implicito. I metodi chiamati sul service (`createAlien`, `getAlien`, `updateAlien`, `deleteAlien`) non coincidono con quelli di `AlienService` della slide precedente (`addAlien`, `getAliens`): i due esempi non sono stati scritti insieme.
+
+### L'URL di un servizio REST
+
+Un servizio REST si chiama andando al suo indirizzo specifico:
+```
+http://<nome_server>/<path_controller>/<path_metodo>
+```
+- La prima parte dell'indirizzo la compila **automaticamente** Spring. Il **routing** di classe e metodo invece lo facciamo noi, con le annotazioni:
+  - `@RequestMapping` sulla **classe** definisce la parte dell'URL che porta alla risorsa;
+  - l'annotazione sul **metodo** aggiunge la parte più specifica, che porta al metodo esatto.
+- La chiamata HTTP del client deve **corrispondere al tipo di mapping**: se il metodo è un `@GetMapping`, il client deve usare una `GET`, altrimenti riceve un errore.
+- Se chiamo solo l'URL della classe con un certo metodo HTTP, viene eseguito il metodo con quel tipo di mapping, anche se non ha un path suo (es. `@PostMapping("")`).
+- Se ci sono **più metodi dello stesso tipo** (es. due `POST`), si distinguono con il path tra `""`: devono avere URL diversi, così l'associazione è univoca.
+
+>[!attention] AGGIUNTA
+>Se il metodo HTTP non corrisponde, Spring risponde con lo status **405 Method Not Allowed**; se l'URL non esiste, con **404 Not Found**.
+
+>[!question] Documentazione delle API
+>Chi sviluppa il back-end fornisce la **documentazione delle API**: chi le usa (il front-end) sa come chiamarle senza dover conoscere il codice o come funziona. Le annotazioni del controller (path e metodo HTTP di ogni servizio) sono già, in pratica, questa documentazione.
+
+### Passare parametri ai servizi REST
+
+Ci sono due modi per passare parametri nell'URL (slide 76):
+
+>[!multi-column]
+>
+>>[!check] Path variable
+>>Nel path del mapping si scrive il parametro tra graffe e lo si preleva con `@PathVariable`:
+>>```java
+>>@RequestMapping(value = "/book/{idBook}",
+>>                method = RequestMethod.GET)
+>>public void getBook(@PathVariable("idBook") int id) {
+>>  // [...]
+>>}
+>>```
+>>Si chiama con `/book/10`.
+>
+>>[!check] Query string
+>>I parametri vanno dopo `?`, separati da `&`, e si prelevano con `@RequestParam`:
+>>```java
+>>@RequestMapping(value = "/book",
+>>                method = RequestMethod.GET)
+>>public void getBookByParam(@RequestParam("bookId") int id) {
+>>  System.out.println("Requested book " + id);
+>>}
+>>```
+>>Si chiama con `/book?bookId=10`.
+
+Sono valide entrambe, ma ognuna è più adatta a un caso:
+- **path variable** (`/{id}/{nome}`): quando i parametri sono **fissi** e il metodo li deve ricevere per forza;
+- **query string** (`?p1=...&p2=...`): quando i parametri sono tanti e **facoltativi**. Funziona a chiave-valore, quindi passo solo quelli che mi interessano. Esempio: una **ricerca avanzata**, dove non si sa a priori quali e quanti parametri verranno usati: il metodo li prevede tutti, e la chiamata passa solo quelli scelti.
+
+>[!important] Parametri nel body: `@RequestBody`
+>Se devo aggiungere un elemento e i parametri sono tanti, non ha senso passarli nell'URL. La richiesta HTTP ha vari campi, e i parametri si possono mettere nel **body**. Il body contiene un **JSON**: Spring ha già un parser JSON che lo traduce e crea l'oggetto Java, che si preleva con `@RequestBody` (es. `newAlien` in `createAlien`).
+
+### Errori: eccezioni e `ResponseEntity`
+
+```java
+@GetMapping("/users/{id}")
+public ResponseEntity<User> getUsersById(@PathVariable(value = "id") Long userId)
+    throws ResourceNotFoundException {
+  User user =
+      userController
+          .findById(userId)
+          .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
+  return ResponseEntity.ok().body(user);
+}
+```
+
+**Best practice**:
+- un metodo restituisce l'**oggetto** che ha aggiunto (o letto);
+- i motivi per cui un metodo può fallire si descrivono con le **eccezioni** (vedi [[Java#Eccezioni checked|eccezioni in Java]]). Nel progetto si crea un **package `exception`**, con un'eccezione per ogni problema che può succedere;
+- il metodo del service restituisce quindi di default l'oggetto (es. l'ordine); se qualcosa va storto lancia l'eccezione **specifica** di quel problema, senza ambiguità;
+- vantaggio: chi implementa i controller non deve sapere cosa succede nei service. Quando chiama il metodo, l'IDE evidenzia le eccezioni da gestire, e con <kbd>Ctrl</kbd>+<kbd>Spazio</kbd> → *Surround with try/catch* aggiunge in automatico un `catch` per ognuna.
+
+>[!attention] AGGIUNTA
+>`ResponseEntity<T>` rappresenta l'intera risposta HTTP: body, status e header. `ResponseEntity.ok().body(user)` risponde con status **200 OK** e l'utente (in JSON) nel body. Nella slide `userController.findById(...)` è con ogni probabilità un refuso per `userRepository.findById(...)`: `findById` restituisce un `Optional`, e `orElseThrow` lancia l'eccezione se è vuoto.
+
+### Paginazione nel controller
+
+La **paginazione** serve a restituire i risultati di una ricerca **a pagine**, come le pagine dei prodotti di un e-commerce (slide 77). È il seguito della [[#Paginazione|paginazione nei repository]].
+
+>[!multi-column]
+>
+>>[!blank] Controller
+>>```java
+>>@GetMapping("/paged")
+>>public ResponseEntity getAll(
+>>    @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+>>    @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+>>    @RequestParam(value = "sortBy", defaultValue = "id") String sortBy) {
+>>  List<Product> result = productService.showAllProducts(pageNumber, pageSize, sortBy);
+>>  if ( result.size() <= 0 ) {
+>>    return new ResponseEntity<>(new ResponseMessage("No results!"), HttpStatus.OK);
+>>  }
+>>  return new ResponseEntity<>(result, HttpStatus.OK);
+>>}
+>>```
+>
+>>[!blank] Service
+>>```java
+>>@Transactional(readOnly = true)
+>>public List<Product> showAllProducts(int pageNumber, int pageSize, String sortBy) {
+>>  Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+>>  Page<Product> pagedResult = productRepository.findAll(paging);
+>>  if ( pagedResult.hasContent() ) {
+>>    return pagedResult.getContent();
+>>  }
+>>  else {
+>>    return new ArrayList<>();
+>>  }
+>>}
+>>```
+
+- I parametri di paginazione arrivano in **query string**, con valori di default: pagina 0, 10 elementi, ordinamento per `id`.
+- Il `sortBy` è **preferibile non lasciarlo libero**.
+
+>[!attention] AGGIUNTA
+>Lasciarlo libero vuol dire accettare qualsiasi stringa dal client: un nome di attributo che non esiste fa fallire la query, e si permette di ordinare per campi che non si vogliono esporre. Di solito si controlla che il valore sia in una lista di campi ammessi. `ResponseMessage` non è una classe di Spring, ma una classe del progetto per mandare un messaggio in JSON.
+
+## Configurations
+
+L'annotazione **`@Configuration`** serve per la configurazione di Spring basata su annotazioni (slide 80). È un'annotazione *marker*: indica che la classe dichiara uno o più metodi **`@Bean`**, che Spring elabora per generare le definizioni dei bean e servirli a runtime. Le configuration servono a impostare le **configurazioni trasversali** del web server.
+
+È sempre bene **suddividere le configuration per scopo**, per avere un codice più pulito e manutenibile.
+
+### Charset UTF-8
+
+```java
+@Bean
+public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+  MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
+  jsonConverter.setDefaultCharset(StandardCharsets.UTF_8);
+  return jsonConverter;
+}
+```
+Questo bean configura il **mapping dei JSON** che arrivano dai client nel body. Secondo le slide il charset standard non è UTF-8, e senza questa configurazione non si leggono alcuni caratteri (es. `À`).
+
+>[!attention] AGGIUNTA
+>Nelle versioni recenti di Spring il convertitore JSON di Jackson usa **già UTF-8** di default. Quello che usa ISO-8859-1 è `StringHttpMessageConverter`, che gestisce i body di tipo `String`. Il bean resta utile per essere sicuri del charset, ma non è più indispensabile.
+
+### Sicurezza
+
+Una configuration di sicurezza ("non troppa in questo esempio!", slide 82 della versione di Claudia). Con gli **`antMatcher`** si decide quali chiamate ai servizi REST sono pubbliche e quali vanno protette:
+```java
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth.requestMatchers(
+          antMatcher("/check/simple"),
+          antMatcher("/users/**"),
+          antMatcher("/products/**"),
+          antMatcher("/purchases/**")
+      ).permitAll().anyRequest().authenticated());
+  http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)));
+  http.sessionManagement(sess -> sess.sessionCreationPolicy(STATELESS));
+  return http.build();
+}
+```
+- gli URL elencati sono accessibili a tutti (`permitAll()`), ogni altra richiesta richiede di essere **autenticati**;
+- l'autenticazione avviene con un token **JWT** (OAuth2 resource server);
+- le sessioni sono **stateless**, come visto per il [[#Server stateless|server stateless]].
+
+>[!attention] AGGIUNTA
+>`/**` vuol dire "questo path e tutti i sotto-path" (es. `/users/**` comprende `/users/5/orders`). `csrf().disable()` è normale per API REST stateless con token, perché la protezione CSRF serve quando l'autenticazione passa dai cookie di sessione. Nella versione delle slide di Davide (slide 81) c'è la stessa configurazione con l'approccio **legacy**: il metodo `configure(HttpSecurity http)` di `WebSecurityConfigurerAdapter`, con `.antMatchers(...)` concatenati. `WebSecurityConfigurerAdapter` è stato rimosso in Spring Security 6, per questo la versione nuova dichiara la `SecurityFilterChain` come `@Bean`. Per la teoria vedi [[Spring#Spring Security|Spring Security]].
+
+### CORS
+
+Una configuration per il **CORS mapping** (slide 82):
+```java
+@Bean
+public CorsFilter corsFilter() {
+  UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+  CorsConfiguration configuration = new CorsConfiguration();
+  configuration.setAllowCredentials(true);
+  configuration.addAllowedOrigin("*");
+  configuration.addAllowedHeader("*");
+  configuration.addAllowedMethod("OPTIONS");
+  configuration.addAllowedMethod("GET");
+  configuration.addAllowedMethod("POST");
+  configuration.addAllowedMethod("PUT");
+  source.registerCorsConfiguration("/**", configuration);
+  return new CorsFilter(source);
+}
+```
+- **Same-origin**: le richieste allo stesso server da cui arriva la pagina sono **sempre permesse**. **Cross-origin**: le richieste verso un altro dominio sono **controllate dal CORS**.
+- `addAllowedOrigin` specifica gli indirizzi di chi può chiamare i servizi del server: con `*` sono **permessi tutti**.
+- Sono permessi **solo alcuni metodi HTTP**, quelli elencati.
+- **`OPTIONS` è importantissimo**: è la prima chiamata HTTP che viene inviata, e se non è permesso non si può fare nessuna richiesta.
+
+>[!attention] AGGIUNTA
+>- L'**origine** non è un indirizzo IP, ma la terna protocollo + dominio + porta (es. `http://localhost:4200`, l'app Angular in sviluppo).
+>- La `OPTIONS` è la richiesta di **preflight**: per le richieste "non semplici" (es. `PUT`, `DELETE`, `POST` con body JSON, header personalizzati) il browser chiede prima al server se sono permesse, e solo dopo manda la richiesta vera.
+>- Il CORS lo controlla il **browser**: chiamando le API da Postman o da un'app mobile non entra in gioco.
+>- Nelle versioni recenti di Spring `setAllowCredentials(true)` insieme all'origine `"*"` non è più permesso (dà errore all'avvio): con le credenziali bisogna elencare le origini o usare `addAllowedOriginPattern("*")`.
+>- Nell'esempio manca `DELETE` tra i metodi permessi: chiamato da un browser di un'altra origine, `deleteAlien` verrebbe bloccato.
+
+## Main
+
+```java
+package com.space.scanner.alien;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class AlienApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(AlienApplication.class, args);
+  }
+}
+```
+(slide 84)
+- La classe contiene il **main**, che si limita a passare il controllo al framework tramite `SpringApplication.run()`. Di solito sta nel **root package**.
+- **`@SpringBootApplication`** è un'annotazione di convenienza che in realtà aggiunge:
+  - **`@Configuration`**: indica una classe che contiene definizioni di **bean**, oggetti da inserire nello Spring Container e da fornire tramite **dependency injection**;
+  - **`@EnableAutoConfiguration`**: Spring inferisce alcuni parametri di configurazione in base, ad esempio, alle dipendenze (es. `@EnableWebMvc` viene inferito perché `spring-webmvc` è nel classpath);
+  - **`@ComponentScan`**: Spring controlla nel package e nei sotto-package la presenza di componenti da inserire nello Spring Container e da fornire tramite DI.
+
+>[!question] Osservazione
+>Per questo il main va nel root package: `@ComponentScan` parte dal package della classe annotata, quindi controller, service e repository nei sotto-package (`...alien.service`, `...alien.controller`, …) vengono trovati da soli.

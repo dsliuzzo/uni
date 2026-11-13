@@ -3631,8 +3631,9 @@ s^\top y = 0
 \end{cases}
 $$
 Se $\sigma^\top x = 0$ e $s^\top y = 0$ allora la loro somma sarà pari a $0$
-Se 
+%%da capire%%
 #### Approfondimenti
+%% mi sono perso, da rivedere tutti approfondimenti%%
 Le relazioni di complementarietà impongono che:
 - a **variabili positive** di un problema corrispondono **vincoli attivi** nel suo duale;
 - a **vincoli non attivi** di un problema corrispondono **variabili nulle** nel suo duale.
@@ -3674,18 +3675,19 @@ e le corrispondenti funzioni obiettivo coincidono.
 >[!info] Condizione necessaria e sufficiente di ottimalità
 >Sia $(P)$ un problema di PL, $(D)$ il suo duale, e sia $x \in \Omega(P)$.
 >$$
->x \text{ è soluzione ottima per } (P)
->$$
->$$\Updownarrow$$
->$$
+>\displaylines{
+>x \text{ è soluzione ottima per } (P) \\
+>\Updownarrow \\
 >\exists y \in \Omega(D) \text{ tale che } x \text{ ed } y \text{ sono complementari}
+>}
 >$$
 
 #dimostrazione
 - $(\Rightarrow)$ Se $x$ è ottima per $(P)$, per il teorema di dualità forte esiste $y$ ottima (e quindi ammissibile) per $(D)$, e, per la condizione necessaria del teorema degli scarti complementari, $x$ ed $y$ sono complementari.
 - $(\Leftarrow)$ Se esiste $y$ ammissibile per $(D)$ e complementare di $x$, per la condizione sufficiente del teorema degli scarti complementari $x$ è ottima per $(P)$ e $y$ è ottima per $(D)$.
 
-Data una soluzione ammissibile $\bar{x}$ per $(P)$, è possibile stabilire se $\bar{x}$ sia o no soluzione ottima per $(P)$.
+Dal teorema nascono due osservazioni fondamentali:
+1. Data una soluzione ammissibile $\bar{x}$ per $(P)$, è possibile stabilire se $\bar{x}$ sia o no soluzione ottima per $(P)$.
 
 >[!important] Test di ottimalità
 >Considerando la coppia primale-duale simmetrica, si impone il soddisfacimento delle relazioni di complementarietà risolvendo
@@ -3700,7 +3702,7 @@ Data una soluzione ammissibile $\bar{x}$ per $(P)$, è possibile stabilire se $\
 >2. $\bar{y} \notin \Omega(D)$ $\implies$ $\bar{x}$ non è soluzione ottima per $(P)$;
 >3. $\bar{y} \in \Omega(D)$ $\implies$ $\bar{x}$ è soluzione ottima per $(P)$.
 
-Data una soluzione ottima $x^*$ per $(P)$, è possibile determinare la soluzione ottima $y^*$ per $(D)$.
+2. Data una soluzione ottima $x^*$ per $(P)$, è possibile determinare la soluzione ottima $y^*$ per $(D)$.
 
 >[!important] Determinazione dell'ottimo duale
 >Considerando la coppia primale-duale simmetrica, si impone il soddisfacimento delle relazioni di complementarietà risolvendo
@@ -3712,49 +3714,19 @@ Data una soluzione ottima $x^*$ per $(P)$, è possibile determinare la soluzione
 >$$
 >In tal caso, il sistema ammetterà sempre almeno una soluzione $y^* \in \Omega(D)$, come garantito dalla condizione necessaria di ottimalità; inoltre, per il teorema degli scarti complementari $y^*$ è soluzione ottima per $(D)$.
 
-## Esercizi su PL e dualità
->[!check] Esercizio 1
->Si consideri il problema
->$$
->(P)\left\{\begin{array}{lrcrcrcrcrcr}
->\min & 6x_1 & + & 6x_2 & - & 12x_3 \\
-> & -2x_1 & + & 2x_2 & - & 2x_3 & - & x_4 & & & = & 2 \\
-> & -3x_1 & + & x_2 & + & 3x_3 & & & + & x_5 & = & 1 \\
-> & x_1 & , & x_2 & , & x_3 & , & x_4 & , & x_5 & \geq & 0
->\end{array}\right.
->$$
->per il quale è noto che la base $B = \{2, 5\}$ è ammissibile.
->1. Risolvere $(P)$ a partire dalla base $B$;
->2. Risolvere il duale $(D)$ di $(P)$ mediante la teoria della dualità;
->3. Verificare i risultati mediante la risoluzione grafica di $(D)$.
-
->[!check] Esercizio 2
->Si consideri il seguente problema di PL
->$$
->(P)\left\{\begin{array}{lrcrcr}
->\max & 3x_1 & + & 6x_2 \\
-> & x_1 & + & 2x_2 & \leq & 12 \\
-> & x_1 & - & 2x_2 & \leq & 4 \\
-> & -3x_1 & + & 2x_2 & \leq & 4 \\
-> & x_1 & , & x_2 & \geq & 0
->\end{array}\right.
->$$
->e siano assegnati i punti $x^{(1)} = (0, 2)^\top$, $x^{(2)} = (0, 6)^\top$ e $x^{(3)} = (4, 4)^\top$.
->1. Stabilire se i punti assegnati sono soluzioni ammissibili, soluzioni di base, soluzioni ottime per $(P)$;
->2. Determinare una soluzione ottima di base per il problema $(P)$;
->3. Risolvere il problema duale $(D)$ mediante la teoria della dualità;
->4. Verificare la correttezza dei risultati ottenuti tramite l'analisi grafica del problema $(P)$.
-
 # Cenni di teoria dei grafi
-## Grafi, nodi, archi
->[!important] Grafo
->Un grafo $G = \langle V, E \rangle$ è una struttura matematica definita da una coppia di insiemi
->- $V$ è l'insieme dei **nodi** (o vertici)
->- $E \subseteq V \times V$ è l'insieme degli **archi**
+Per la teoria dei grafi vedi gli appunti di ASD: [[Strutture dati#Grafi|grafi]], [[Strutture dati#Rappresentazione|rappresentazione]], [[Strutture dati#Cammini|cammini]] e [[Algoritmi#^albero-ricoprente|albero ricoprente]].
 
-Assumiamo che la cardinalità di entrambi gli insiemi sia finita:
+Rispetto agli appunti di ASD, nelle slide ci sono queste differenze.
+## Grafi, nodi, archi
+Il grafo si scrive $G = \langle V, E \rangle$ con $E \subseteq V \times V$ (come in [[Strutture dati#Rappresentazione|ASD]]), assumendo entrambi gli insiemi finiti:
 - $|V| = m$, cioè $V = \{v_1, v_2, \dots, v_m\}$
 - $|E| = n$, cioè $E = \{e_1, e_2, \dots, e_n\}$
+
+>[!warning] Notazione invertita rispetto ad ASD
+>In [[Strutture dati#Rappresentazione|ASD]] si usa $|V| = n$ e $|E| = m$, qui è il contrario.
+>Il motivo: nei problemi di flusso i **vincoli** sono associati ai **nodi** (conservazione del flusso) e le **variabili decisionali** agli **archi** (il flusso $f_{ij}$). Con $|V| = m$ e $|E| = n$ la matrice dei vincoli resta $A \in \mathbb{R}^{m \times n}$ ($m$ vincoli, $n$ variabili) come in tutta la PL vista finora, quindi conviene tenere la notazione di ricerca operativa e adattare quella di ASD.
+>Di conseguenza la matrice di incidenza è $m \times n$ (in ASD $n \times m$) e in un albero vale $n = m - 1$.
 
 I grafi possono essere rappresentati graficamente associando a ciascun nodo un punto in $\mathbb{R}^2$, e a ogni arco $e = (v_i, v_j)$ un segmento (o una curva) che collega $v_i$ a $v_j$.
 Spesso semplificheremo la notazione utilizzando gli indici dei nodi per rappresentare $V$, quindi denoteremo con $e = (i,j)$ l'arco $e = (v_i, v_j)$.
@@ -3765,9 +3737,8 @@ Spesso semplificheremo la notazione utilizzando gli indici dei nodi per rapprese
 >$$
 >![[Problemi di ottimizzazione-RO37-grafo.svg|center|300]]
 
-Consideriamo un grafo $G = \langle V, E \rangle$
-- Dato un arco $e = (v_i, v_j) \in E$, i nodi $v_i$ e $v_j$ si dicono **estremi** di $e$, e l'arco $e$ si dice **incidente** sui nodi $v_i$ e $v_j$
-- Due nodi $v_i, v_j \in V$ si dicono **adiacenti** se esiste $(v_i, v_j) \in E$
+Consideriamo un grafo $G = \langle V, E \rangle$ (nodi adiacenti e arco incidente come in [[Strutture dati#Grafi|ASD]])
+- Dato un arco $e = (v_i, v_j) \in E$, i nodi $v_i$ e $v_j$ si dicono **estremi** di $e$
 - Due **archi** si dicono adiacenti se hanno un estremo in comune
 - Si dice **loop** un arco che ha i due estremi coincidenti
 - Un grafo si dice **semplice** se non contiene loop e se per ogni coppia di nodi esiste al più un arco che li congiunge
@@ -3780,10 +3751,9 @@ Consideriamo un grafo $G = \langle V, E \rangle$
 >- il grafo $G$ non contiene loop e per ogni coppia di nodi esiste al massimo un arco, quindi $G$ è un grafo semplice
 
 ### Grafi orientati e non orientati
->[!important] Grafo orientato e non orientato
->Dato un grafo $G = \langle V, E \rangle$, se $E$ è costituito da coppie non ordinate, cioè se $(i,j) = (j,i)$, allora il grafo si dice **non orientato** o **simmetrico**. Se tutti gli archi di $E$ sono coppie ordinate il grafo si dice **orientato**.
+Per la definizione vedi [[Strutture dati#Grafi|grafi orientati e non orientati]]: nelle slide il grafo non orientato ($(i,j) = (j,i)$) è detto anche **simmetrico**.
 
-In un grafo orientato tutti gli archi sono orientati. Per un arco orientato $(i,j)$, si dice che $i$ è la **coda** e $j$ è la **testa**; l'arco è **uscente** da $i$ ed **entrante** in $j$.
+Per un arco orientato $(i,j)$, si dice che $i$ è la **coda** e $j$ è la **testa**.
 
 >[!check] Esempio (grafo orientato)
 >$$
@@ -3801,7 +3771,10 @@ Consideriamo un grafo **non orientato** $G = \langle V, E \rangle$
 - Si definisce **intorno** di un nodo $v \in V$ l'insieme $N(v)$ costituito da tutti i nodi adiacenti a $v$
 - Un nodo $v$ si dice **isolato** se $N(v) = \emptyset$
 - Si definisce **stella** $\delta(v)$ di $v$ in $G$ l'insieme degli archi incidenti su $v$
-- Si definisce **grado** $d(v)$ di un nodo $v$ la cardinalità dell'insieme $\delta(v)$
+- Il [[Strutture dati#Grafi|grado]] $d(v)$ di un nodo $v$ è la cardinalità dell'insieme $\delta(v)$
+
+>[!attention] Attenzione
+>In ASD $\delta$ indica il **grado**, qui $\delta(v)$ è la **stella** (insieme di archi) e il grado si scrive $d(v)$.
 
 Nel grafo non orientato dell'esempio: $N(3) = \{2, 4, 5\}$, $d(2) = 2$
 
@@ -3817,69 +3790,23 @@ Nel grafo orientato dell'esempio: nodo sorgente $= 1$, nodo pozzo $= 5$
 >Nelle slide $N(3)$, $d(2)$, il nodo sorgente e il nodo pozzo sono lasciati da completare ("$\dots$"): i valori sopra sono ricavati dal grafo dell'esempio.
 
 ## Rappresentazioni matriciali
->[!multi-column]
->>[!important] Grafo non orientato: matrice di incidenza
->>$A \in \{0,1\}^{m \times n}$
->>$$
->>a_{ik} = \begin{cases} 1 & \text{se l'arco } e_k \text{ incide sul nodo } i \\ 0 & \text{altrimenti} \end{cases}
->>$$
->>$$
->>A = \begin{pmatrix}
->>1 & 0 & 1 & 0 & 0 & 0 \\
->>1 & 1 & 0 & 0 & 0 & 0 \\
->>0 & 1 & 0 & 1 & 1 & 0 \\
->>0 & 0 & 0 & 0 & 1 & 1 \\
->>0 & 0 & 1 & 1 & 0 & 1
->>\end{pmatrix}
->>$$
->
->>[!important] Grafo non orientato: matrice di adiacenza
->>$A \in \{0,1\}^{m \times m}$
->>$$
->>a_{ij} = \begin{cases} 1 & \text{se l'arco } (i,j) \in E \\ 0 & \text{altrimenti} \end{cases}
->>$$
->>$$
->>A = \begin{pmatrix}
->>0 & 1 & 0 & 0 & 1 \\
->>1 & 0 & 1 & 0 & 0 \\
->>0 & 1 & 0 & 1 & 1 \\
->>0 & 0 & 1 & 0 & 1 \\
->>1 & 0 & 1 & 1 & 0
->>\end{pmatrix}
->>$$
+Per le definizioni vedi [[Strutture dati#Matrice di adiacenza|matrice di adiacenza]] e [[Strutture dati#Matrice di incidenza|matrice di incidenza]] di ASD. Con la notazione di RO le dimensioni sono:
+- matrice di adiacenza: $A \in \{0,1\}^{m \times m}$
+- matrice di incidenza: $A \in \{0,1\}^{m \times n}$ (non orientato), $A \in \{0,1,-1\}^{m \times n}$ (orientato)
 
-![[Problemi di ottimizzazione-RO37-grafo.svg|center|300]]
-
->[!multi-column]
->>[!important] Grafo orientato: matrice di incidenza
->>$A \in \{0,1,-1\}^{m \times n}$
->>$$
->>a_{ik} = \begin{cases} 1 & \text{se l'arco } e_k \text{ è uscente dal nodo } i \\ -1 & \text{se l'arco } e_k \text{ è entrante nel nodo } i \\ 0 & \text{altrimenti} \end{cases}
->>$$
->>$$
->>A = \begin{pmatrix}
->>1 & 0 & 1 & 0 & 0 & 0 \\
->>-1 & 1 & 0 & 0 & 0 & 0 \\
->>0 & -1 & 0 & 1 & 1 & 0 \\
->>0 & 0 & 0 & 0 & -1 & 1 \\
->>0 & 0 & -1 & -1 & 0 & -1
->>\end{pmatrix}
->>$$
->
->>[!important] Grafo orientato: matrice di adiacenza
->>$A \in \{0,1\}^{m \times m}$
->>$$
->>a_{ij} = \begin{cases} 1 & \text{se l'arco } (i,j) \in E \\ 0 & \text{altrimenti} \end{cases}
->>$$
->>$$
->>A = \begin{pmatrix}
->>0 & 1 & 0 & 0 & 1 \\
->>0 & 0 & 1 & 0 & 0 \\
->>0 & 0 & 0 & 1 & 1 \\
->>0 & 0 & 0 & 0 & 1 \\
->>0 & 0 & 0 & 0 & 0
->>\end{pmatrix}
->>$$
+>[!important] Grafo orientato: matrice di incidenza
+>$$
+>a_{ik} = \begin{cases} 1 & \text{se l'arco } e_k \text{ è uscente dal nodo } i \\ -1 & \text{se l'arco } e_k \text{ è entrante nel nodo } i \\ 0 & \text{altrimenti} \end{cases}
+>$$
+>$$
+>A = \begin{pmatrix}
+>1 & 0 & 1 & 0 & 0 & 0 \\
+>-1 & 1 & 0 & 0 & 0 & 0 \\
+>0 & -1 & 0 & 1 & 1 & 0 \\
+>0 & 0 & 0 & 0 & -1 & 1 \\
+>0 & 0 & -1 & -1 & 0 & -1
+>\end{pmatrix}
+>$$
 
 ![[Problemi di ottimizzazione-RO37-grafo-orientato.svg|center|300]]
 
@@ -3914,6 +3841,7 @@ Nel grafo orientato dell'esempio: nodo sorgente $= 1$, nodo pozzo $= 5$
 >\end{array}
 >$$
 
+Il rango della matrice di incidenza non è massimo, sommando tutte le righe tra loro otteniamo il vettore nullo, quindi le righe non sono tutte linearmente indipendenti.
 ## Sottografi
 Consideriamo un grafo $G = \langle V, E \rangle$
 >[!important] Sottografo
@@ -3953,10 +3881,12 @@ Consideriamo un grafo orientato o non orientato $G = \langle V, E \rangle$
 >$$
 >con $k \geq 0$, tale che $e_{h_i}$ è incidente sui nodi $v_{j_{i-1}}$ e $v_{j_i}$. I nodi $v_{j_0}$ e $v_{j_k}$ si dicono **estremi** del cammino.
 
-- Un cammino **semplice** ha tutti i nodi e gli archi distinti, la sua **lunghezza** è data dal numero di archi che lo compongono
-- Dati due nodi $u, v \in V$ la **distanza** tra $u$ e $v$ è data dalla lunghezza minima di un cammino semplice tra $u$ e $v$
+- Un cammino **semplice** ha tutti i nodi e gli archi distinti, la sua **lunghezza** è data dal numero di archi che lo compongono ([[Strutture dati#Cammini|distanza]] come in ASD)
 - In un grafo orientato un cammino si dice **orientato** se $(v_{j_{i-1}}, v_{j_i}) \in E$ per ogni $i = 1, \dots, k$
 - Un cammino si dice **chiuso** se i suoi estremi coincidono
+
+>[!attention] Attenzione
+>In [[Strutture dati#Cammini|ASD]] un cammino in un grafo orientato deve seguire il verso degli archi; qui invece basta che ogni arco sia **incidente** sui due nodi consecutivi, quindi può essere percorso anche al contrario. Il cammino di ASD corrisponde al **cammino orientato**.
 
 >[!important] Ciclo
 >Un cammino chiuso
@@ -3972,10 +3902,15 @@ Consideriamo un grafo orientato o non orientato $G = \langle V, E \rangle$
 
 >[!check] Esempi
 >![[Problemi di ottimizzazione-RO37-cammini.svg|center|480]]
+>- **cammino** $W = \{1, e_1, 2, e_2, 3, e_5, 4\}$: è semplice e ha lunghezza 3
+>- **cammino** nel grafo orientato $W = \{1, e_3, 5, e_4, 3, e_5, 4\}$: è un cammino ma **non orientato**, perché $e_4 = (3,5)$ viene percorso da 5 a 3
+>
 >![[Problemi di ottimizzazione-RO37-cicli.svg|center|480]]
+>- **ciclo** $C = \{1, e_1, 2, e_2, 3, e_4, 5, e_3, 1\}$
+>- **ciclo** nel grafo orientato $C = \{3, e_5, 4, e_6, 5, e_4, 3\}$: è un ciclo ma **non orientato**, perché $e_4 = (3,5)$ viene percorso da 5 a 3
 
->[!bug] Da verificare
->Le evidenziazioni (in rosso) sono riprodotte come nelle slide 32–33, ma non sempre formano un cammino o un ciclo: ad esempio nel primo "cammino" gli archi $e_3, e_4, e_6$ sono tutti incidenti sul nodo 5 (è la stella di 5). Da verificare con il docente.
+>[!question] Osservazione
+>Nelle slide 32–33 il cammino (o ciclo) è quello con gli archi **neri spessi**, mentre in rosso sono segnati i nodi e gli archi che **non** ne fanno parte. Negli SVG è il contrario: è evidenziato il cammino (o ciclo). Le sequenze $W$ e $C$ sono ricavate dalle figure, le slide mostrano solo il disegno.
 
 ## Grafi connessi, alberi
 Consideriamo un grafo orientato o non orientato $G = \langle V, E \rangle$
@@ -3983,8 +3918,11 @@ Consideriamo un grafo orientato o non orientato $G = \langle V, E \rangle$
 - Il grafo $G$ si dice **aciclico** se non contiene cicli
 - Il grafo orientato $G$ si dice **fortemente connesso** se esiste un cammino orientato tra ogni coppia di suoi nodi
 - Il grafo $G$ si dice **albero** se è connesso e aciclico
-- Si chiama **foglia** un nodo di un albero con grado pari a 1
-- Un sottografo ricoprente di $G$ che sia connesso e aciclico si dice **albero ricoprente** di $G$
+- Si chiama **foglia** un nodo di un albero con grado pari a 1 (in ASD la foglia è un [[Strutture dati#Alberi|nodo senza figli]], perché l'albero ha una radice)
+- Un sottografo ricoprente di $G$ che sia connesso e aciclico si dice [[Algoritmi#^albero-ricoprente|albero ricoprente]] di $G$
+
+>[!attention] Attenzione
+>Siccome il cammino può percorrere gli archi al contrario, per un grafo orientato "connesso" qui corrisponde a [[Strutture dati#Grafi|debolmente connesso]] di ASD.
 
 >[!info] Caratterizzazione degli alberi
 >Sia $G = \langle V, E \rangle$ un grafo con $|V| = m$ e $|E| = n$. Le seguenti affermazioni sono equivalenti:
@@ -4003,22 +3941,25 @@ Molti problemi di ottimizzazione sono caratterizzati da una struttura di grafo: 
 - reti di trasporto
 - reti idrauliche
 - reti elettriche
-- reti di telecomunicazioni
+- [[Protocolli#Grafi|reti di telecomunicazioni]]
 - $\vdots$
 
 in altri casi emerge per effetto di tecniche di modellazione.
 
 >[!important] Rete
->Con il termine **rete** si fa riferimento a un grafo orientato $G = \langle V, E \rangle$ che sia **pesato**, cioè ai cui nodi ed archi siano associati valori numerici.
+>Con il termine **rete** si fa riferimento a un **grafo orientato** $G = \langle V, E \rangle$ che sia **pesato**, cioè ai cui nodi ed archi siano associati valori numerici.
 
 In generale, in una rete gli archi sono interpretabili come canali attraverso cui fluiscono dei materiali.
 I pesi degli archi rappresentano usualmente delle **capacità** e dei **costi**, mentre i pesi dei nodi rappresentano le quantità di materiale che entrano nella rete in quei nodi, o che ne escono.
+In ASD i [[Strutture dati#Grafi pesati sugli archi|grafi pesati]] hanno i pesi solo sugli archi (funzione $\lambda$), e tra i casi d'uso c'è già la rete idrica con la portata delle tubature come peso, cioè la capacità. Divergenza, flusso e conservazione del flusso lì non ci sono.
 
 >[!important] Divergenza
 >Ad ogni nodo $i \in V$ è associato un valore reale (**divergenza**) $b_i$, che può essere:
 >- **negativo**: rappresenta la quantità di materiale che esce dalla rete al nodo $i$; $b_i$ è allora detto **domanda** del nodo, ed il nodo viene detto **destinazione**, **pozzo** o **nodo di output**
 >- **positivo**: rappresenta la quantità di materiale che entra nella rete al nodo $i$; $b_i$ è allora detto **offerta** del nodo, ed il nodo viene detto **origine**, **sorgente** o **nodo di input**
->- **nullo**: $i$ viene detto **nodo di trasferimento** (o di transito)
+>- **nullo**: $i$ non ha interazione con l'esterno e viene detto **nodo di trasferimento** (o di transito)
+
+>[!attention] I concetti di sorgente e pozzo nella divergenza sono diversi dagli stessi concetti in teoria dei grafi
 
 Ad ogni arco $(i,j)$ sono associati un **costo** $c_{ij}$, che indica il costo che viene pagato per ogni unità di materiale che attraversi l'arco, e le **capacità inferiore** $l_{ij}$ e **superiore** $u_{ij}$, che indicano, rispettivamente, le quantità di materiale minima e massima che possono attraversare l'arco.
 

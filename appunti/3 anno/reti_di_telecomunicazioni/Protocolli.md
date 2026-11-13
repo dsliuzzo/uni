@@ -1379,6 +1379,7 @@ Quindi:
 
 >[!question] Osservazione
 >Non tutte le metriche si sommano lungo il cammino: dipende se la metrica è **cumulativa** o no (metriche *concave* e *convesse*). Se il peso è la **banda** e voglio il percorso che la massimizza, sommare le bande non ha senso: la banda del cammino è quella del ramo più lento, quindi si guarda il **minimo**.
+>È la stessa idea della portata delle tubature nei [[Strutture dati#Grafi pesati sugli archi|grafi pesati]] di ASD: il peso del ramo è una capacità, non un costo da sommare.
 >**Widest path** (cammino più largo): è il cammino che **massimizza il minimo** delle bande dei rami (problema *max-min*):
 >$$B(P) = \min_{\ell \in P} b(\ell) \qquad P^* = \arg\max_{P} B(P)$$
 >Si risolve con una variante di Dijkstra: invece di "sommo i pesi e scelgo il cammino col totale **minimo**", si fa "prendo il **minimo** lungo il cammino e scelgo il cammino col valore **massimo**".
