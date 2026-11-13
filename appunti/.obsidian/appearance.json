@@ -11,5 +11,6 @@
   "baseFontSize": 18,
   "interfaceFontFamily": "Baloo 2,Dongle,Nunito,Minecraft",
   "nativeMenus": false,
-  "showViewHeader": true
+  "showViewHeader": true,
+  "showRibbon": true
 }
