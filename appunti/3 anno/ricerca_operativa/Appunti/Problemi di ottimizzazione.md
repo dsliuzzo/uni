@@ -3567,11 +3567,6 @@ cioè $y^*_i$ rappresenta la **variazione della funzione obiettivo** corrisponde
 >$$
 >Ne deriva che almeno una delle due componenti è nulla: una somma di termini non negativi è nulla solo se **ogni termine** è nullo. Quindi per ogni $j$ almeno uno tra $x_j$ e $(c - A^\top y)_j$ è nullo, e lo stesso vale per ogni $i$ nella seconda relazione (almeno uno tra $(Ax-b)_i$ e $y_i$ è nullo).
 
-
-
-
----
-
 #dimostrazione
 Riformuliamo i problemi $(P)$ e $(D)$ in forma standard, con vettori delle variabili ausiliarie $s$ e $\sigma$:
 $$
@@ -3603,6 +3598,8 @@ x^\top \sigma = 0 \\
 s^\top y = 0
 \end{cases}
 $$
+Dobbiamo dimostrare che il soddisfacimento di questo sistema $\iff$ $x,y$ sono ottime.
+
 Per ogni coppia di soluzioni ammissibili $x \in \Omega(P)$ e $y \in \Omega(D)$, il teorema di dualità debole assicura che il gap di dualità è non negativo
 $$
 c^\top x - b^\top y \geq 0
@@ -3612,12 +3609,12 @@ $$
 x \text{ ottimale per } (P) \text{ e } y \text{ ottimale per } (D) \iff c^\top x - b^\top y = 0
 $$
 - $(\Rightarrow)$: dualità forte
-- $(\Leftarrow)$: corollario della dualità debole
+- $(\Leftarrow)$: corollario della dualità debole (applicabile per ammissibilità delle due soluzioni per hp)
 
 Se dimostriamo che il soddisfacimento delle relazioni di complementarietà tra $x$ ed $y$ equivale all'annullamento del gap di dualità, il teorema è dimostrato.
 Osserviamo che
 $$
-c^\top x = \left(A^\top y + \sigma\right)^\top x = y^\top Ax + \sigma^\top x
+c^\top x = \left(A^\top y + \sigma\right)^\top x = y^\top (Ax) + \sigma^\top x
 $$
 $$
 b^\top y = (Ax - s)^\top y = (Ax)^\top y - s^\top y
@@ -3633,7 +3630,8 @@ c^\top x - b^\top y = 0 \iff \sigma^\top x + s^\top y = 0 \iff \begin{cases}
 s^\top y = 0
 \end{cases}
 $$
-
+Se $\sigma^\top x = 0$ e $s^\top y = 0$ allora la loro somma sarà pari a $0$
+Se 
 #### Approfondimenti
 Le relazioni di complementarietà impongono che:
 - a **variabili positive** di un problema corrispondono **vincoli attivi** nel suo duale;
