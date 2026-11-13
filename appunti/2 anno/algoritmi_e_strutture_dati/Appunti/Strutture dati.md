@@ -915,7 +915,7 @@ Otterremo una matrice molto sparsa con una dimensione inutilmente grande.
 >>![[Strutture dati-1777122015614.webp|200]]
 >
 
-Per il grafo non orientato inseriamo `-1` se l'arco è uscente.
+Per il grafo orientato inseriamo `1` se l'arco è uscente dal nodo e `-1` se è entrante.
 ## Cammini
 Possiamo rappresentare un cammino all'interno del grafo come:
 1. Una lista dei nodi attraversati
