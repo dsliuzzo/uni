@@ -1210,7 +1210,8 @@ Le query sono **strutturate**: hanno tutte la stessa forma e vanno organizzate s
 >- l'ordine in cui scriviamo le clausole **non** corrisponde all'ordine in cui vengono svolte dal DBMS
 >- il delimitatore predefinito `;` indica la fine di un comando
 
-### SELECT e FROM
+### Interrogazioni di base
+#### SELECT e FROM
 `SELECT` indica cosa vogliamo visualizzare. Senza `FROM` mostra dei valori costanti:
 ```sql
 SELECT 3, 'ciao', 2*4+1; -- crea e mostra una tupla con i valori 3, 'ciao' e 9
@@ -1245,7 +1246,7 @@ FROM Fornitore;
 >FROM Fornitore;  -- CS, RC (senza DISTINCT: CS, RC, CS)
 >```
 
-### WHERE
+#### WHERE
 `WHERE` tiene solo le righe che rispettano una determinata proprietà ([[#Operatore di selezione|selezione]]). Le condizioni si combinano con `AND`, `OR`, `NOT`.
 
 >[!check] Esempio
@@ -1261,7 +1262,7 @@ FROM Fornitore;
 - Quando indichiamo un attributo conviene usare come **prefisso** la tabella da cui lo prendiamo (`Fornitore.citta`), per evitare problemi dovuti alle omonimie.
 - Il simbolo di $\neq$ dipende dal DBMS: potrebbe essere `!=`, `<>` o altro.
 
-### Ridenominazione (AS)
+#### Ridenominazione (AS)
 Se i nomi delle tabelle sono troppo lunghi possiamo effettuare una **ridenominazione locale**, che ci permette di richiamare la tabella con un nome diverso all'interno della query:
 ```sql
 SELECT *
@@ -1299,7 +1300,7 @@ WHERE F.citta = 'CS';
 >| x         |
 >| y         |
 
-### Join e prodotto cartesiano
+#### Join e prodotto cartesiano
 In SQL esiste l'operatore di join, ma si usa raramente perché è piuttosto verboso. Le query si riformulano trasformando la join in una **selezione di un prodotto cartesiano** ([[#Prodotto cartesiano|relazione con la join]]):
 - le tabelle elencate nella `FROM` separate da virgola formano il **prodotto cartesiano**
 - le condizioni di join vanno nella `WHERE`
@@ -1360,7 +1361,25 @@ Quando la stessa tabella compare più volte nella `FROM` la ridenominazione è *
 >```
 >Senza `DISTINCT` il risultato contiene A due volte, una per la coppia (M1, M2) e una per (M2, M1).
 
-### EXCEPT e UNION
+#### Multinsiemi e DISTINCT
+In algebra il risultato di ogni operazione è una relazione, in SQL no.
+```sql
+SELECT citta
+FROM Fornitore;
+```
+- in algebra restituisce una riga per ogni città, senza ripetizioni
+- in SQL restituisce **tante righe quante sono le righe originali**: non accorpa i duplicati. Se tutti i fornitori sono di Cosenza, otteniamo Cosenza tante volte quanti sono i fornitori
+
+>[!important] Multinsieme
+>SQL lavora su **multinsiemi** di tuple: insiemi in cui ogni elemento è associato a una **molteplicità**. Lo fa per efficienza, perché eliminare i duplicati costa.
+
+Eliminare i duplicati ha un costo: la query diventa quadratica. La clausola `DISTINCT`, messa tra `SELECT` e gli attributi, restituisce solo righe diverse: la query diventa più lenta, ma elimina tutti i duplicati.
+
+>[!attention] AGGIUNTA - Dubbio
+>"Quadratica" vale per il confronto ingenuo di ogni riga con tutte le altre. I DBMS di solito eliminano i duplicati ordinando o con una tabella hash, quindi con costo $O(n \log n)$ o circa lineare.
+
+### Operatori insiemistici e viste
+#### EXCEPT e UNION
 Gli [[#Operatori insiemistici|operatori insiemistici]] si mettono **tra due query**: ogni operando va tradotto separatamente.
 - `EXCEPT`: sottrazione, restituisce le tuple che stanno nel risultato della prima query e non in quello della seconda
 - `UNION`: unione
@@ -1409,7 +1428,7 @@ Gli [[#Operatori insiemistici|operatori insiemistici]] si mettono **tra due quer
 >| F1   |
 >| F2   |
 
-### Viste
+#### Viste
 Le **viste** (*view*) sono il corrispondente SQL delle variabili usate in algebra relazionale per i risultati intermedi. Sono **oggetti del database** e si creano esattamente come le tabelle:
 ```sql
 CREATE VIEW NomeVista(attributo1, attributo2, ...) AS (
@@ -1508,7 +1527,8 @@ Una volta creata, una vista si usa nella `FROM` come una qualsiasi tabella.
 >| A    |
 >| B    |
 
-### IN e NOT IN
+### Interrogazioni annidate
+#### IN e NOT IN
 I predicati `IN` ($\in$) e `NOT IN` ($\notin$) testano l'**appartenenza** di un elemento a un insieme.
 
 >[!important] Sintassi
@@ -1577,7 +1597,7 @@ Con `NOT IN` possiamo evitare tutte le [[#Sottrazione|sottrazioni]] che usavamo 
 >);
 >```
 
-### EXISTS e NOT EXISTS
+#### EXISTS e NOT EXISTS
 `EXISTS` ($\exists$) e `NOT EXISTS` ($\nexists$) testano se il risultato di una query è vuoto o no.
 
 >[!important] Sintassi
@@ -1685,24 +1705,8 @@ Con `NOT EXISTS` si esprime la [[#Quantificazione universale|quantificazione uni
 >```
 >Il viceversa serve: senza, usciremmo anche le coppie in cui $f''$ fornisce più merci di $f'$.
 
-### Multinsiemi e DISTINCT
-In algebra il risultato di ogni operazione è una relazione, in SQL no.
-```sql
-SELECT citta
-FROM Fornitore;
-```
-- in algebra restituisce una riga per ogni città, senza ripetizioni
-- in SQL restituisce **tante righe quante sono le righe originali**: non accorpa i duplicati. Se tutti i fornitori sono di Cosenza, otteniamo Cosenza tante volte quanti sono i fornitori
-
->[!important] Multinsieme
->SQL lavora su **multinsiemi** di tuple: insiemi in cui ogni elemento è associato a una **molteplicità**.
-
-Eliminare i duplicati ha un costo: la query diventa quadratica. La clausola `DISTINCT`, messa tra `SELECT` e gli attributi, restituisce solo righe diverse: la query diventa più lenta, ma elimina tutti i duplicati.
-
->[!attention] AGGIUNTA - Dubbio
->"Quadratica" vale per il confronto ingenuo di ogni riga con tutte le altre. I DBMS di solito eliminano i duplicati ordinando o con una tabella hash, quindi con costo $O(n \log n)$ o circa lineare.
-
-### Operatori di aggregazione
+### Aggregazione
+#### Operatori di aggregazione
 Un **operatore di aggregazione** prende più tuple e restituisce un'unica tupla che le rappresenta.
 
 Schema usato negli esempi, che rappresenta le fatture di un'azienda:
@@ -1751,12 +1755,35 @@ SELECT COUNT(DISTINCT nome)
 FROM Cliente;
 ```
 
-Altri operatori di aggregazione: `SUM`, `AVG`, `MIN` e `MAX`.
+Altri operatori di aggregazione:
+- `SUM(A)`: somma dei valori di `A` (o di un'espressione, es. `qnt * prezzoU`), esclusi i `NULL`
+- `AVG(A)`: media dei valori di `A`
+- `MIN(A)` e `MAX(A)`: valore minimo e massimo di `A`, esclusi i `NULL`
+
+>[!attention] AGGIUNTA - Valori nulli e insieme vuoto
+>Dagli appunti LaTeX di Claudia, che li prende dall'Atzeni (cap. SQL, "Operatori aggregati"):
+>- `AVG` ignora le tuple con `A` nullo, sia nella somma sia nel numero di elementi
+>- `SUM` e `AVG` accettano valori numerici, `MIN` e `MAX` qualunque tipo ordinabile (numeri, stringhe, date)
+>- `SUM(DISTINCT A)` e `AVG(DISTINCT A)` considerano solo i valori distinti
+>- su un insieme vuoto `COUNT` restituisce 0, gli altri `NULL`
+
+>[!check] Esempio
+>Età minima dei clienti di CS: `MIN` viene calcolato dopo la valutazione della `WHERE`.
+>```sql
+>SELECT MIN(eta)
+>FROM Cliente
+>WHERE citta = 'CS';
+>```
 
 >[!question] Osservazione
 >- Più aggregazioni possono stare nella stessa `SELECT` solo se hanno senso insieme: non posso mettere l'età massima dei clienti di Cosenza e l'età minima di quelli di Reggio.
 >- Possiamo aggiungere condizioni nella `WHERE`: con un operatore di aggregazione la `SELECT` viene svolta per ultima.
 >- Non ha senso mettere nella `SELECT` sia aggregazioni sia attributi normali, a meno che l'attributo non sia comune a tutto l'insieme.
+>```sql
+>SELECT AVG(eta), CF  -- SBAGLIATA: di quale cliente sarebbe il CF?
+>FROM Cliente
+>WHERE citta = 'CS';
+>```
 
 >[!check] Esempio
 >Numero di fatture intestate al cliente Pippo.
@@ -1784,7 +1811,7 @@ Altri operatori di aggregazione: `SUM`, `AVG`, `MIN` e `MAX`.
 >	AND fattura_anno = 2026;
 >```
 
-### GROUP BY
+#### GROUP BY
 La clausola di raggruppamento `GROUP BY` **partiziona** la tabella secondo gli attributi indicati: gli operatori di aggregazione vengono calcolati su ogni partizione, non sulla tabella completa. Tutte le tuple di una partizione hanno lo stesso valore negli attributi del `GROUP BY`.
 
 >[!important] Regola
@@ -1797,6 +1824,32 @@ La clausola di raggruppamento `GROUP BY` **partiziona** la tabella secondo gli a
 >FROM Cliente
 >GROUP BY citta;
 >```
+
+>[!check] Esempio
+>Numero di clienti di CS e di RC. Senza raggruppamento servono due query, una per città:
+>```sql
+>SELECT COUNT(*)
+>FROM Cliente
+>WHERE citta = 'CS'
+>
+>UNION
+>
+>SELECT COUNT(*)
+>FROM Cliente
+>WHERE citta = 'RC';
+>```
+>Con `GROUP BY` basta una query. `HAVING` tiene solo i gruppi che rispettano la condizione:
+>```sql
+>SELECT citta, COUNT(*)
+>FROM Cliente
+>GROUP BY citta
+>HAVING citta = 'CS' OR citta = 'RC';
+>```
+
+>[!attention] AGGIUNTA - Dubbio
+>- Questo esempio con `HAVING` viene dagli appunti LaTeX di Claudia.
+>- Con `UNION` le due righe vengono fuse in una se i conteggi sono uguali, perché `UNION` elimina i duplicati. Per tenerle entrambe serve `UNION ALL`.
+>- Una condizione su un attributo del `GROUP BY` si può mettere anche nella `WHERE`. `HAVING` serve soprattutto per le condizioni sugli aggregati, es. `HAVING COUNT(*) >= 2`.
 
 >[!check] Esempio
 >Importo di ogni fattura del 2026.

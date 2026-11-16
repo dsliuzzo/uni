@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200" viewBox="0 0 640 200">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="530" y="40" width="70" height="74" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="546" y="64" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">D</text>
+<text x="584" y="64" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">Q</text>
+<line x1="500" y1="59" x2="530" y2="59" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="600" y1="59" x2="630" y2="59" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="524" cy="94" r="5" fill="none" stroke="#b8b8b8" stroke-width="2"/>
+<line x1="500" y1="94" x2="519" y2="94" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="538" y="99" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic">Clk</text>
+<polyline points="60,20 126,20 126,46 192,46 192,20 258,20 258,46 324,46 324,20 390,20 390,46 456,46 456,20 500,20" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="46" y="38.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic">Clk</text>
+<polyline points="60,106 148,106 148,80 346,80 346,106 500,106" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="46" y="98.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic">D</text>
+<polyline points="60,166 148,166 148,140 390,140 390,166 500,166" fill="none" stroke="#e0a040" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="46" y="158.0" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic">Q</text>
+<line x1="126" y1="12" x2="126" y2="172" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+<line x1="192" y1="12" x2="192" y2="172" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+<line x1="258" y1="12" x2="258" y2="172" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+<line x1="324" y1="12" x2="324" y2="172" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+<line x1="390" y1="12" x2="390" y2="172" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+<line x1="456" y1="12" x2="456" y2="172" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+</svg>

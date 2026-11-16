@@ -584,3 +584,184 @@ Più i fronti sono ripidi (tempi di salita e discesa piccoli), meno incide la po
 >- **Caratteristiche dinamiche**: tempo di propagazione, fan-out, dissipazione di potenza dinamica (switching + corto circuito)
 >
 >Frequenza e potenza sono legate ($P = f \cdot C_L \cdot V_{DD}^2$): il progettista sceglie di conseguenza se deve **ottimizzare la frequenza** (velocità) o la **dissipazione di potenza**.
+
+# Circuiti sequenziali
+
+>[!multi-column]
+>
+>>[!important] Circuiti combinatori
+>>Rispondono solo agli ingressi **correnti**: l'uscita al tempo $t + \Delta t$ dipende esclusivamente dagli ingressi al tempo $t$ ($\Delta t$ = ritardo del circuito, cioè il [[#Tempo di propagazione|tempo di propagazione]]). La risposta non dipende mai da ingressi o uscite passati.
+>
+>>[!important] Circuiti sequenziali
+>>Hanno **memoria degli eventi precedenti**: l'uscita al tempo $t$ dipende dagli ingressi al tempo $t$ **e** dall'uscita generata al tempo $t-1$ (slide 1).
+
+![[Sequenziali-modello.svg|center|450]]
+
+La parte combinatoria calcola uscite e **stato futuro**; i registri memorizzano lo stato e lo restituiscono come **stato corrente** al colpo di clock successivo (slide 1).
+
+>[!question] Osservazione: nomi diversi
+>È lo stesso [[1. Reti logiche#Reti sequenziali sincrone|modello generale delle reti sequenziali sincrone]] di Reti logiche: lì stato corrente e stato futuro si chiamano **variabili di stato** $y$ e $y'$, e i registri sono gli anelli con i FF Fc.
+
+## Segnale di clock
+Per sapere se qualcosa è già accaduto bisogna **scandire il tempo** dentro il circuito: lo fa il **clock**, un'onda quadra periodica che si ripete indefinitamente. Sono gli **eventi** su questo segnale a dare al circuito il comportamento corretto.
+
+Caratteristiche:
+1. **periodo** $T$: intervallo di tempo tra due eventi dello stesso tipo, es. $T = t_2 - t_1 = t_2' - t_1'$ (due fronti di salita o due fronti di discesa consecutivi)
+2. **frequenza** $f = \frac{1}{T}$: il parametro che vogliamo **massimizzare**
+
+Eventi del clock:
+1. **fronte di salita** (da 0 a 1 logico)
+2. **fronte di discesa** (da 1 a 0 logico)
+3. **livello 0** (clock stabilmente a 0)
+4. **livello 1** (clock stabilmente a 1)
+
+![[Sequenziali-clock.svg|center|450]]
+
+## Latch
+>[!important] Latch
+>Il latch è sensibile ai **livelli** del clock (slide 2-3). Ha un ingresso $D$, un'uscita $Q$ e l'ingresso del clock $Clk$.
+
+Esistono due tipi di latch:
+
+>[!multi-column]
+>
+>>[!important] Latch negativo
+>>Il **pallino** sull'ingresso del clock indica che è sensibile al **livello 0**:
+>>- $Clk = 0$: **trasferisce** il dato in uscita, $Q \Leftarrow D$
+>>- $Clk = 1$: **memorizza** lo stato precedente
+>
+>>[!important] Latch positivo
+>>Duale del negativo, sensibile al **livello 1**:
+>>- $Clk = 1$: **trasferisce** il dato in uscita, $Q \Leftarrow D$
+>>- $Clk = 0$: **memorizza** lo stato precedente
+
+Il comportamento si vede con i **diagrammi di timing** (slide 2-3): finché il clock è al livello attivo $Q$ segue $D$, quando il clock passa al livello opposto $Q$ resta fermo sull'ultimo valore. La variazione dell'uscita quindi può essere causata **o da $D$ o da $Clk$**.
+
+>[!multi-column]
+>
+>>[!check] Latch negativo
+>>![[Sequenziali-latch-negativo.svg]]
+>
+>>[!check] Latch positivo
+>>![[Sequenziali-latch-positivo.svg]]
+
+Nel latch negativo il fronte di salita di $D$ arriva con $Clk = 0$ e passa subito in $Q$; quello di discesa arriva con $Clk = 1$ e $Q$ cambia solo quando il clock torna a 0. Nel latch positivo succede il contrario.
+
+>[!question] Osservazione: latch e glitch
+>Ogni commutazione di un segnale produce [[#Potenza di switching|dissipazione di potenza dinamica]]. Nei circuiti combinatori le commutazioni sono molto frequenti, legate ai ritardi diversi con cui le porte logiche rispondono: questi impulsi spuri si chiamano **glitch** e non trasportano nessuna informazione utile. Se il latch **blocca** i glitch (li lascia passare solo durante il livello attivo), in $Q$ arriva un segnale con meno cambi repentini, quindi con **minore dissipazione di potenza**. Nel latch negativo, ad esempio, le variazioni rapide di $D$ con $Clk = 1$ non arrivano in uscita.
+
+### Schema elementare
+Il latch si realizza con un **collegamento in retroazione**: due porte NAND incrociate (A e B in ingresso, $Q$ e $\overline{Q}$ in uscita) memorizzano il bit, mentre le due NAND di ingresso fanno passare $D$ solo quando $clk = 1$ (slide 6). È quindi un **latch positivo**. In CMOS servono **18 interruttori**: 4 NAND a 2 ingressi da 4 transistor + l'inverter da 2.
+
+![[Sequenziali-latch-nand.svg|center|450]]
+$$
+\begin{array}{cc|c}
+Clk & D & Q(t) \\
+\hline
+0 & 0 & Q(t-\Delta t) \\
+0 & 1 & Q(t-\Delta t) \\
+1 & 0 & 0 \\
+1 & 1 & 1
+\end{array}
+$$
+
+>[!question] Osservazione: nomi diversi
+>- La coppia di porte incrociate è il [[1. Reti logiche#FLIP-FLOP RS (reset-set)|flip-flop RS]] di Reti logiche (lì fatto con NOR, qui con NAND): in elettronica, essendo sensibile ai livelli e senza clock, si chiama **latch**.
+>- Il latch positivo con clock è il [[1. Reti logiche#Reti sequenziali sincrone|FF Fc]] di Reti logiche: $F$ corrisponde a $D$ e $c$ a $Clk$; la tabella è la stessa.
+>- In VHDL un latch si può ottenere anche senza volerlo: [[VHDL#Latch involontari|latch involontari]].
+
+## Flip flop
+>[!important] Flip flop
+>Il flip flop **memorizza il dato quando il clock "sale"**: è sensibile ai **fronti** del clock (slide 4). $Q$ può cambiare **solo** in corrispondenza dell'evento attivo del clock. Nel simbolo il fronte si indica con il **triangolino** sull'ingresso del clock.
+
+![[Sequenziali-flip-flop.svg|center|550]]
+
+Rispetto al fronte di salita si possono verificare 3 casi:
+1. $D$ varia **prima** del fronte: la variazione non ha effetto immediato su $Q$, che cambia solo al fronte (è il fronte di clock a far cambiare $Q$)
+2. $D$ varia **dopo** il fronte: la variazione ha effetto su $Q$ solo se dura fino al fronte successivo
+3. la variazione di $D$ **coincide** esattamente con il fronte di clock: è uno stato di malfunzionamento, il FF entra in **metastabilità** (indeterminazione): non si riesce a riconoscere il valore del segnale e in simulazione l'uscita vale `'X'`
+
+Come il latch, anche il flip flop esiste in due versioni: sensibile al **fronte di salita** o al **fronte di discesa** (pallino prima del triangolino).
+
+### Vincoli temporali
+Per evitare la metastabilità bisogna rispettare dei vincoli temporali intorno al fronte attivo del clock: un registro funziona correttamente solo se sono rispettati **tempo di setup** e **tempo di hold** (slide 5).
+
+>[!important] Tempo di setup e tempo di hold
+>- **Tempo di setup** ($t_{su}$): minimo tempo tra l'ultima variazione dell'ingresso e il fronte attivo del clock
+>- **Tempo di hold** ($t_{hold}$): minimo tempo tra il fronte attivo del clock e la successiva variazione dell'ingresso
+>
+>Da $t_{su}$ prima del fronte fino a $t_{hold}$ dopo il fronte l'ingresso deve restare **stabile**:
+>- se $D$ deve cambiare, deve farlo **almeno $t_{su}$ prima** del fronte, così ha il tempo di assestarsi
+>- dopo il fronte, prima di far cambiare di nuovo $D$ bisogna far passare **$t_{hold}$**
+
+![[Sequenziali-vincoli.svg|center|450]]
+
+Nella figura della slide 5 compare anche $t_{c2q}$ (clock-to-Q): il ritardo tra il fronte del clock e la variazione di $Q$.
+
+### Segnali di preset e clear
+**Preset** ($Pr$) e **clear** ($Cr$) consentono di forzare l'uscita del flip flop a 1 o a 0 **indipendentemente dagli ingressi** (slide 12).
+
+![[Sequenziali-preset-clear.svg|center|250]]
+
+| $Pr$ | $Cr$ | $Q$ |
+|:-:|:-:|:-:|
+| 0 | 0 | dipende da $D$ e $ck$ |
+| 1 | 0 | 1, qualsiasi siano $D$ e $ck$ |
+| 0 | 1 | 0, qualsiasi siano $D$ e $ck$ |
+| 1 | 1 | **non consentita**: l'uscita è indeterminata ($X$) |
+
+Clear e preset sono **asincroni**: hanno **priorità** sul clock. Una variazione di $Q$ può quindi essere imposta da tre segnali:
+$$
+\displaylines{
+Clk \to Q \\
+Cr \to Q \\
+Pr \to Q
+}
+$$
+
+Esistono anche le **versioni sincrone** di questi segnali, che agiscono solo al fronte attivo del clock:
+- clear $\to$ **reset**
+- preset $\to$ **set**
+
+Inoltre questi segnali possono essere **attivi alti** (agiscono quando valgono 1, come nella tabella sopra) o **attivi bassi** (agiscono quando valgono 0, nel simbolo hanno il **pallino**).
+
+| segnale | tipo | attivo alto | attivo basso | effetto |
+|---|---|:-:|:-:|---|
+| clear | asincrono | $Cr = 1$ | $Cr = 0$ | $Q = 0$ subito |
+| preset | asincrono | $Pr = 1$ | $Pr = 0$ | $Q = 1$ subito |
+| reset | sincrono | $Reset = 1$ | $Reset = 0$ | $Q = 0$ al fronte di salita |
+| set | sincrono | $Set = 1$ | $Set = 0$ | $Q = 1$ al fronte di salita |
+
+"Attivo basso" indica il **valore del segnale** che fa agire il comando, non il valore a cui viene forzata l'uscita.
+
+>[!check] Esempio: in VHDL
+>Il [[VHDL#Process|flip-flop D con clear asincrono]] visto in VHDL ha il clear **attivo basso** (`reset = '0'`) e il clock sul fronte di salita. Nei circuiti sequenziali in VHDL bisogna gestire le **priorità** (clear prima del clock): per questo si usano statement **sequenziali** dentro un `process`.
+
+## Registri
+Un registro è fatto da $N$ flip flop con il **clock in comune**: memorizza una parola di $N$ bit. Ne esistono quattro tipi, a seconda di come entrano ed escono i dati (slide 13-16).
+
+>[!question] Osservazione: nomi diversi
+>In Reti logiche il [[1. Reti logiche#Registro|registro]] è fatto con $n$ [[1. Reti logiche#Flip-Flop FAc|FF FAc]] con $A$ e $c$ in comune: è un **PIPO** con in più l'ingresso di attivazione $A$. SIPO e SISO sono [[1. Reti logiche#Registri a scorrimento|registri a scorrimento]].
+
+### Parallel IN – Parallel OUT (PIPO)
+Ogni FF ha il suo ingresso $D_i$ e la sua uscita $Q_i$: a ogni fronte attivo del clock tutti gli $N$ bit vengono caricati **insieme**. $Q$ è **sincronizzata con il clock** (slide 13).
+
+![[Sequenziali-pipo-timing.svg|center|500]]
+
+>[!check] Esempio: PIPO a 4 bit (lavagna)
+>$N$ flip flop tutti provvisti di **clear attivo basso**: ingressi $A(3)\dots A(0)$, uscite $QA(3)\dots QA(0)$, segnali **Clock** e **Clear** in comune a tutti i FF.
+>![[Sequenziali-pipo-lavagna.svg|center|600]]
+### Serial IN – Parallel OUT (SIPO)
+I FF sono in cascata: l'uscita $Q$ di ciascuno entra nel $D$ del successivo, e a ogni fronte il dato **scorre** di una posizione. Il dato entra da un solo ingresso $D$ e si leggono tutte le uscite $Q_1 \dots Q_n$. Una stringa binaria di $n$ bit viene memorizzata **dopo $n$ cicli di clock** (slide 14).
+
+![[Sequenziali-sipo.svg|center|550]]
+
+### Parallel IN – Serial OUT (PISO)
+I bit $D_1 \dots D_4$ si caricano in parallelo tramite **preset e clear** ($Pr = D_i$, $Cr = \overline{D_i}$, attivi alti), poi escono in serie da $Q$ dello stesso schema a scorrimento (slide 15).
+
+![[Sequenziali-piso.svg|center|500]]
+
+### Serial IN – Serial OUT (SISO)
+Stessa catena del SIPO, ma si legge solo l'uscita dell'ultimo FF: il dato entra in serie da $D$ ed esce in serie da $Q$ (slide 16).
+
+![[Sequenziali-siso.svg|center|550]]

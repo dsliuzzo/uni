@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="470" height="220" viewBox="0 0 470 220">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<path d="M150,30 h18 a20.0,20.0 0 0 1 0,40 h-18 z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="193.0" cy="50.0" r="5" fill="none" stroke="#b8b8b8" stroke-width="2"/>
+<path d="M150,140 h18 a20.0,20.0 0 0 1 0,40 h-18 z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="193.0" cy="160.0" r="5" fill="none" stroke="#b8b8b8" stroke-width="2"/>
+<path d="M300,30 h18 a20.0,20.0 0 0 1 0,40 h-18 z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="343.0" cy="50.0" r="5" fill="none" stroke="#b8b8b8" stroke-width="2"/>
+<path d="M300,140 h18 a20.0,20.0 0 0 1 0,40 h-18 z" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round"/>
+<circle cx="343.0" cy="160.0" r="5" fill="none" stroke="#b8b8b8" stroke-width="2"/>
+<text x="20" y="45" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic">D</text>
+<line x1="35" y1="40" x2="150" y2="40" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="70" cy="40" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="70" y1="40" x2="70" y2="170" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="70,170 90,170" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polygon points="90,162 90,178 104,170" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="109" cy="170" r="5" fill="none" stroke="#b8b8b8" stroke-width="2"/>
+<line x1="114" y1="170" x2="150" y2="170" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="20" y="105" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic">clk</text>
+<line x1="45" y1="100" x2="120" y2="100" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="120" cy="100" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="120" y1="60" x2="120" y2="150" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="120" y1="60" x2="150" y2="60" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="120" y1="150" x2="150" y2="150" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="198.0" y1="50.0" x2="300" y2="50.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="270" y="42" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">A</text>
+<line x1="198.0" y1="160.0" x2="300" y2="160.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="270" y="152" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">B</text>
+<line x1="348.0" y1="50.0" x2="450" y2="50.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="455" y="55.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic">Q</text>
+<line x1="348.0" y1="160.0" x2="450" y2="160.0" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="455" y="165.0" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic" text-decoration="overline">Q</text>
+<circle cx="420" cy="50.0" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<circle cx="420" cy="160.0" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<polyline points="420,50.0 420,95 285,125 285,170 300,170" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="420,160.0 420,125 285,95 285,60 300,60" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

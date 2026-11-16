@@ -910,3 +910,26 @@ begin
 		end loop;
 end Sim;
 ```
+
+
+---
+
+``` vhdl
+Library IEEE
+use ieee.std_logic_1164.all;
+Entity LatchN is
+port(
+	D, clk: in std_logic;
+	Q: out std_logic);
+Architecture myLN of LatchN is
+-- prima di qualsiasi cosa devo verificare
+-- se clk = 0
+--   Q <= D
+-- altrimenti Q non cambia
+begin
+	process (clk, D) begin -- va aggiunta la sensitivity list (elenco di tutti i segnali o porte di ingresso o porte di ingresso del circuito che in maniera diretta possono far cambiare un altro segnale o una porta di uscita)
+		if clk = 0 then Q <= D;
+		end if;
+	end process;
+end myLN;
+```

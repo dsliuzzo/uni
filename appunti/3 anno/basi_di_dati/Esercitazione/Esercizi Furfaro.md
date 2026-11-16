@@ -771,9 +771,33 @@ FROM coppieNo
 
 # Esercizi 6
 **Query per casa**
-
 1) Voglio conoscere il numero di clienti di Cosenza e con età compresa tra 15 e 25 anni
-2) Numero di volte che è stato acquistato il prodotto `P1` a un prezzo unitario inferiore a 10 da clienti di Cosenza
-3) Per ogni cliente di Cosenza il numero di esemplari complessivi da lui acquistati del prodotto `P1`
-4) Per ogni città l'importo complessivo delle fatture intestate a clienti della città ed emesse nel 2026
+``` sql
+SELECT COUNT(*)
+FROM Cliente
+WHERE eta <= 25 AND eta >= 15 AND citta = 'Cosenza'
+```
 
+2) Numero di volte che è stato acquistato il prodotto `P1` a un prezzo unitario inferiore a 10 da clienti di Cosenza
+``` sql
+SELECT COUNT(*)
+FROM Composizione Com, Cliente Cli, Fattura F
+WHERE Com.prodotto = 'P1' AND Com.prezzoU < 10 AND Com.fattura_numero = F.numero AND Com.fattura_anno = F.anno AND F.cliente = Cli.CF AND Cli.citta = 'Cosenza'
+```
+
+3) Per ogni cliente di Cosenza il numero di esemplari complessivi da lui acquistati del prodotto `P1`
+``` sql
+SELECT F.cliente, SUM(Com.qnt)
+FROM Composizione Com, Fattura F, Cliente Cli
+WHERE Com.prodotto = 'P1' AND Com.fattura_numero = F.numero AND Com.fattura_anno = F.anno AND Cli.citta = 'Cosenza' AND Cli.CF = F.cliente
+GROUP BY F.cliente
+```
+
+4) Per ogni città l'importo complessivo delle fatture intestate a clienti della città ed emesse nel 2026
+``` sql
+SELECT Cli.citta, SUM(Com.qnt * Com.prezzoU)
+FROM Cliente Cli, Fattura F, Composizione Com
+WHERE   F.numero = Com.fattura_numero AND F.anno = Com.fattura_anno AND F.cliente = Cli.CF
+	AND F.anno = 2026
+GROUP BY Cli.citta
+```

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="230" viewBox="0 0 640 230">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="90" y="70" width="80" height="64" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="108" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">ck</text>
+<text x="152" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">D</text>
+<text x="152" y="122" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">Q</text>
+<text x="130" y="94" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Pr</text>
+<text x="130" y="122" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Cr</text>
+<line x1="130" y1="70" x2="130" y2="18" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="130" y="14" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">D4</text>
+<line x1="130" y1="134" x2="130" y2="190" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="130" y="206" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic" text-decoration="overline">D4</text>
+<line x1="108" y1="70" x2="108" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="108" cy="45" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<rect x="220" y="70" width="80" height="64" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="238" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">ck</text>
+<text x="282" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">D</text>
+<text x="282" y="122" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">Q</text>
+<text x="260" y="94" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Pr</text>
+<text x="260" y="122" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Cr</text>
+<line x1="260" y1="70" x2="260" y2="18" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="260" y="14" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">D3</text>
+<line x1="260" y1="134" x2="260" y2="190" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="260" y="206" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic" text-decoration="overline">D3</text>
+<line x1="238" y1="70" x2="238" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="238" cy="45" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<rect x="350" y="70" width="80" height="64" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="368" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">ck</text>
+<text x="412" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">D</text>
+<text x="412" y="122" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">Q</text>
+<text x="390" y="94" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Pr</text>
+<text x="390" y="122" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Cr</text>
+<line x1="390" y1="70" x2="390" y2="18" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="390" y="14" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">D2</text>
+<line x1="390" y1="134" x2="390" y2="190" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="390" y="206" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic" text-decoration="overline">D2</text>
+<line x1="368" y1="70" x2="368" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="368" cy="45" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<rect x="480" y="70" width="80" height="64" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="498" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">ck</text>
+<text x="542" y="94" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">D</text>
+<text x="542" y="122" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">Q</text>
+<text x="520" y="94" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Pr</text>
+<text x="520" y="122" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">Cr</text>
+<line x1="520" y1="70" x2="520" y2="18" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="520" y="14" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic">D1</text>
+<line x1="520" y1="134" x2="520" y2="190" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="520" y="206" font-size="12" text-anchor="middle" fill="#b8b8b8" font-style="italic" text-decoration="overline">D1</text>
+<line x1="498" y1="70" x2="498" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="498" cy="45" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="108" y1="45" x2="498" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="108" y1="45" x2="60" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="55" y="49" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">ck</text>
+<line x1="542" y1="70" x2="542" y2="30" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<polyline points="542,134 542,155 442,155 442,58 412,58 412,70" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="412,134 412,155 312,155 312,58 282,58 282,70" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="282,134 282,155 182,155 182,58 152,58 152,70" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="152" y1="134" x2="152" y2="170" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="152" y="186" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">Q</text>
+</svg>
