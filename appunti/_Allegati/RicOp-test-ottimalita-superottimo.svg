@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="335" viewBox="0 0 540 335">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .b{fill:#7aa2d6} .r{fill:#d68a8a} .g{fill:#8ac78f} </style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7aa2d6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- regioni dei valori -->
+ <rect x="310" y="35" width="120" height="190" rx="6" stroke="#7aa2d6"/>
+ <rect x="110" y="225" width="120" height="75" rx="6" stroke="#d68a8a"/>
+ <!-- asse dei valori -->
+ <line x1="270" y1="310" x2="270" y2="24" marker-end="url(#arrow)"/>
+ <!-- z* -->
+ <line x1="90" y1="225" x2="450" y2="225" stroke="#8ac78f" stroke-dasharray="6 6"/>
+ <!-- gap nullo: stessa altezza -->
+ <g stroke-width="1.5" stroke-dasharray="3 5">
+  <line x1="178" y1="60" x2="362" y2="60"/>
+  <line x1="178" y1="115" x2="362" y2="115"/>
+  <line x1="178" y1="170" x2="362" y2="170"/>
+ </g>
+ <!-- x̄ ammissibili -->
+ <g stroke="#7aa2d6" fill="#7aa2d6"><circle cx="370" cy="60" r="5"/><circle cx="370" cy="115" r="5"/><circle cx="370" cy="170" r="5"/></g>
+ <!-- ȳ complementari non ammissibili -->
+ <g stroke="#d68a8a"><circle cx="170" cy="60" r="5"/><circle cx="170" cy="115" r="5"/><circle cx="170" cy="170" r="5"/></g>
+ <!-- ottimo -->
+ <g stroke="#8ac78f" fill="#8ac78f"><circle cx="370" cy="225" r="6"/><circle cx="170" cy="225" r="6"/></g>
+ <!-- discesa -->
+ <line x1="455" y1="60" x2="455" y2="212" stroke="#7aa2d6" marker-end="url(#arrowb)"/>
+</g>
+<text class="ts" x="270" y="10">valore</text>
+<text class="th b" x="370" y="18">cᵀx, x ∈ Ω(P)</text>
+<text class="th r" x="170" y="318">bᵀy, y ∈ Ω(D)</text>
+<text class="th g" x="470" y="225">z*</text>
+<text class="t b" x="395" y="60">x̄⁰</text><text class="t b" x="395" y="115">x̄¹</text><text class="t b" x="395" y="170">x̄²</text>
+<text class="t r" x="115" y="60">ȳ⁰ ∉ Ω(D)</text><text class="t r" x="115" y="115">ȳ¹ ∉ Ω(D)</text><text class="t r" x="115" y="170">ȳ² ∉ Ω(D)</text>
+<text class="ts r" x="115" y="32">"superottimi"</text>
+<text class="ts" x="220" y="48">gap = 0</text>
+<text class="t g" x="395" y="244">x*</text><text class="t g" x="145" y="244">y*</text>
+<text class="ts b" x="500" y="136">cᵀx̄ cala</text>
+</svg>

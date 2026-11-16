@@ -31,6 +31,7 @@ Un problema decisionale può essere affrontato in 5 fasi:
 4. Soluzione numerica
 5. Validazione del modello
 
+- [[Problemi di flusso]]
 # Esame
 ## Scritto
 Durata: 2 ore

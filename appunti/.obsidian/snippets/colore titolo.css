@@ -42,6 +42,17 @@ strong, .cm-strong {
     text-align: center !important;
 }
 
+/* 3. DENTRO I CALLOUT (Live Preview)
+ *  Il contenuto dei callout è renderizzato come blocco a parte
+ *  (.markdown-rendered), non come righe di CodeMirror: qui si può
+ *  centrare l'immagine direttamente senza rompere il cursore. */
+.callout-content img[alt*="center"] {
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    float: none !important;
+}
+
 
 /* nuovi callout */
 .callout[data-callout="structure"] {

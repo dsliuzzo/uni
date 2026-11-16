@@ -1,3 +1,6 @@
+#basi_di_dati 
+#appunti 
+
 # Prova esame 29 giugno 2018
 ## Esercizio 1
 ### A
@@ -278,7 +281,15 @@ $$
 \text{Q2} = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2inv} \right)
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT C.*
+FROM Cliente AS C, Sottoscrizione AS Sott1, Sottoscrizione AS Sott2
+WHERE   C.citta = 'Cosenza'
+	AND Sott1.cliente = Sott2.cliente
+	AND C.CodiceFiscale = Sott1.cliente
+	AND Sott1.Investimento != Sott2.investimento
+```
+
 3) I clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie
 $$
 \begin{array}{l}
@@ -287,7 +298,17 @@ $$
 \text{Q3} = \Pi_{\$1, \$2, \$3} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{almeno2soc} \right)
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT C.*
+FROM Cliente AS C, Sottoscrizione AS Sott1, Investimento AS I1, Sottoscrizione AS Sott2, Investimento AS I2
+WHERE   Sott1.Investimento = I1.Nome
+	AND Sott2.Investimento = I2.Nome
+	AND Sott1.Investimento = Sott2.Investimento
+	AND I1.SocietaFinanziaria != I2.SocietaFinanziaria
+	AND C.Citta = 'Cosenza'
+	AND C.CodiceFiscale = Sott1.Cliente
+```
+
 4) Il nome dei clienti della città di Cosenza che hanno sottoscritto investimenti di almeno due società finanziarie, ciascuna delle quali è curatrice di almeno due investimenti;
 $$
 \begin{array}{l}
@@ -297,7 +318,26 @@ $$
 \text{Q4} = \Pi_{\$2} \left( \text{clientiCS} \underset{\$1 = \$1}{\bowtie} \text{pippo} \right)
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW sottCur (cliente, investimento, societa) AS (
+	SELECT Sott.Cliente AS cliente, Sott.Investimento AS investimento, I.SocietaFinanziaria AS societa
+	FROM Sottoscrizione AS Sott, Investimento AS I, Investimento AS I1, Investimento AS I2
+	WHERE   Sott.Investimento = I.Nome
+		AND I.SocietaFinanziaria = I1.SocietaFinanziaria
+		AND I1.Nome != I2.Nome
+		AND I1.SocietaFinanziaria = I2.SocietaFinanziaria
+);
+
+SELECT C.Nome
+FROM Cliente AS C, SottCurr AS S1, SottCurr AS S2
+WHERE   C.Citta = 'Cosenza'
+	AND C.CodiceFiscale = S1.cliente
+	AND S1.cliente = S2.cliente
+	AND S1.investimento = S2.investimento
+	AND S1.societa != S2.societa
+```
+
+
 5) I clienti che hanno sottoscritto almeno un investimento di tipo “obbligazione” curati da società finanziarie di Cosenza
 $$
 \begin{array}{l}
@@ -306,19 +346,57 @@ $$
 \text{Q5} = \Pi_{\$1}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{invObbCS} \right)
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT Sott.Cliente
+FROM Sottoscrizione AS Sott, Investimento AS I, Societa AS Soc
+WHERE   Soc.Citta = 'Cosenza'
+	AND I.TipoInvestimento = 'Obbligazione'
+	AND I.SocietaFinanziaria = Soc.Nome
+	AND Sott.Investimento = I.Nome
+```
+
+
 6) I clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
 $$
 \begin{array}{l}
 \text{Q6} = \Pi_{\$1}(\text{cliente}) - \Pi_{\$1}\left[ \sigma_{\$6 = \text{'obbligazione'}}\left( \text{sottoscrizione} \underset{\$2 = \$1}{\bowtie} \text{investimento}\right) \right]
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT C.CodiceFiscale AS cliente
+FROM Cliente AS C
+
+EXCEPT
+
+SELECT Sott.Cliente AS cliente
+FROM Sottoscrizione AS Sott, Investimento AS I
+WHERE   I.TipoInvestimento = 'Obbligazione'
+	AND Sott.Investimento = I.Nome
+```
+
 7) Le città dei clienti che non hanno sottoscritto alcun investimento di tipo “obbligazione”
 $$
 \text{Q7} = \Pi_{\$3} \left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{Q6} \right)
 $$
-%%sql%%
+``` sql
+CREATE VIEW ClienteObb (cliente) AS (
+	SELECT C.CodiceFiscale AS cliente
+	FROM Cliente AS C
+	
+	EXCEPT
+	
+	SELECT Sott.Cliente AS cliente
+	FROM Sottoscrizione AS Sott, Investimento AS I
+	WHERE   I.TipoInvestimento = 'Obbligazione'
+		AND Sott.Investimento = I.Nome
+);
+
+SELECT C.Citta
+FROM Cliente AS C, ClienteObb
+WHERE C.CodiceFiscale = ClienteObb.cliente
+```
+
+
 8) Le città che non hanno nessun cliente che ha sottoscritto almeno un investimenti di tipo “obbligazione”
 $$
 \begin{array}{l}
@@ -326,7 +404,19 @@ $$
 \text{Q8} = \Pi_{\$3}(\text{cliente}) - \Pi_{\$3}\left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{clienteObb} \right)
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT C.Citta AS citta
+FROM Cliente AS C
+
+EXCEPT
+
+SELECT C.Citta AS citta
+FROM Cliente AS C, Sottoscrizione AS S, Investimento AS I
+WHERE   S.Investimento = I.Nome
+	AND I.TipoInvestimento = 'Obbligazione'
+	AND S.Cliente = C.CodiceFiscale
+```
+
 9) Le città dei clienti che hanno sottoscritto investimenti, ma non di tipo “obbligazione”
 $$
 \begin{array}{l}
@@ -334,7 +424,25 @@ $$
 \text{Q9} = \Pi_{\$3}\left( \text{cliente} \underset{\$1 = \$1}{\bowtie} \text{clientiNoObb} \right)
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW clientiNoObb (cliente) AS (
+	SELECT S.Cliente
+	FROM Sottoscrizione AS S
+	
+	EXCEPT
+	
+	SELECT S.Cliente AS cliente
+	FROM Sottoscrizione AS S, Investimento AS I
+	WHERE   S.Investimento = I.Nome
+		AND I.TipoInvestimento = 'Obbligazione'
+);
+
+SELECT C.citta
+FROM clientiNoObb, Cliente
+WHERE Cliente.CodiceFiscale = clientiNoObb.cliente
+```
+
+
 10) I clienti che hanno sottoscritto tutti gli investimenti di tipo “obbligazione” curati da società finanziarie di Cosenza.
 tutti i clienti - clienti(tutte le possibili coppie (cliente|investimento) - quelle reali)
 $$
@@ -343,7 +451,30 @@ $$
 \text{Q10} = \Pi_{\$1}(\text{cliente}) - \text{clientiNo}
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW clientiNo (cliente, investimento) AS (
+	SELECT C.CodiceFiscale AS cliente, I.Nome AS investimento
+	FROM Cliente AS C, Investimento AS I, Societa AS S
+	WHERE   I.TipoInvestimento = 'Obbligazione'
+		AND S.Citta = 'Cosenza'
+		AND I.SocietaFinanziaria = I.Nome
+	
+	EXCEPT
+	
+	SELECT S.Cliente AS cliente, S.Investimento AS investimento
+	FROM Sottoscrizione AS S
+);
+
+SELECT C.CodiceFiscale AS cliente
+FROM Cliente AS C
+
+EXCEPT
+
+SELECT clientiNo.cliente
+FROM clientiNo
+```
+
+
 11) Coppie di clienti `<C1,C2>` che hanno sottoscritto investimenti curati dallo stesso insieme di società finanziarie
 trovo tutte le coppie $(c|s)$ tali che il cliente $c$ non ha sottoscritto investimenti curati dalla società $s$
 $$ \text{csNo} = [\Pi_{\$ 1}(\text{Cliente}) \times \Pi_{\$ 1} (\text{Societa})] - \Pi_{\$ 1, \$ 5} \left( \text{Sottoscrizione} \underset{\$ 2 = \$ 1}{\bowtie} \text{Investimento}\right) $$
@@ -566,7 +697,21 @@ $$
 \text{Q1} = \Pi_{\$2, \$3, \$4}\left(\text{COND} \underset{\$1 = \$1}{\bowtie} \sigma_{\$3 = \text{'RENDE'}}(\text{CONDOMINIO})\right)
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT C.*
+FROM Affitto A1, Affitto A2, Affitto A3, Affitto A4, Condominio C
+WHERE A1.dataInizio = 2021 AND A2.dataInizio = 2021
+  AND A3.dataInizio = 2021 AND A4.dataInizio = 2021
+  -- appartamento 1: due inquilini diversi
+  AND A1.appCondominio = A2.appCondominio AND A1.appInterno = A2.appInterno
+  AND A1.inquilino != A2.inquilino
+  -- appartamento 2: due inquilini diversi
+  AND A3.appCondominio = A4.appCondominio AND A3.appInterno = A4.appInterno
+  AND A3.inquilino != A4.inquilino
+  -- i due appartamenti sono nello stesso condominio ma diversi
+  AND A1.appCondominio = A3.appCondominio AND A1.appInterno != A3.appInterno
+  AND C.citta = 'Rende' AND C.nome = A1.appCondominio
+```
 
 2) I condomini di Rende che non hanno affittato alcun appartamento nell'anno 2020
 $$
@@ -575,7 +720,17 @@ $$
 \text{Q2} = \Pi_{\$1}\left(\sigma_{\$3 = \text{'RENDE'}}(\text{CONDOMINIO})\right) - \text{AFFITTO2020}
 \end{array}
 $$
-%%sql%%
+``` sql
+SELECT C.nome AS cond
+FROM Condominio AS C
+WHERE C.citta = 'Rende'
+
+EXCEPT
+
+SELECT A.appCondominio AS cond
+FROM Affitto
+WHERE A.dataInizio = 2020
+```
 
 3) I condomini di Rende che hanno affittato appartamenti solo ad inquilini della città di Cosenza
 $$
@@ -585,7 +740,30 @@ $$
 \text{Q3} = \sigma_{\$3 = \text{'RENDE'}}(\text{CONDOMINIO}) - \text{ALTRI}
 \end{array}
 $$
-%%sql%%
+
+``` sql
+CREATE VIEW inqNoCod (inquilino) AS (
+	SELECT I.codiceFiscale AS inquilino
+	FROM Inquilino AS I
+	
+	EXCEPT
+	
+	SELECT I.codiceFiscale AS inquilino
+	FROM Inquilino AS I
+	WHERE I.citta = 'Cosenza'
+);
+
+SELECT *
+FROM Condominio
+WHERE citta = 'Rende'
+
+EXCEPT
+
+SELECT C.nome nome, C.indirizzo indirizzo, C.citta citta
+FROM Affitto AS A, inqNoCos AS I, Condominio AS C
+WHERE   A.inquilino = I.codiceFiscale
+	AND A.appCondominio = C.nome
+```
 
 4) Le coppie di nomi di inquilini che hanno affittato lo stesso insieme di appartamenti nella città di Cosenza
 $$
@@ -596,7 +774,46 @@ $$
 \text{Q4} = \Pi_{\$ 2,\$ 9} \left[ \text{Inquilino} \underset{\$ 1 = \$ 2}{\bowtie}\left( \text{coppieSi} \underset{\$ 1 = \$ 1}{\bowtie} \text{Inquilino} \right) \right]
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW icNo (inquilino, appCondominio, appInterno) AS (
+	SELECT I.codiceFiscale AS inquilino, A.condominio AS appCondominio, A.interno AS appInterno
+	FROM Inquilino AS I, Appartamento AS A, Condominio AS C
+	WHERE   C.citta = 'Cosenza'
+		AND A.condominio = C.nome
+	
+	EXCEPT
+	
+	SELECT inquilino, appCondominio, appInterno
+	FROM Affitto
+);
+
+CREATE VIEW coppieNo (i1, i2) AS (
+	SELECT A.inquilino AS i1, icNo.inquilino AS i2
+	FROM Affitto AS A, icNo
+	WHERE A.appCondominio = icNo.appCondominio AND A.appInterno = icNo.appInterno
+);
+
+CREATE VIEW coppieSi (i1, i2) AS (
+	SELECT I1.codiceFiscale AS i1, I2.codiceFiscale AS i2
+	FROM Inquilino AS I1, Inquilino AS I2
+	WHERE I1.codiceFiscale < I2.codiceFiscale
+	
+	EXCEPT
+	
+	SELECT *
+	FROM coppieNo
+	
+	EXCEPT
+	
+	SELECT i2 AS i1, i1 AS i2
+	FROM coppieNo
+);
+
+SELECT I1.nome, I2.nome
+FROM Inquilino AS I1, Inquilino AS I2, coppieSi
+WHERE   I1.codiceFiscale = coppieSi.i1
+	AND I2.codiceFiscale = coppieSi.i2
+```
 
 # Prova esame 30 giugno 2022
 ## Esercizio 3
@@ -621,7 +838,20 @@ $$
 Q = \Pi_{\$2}\left[\text{scrittori} \underset{\$1 = \$1}{\bowtie}\left(\text{artC} \underset{\$ 1 = \$ 1 \wedge \$2 \neq \$2}{\bowtie} \text{artC}\right)\right]
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW artC (scrittore, categoria) AS (
+	SELECT A.scrittore scrittore, A.categoria categoria
+	FROM Articolo A, Categoria C
+	WHERE   C.nome = 'cronaca'
+		AND A.categoria = C.id
+);
+
+SELECT S.nome
+FROM Scrittore AS S, artC AS A1, artC AS A2
+WHERE   A1.scrittore = A2.scrittore
+	AND A1.categoria != A2.categoria
+	AND S.codiceFiscale = A1.scrittore
+```
 
 2)  I nomi delle categorie di cui esiste una coppia di articoli redatti da scrittori diversi accreditati per tale categoria, dove ciascuno di tali scrittori ha scritto articoli di almeno due categorie differenti nell'anno 2018
 $$
@@ -631,14 +861,45 @@ $$
 Q = \Pi_{\$2}\left(\text{categoria} \underset{\$1 = \$2}{\bowtie}\left\{\left[\left(\text{articolo} \underset{\$1 \neq \$1 \wedge \$2 = \$2}{\bowtie} \text{articolo}\right) \underset{\$1 = \$1 \wedge \$2 = \$2}{\bowtie} \text{acc2018}\right] \underset{\$5 = \$1 \wedge \$6 = \$2}{\bowtie} \text{acc2018}\right\}\right)
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW catDiff2018 (scrittore) AS (
+	SELECT A1.scrittore AS scrittore
+	FROM Articolo A1, Articolo A2
+	WHERE   A1.data = 2018 AND A2.data = 2018
+		AND A1.scrittore = A2.scrittore
+		AND A1.categoria != A2.categoria
+);
+
+CREATE VIEW acc2018 (scrittore, categoria) AS (
+	SELECT A.scrittore scrittore, A.categoria categoria
+	FROM Accreditato A, catDiff2018 cat
+	WHERE A.scrittore = cat.scrittore
+);
+
+SELECT C.nome AS nome
+FROM Categoria C, Articolo A1, Articolo A2, acc2018 acc1, acc2018 acc2
+WHERE   A1.scrittore != A2.scrittore AND A1.categoria = A2.categoria
+	AND A1.scrittore = acc1.scrittore AND A1.categoria = acc1.categoria
+	AND A2.scrittore = acc2.scrittore AND A2.categoria = acc2.categoria
+	AND C.id = A1.categoria
+```
 
 3) Gli scrittori della città di Genova che hanno scritto solo articoli di categorie per le quali non sono accreditati
 scrittori della città di genova - scrittori che hanno scritto articoli di categorie per le quali sono accreditati
 $$
 \text{Q3} = \Pi_{\$ 1}[\sigma_{\$ 4 = \text{'Genova'}}(\text{Scrittore})] - \Pi_{\$ 1} \left( \text{Articolo} \underset{\$ 1 = \$ 1 \wedge \$ 2 = \$ 2}{\bowtie} \text{Accreditato} \right)
 $$
-%%sql%%
+``` sql
+SELECT S.codiceFiscale AS scrittore
+FROM Scrittore S
+WHERE S.citta = 'Genova'
+
+EXCEPT
+
+SELECT Art.scrittore
+FROM Articolo Art, Accreditato Acc
+WHERE Art.scrittore = Acc.scrittore AND Art.categoria = Acc.categoria
+```
 
 
 4) Le coppie di scrittori `<S1,S2>` che hanno scritto articoli per lo stesso insieme di categorie
@@ -649,4 +910,34 @@ $$
 \text{Q4} = \left[ \Pi_{\$ 1, \$ 6}\left( \text{Scrittore} \underset{\$ 1 < \$ 1}{\bowtie} \text{Scrittore} \right) - \text{coppieNo} \right] - \Pi_{\$ 2, \$ 1}(\text{coppieNo})
 \end{array}
 $$
-%%sql%%
+``` sql
+CREATE VIEW scNo (scrittore, categoria) AS (
+	SELECT S.codiceFiscale scrittore, A.categoria categoria
+	FROM Scrittore S, Articolo A
+	
+	EXCEPT
+	
+	SELECT scrittore, categoria
+	FROM Articolo
+);
+
+CREATE VIEW coppieNo (s1, s2) AS (
+	SELECT A.scrittore s1, scNo.scrittore s2
+	FROM Articolo A, scNo
+	WHERE A.categoria = scNo.categoria
+);
+
+SELECT S1.codiceFiscale s1, S2.codiceFiscale s2
+FROM Scrittore S1, Scrittore S2
+WHERE S1.codiceFiscale < S2.codiceFiscale
+
+EXCEPT
+
+SELECT *
+FROM coppieNo
+
+EXCEPT
+
+SELECT s2 AS s1, s1 AS s2
+FROM coppieNo
+```

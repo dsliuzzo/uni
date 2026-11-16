@@ -2,7 +2,7 @@
 #basi_di_dati
 # Appunti
 [[DBMS]]
-
+[[3 anno/basi_di_dati/Esercitazione/Esercitazione|Esercitazione]]
 
 # Esame
 Scritto e orale di pari importanza

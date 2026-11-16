@@ -6,6 +6,7 @@
 4. tecnologie di comunicazione e di rete
 5. modi di interpretare e gestire l'informazione
 
+[[3 anno/reti_di_telecomunicazioni/Esercitazione|Esercitazione]]
 **esame**
 prova scritta e orale
 la scritta è cambiata l'anno scorso e sarà come l'anno scorso

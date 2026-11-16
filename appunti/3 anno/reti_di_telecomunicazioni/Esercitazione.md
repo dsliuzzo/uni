@@ -1,3 +1,5 @@
+#appunti 
+#telecomunicazioni
 # Esercitazione 1
 
 ## Esercizio 1: scambio dati tra due stazioni su Ethernet asimmetrico

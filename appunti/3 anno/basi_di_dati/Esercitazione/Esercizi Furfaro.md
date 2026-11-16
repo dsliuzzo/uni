@@ -768,3 +768,282 @@ EXCEPT
 SELECT m2, m1
 FROM coppieNo
 ```
+
+
+
+
+---
+
+
+testare l'appartenenza di un elemento ad un insieme
+predicato `IN` $\in$ e `NOT IN` $\notin$
+
+*es.* nomi dei fornitori che forniscono qualche merce
+$$
+\Pi_{\$ 2}\left( \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitura} \right)
+$$
+manteniamo solo i fornitori che forniscono qualcosa
+
+``` sql
+SELECT F.nome
+FROM Fornitore F, Fornitura X
+WHERE F.piva = X.fornitore;
+```
+
+concettualmente è esagerata.
+testiamo se una tupla sta in una select
+``` sql
+SELECT F.nome
+FROM Fornitore F
+WHERE F.piva IN (SELECT fornitore FROM Fornitura);
+```
+dentro la parentesi esprimo la query in cui si deve trovare l'elemento che precede `IN`
+```
+<tupla> IN (<query>)
+```
+
+tramite il `NOT IN` possiamo evitare di effettuare tutte quelle operazioni di sottrazione che abbiamo usato in algebra
+
+*es.* nomi dei fornitori che non forniscono nulla
+$$
+\Pi_{\$ 2}\left\{ \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie} [\Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{Fornitura})]\right\}
+$$
+
+questa query prende il nome di **formulazione procedurale**. In sql invece la query segue l'enunciato, è una **formulazione dichiarativa**
+``` sql
+SELECT F.nome
+FROM Fornitore F
+WHERE F.piva NOT IN (SELECT fornitore FROM Fornitura);
+```
+
+errori tipici
+``` sql
+SELECT F.nome
+FROM Fornitore F
+WHERE F.piva IN Fornitura
+```
+ma non possiamo dire se una tupla appartiene ad una tabella: il predicato IN vuole a sinistra una tupla e a destra una query, non una tabella, anche se prendiamo tutte le colonne di Fornitura.
+
+Inoltre dovremmo rinominare gli attributi in modo tale che abbiano lo stesso nome, stesso discorso della sottrazione.
+
+Se confrontiamo un numero maggiore di attributi sql non saprebbe nemmeno come mappare i due elementi.
+
+
+*es.* voglio conoscere le città in cui risiedono marche che non producono merci fornite a cosenza
+``` sql
+SELECT sede
+FROM Marca
+WHERE nome NOT IN (
+	SELECT M.marca AS nome
+	FROM Fornitura X, Fornitore F, Merce M
+	WHERE   X.fornitore = F.piva
+		AND X.merce = M.cod
+		AND F.citta = 'Cosenza'
+	);
+```
+
+
+predicato che testa se il risultato di una query è vuoto o no (è verificato se esiste almeno una tupla in un irsultato)
+`EXISTS` $\exists$ e `NOT EXISTS` $\nexists$
+
+*es.* insieme dei fornitori che forniscono qualche merce
+``` sql
+SELECT F.nome
+FROM Fornitore F
+WHERE EXISTS (
+	SELECT *
+	FROM Fornitura X
+	WHERE X.fornitore = F.piva
+);
+```
+
+non ha un argomento che lo precede
+```
+EXISTS (<query>)
+```
+è verificato se esiste almeno una tupla in `<query>`
+
+la visibilità degli attributi verso l'interno è valida, verso l'esterno no. Quindi in questo caso possiamo usare `F.piva`, ma prima non c'erano problemi di omonimia perché quelle esterne non vedono quelle interne.
+
+
+*es.* nomi dei fornitori che forniscono tutte le merci
+nomi dei fornitori tali che non esiste alcuna merce che essi non forniscono
+``` sql
+SELECT F.nome
+FROM Fornitore F
+WHERE NOT EXISTS ( -- non esiste una merce che essi non forniscono
+	SELECT *
+	FROM Merce M
+	WHERE F.piva NOT IN ( -- elenco delle merci da essi fornite
+		SELECT X.fornitore
+		FROM Fornitura X
+		WHERE X.merce = M.cod
+	)
+);
+```
+
+che essi non forniscono $\equiv$ che non appartiene alla lista delle merci da essi fornite
+
+``` sql
+SELECT F.nome
+FROM Fornitore F
+WHERE NOT EXISTS ( -- non esiste una merce che essi non forniscono
+	SELECT *
+	FROM Merce M
+	WHERE M.cod NOT IN ( -- elenco delle merci da essi fornite
+		SELECT X.merce
+		FROM Fornitura X
+		WHERE X.fornitore = F.piva
+	)
+);
+```
+
+*es.* coppie di fornitori $(f', f'')$ che forniscono lo stesso insieme di merci
+coppie $(f', f'')$ tali che non esiste alcuna merce fornita da $f'$ e non da $f''$ o viceversa
+non esiste alcuna merce $m$ che $\in$ alla lista di merci di $f'$ e $\notin$ alla lista di merci fornite da $f''$
+
+``` sql
+SELECT F1.piva, F2.piva
+FROM Fornitore F1, Fornitore F2
+WHERE F1.piva < F2.piva
+AND NOT EXISTS (
+	SELECT *
+	FROM Merce M
+	WHERE M.cod IN (
+		SELECT X.merce AS cod
+		FROM Fornitura X
+		WHERE X.fornitore = F1.piva
+	) AND M.cod NOT IN (
+		SELECT X.merce AS cod
+		FROM Fornitura X
+		WHERE X.fornitore = F2.piva
+	)
+) AND NOT EXISTS (
+	SELECT *
+	FROM Merce M
+	WHERE M.cod IN (
+		SELECT X.merce AS cod
+		FROM Fornitura X
+		WHERE X.fornitore = F2.piva
+	) AND M.cod NOT IN (
+		SELECT X.merce AS cod
+		FROM Fornitura X
+		WHERE X.fornitore = F1.piva
+	)
+);
+```
+
+
+versione molto più pulita:
+``` sql
+SELECT F1.piva, F2.piva
+FROM Fornitore F1, Fornitore F2
+WHERE F1.piva < F2.piva
+AND NOT EXISTS (
+	SELECT *
+	FROM Merce M
+	WHERE (F1.piva, M.cod) IN (
+		SELECT fornitore, merce
+		FROM Fornitura X
+	) AND (F2.piva, M.cod) NOT IN (
+		SELECT fornitore, merce
+		FROM Fornitura X
+	)
+) AND NOT EXISTS (
+	SELECT *
+	FROM Merce M
+	WHERE (F2.piva, M.cod) IN (
+		SELECT fornitore, merce
+		FROM Fornitura X
+	) AND (F1.piva, M.cod) NOT IN (
+		SELECT fornitore, merce
+		FROM Fornitura X
+	)
+);
+```
+
+in algebra il risultato di tutte le operazioni sono relazioni, in sql no:
+``` sql
+SELECT citta
+FROM Fornitore;
+```
+in algebra restituisce tante righe quante sono le città (le città uguali non vengono riportate)
+in sql non è così: vengono restituite tante righe tante quante sono le righe originali, non accorpa i duplici
+usa multi insiemi di tuple (insieme in cui ogni elemento è associato ad una molteplicità)
+Se tutti i fornitori sono di Cosenza apparirà una tabella con Cosenza tante volte tante quanti sono gli elementi di fornitori
+eliminare i duplicati ha un costo, la query diventa quadratica
+- clausola `DISTINCT`
+aggiungendo la keyword tra la SELECT e gli attributi, restituisce solo righe diverse
+la query diventa più lenta, ma elimina tutti i duplicati
+
+
+query che richiedono ragionamenti di aggregazione
+Operatori di aggregazione
+prese più tuple restituisce una unica tupla che li rappresenta
+supponiamo di avere uno schema in cui rappresentiamo le fatture all'interno di un'azienda
+$$
+\begin{array}{l}
+\text{Cliente}(\underline{\text{CF}}\text{, nome, eta, citta}) \\
+\text{Fattura}(\underline{\text{numero, anno}}\text{, cliente}) \\
+\text{Composizione}(\underline{\text{fattura\_numero, fattura\_anno, prodotto}}\text{, qnt, prezzoU})
+\end{array}
+$$
+
+| CF  | nome | età | città   |
+| --- | ---- | --- | ------- |
+| 1   | A    | 18  | CS      |
+| 2   | B    | 20  | RC      |
+| 3   | C    | 22  | CS      |
+| 4   | D    | 26  | $\perp$ |
+
+
+($\neq$ operatori algebrici, hanno significato diverso) se volessi trasformare Composizione
+$$
+\text{Composizione} (\underline{\text{fattura\_numero, fattura\_anno, prodotto}}\text{, importo})
+$$
+questa non è una operazione di aggregazione, ma semplicemente utilizza operatori algebrici
+``` sql
+SELECT fattura_numero, fattura_anno, prodotto, qnt * prezzo AS importo
+FROM Composizione;
+```
+La parola aggregazione è riservata agli operatori che prendono più tuple e ne restituiscono una in loro rappresentanza, questa operazione sta effettuando operazioni algebriche per unire degli attributi, non delle tuple.
+
+*es.* voglio conoscere il numero di clienti che ho registrato
+``` sql
+SELECT COUNT(CF)
+FROM Cliente;
+```
+restituirà
+
+| COUNT(CF) |
+| --------- |
+| 4         |
+per eseguirla non possiamo osservare una tupla per volta, ma dobbiamo guardarle prima tutte.
+Possiamo anche usare `COUNT(*)` se non vogliamo specificare l'attributo e contare semplicemente le righe
+Se usiamo * o un attributo chiave il risultato è uguale
+Se invece usiamo il `COUNT()` su un attributo non chiave potrebbe restituire un numero minore se per esempio per quell'attributo passato come parametro non è presente in una determinata tupla (*es.* se facciamo `COUNT(citta)` restituisce 3).
+Possiamo anche cercare il numero di elementi diversi
+``` sql
+SELECT COUNT(DISTINCT nome)
+FROM Cliente
+```
+
+esistono altri operatori di aggregazione
+- `SUM`
+- `AVG`
+- `MIN` e `MAX`
+
+due aggregazioni possono essere messi nella stessa tabella, ma solo se ha senso semanticamente, non posso mettere l'età massima dei clienti di Cosenza e l'età minima dei clienti di reggio.
+
+Possiamo aggiungere clausole nel `WHERE`
+quando aggiungiamo un operatore di aggregazione la `SELECT` viene svolta come ultima istruzione
+
+non ha senso inserire sia operatori di aggregazione che normali attributi all'interno della `SELECT`, a meno che non sia comune a tutto l'insieme.
+
+*es.* numero di fatture intestate al cliente Pippo
+``` sql
+SELECT COUNT(*)
+FROM Fatture F, Cliente C
+WHERE   F.cliente = C.CF
+	AND C.nome = 'Pippo'
+```
