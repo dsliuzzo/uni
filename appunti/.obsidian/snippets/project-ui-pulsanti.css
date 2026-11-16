@@ -1,0 +1,42 @@
+/* Generato da ~/project_UI/tools/generate.py: NON modificare a mano.
+   Pulsanti della finestra di Obsidian come quelli di Klassy (resto invariato).
+   Si attiva in Impostazioni → Aspetto → Snippet CSS → project-ui-pulsanti. */
+
+body.mod-linux .titlebar-button-container.mod-right { align-items: center !important; padding-inline-end: 6px !important; }
+/* spazio che Obsidian riserva ai pulsanti a destra (126 px per i suoi): ora sono più piccoli */
+/* Spazio che Obsidian riserva ai pulsanti (126 px per i suoi, più larghi):
+   = larghezza dei nostri. Con la barra laterale destra aperta si tolgono
+   36 px misurati (16/11): li occupa già la barra delle schede della sidebar,
+   altrimenti resta un vuoto. Da chiusa servono tutti (o si sovrappongono). */
+body.mod-linux:not(.mod-system-rtl):not(.is-fullscreen) { --frame-right-space: calc(96px - var(--frame-ribbon-right)) !important; }
+body.mod-linux:not(.mod-system-rtl):not(.is-fullscreen):has(.workspace.is-right-sidedock-open) { --frame-right-space: calc(60px - var(--frame-ribbon-right)) !important; }
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close) {
+  width: 24px !important; height: 24px !important;
+  padding: 0 !important; margin: 0 3px !important;
+  border-radius: 50% !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+  transition: background-color 84ms ease;
+}
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close) > svg, body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close) .svg-icon { display: none !important; }
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close)::before {
+  content: "";
+  width: 16px; height: 16px;
+  /* stesso colore e opacità delle altre icone di Obsidian (clickable-icon) */
+  background-color: var(--icon-color);
+  opacity: var(--icon-opacity);
+  -webkit-mask: var(--pui-icon) center / contain no-repeat;
+}
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close):hover::before { background-color: var(--icon-color-hover); opacity: var(--icon-opacity-hover); }
+/* sempre visibili: in Obsidian accanto ci sono altri pulsanti (Davide, 16/11) */
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close):hover { background-color: transparent !important; }
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-minimize { --pui-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-2%20-2%2028%2028%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2012h14%22%20/%3E%3C/g%3E%3C/svg%3E"); }
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-maximize { --pui-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-2%20-2%2028%2028%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M15%203h6v6%22%20/%3E%3Cpath%20d%3D%22m21%203-7%207%22%20/%3E%3Cpath%20d%3D%22m3%2021%207-7%22%20/%3E%3Cpath%20d%3D%22M9%2021H3v-6%22%20/%3E%3C/g%3E%3C/svg%3E"); }
+body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close { --pui-icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-2%20-2%2028%2028%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M18%206%206%2018%22%20/%3E%3Cpath%20d%3D%22m6%206%2012%2012%22%20/%3E%3C/g%3E%3C/svg%3E"); }
+
+body.theme-dark body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close):active { background-color: rgba(255, 255, 255, 0.14) !important; }
+body.theme-dark body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close:active { background-color: #F2716A !important; }
+body.theme-dark body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close:active::before { background-color: #fff; opacity: 1; }
+body.theme-light body.mod-linux .titlebar-button-container.mod-right .titlebar-button:is(.mod-minimize, .mod-maximize, .mod-close):active { background-color: rgba(0, 0, 0, 0.09) !important; }
+body.theme-light body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close:active { background-color: #FFABA3 !important; }
+body.theme-light body.mod-linux .titlebar-button-container.mod-right .titlebar-button.mod-close:active::before { background-color: #fff; opacity: 1; }

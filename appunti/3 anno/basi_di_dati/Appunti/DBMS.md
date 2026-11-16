@@ -1508,3 +1508,302 @@ Una volta creata, una vista si usa nella `FROM` come una qualsiasi tabella.
 >| A    |
 >| B    |
 
+### IN e NOT IN
+I predicati `IN` ($\in$) e `NOT IN` ($\notin$) testano l'**appartenenza** di un elemento a un insieme.
+
+>[!important] Sintassi
+>```
+><tupla> IN (<query>)
+>```
+>A sinistra c'è una tupla, a destra, tra parentesi, la query in cui si deve trovare.
+
+>[!check] Esempio
+>Nomi dei fornitori che forniscono qualche merce.
+>$$\Pi_{\$ 2}\left( \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie} \text{Fornitura} \right)$$
+>Con la join teniamo solo i fornitori che forniscono qualcosa, ma concettualmente è esagerata:
+>```sql
+>SELECT F.nome
+>FROM Fornitore F, Fornitura X
+>WHERE F.piva = X.fornitore;
+>```
+>Basta testare se la partita IVA sta nel risultato di una `SELECT`:
+>```sql
+>SELECT F.nome
+>FROM Fornitore F
+>WHERE F.piva IN (SELECT fornitore FROM Fornitura);
+>```
+
+Con `NOT IN` possiamo evitare tutte le [[#Sottrazione|sottrazioni]] che usavamo in algebra.
+
+>[!check] Esempio
+>Nomi dei fornitori che non forniscono nulla.
+>$$\Pi_{\$ 2}\left\{ \text{Fornitore} \underset{\$ 1 = \$ 1}{\bowtie} [\Pi_{\$ 1}(\text{Fornitore}) - \Pi_{\$ 1}(\text{Fornitura})]\right\}$$
+>```sql
+>SELECT F.nome
+>FROM Fornitore F
+>WHERE F.piva NOT IN (SELECT fornitore FROM Fornitura);
+>```
+
+>[!important] Formulazione procedurale e dichiarativa
+>- La query in algebra è una **formulazione procedurale**: descrive i passi per calcolare il risultato.
+>- In SQL la query segue l'enunciato: è una **formulazione dichiarativa**.
+
+>[!question] Osservazione - Errore tipico
+>```sql
+>SELECT F.nome
+>FROM Fornitore F
+>WHERE F.piva IN Fornitura;  -- SBAGLIATA
+>```
+>Non possiamo chiedere se una tupla appartiene a una tabella: `IN` vuole a destra una **query**, non una tabella, anche se prendiamo tutte le colonne di `Fornitura`.
+>Inoltre dovremmo ridenominare gli attributi in modo che abbiano lo stesso nome, come per la [[#EXCEPT e UNION|sottrazione]]. Se confrontiamo più attributi, SQL non saprebbe nemmeno come associarli.
+
+>[!attention] AGGIUNTA - Confronto tra tuple
+>Per testare più attributi insieme la tupla va scritta tra parentesi: `(F.piva, M.cod) IN (SELECT fornitore, merce FROM Fornitura)`. Le colonne sono confrontate per posizione. Funziona in PostgreSQL, MySQL e Oracle, non in SQL Server.
+
+>[!attention] AGGIUNTA - NOT IN e valori nulli
+>Se la sottoquery restituisce anche un `NULL`, `x NOT IN (...)` non è mai vero (vale UNKNOWN). Se gli attributi della sottoquery fanno parte della chiave il problema non si pone.
+
+>[!check] Esempio
+>Città in cui hanno sede le marche che non producono merci fornite da fornitori di Cosenza.
+>```sql
+>SELECT sede
+>FROM Marca
+>WHERE nome NOT IN (
+>	SELECT M.marca AS nome
+>	FROM Fornitura X, Fornitore F, Merce M
+>	WHERE   X.fornitore = F.piva
+>		AND X.merce = M.cod
+>		AND F.citta = 'Cosenza'
+>);
+>```
+
+### EXISTS e NOT EXISTS
+`EXISTS` ($\exists$) e `NOT EXISTS` ($\nexists$) testano se il risultato di una query è vuoto o no.
+
+>[!important] Sintassi
+>```
+>EXISTS (<query>)
+>```
+>Non ha un argomento che lo precede. È verificato se esiste **almeno una tupla** nel risultato di `<query>`.
+
+>[!check] Esempio
+>Nomi dei fornitori che forniscono qualche merce.
+>```sql
+>SELECT F.nome
+>FROM Fornitore F
+>WHERE EXISTS (
+>	SELECT *
+>	FROM Fornitura X
+>	WHERE X.fornitore = F.piva
+>);
+>```
+
+>[!question] Osservazione - Visibilità
+>Gli attributi della query esterna sono visibili **all'interno** della sottoquery (qui `F.piva`), quelli interni **non** sono visibili all'esterno. Per questo con `IN` non c'erano problemi di omonimia.
+
+Con `NOT EXISTS` si esprime la [[#Quantificazione universale|quantificazione universale]]: "per ogni" $\equiv$ "non esiste alcuno che non".
+
+>[!check] Esempio
+>Nomi dei fornitori che forniscono **tutte** le merci $\equiv$ fornitori per cui non esiste alcuna merce che essi non forniscono.
+>```sql
+>SELECT F.nome
+>FROM Fornitore F
+>WHERE NOT EXISTS ( -- non esiste una merce che essi non forniscono
+>	SELECT *
+>	FROM Merce M
+>	WHERE F.piva NOT IN ( -- fornitori della merce M
+>		SELECT X.fornitore
+>		FROM Fornitura X
+>		WHERE X.merce = M.cod
+>	)
+>);
+>```
+>"che essi non forniscono" $\equiv$ "che non appartiene alla lista delle merci da essi fornite":
+>```sql
+>SELECT F.nome
+>FROM Fornitore F
+>WHERE NOT EXISTS (
+>	SELECT *
+>	FROM Merce M
+>	WHERE M.cod NOT IN ( -- merci fornite da F
+>		SELECT X.merce
+>		FROM Fornitura X
+>		WHERE X.fornitore = F.piva
+>	)
+>);
+>```
+>Le due query sono equivalenti: entrambe controllano che la coppia `(F.piva, M.cod)` non stia in `Fornitura`.
+
+>[!check] Esempio
+>Coppie di fornitori $(f', f'')$ che forniscono lo stesso insieme di merci ([[#Coppie con lo stesso insieme|in algebra]]) $\equiv$ coppie tali che non esiste alcuna merce fornita da $f'$ e non da $f''$, **e viceversa**.
+>```sql
+>SELECT F1.piva, F2.piva
+>FROM Fornitore F1, Fornitore F2
+>WHERE F1.piva < F2.piva
+>AND NOT EXISTS (
+>	SELECT *
+>	FROM Merce M
+>	WHERE M.cod IN (
+>		SELECT X.merce
+>		FROM Fornitura X
+>		WHERE X.fornitore = F1.piva
+>	) AND M.cod NOT IN (
+>		SELECT X.merce
+>		FROM Fornitura X
+>		WHERE X.fornitore = F2.piva
+>	)
+>) AND NOT EXISTS ( -- viceversa
+>	SELECT *
+>	FROM Merce M
+>	WHERE M.cod IN (
+>		SELECT X.merce
+>		FROM Fornitura X
+>		WHERE X.fornitore = F2.piva
+>	) AND M.cod NOT IN (
+>		SELECT X.merce
+>		FROM Fornitura X
+>		WHERE X.fornitore = F1.piva
+>	)
+>);
+>```
+>Versione più pulita, con il confronto tra tuple:
+>```sql
+>SELECT F1.piva, F2.piva
+>FROM Fornitore F1, Fornitore F2
+>WHERE F1.piva < F2.piva
+>AND NOT EXISTS (
+>	SELECT *
+>	FROM Merce M
+>	WHERE (F1.piva, M.cod) IN (SELECT fornitore, merce FROM Fornitura)
+>	  AND (F2.piva, M.cod) NOT IN (SELECT fornitore, merce FROM Fornitura)
+>) AND NOT EXISTS (
+>	SELECT *
+>	FROM Merce M
+>	WHERE (F2.piva, M.cod) IN (SELECT fornitore, merce FROM Fornitura)
+>	  AND (F1.piva, M.cod) NOT IN (SELECT fornitore, merce FROM Fornitura)
+>);
+>```
+>Il viceversa serve: senza, usciremmo anche le coppie in cui $f''$ fornisce più merci di $f'$.
+
+### Multinsiemi e DISTINCT
+In algebra il risultato di ogni operazione è una relazione, in SQL no.
+```sql
+SELECT citta
+FROM Fornitore;
+```
+- in algebra restituisce una riga per ogni città, senza ripetizioni
+- in SQL restituisce **tante righe quante sono le righe originali**: non accorpa i duplicati. Se tutti i fornitori sono di Cosenza, otteniamo Cosenza tante volte quanti sono i fornitori
+
+>[!important] Multinsieme
+>SQL lavora su **multinsiemi** di tuple: insiemi in cui ogni elemento è associato a una **molteplicità**.
+
+Eliminare i duplicati ha un costo: la query diventa quadratica. La clausola `DISTINCT`, messa tra `SELECT` e gli attributi, restituisce solo righe diverse: la query diventa più lenta, ma elimina tutti i duplicati.
+
+>[!attention] AGGIUNTA - Dubbio
+>"Quadratica" vale per il confronto ingenuo di ogni riga con tutte le altre. I DBMS di solito eliminano i duplicati ordinando o con una tabella hash, quindi con costo $O(n \log n)$ o circa lineare.
+
+### Operatori di aggregazione
+Un **operatore di aggregazione** prende più tuple e restituisce un'unica tupla che le rappresenta.
+
+Schema usato negli esempi, che rappresenta le fatture di un'azienda:
+$$
+\begin{array}{l}
+\text{Cliente}(\underline{\text{CF}}\text{, nome, eta, citta}) \\
+\text{Fattura}(\underline{\text{numero, anno}}\text{, cliente}) \\
+\text{Composizione}(\underline{\text{fattura\_numero, fattura\_anno, prodotto}}\text{, qnt, prezzoU})
+\end{array}
+$$
+
+| CF  | nome | età | città   |
+| --- | ---- | --- | ------- |
+| 1   | A    | 18  | CS      |
+| 2   | B    | 20  | RC      |
+| 3   | C    | 22  | CS      |
+| 4   | D    | 26  | $\perp$ |
+
+>[!question] Osservazione - Non è aggregazione
+>Se vogliamo trasformare Composizione in
+>$$\text{Composizione} (\underline{\text{fattura\_numero, fattura\_anno, prodotto}}\text{, importo})$$
+>```sql
+>SELECT fattura_numero, fattura_anno, prodotto, qnt * prezzoU AS importo
+>FROM Composizione;
+>```
+>questa **non** è un'aggregazione: usa operatori algebrici (diversi dagli operatori dell'algebra relazionale) per combinare **attributi** della stessa tupla, non tuple diverse.
+
+>[!check] Esempio
+>Numero di clienti registrati.
+>```sql
+>SELECT COUNT(CF)
+>FROM Cliente;
+>```
+>
+>| COUNT(CF) |
+>| --------- |
+>| 4         |
+>
+>Per eseguirla non possiamo guardare una tupla alla volta, dobbiamo prima vederle tutte.
+
+- `COUNT(*)` conta semplicemente le righe. Con `*` o con un attributo chiave il risultato è lo stesso.
+- `COUNT(attributo)` su un attributo non chiave non conta le tuple in cui quell'attributo è nullo: `COUNT(citta)` restituisce 3.
+- `COUNT(DISTINCT attributo)` conta i valori diversi:
+```sql
+SELECT COUNT(DISTINCT nome)
+FROM Cliente;
+```
+
+Altri operatori di aggregazione: `SUM`, `AVG`, `MIN` e `MAX`.
+
+>[!question] Osservazione
+>- Più aggregazioni possono stare nella stessa `SELECT` solo se hanno senso insieme: non posso mettere l'età massima dei clienti di Cosenza e l'età minima di quelli di Reggio.
+>- Possiamo aggiungere condizioni nella `WHERE`: con un operatore di aggregazione la `SELECT` viene svolta per ultima.
+>- Non ha senso mettere nella `SELECT` sia aggregazioni sia attributi normali, a meno che l'attributo non sia comune a tutto l'insieme.
+
+>[!check] Esempio
+>Numero di fatture intestate al cliente Pippo.
+>```sql
+>SELECT COUNT(*)
+>FROM Fattura F, Cliente C
+>WHERE   F.cliente = C.CF
+>	AND C.nome = 'Pippo';
+>```
+
+>[!check] Esempio
+>Numero complessivo di esemplari del prodotto `P1` venduti.
+>```sql
+>SELECT SUM(qnt)
+>FROM Composizione
+>WHERE prodotto = 'P1';
+>```
+
+>[!check] Esempio
+>Importo complessivo della fattura 1 del 2026: un operatore algebrico dentro un operatore di aggregazione.
+>```sql
+>SELECT SUM(qnt * prezzoU)
+>FROM Composizione
+>WHERE   fattura_numero = 1
+>	AND fattura_anno = 2026;
+>```
+
+### GROUP BY
+La clausola di raggruppamento `GROUP BY` **partiziona** la tabella secondo gli attributi indicati: gli operatori di aggregazione vengono calcolati su ogni partizione, non sulla tabella completa. Tutte le tuple di una partizione hanno lo stesso valore negli attributi del `GROUP BY`.
+
+>[!important] Regola
+>In una query con aggregazione, nella `SELECT` posso mettere attributi non aggregati **solo se compaiono nel `GROUP BY`**.
+
+>[!check] Esempio
+>Numero di clienti per ogni città.
+>```sql
+>SELECT citta, COUNT(*)
+>FROM Cliente
+>GROUP BY citta;
+>```
+
+>[!check] Esempio
+>Importo di ogni fattura del 2026.
+>```sql
+>SELECT fattura_numero, fattura_anno, SUM(qnt * prezzoU)
+>FROM Composizione
+>WHERE fattura_anno = 2026
+>GROUP BY fattura_numero, fattura_anno;
+>```
+

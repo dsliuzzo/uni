@@ -3,7 +3,8 @@
   "accentColor": "#62dbf3",
   "enabledCssSnippets": [
     "MCL Multi Column",
-    "colore titolo"
+    "colore titolo",
+    "project-ui-pulsanti"
   ],
   "theme": "obsidian",
   "baseFontSizeAction": false,
