@@ -260,4 +260,373 @@ $$
 >{\color{#e07b6a} \sum_{j : (i,j) \in E} f_{ij}} - {\color{#6a9ee0} \sum_{j : (j,i) \in E} f_{ji}} = b_i \qquad \forall i \in V
 >$$
 >![[Problemi di flusso-conservazione-flusso.svg|center|260]]
+>dove $b_i$ è un domanda/offerta al nodo che non fa parte del normale flusso, è una interazione con l'esterno.
 >cioè la differenza tra la somma dei flussi uscenti dal nodo $i$ e la somma dei flussi entranti nel nodo $i$ deve eguagliare la divergenza del nodo $i$.
+
+Si distinguono i seguenti casi possibili
+- $b_i > 0$$$\sum_{j:(i,j) \in E} f_{ij} -\sum_{j:(j,i) \in E} f_{ji} = b_i \qquad \forall i \in V$$
+- $b_i < 0$$$\sum_{j:(i,j) \in E} f_{ij} - b_i = \sum_{j:(j,i) \in E} f_{ji} \qquad \forall i \in V$$
+- $b_i = 0$$$\sum_{j:(i,j) \in E} f_{ij} = \sum_{j:(j,i) \in E} f_{ji} \qquad \forall i \in V$$
+# Problema del flusso di costo minimo
+## Notazione e ipotesi
+Consideriamo un grafo orientato $G = \langle V, E \rangle$
+>[!important] Dati
+>- $V = \{1, \dots, m\}$ è l'insieme dei nodi, $|V| = m$
+>- $E \subseteq V \times V$ è l'insieme degli archi, $|E| = n$
+>- $b \in \mathbb{R}^m$ è il vettore delle [[#Problemi di flusso su reti|divergenze]] nei nodi
+>- $c \in \mathbb{R}^n$ è il vettore dei costi unitari di flusso sugli archi
+>- $u_{ij}$ è la capacità su ogni arco $(i,j) \in E$
+
+>[!info] Ipotesi
+>$u_{ij}$ è sufficientemente ampia da non costituire una limitazione sul flusso che può transitare lungo l'arco $(i,j)$ per ogni $(i,j) \in E$.
+
+**Variabili decisionali**: $f_{ij} \geq 0$ rappresenta la quantità di flusso che transita lungo l'arco $(i,j)$ per ogni $(i,j) \in E$.
+
+>[!important] Minimum-cost flow problem (MCFP)
+>$$
+>(MCFP) \begin{cases}
+>\min & \displaystyle\sum_{(i,j) \in E} c_{ij} f_{ij} \\
+>& \displaystyle\sum_{j : (i,j) \in E} f_{ij} - \sum_{j : (j,i) \in E} f_{ji} = b_i & \forall i \in V \\
+>& f_{ij} \geq 0 & \forall (i,j) \in E
+>\end{cases}
+>\qquad\qquad
+>(MCFP) \begin{cases}
+>\min & c^\top f \\
+> & Af = b \\
+> & f \geq 0
+>\end{cases}
+>$$
+>- $f \in \mathbb{R}^n$ è il vettore dei flussi
+>- $A \in \mathbb{R}^{m \times n}$ è la [[#Rappresentazioni matriciali|matrice di incidenza]] del grafo
+
+%%
+$c^\top$ è un vettore a cui associamo tutti i costi degli archi (già scritto sopra)
+%%
+
+>[!question] Osservazione
+>Non usiamo la dimensione temporale, lo diamo come sotto inteso. In problemi reali si dovrebbe specificare l'unità di tempo.
+
+%%
+Nei nodi a divergenza positiva ciò che entra dall'esterno se ne deve andare.
+Nei nodi a divergenza negativa parte del flusso a disposizione. 
+Problema di soddisfare la domanda nei nodi a divergenza negativa con ciò che entra dall'esterno nei nodi a divergenza positiva.
+Consumando tutta quanta l'offerta andando a soddisfare tutta quanta la domanda.
+Lo vogliamo fare inviando nella nostra rete un flusso che complessivamente ha il costo minimo.
+%%
+
+>[!check] Esempio: vincoli di conservazione del flusso
+>È il grafo dell'[[#Rappresentazioni matriciali|esempio 2]], con le colonne etichettate dai flussi:
+>![[Problemi di ottimizzazione-RO37-incidenza-esempio2.svg|center|320]]
+>$$
+>\begin{array}{c} \\ \text{①} \\ \text{②} \\ \text{③} \\ \text{④} \\ \text{⑤} \end{array}
+>\begin{array}{cccccccc}
+>f_{12} & f_{41} & f_{24} & f_{23} & f_{34} & f_{45} & f_{53} & f_{35} \\
+>1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+>-1 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+>0 & 0 & 0 & -1 & 1 & 0 & -1 & 1 \\
+>0 & 1 & -1 & 0 & -1 & 1 & 0 & 0 \\
+>0 & 0 & 0 & 0 & 0 & -1 & 1 & -1
+>\end{array}
+>$$
+>Scriviamo i vincoli di conservazione del flusso per il nodo ③
+>$$
+>\sum_{j : (3,j) \in E} f_{3j} - \sum_{j : (j,3) \in E} f_{j3} = b_3
+>\quad\Longrightarrow\quad
+>f_{34} + f_{35} - f_{23} - f_{53} = b_3
+>$$
+>riscrivendoli in ordine di apparizione nella matrice equivale a
+>$$
+>-f_{23} + f_{34} - f_{53} + f_{35} = b_3
+>$$
+>cioè $a_3^\top f = b_3$, dove $a_3^\top$ è la terza riga di $A$.
+
+La colonna di $A$ associata all'arco $(i,j) \in E$ ha un $1$ in posizione $i$ (coda) e un $-1$ in posizione $j$ (testa), quindi si può scrivere come:
+$$
+A_{(i,j)} = \begin{pmatrix} 0 \\ \vdots \\ 0 \\ 1 \\ 0 \\ \vdots \\ 0 \\ -1 \\ 0 \\ \vdots \\ 0 \end{pmatrix} \begin{array}{c} \\ \\ \\ i \\ \\ \\ \\ j \\ \\ \\ \phantom{0} \end{array}
+= \begin{pmatrix} 0 \\ \vdots \\ 0 \\ 1 \\ 0 \\ \vdots \\ 0 \\ 0 \\ 0 \\ \vdots \\ 0 \end{pmatrix}
+- \begin{pmatrix} 0 \\ \vdots \\ 0 \\ 0 \\ 0 \\ \vdots \\ 0 \\ 1 \\ 0 \\ \vdots \\ 0 \end{pmatrix}
+= \hat{e}_i - \hat{e}_j
+$$
+dove $\hat{e}_i \in \mathbb{R}^m$ è l'$i$-esimo vettore della **base canonica**.
+
+## Ammissibilità di (MCFP)
+>[!info] Proprietà 1
+>È immediato verificare che la somma delle righe di $A$ è un vettore identicamente nullo (come già visto [[#Rappresentazioni matriciali|sopra]]). Cioè, indicando con $e \in \mathbb{R}^m$ un vettore con componenti tutte pari ad 1, vale
+>$$
+>e^\top A = 0^\top
+>$$
+>da cui discende la proprietà
+>$$
+>rango(A) \leq m - 1
+>$$
+
+%%
+Ne deriva che sopra potrebbe sembrare una forma standard, ma non soddisfa le ipotesi di lavoro (sistema link)
+%%
+
+>[!info] Proprietà 2 (Condizione Necessaria di Ammissibilità)
+>$$
+>\Omega(MCFP) \neq \emptyset \ \Rightarrow \ e^\top b = \sum_{i \in V} b_i = 0
+>$$
+
+%%
+Vogliamo soddisfare tutta la domanda consuma tutta l'offerta $\equiv$ somma algebrica delle divergenze è pari a 0 - c'è scritto anche sotto, sistema
+%%
+#dimostrazione
+$$
+\exists \bar{f} \in \Omega(MCFP) \ \Rightarrow \ A\bar{f} = b
+$$
+Premoltiplichiamo per un vettore $e^\top$ (sommiamo tutti i vincoli) %% da verificare %%
+$$
+e^\top A \bar{f} = e^\top b \ \Rightarrow \ 0^\top \bar{f} = 0 = e^\top b
+$$
+Ovviamente risulta
+$$
+\sum_{i \in V} b_i \neq 0 \ \Rightarrow \ \Omega(MCFP) = \emptyset
+$$
+
+>[!question] Osservazione
+>È la stessa condizione vista [[#Problemi di flusso su reti|sopra]]: l'offerta globale deve essere uguale alla domanda globale.
+
+## Caratterizzazione delle basi nei problemi di flusso
+%%
+Caratterizzare = osservare un oggetto e le sue proprietà per capire se qualcosa ci può essere utile
+%%
+Riprendendo (MCFP) in forma matriciale:
+$$
+\begin{cases}
+\min & c^\top f \\
+ & \tilde{A}f = \tilde{b} \\
+ & f \geq 0
+\end{cases}
+$$
+- $f \in \mathbb{R}^n$ è il vettore dei flussi
+- $A \in \mathbb{R}^{m \times n}$ è la matrice di incidenza del grafo, le cui colonne sono ordinate secondo l'ordinamento del vettore $f$
+- $rango(A) \leq m - 1$
+- $\sum_{i \in V} b_i = 0$ %%(condizione necessaria di ammissibilità, va garantita anche dopo aver eliminato la riga) non ne sono sicuro%%
+- $\tilde{A}$ è la sotto matrice ottenuta eliminando una riga da $A$, e $\tilde{b}$ è il corrispondente vettore delle divergenze. Eliminare una riga dalla matrice di incidenza $A$ corrisponde a eliminare un nodo dalla rete.
+
+Vogliamo caratterizzare le basi della matrice di incidenza al fine di derivare una versione ad hoc del [[Problemi di ottimizzazione#Algoritmo del simplesso|metodo del simplesso]].
+
+Serve la [[#Grafi connessi, alberi|caratterizzazione degli alberi]] vista prima: nelle slide l'albero si scrive $H = \langle V, T \rangle$ con $|V| = m$, $|T| = p$, quindi $p = m - 1$. Il punto 5 aggiunge che **un albero è un grafo connesso minimale**.
+
+>[!info] Teorema
+>Una sottomatrice quadrata di ordine $m - 1$ di $\tilde{A}$ è una **base** se e solo se le sue colonne corrispondono agli archi di un **albero ricoprente** l'insieme dei nodi $V$ del grafo.
+
+#dimostrazione
+- (ho una base $\Leftarrow$ ho un albero ricoprente) [[#Lemma 1]]: sia $H = \langle V, T \rangle$ un albero ricoprente i nodi del grafo $G$, sia $B$ la corrispondente sotto matrice quadrata di ordine $m - 1$ di $\tilde{A}$. Allora, opportunamente permutando le sue righe e le sue colonne, $B$ può essere posta in forma triangolare superiore con elementi diagonali non nulli ($\Rightarrow det(B) \neq 0$).
+- (ho una base $\Rightarrow$ ho un albero ricoprente) [[#Lemma 2]]: se $B$ è una base di $\tilde{A}$, allora gli archi corrispondenti alle sue colonne formano un albero ricoprente i nodi del grafo $G$.
+
+>[!check] Esempio di albero ricoprente e matrice di incidenza associata
+>Prendiamo il grafo dell'esempio precedente e l'albero ricoprente formato dagli archi $e_1, e_3, e_4, e_6$ (in rosso)
+>![[Problemi di flusso-albero-ricoprente.svg|center|320]]
+>$$
+>A = \begin{pmatrix}
+>1 & -1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+>-1 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+>0 & 0 & 0 & -1 & 1 & 0 & -1 & 1 \\
+>0 & 1 & -1 & 0 & -1 & 1 & 0 & 0 \\
+>0 & 0 & 0 & 0 & 0 & -1 & 1 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{①} \\ \text{②} \\ \text{③} \\ \text{④} \\ \text{⑤} \end{array}
+>$$
+>Eliminando la prima riga, corrispondente al nodo 1, otteniamo
+>$$
+>\tilde{A} = \begin{pmatrix}
+>-1 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+>0 & 0 & 0 & -1 & 1 & 0 & -1 & 1 \\
+>0 & 1 & -1 & 0 & -1 & 1 & 0 & 0 \\
+>0 & 0 & 0 & 0 & 0 & -1 & 1 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{②} \\ \text{③} \\ \text{④} \\ \text{⑤} \end{array}
+>\qquad
+>\begin{array}{c} \text{colonne: } e_1, \dots, e_8 \end{array}
+>$$
+>Le colonne degli archi dell'albero ($e_1, e_3, e_4, e_6$) formano
+>$$
+>B = \begin{pmatrix}
+>-1 & 1 & 1 & 0 \\
+>0 & 0 & -1 & 0 \\
+>0 & -1 & 0 & 1 \\
+>0 & 0 & 0 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{②} \\ \text{③} \\ \text{④} \\ \text{⑤} \end{array}
+>\qquad
+>\begin{array}{c} \text{colonne: } e_1, e_3, e_4, e_6 \end{array}
+>$$
+>Permutando la seconda riga con la terza otteniamo una matrice triangolare superiore
+>![[Problemi di flusso-albero-ricoprente-solo.svg|center|320]]
+>$$
+>B = \begin{pmatrix}
+>-1 & 1 & 1 & 0 \\
+>0 & -1 & 0 & 1 \\
+>0 & 0 & -1 & 0 \\
+>0 & 0 & 0 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{②} \\ \text{④} \\ \text{③} \\ \text{⑤} \end{array}
+>$$
+
+%% rivedi questo esempio. Non ho capito, abbiamo eliminato la prima riga, ma il nodo associato a quella riga è ancora lì. È per il nodo 2 che lo collegava? %%
+%%
+definiamo il vettore $f$ come segue per risolvere il problema
+$$
+f = \binom{f_B}{f_N} = \binom{?}{0}
+$$
+se abbiamo la matrice di base definiamo quindi $f_B = B^{-1} \tilde{b}$
+non stiamo facendo altro che risolvere il sistema $B f_B = \tilde{b}$
+possiamo risolvere il sistema senza invertire la matrice?
+$-f_{45} =$ divergenza del nodo 5
+salendo il peggio che può capitare è che siano coinvolte le variabili già trovate
+risoluzione di sistemi normalissima
+lavoriamo per sostituzioni successive dal basso verso l'alto
+serve a questo triangolarizzare la matrice
+costa computazionalmente la triangolazione, ma il sistema ottenuto è più semplice da risolvere.
+In questo modo semplifichiamo l'applicazione del simplesso, non abbiamo bisogno di invertire $B^{-1}$ per calcolare i flussi di base
+%%
+### Lemma 1
+>[!info] Lemma 1
+>Sia $H = \langle V, T \rangle$ un albero ricoprente i nodi del grafo $G$, sia $B$ la sottomatrice corrispondente di $\tilde{A}$. Allora, opportunamente permutando le sue righe e le sue colonne, $B$ può essere posta in forma triangolare superiore con elementi diagonali non nulli ($\Rightarrow det(B) \neq 0$).
+
+#dimostrazione
+La dimostrazione è per induzione su $|V|$.
+
+**Base dell'induzione**: $|V| = 2$. Allora $|T| = 1$, ovvero l'albero ha un solo arco, con colonna, ad esempio, $(1, -1)^\top$. Rimossa una riga, si ottiene $B = [\pm 1]$ e la tesi vale.
+
+**Passo induttivo**: per ipotesi di induzione, assumiamo che la tesi valga quando $H$ è un albero ricoprente $V$ con $|V| = k$, e dimostriamo che la tesi continua a valere per $H = \langle V, T \rangle$ con $|V| = k + 1$.
+
+Sia dunque $H = \langle V, T \rangle$ con $|V| = k + 1$; sia $w$ una sua [[#Grafi connessi, alberi|foglia]] (collegata esclusivamente ad un altro nodo del grafo).
+Rimuovendo da $H$ la foglia $w$ e l'unico arco che incide su $w$, si ottiene un sottografo di $H$ che è a sua volta un albero: $H' = \langle V', T' \rangle$, con
+$$
+|V'| = |V \setminus \{w\}| = k
+$$
+![[Problemi di flusso-lemma1-foglia.svg|center|360]]
+
+Per l'ipotesi di induzione, la sottomatrice $B'$ di $\tilde{A}$ associata agli archi di $H'$ è triangolare superiore con elementi diagonali non nulli.
+Per ottenere la matrice corrispondente all'albero $H$ basterà **orlare** $B'$ con la riga associata al nodo $w$ e la colonna associata all'arco incidente.
+$$
+B' = \begin{pmatrix}
+\pm 1 & \cdots & \cdots & \cdot \\
+ & \pm 1 & & \vdots \\
+ & & \ddots & \vdots \\
+ & & & \pm 1
+\end{pmatrix}
+\qquad
+B = \begin{pmatrix}
+\pm 1 & \cdots & \cdots & \cdot & {\color{#e07b6a} 0} \\
+ & \pm 1 & & \vdots & {\color{#e07b6a} \vdots} \\
+ & & \ddots & \vdots & {\color{#e07b6a} \mp 1} \\
+ & & & \pm 1 & {\color{#e07b6a} \vdots} \\
+{\color{#e07b6a} 0} & {\color{#e07b6a} 0} & {\color{#e07b6a} \cdots} & {\color{#e07b6a} 0} & {\color{#e07b6a} \pm 1}
+\end{pmatrix}
+$$
+Nessuno degli archi di $T'$ incide sul nodo $w$; perciò, aggiungendo la nuova riga in basso e la nuova colonna a destra, la matrice $B$ sarà anch'essa triangolare superiore con elementi diagonali non nulli.
+
+Nella nuova colonna (arco tra $w$ e il suo vicino) l'unico altro elemento non nullo è il $\mp 1$ nella riga del vicino di $w$, sopra la diagonale; la nuova riga ha zeri ovunque tranne sulla diagonale.
+
+>[!check] Esempio (Lemma 1), radice nel nodo 5
+>Selezioniamo un albero ricoprente (lo stesso di prima, archi $e_1, e_3, e_4, e_6$) e un nodo **radice** (p.es. il nodo 5), e ordiniamo i nodi secondo una **visita in ampiezza** ([[Strutture dati#Visita a ventaglio / in ampiezza|BFS]]).
+>![[Problemi di flusso-albero-ricoprente.svg|center|320]]
+>
+>![[Problemi di flusso-albero-radice5.svg|center|180]]
+>$$
+>\begin{pmatrix}
+>-1 & 0 & 0 & 0 \\
+>1 & -1 & 0 & 0 \\
+>0 & 1 & -1 & 1 \\
+>0 & 0 & 1 & 0 \\
+>0 & 0 & 0 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{⑤} \\ \text{④} \\ \text{②} \\ \text{①} \\ \text{③} \end{array}
+>\qquad
+>\begin{array}{c} \text{colonne: } e_6, e_3, e_1, e_4 \end{array}
+>$$
+>Eliminando la riga corrispondente al nodo radice otteniamo la matrice triangolare superiore.
+>$$
+>B = \begin{pmatrix}
+>1 & -1 & 0 & 0 \\
+>0 & 1 & -1 & 1 \\
+>0 & 0 & 1 & 0 \\
+>0 & 0 & 0 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{④} \\ \text{②} \\ \text{①} \\ \text{③} \end{array}
+>\qquad
+>\begin{array}{c} \text{colonne: } e_6, e_3, e_1, e_4 \end{array}
+>$$
+
+>[!check] Esempio (Lemma 1), radice nel nodo 2
+>Stesso albero ricoprente, ma con radice nel nodo 2, e ordiniamo i nodi (secondo una visita in ampiezza).
+>![[Problemi di flusso-albero-radice2.svg|center|230]]
+>$$
+>\begin{pmatrix}
+>-1 & 1 & 1 & 0 \\
+>1 & 0 & 0 & 0 \\
+>0 & -1 & 0 & 1 \\
+>0 & 0 & -1 & 0 \\
+>0 & 0 & 0 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{②} \\ \text{①} \\ \text{④} \\ \text{③} \\ \text{⑤} \end{array}
+>\qquad
+>\begin{array}{c} \text{colonne: } (1,2), (2,4), (2,3), (4,5) \end{array}
+>$$
+>Eliminando la riga corrispondente al nodo radice otteniamo la matrice triangolare superiore.
+>$$
+>B = \begin{pmatrix}
+>1 & 0 & 0 & 0 \\
+>0 & -1 & 0 & 1 \\
+>0 & 0 & -1 & 0 \\
+>0 & 0 & 0 & -1
+>\end{pmatrix}
+>\begin{array}{c} \text{①} \\ \text{④} \\ \text{③} \\ \text{⑤} \end{array}
+>\qquad
+>\begin{array}{c} \text{colonne: } (1,2), (2,4), (2,3), (4,5) \end{array}
+>$$
+
+### Lemma 2
+>[!info] Lemma 2
+>Se $B$ è una base di $\tilde{A}$, allora gli archi corrispondenti alle sue colonne formano un albero ricoprente i nodi del grafo $G$.
+
+#dimostrazione
+Gli archi del grafo corrispondenti alle colonne di $B$ sono in numero pari ad $m - 1$; per dimostrare che tali archi formano un albero ricoprente i nodi di $G$, proviamo che essi individuano un sottografo **aciclico** di $G$ (punto 3 della [[#Grafi connessi, alberi|caratterizzazione degli alberi]]).
+
+Supponiamo, per assurdo, che un loro sottoinsieme formi un ciclo $\mathcal{C}$.
+Scegliamo ad arbitrio un orientamento del ciclo e partizioniamo gli archi in due insiemi $\mathcal{C}^+$ e $\mathcal{C}^-$, tali che $\mathcal{C}^+$ sono i rami **concordi** con l'orientamento scelto e $\mathcal{C}^-$ quelli **discordi**, quindi
+$$
+\mathcal{C} = \mathcal{C}^+ \cup \mathcal{C}^-
+$$
+Di conseguenza osserviamo che:
+$$
+\sum_{(i,j) \in \mathcal{C}^+} A_{(i,j)} - \sum_{(i,j) \in \mathcal{C}^-} A_{(i,j)} = 0
+$$
+che contraddice l'indipendenza lineare delle colonne di $B$, abbiamo trovato l'assurdo.
+
+>[!check] Esempio
+>![[Problemi di flusso-lemma2-ciclo.svg|center|220]]
+>In verso orario otteniamo ($(h,i), (i,j), (j,k)$ concordi, $(h,k)$ discorde):
+>$$
+>A_{(h,i)} + A_{(i,j)} + A_{(j,k)} - A_{(h,k)} = \hat{e}_h - \hat{e}_i + \hat{e}_i - \hat{e}_j + \hat{e}_j - \hat{e}_k - \hat{e}_h + \hat{e}_k = 0
+>$$
+
+## Osservazioni
+La dimostrazione del [[#Lemma 1]] è **costruttiva**, e la forma triangolare della base è molto importante perché:
+- Nota la base $B$, è facile determinare le componenti di base della soluzione corrispondente, $f_B$, risolvendo il sistema:
+$$
+B \cdot f_B = \tilde{b}
+$$
+- Se le divergenze dei nodi sono numeri interi, $b \in \mathbb{Z}^m$, allora tutte le soluzioni di base, e quindi la soluzione ottima di base, del problema (MCFP) avranno **componenti intere**. Infatti gli elementi diagonali della matrice $B$ hanno valore $B_{ii} \in \{-1, 1\}$, e le uniche divisioni necessarie nella risoluzione del sistema triangolare hanno tali elementi come divisori.
+
+Può accadere che la matrice di incidenza $A$ abbia rango strettamente minore di $m - 1$?
+
+>[!info] Lemma 3
+>Il grafo $G = \langle V, E \rangle$ è connesso se e solo se esiste almeno un albero ricoprente i nodi di $G$.
+
+%%
+#dimostrazione
+Se $G$ è un grafo connesso, è sempre possibile eliminare consecutivamente archi da $E$ mantenendo la connessione, fino a quando la rimozione di qualunque altro arco sconnetterebbe il grafo: a questo punto sarà stato individuato un albero ricoprente $G$.
+Viceversa, se esiste in $G$ un albero ricoprente, $H = \langle V, T \rangle$, allora $G$ è ovviamente connesso perché l'albero è connesso ed è un sottografo di $G$ (in particolare, per ogni coppia di nodi in un albero esiste uno e un solo cammino che li congiunge).
+%%
+
+>[!info] Teorema
+>Sia $G = \langle V, E \rangle$ un grafo orientato, $|V| = m$, $|E| = n$; sia $A$ la sua matrice di incidenza. Allora $rango(A) = m - 1$ se e solo se $G$ è connesso.
+
+#dimostrazione
+Osserviamo che $rango(A) = m - 1$ se e solo se esiste una sottomatrice quadrata $B$ di $\tilde{A}$ di ordine $m - 1$ che è una base. Per il [[#Caratterizzazione delle basi nei problemi di flusso|Teorema sulla caratterizzazione delle basi]] ciò avviene se e solo se esiste un albero ricoprente $G$, e quindi, per il [[#Osservazioni|Lemma 3]], se e solo se $G$ è connesso.

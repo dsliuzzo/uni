@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="290" viewBox="0 0 220 290">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ti{font-size:14px;font-style:italic} .th{font-size:14px;font-weight:500} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<line x1="110.0" y1="94.0" x2="110.0" y2="46.0" stroke="#e07b6a" stroke-width="3.5" fill="none" stroke-linecap="round" marker-end="url(#arrowr)"/>
+<text class="t" style="fill:#e07b6a" x="94" y="70">e<tspan baseline-shift="sub" font-size="10">6</tspan></text>
+<line x1="110.0" y1="174.0" x2="110.0" y2="126.0" stroke="#e07b6a" stroke-width="3.5" fill="none" stroke-linecap="round" marker-end="url(#arrowr)"/>
+<text class="t" style="fill:#e07b6a" x="94" y="150">e<tspan baseline-shift="sub" font-size="10">3</tspan></text>
+<line x1="100.1" y1="202.6" x2="64.9" y2="247.4" stroke="#e07b6a" stroke-width="3.5" fill="none" stroke-linecap="round" marker-end="url(#arrowr)"/>
+<text class="t" style="fill:#e07b6a" x="68" y="216">e<tspan baseline-shift="sub" font-size="10">4</tspan></text>
+<line x1="155.1" y1="247.4" x2="119.9" y2="202.6" stroke="#e07b6a" stroke-width="3.5" fill="none" stroke-linecap="round" marker-end="url(#arrowr)"/>
+<text class="t" style="fill:#e07b6a" x="152" y="216">e<tspan baseline-shift="sub" font-size="10">1</tspan></text>
+<circle cx="110" cy="30" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="t" style="fill:#e07b6a" x="110" y="30">5</text>
+<circle cx="110" cy="110" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="t" style="fill:#e07b6a" x="110" y="110">4</text>
+<circle cx="110" cy="190" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="t" style="fill:#e07b6a" x="110" y="190">2</text>
+<circle cx="55" cy="260" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="t" style="fill:#e07b6a" x="55" y="260">3</text>
+<circle cx="165" cy="260" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="t" style="fill:#e07b6a" x="165" y="260">1</text>
+</svg>

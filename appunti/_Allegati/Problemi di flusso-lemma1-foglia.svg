@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="225" viewBox="0 0 360 225">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ti{font-size:14px;font-style:italic} .th{font-size:14px;font-weight:500} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<text class="ti" x="90" y="14">H = ⟨V, T⟩</text>
+<line x1="80.0" y1="62.5" x2="60.0" y2="87.5" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<line x1="60.0" y1="112.5" x2="80.0" y2="137.5" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<line x1="120.0" y1="112.5" x2="100.0" y2="137.5" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<line x1="100.0" y1="162.5" x2="120.0" y2="187.5" stroke="#e07b6a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<circle cx="90" cy="50" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="90" y="50"></text>
+<circle cx="50" cy="100" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="50" y="100"></text>
+<circle cx="130" cy="100" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="130" y="100"></text>
+<circle cx="90" cy="150" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="90" y="150"></text>
+<circle cx="130" cy="200" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="130" y="200">w</text>
+<text class="ti" x="270" y="14">H′ = ⟨V′, T′⟩</text>
+<line x1="260.0" y1="62.5" x2="240.0" y2="87.5" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<line x1="240.0" y1="112.5" x2="260.0" y2="137.5" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<line x1="300.0" y1="112.5" x2="280.0" y2="137.5" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<line x1="280.0" y1="162.5" x2="300.0" y2="187.5" stroke="#e07b6a" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="1.5 4"/>
+<circle cx="270" cy="50" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="270" y="50"></text>
+<circle cx="230" cy="100" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="230" y="100"></text>
+<circle cx="310" cy="100" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="310" y="100"></text>
+<circle cx="270" cy="150" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="t" x="270" y="150"></text>
+<circle cx="310" cy="200" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5" stroke-dasharray="1.5 3.5" stroke-linecap="round"/>
+<text class="ti" style="fill:#e07b6a" x="310" y="200">w</text>
+</svg>

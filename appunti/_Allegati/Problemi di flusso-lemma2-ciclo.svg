@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="140" viewBox="0 0 240 140">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ti{font-size:14px;font-style:italic} .th{font-size:14px;font-weight:500} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<line x1="56.0" y1="30.0" x2="104.0" y2="30.0" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="136.0" y1="30.0" x2="184.0" y2="30.0" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="188.7" y1="41.3" x2="131.3" y2="98.7" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="51.3" y1="41.3" x2="108.7" y2="98.7" stroke="#b8b8b8" stroke-width="2.5" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<circle cx="40" cy="30" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="ti" x="40" y="30">h</text>
+<circle cx="120" cy="30" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="ti" x="120" y="30">i</text>
+<circle cx="200" cy="30" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="ti" x="200" y="30">j</text>
+<circle cx="120" cy="110" r="16" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text class="ti" x="120" y="110">k</text>
+</svg>
