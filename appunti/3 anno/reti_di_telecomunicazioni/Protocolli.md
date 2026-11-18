@@ -1397,6 +1397,7 @@ Quindi:
 Uno **spanning tree** ([[Algoritmi#^albero-ricoprente|albero ricoprente]]) di $G$ è un sottografo che è un albero e include tutti i nodi di $G$: si ottiene rimuovendo archi in modo da eliminare i cicli, creando così una **topologia logica** che ignora alcuni archi. Lo spanning tree di un grafo **non è unico**.
 
 %% da aggiungere Dijkstra e Bellman-Ford%%
+%%IGP%%
 ## ARP e RARP
 >[!protocollo] ARP e RARP
 >**ARP** (Address Resolution Protocol, RFC 826) e **RARP** (Reverse Address Resolution Protocol, RFC 903) sono protocolli di supporto a [[#IP]] che si occupano della **traduzione degli indirizzi**:

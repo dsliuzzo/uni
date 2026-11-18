@@ -218,6 +218,8 @@ Consideriamo un grafo orientato o non orientato $G = \langle V, E \rangle$
 >4. esiste uno ed un solo cammino che connette ciascuna coppia di nodi in $G$;
 >5. l'eliminazione di un qualsiasi arco di $G$ rende il grafo risultante sconnesso;
 >6. l'aggiunta di un qualunque arco crea uno ed un solo ciclo.
+>
+>Il punto 5 dice che **un albero è un grafo connesso minimale**: nessun arco si può togliere senza perdere la connessione.
 
 >[!check] Esempi
 >![[Problemi di ottimizzazione-RO37-connesso-albero.svg|center|480]]
@@ -299,20 +301,19 @@ Consideriamo un grafo orientato $G = \langle V, E \rangle$
 >- $f \in \mathbb{R}^n$ è il vettore dei flussi
 >- $A \in \mathbb{R}^{m \times n}$ è la [[#Rappresentazioni matriciali|matrice di incidenza]] del grafo
 
-%%
-$c^\top$ è un vettore a cui associamo tutti i costi degli archi (già scritto sopra)
-%%
+^minimumcostflowdefinizione
 
 >[!question] Osservazione
 >Non usiamo la dimensione temporale, lo diamo come sotto inteso. In problemi reali si dovrebbe specificare l'unità di tempo.
 
-%%
-Nei nodi a divergenza positiva ciò che entra dall'esterno se ne deve andare.
-Nei nodi a divergenza negativa parte del flusso a disposizione. 
-Problema di soddisfare la domanda nei nodi a divergenza negativa con ciò che entra dall'esterno nei nodi a divergenza positiva.
-Consumando tutta quanta l'offerta andando a soddisfare tutta quanta la domanda.
-Lo vogliamo fare inviando nella nostra rete un flusso che complessivamente ha il costo minimo.
-%%
+>[!important] Interpretazione
+>- I nodi con $b_i > 0$ sono **sorgenti** (offerta): ricevono flusso dall'esterno e lo immettono nella rete.
+>- I nodi con $b_i < 0$ sono **pozzi** (domanda): assorbono flusso dalla rete.
+>
+>Il MCFP chiede di far transitare il flusso nella rete in modo da **consumare tutta l'offerta** e **soddisfare tutta la domanda**, con **costo complessivo minimo**.
+>
+>Consumare tutta l'offerta soddisfacendo tutta la domanda equivale a chiedere che la somma algebrica delle divergenze sia nulla, $\sum_{i \in V} b_i = 0$: è la [[#^proprieta2mcfp|condizione necessaria di ammissibilità]].
+
 
 >[!check] Esempio: vincoli di conservazione del flusso
 >È il grafo dell'[[#Rappresentazioni matriciali|esempio 2]], con le colonne etichettate dai flussi:
@@ -360,23 +361,19 @@ dove $\hat{e}_i \in \mathbb{R}^m$ è l'$i$-esimo vettore della **base canonica**
 >rango(A) \leq m - 1
 >$$
 
-%%
-Ne deriva che sopra potrebbe sembrare una forma standard, ma non soddisfa le ipotesi di lavoro (sistema link)
-%%
+Ne deriva che [[#^minimumcostflowdefinizione|la forma compatta]] del MCFP potrebbe sembrare una forma standard ma non soddisfa le [[Problemi di ottimizzazione#Ipotesi di lavoro|ipotesi di lavoro]].
 
 >[!info] Proprietà 2 (Condizione Necessaria di Ammissibilità)
 >$$
 >\Omega(MCFP) \neq \emptyset \ \Rightarrow \ e^\top b = \sum_{i \in V} b_i = 0
 >$$
+^proprieta2mcfp
 
-%%
-Vogliamo soddisfare tutta la domanda consuma tutta l'offerta $\equiv$ somma algebrica delle divergenze è pari a 0 - c'è scritto anche sotto, sistema
-%%
 #dimostrazione
 $$
 \exists \bar{f} \in \Omega(MCFP) \ \Rightarrow \ A\bar{f} = b
 $$
-Premoltiplichiamo per un vettore $e^\top$ (sommiamo tutti i vincoli) %% da verificare %%
+Premoltiplichiamo per un vettore $e^\top$ (sommiamo tutti i vincoli)
 $$
 e^\top A \bar{f} = e^\top b \ \Rightarrow \ 0^\top \bar{f} = 0 = e^\top b
 $$
@@ -389,9 +386,8 @@ $$
 >È la stessa condizione vista [[#Problemi di flusso su reti|sopra]]: l'offerta globale deve essere uguale alla domanda globale.
 
 ## Caratterizzazione delle basi nei problemi di flusso
-%%
-Caratterizzare = osservare un oggetto e le sue proprietà per capire se qualcosa ci può essere utile
-%%
+**Caratterizzare** le basi vuol dire studiarne la struttura e le proprietà, per capire quali di queste possono esserci utili nella risoluzione del problema.
+
 Riprendendo (MCFP) in forma matriciale:
 $$
 \begin{cases}
@@ -403,12 +399,12 @@ $$
 - $f \in \mathbb{R}^n$ è il vettore dei flussi
 - $A \in \mathbb{R}^{m \times n}$ è la matrice di incidenza del grafo, le cui colonne sono ordinate secondo l'ordinamento del vettore $f$
 - $rango(A) \leq m - 1$
-- $\sum_{i \in V} b_i = 0$ %%(condizione necessaria di ammissibilità, va garantita anche dopo aver eliminato la riga) non ne sono sicuro%%
-- $\tilde{A}$ è la sotto matrice ottenuta eliminando una riga da $A$, e $\tilde{b}$ è il corrispondente vettore delle divergenze. Eliminare una riga dalla matrice di incidenza $A$ corrisponde a eliminare un nodo dalla rete.
+- $\sum_{i \in V} b_i = 0$ ([[#^proprieta2mcfp|condizione necessaria di ammissibilità]]): sotto questa ipotesi ogni vincolo è combinazione degli altri, quindi una riga di $A$ si può eliminare senza modificare la regione ammissibile.
+- $\tilde{A}$ è la sotto matrice ottenuta eliminando una riga da $A$, e $\tilde{b}$ è il corrispondente vettore delle divergenze. Eliminare una riga da $A$ corrisponde a eliminare il **vincolo** di conservazione di un nodo, non il nodo: gli archi incidenti restano tutti come colonne di $\tilde A$.
 
 Vogliamo caratterizzare le basi della matrice di incidenza al fine di derivare una versione ad hoc del [[Problemi di ottimizzazione#Algoritmo del simplesso|metodo del simplesso]].
 
-Serve la [[#Grafi connessi, alberi|caratterizzazione degli alberi]] vista prima: nelle slide l'albero si scrive $H = \langle V, T \rangle$ con $|V| = m$, $|T| = p$, quindi $p = m - 1$. Il punto 5 aggiunge che **un albero è un grafo connesso minimale**.
+Serve la [[#Grafi connessi, alberi|caratterizzazione degli alberi]] vista prima: un albero ricoprente $H = \langle V, T \rangle$ ha $|V| = m$ nodi e quindi $|T| = m - 1$ archi.
 
 >[!info] Teorema
 >Una sottomatrice quadrata di ordine $m - 1$ di $\tilde{A}$ è una **base** se e solo se le sue colonne corrispondono agli archi di un **albero ricoprente** l'insieme dei nodi $V$ del grafo.
@@ -466,15 +462,14 @@ Serve la [[#Grafi connessi, alberi|caratterizzazione degli alberi]] vista prima:
 >\begin{array}{c} \text{②} \\ \text{④} \\ \text{③} \\ \text{⑤} \end{array}
 >$$
 
-%% rivedi questo esempio. Non ho capito, abbiamo eliminato la prima riga, ma il nodo associato a quella riga è ancora lì. È per il nodo 2 che lo collegava? %%
 %%
 definiamo il vettore $f$ come segue per risolvere il problema
 $$
-f = \binom{f_B}{f_N} = \binom{?}{0}
+f = \binom{f_B}{f_N} = \binom{B^{-1}\tilde{b}}{0}
 $$
-se abbiamo la matrice di base definiamo quindi $f_B = B^{-1} \tilde{b}$
-non stiamo facendo altro che risolvere il sistema $B f_B = \tilde{b}$
-possiamo risolvere il sistema senza invertire la matrice?
+non stiamo facendo altro che risolvere il sistema $B f_B = \tilde{b}$.
+Per risolvere questo sistema non è necessario calcolare la matrice inversa $B^{-1}$, ma è sufficiente risolvere il sistema per sostituzione partendo dal basso: il peggio che può capitare è che siano coinvolte le variabili già trovate.
+
 $-f_{45} =$ divergenza del nodo 5
 salendo il peggio che può capitare è che siano coinvolte le variabili già trovate
 risoluzione di sistemi normalissima

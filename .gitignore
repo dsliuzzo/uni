@@ -26,3 +26,6 @@ BarberShop-master/
 /appunti/.obsidian/plugins
 .DS_Store
 /appunti/.claude
+
+# barberia-app: da tenere solo in locale
+code/web/barberia-app/

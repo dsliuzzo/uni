@@ -709,7 +709,7 @@ Il controller è l'ultimo layer: modella il comportamento dell'applicazione rend
 
 Serve per **leggere** informazioni salvate nel **browser** dell'utente tramite cookie: associa un parametro del metodo al valore di un cookie HTTP inviato dal client. Per **scrivere** un cookie invece lo si aggiunge alla risposta HTTP, non si usa `@CookieValue`.
 
-I **cookie** sono piccole informazioni memorizzate dal server nel browser dell'utente (slide 78). Il server imposta i cookie quando restituisce la risposta a una richiesta del browser; il browser li memorizza e li rimanda con la richiesta successiva allo stesso server. Si usano per la gestione delle sessioni, il monitoraggio degli utenti e per memorizzare le preferenze.
+I **cookie** sono piccole informazioni memorizzate dal server nel browser dell'utente. Il server imposta i cookie quando restituisce la risposta a una richiesta del browser; il browser li memorizza e li rimanda con la richiesta successiva allo stesso server. Si usano per la gestione delle sessioni, il monitoraggio degli utenti e per memorizzare le preferenze.
 
 >[!multi-column]
 >
@@ -798,11 +798,11 @@ Con un servizio REST invece il server restituisce solo i **dati**: la pagina sul
 
 ### Controller e REST API
 
-I controller sono la vera anima del paradigma MVC (slide 73): sono il componente **invocato direttamente dai client** e possono esistere anche senza Model e View. Smartphone, PC e tablet chiamano le **REST API** del server, che a loro volta lavorano sul database.
+I controller sono la vera anima del paradigma MVC: sono il componente **invocato direttamente dai client** e possono esistere anche senza Model e View. Smartphone, PC e tablet chiamano le **REST API** del server, che a loro volta lavorano sul database.
 
 ### REST
 
-Caratteristiche di **REST** (*REpresentational State Transfer*, slide 75):
+Caratteristiche di **REST** (*REpresentational State Transfer*):
 - l'astrazione principale è la **risorsa**;
 - si evitano le azioni (es. `add`): per definire le API si usano **nomi, non verbi**;
 - ogni risorsa ha un **URI** (*Uniform Resource Identifier*);
@@ -825,7 +825,7 @@ Caratteristiche di **REST** (*REpresentational State Transfer*, slide 75):
 
 ### Esempio: `AlienService` e `AlienController`
 
-Il service dell'esempio (slide 76 della versione delle slide di Claudia: nella versione di Davide non c'è):
+Il service dell'esempio:
 ```java
 package com.space.scanner.alien.service;
 import [...]
@@ -855,7 +855,7 @@ public class AlienService {
 }
 ```
 
-Il controller che espone il CRUD sugli alieni (slide 76):
+Il controller che espone il CRUD sugli alieni:
 ```java
 // CREATE
 @PostMapping("")
@@ -906,7 +906,7 @@ http://<nome_server>/<path_controller>/<path_metodo>
 
 ### Passare parametri ai servizi REST
 
-Ci sono due modi per passare parametri nell'URL (slide 76):
+Ci sono due modi per passare parametri nell'URL:
 
 >[!multi-column]
 >
@@ -964,7 +964,7 @@ public ResponseEntity<User> getUsersById(@PathVariable(value = "id") Long userId
 
 ### Paginazione nel controller
 
-La **paginazione** serve a restituire i risultati di una ricerca **a pagine**, come le pagine dei prodotti di un e-commerce (slide 77). È il seguito della [[#Paginazione|paginazione nei repository]].
+La **paginazione** serve a restituire i risultati di una ricerca **a pagine**, come le pagine dei prodotti di un e-commerce. È il seguito della [[#Paginazione|paginazione nei repository]].
 
 >[!multi-column]
 >
@@ -1006,7 +1006,7 @@ La **paginazione** serve a restituire i risultati di una ricerca **a pagine**, c
 
 ## Configurations
 
-L'annotazione **`@Configuration`** serve per la configurazione di Spring basata su annotazioni (slide 80). È un'annotazione *marker*: indica che la classe dichiara uno o più metodi **`@Bean`**, che Spring elabora per generare le definizioni dei bean e servirli a runtime. Le configuration servono a impostare le **configurazioni trasversali** del web server.
+L'annotazione **`@Configuration`** serve per la configurazione di Spring basata su annotazioni. È un'annotazione *marker*: indica che la classe dichiara uno o più metodi **`@Bean`**, che Spring elabora per generare le definizioni dei bean e servirli a runtime. Le configuration servono a impostare le **configurazioni trasversali** del web server.
 
 È sempre bene **suddividere le configuration per scopo**, per avere un codice più pulito e manutenibile.
 
@@ -1027,7 +1027,7 @@ Questo bean configura il **mapping dei JSON** che arrivano dai client nel body. 
 
 ### Sicurezza
 
-Una configuration di sicurezza ("non troppa in questo esempio!", slide 82 della versione di Claudia). Con gli **`antMatcher`** si decide quali chiamate ai servizi REST sono pubbliche e quali vanno protette:
+Una configuration di sicurezza ("non troppa in questo esempio!"). Con gli **`antMatcher`** si decide quali chiamate ai servizi REST sono pubbliche e quali vanno protette:
 ```java
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -1047,11 +1047,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
 - le sessioni sono **stateless**, come visto per il [[#Server stateless|server stateless]].
 
 >[!attention] AGGIUNTA
->`/**` vuol dire "questo path e tutti i sotto-path" (es. `/users/**` comprende `/users/5/orders`). `csrf().disable()` è normale per API REST stateless con token, perché la protezione CSRF serve quando l'autenticazione passa dai cookie di sessione. Nella versione delle slide di Davide (slide 81) c'è la stessa configurazione con l'approccio **legacy**: il metodo `configure(HttpSecurity http)` di `WebSecurityConfigurerAdapter`, con `.antMatchers(...)` concatenati. `WebSecurityConfigurerAdapter` è stato rimosso in Spring Security 6, per questo la versione nuova dichiara la `SecurityFilterChain` come `@Bean`. Per la teoria vedi [[Spring#Spring Security|Spring Security]].
+>`/**` vuol dire "questo path e tutti i sotto-path" (es. `/users/**` comprende `/users/5/orders`). `csrf().disable()` è normale per API REST stateless con token, perché la protezione CSRF serve quando l'autenticazione passa dai cookie di sessione. Nella versione delle slide di Davide c'è la stessa configurazione con l'approccio **legacy**: il metodo `configure(HttpSecurity http)` di `WebSecurityConfigurerAdapter`, con `.antMatchers(...)` concatenati. `WebSecurityConfigurerAdapter` è stato rimosso in Spring Security 6, per questo la versione nuova dichiara la `SecurityFilterChain` come `@Bean`. Per la teoria vedi [[Spring#Spring Security|Spring Security]].
 
 ### CORS
 
-Una configuration per il **CORS mapping** (slide 82):
+Una configuration per il **CORS mapping**:
 ```java
 @Bean
 public CorsFilter corsFilter() {
@@ -1096,7 +1096,6 @@ public class AlienApplication {
   }
 }
 ```
-(slide 84)
 - La classe contiene il **main**, che si limita a passare il controllo al framework tramite `SpringApplication.run()`. Di solito sta nel **root package**.
 - **`@SpringBootApplication`** è un'annotazione di convenienza che in realtà aggiunge:
   - **`@Configuration`**: indica una classe che contiene definizioni di **bean**, oggetti da inserire nello Spring Container e da fornire tramite **dependency injection**;
@@ -1105,3 +1104,5 @@ public class AlienApplication {
 
 >[!question] Osservazione
 >Per questo il main va nel root package: `@ComponentScan` parte dal package della classe annotata, quindi controller, service e repository nei sotto-package (`...alien.service`, `...alien.controller`, …) vengono trovati da soli.
+
+

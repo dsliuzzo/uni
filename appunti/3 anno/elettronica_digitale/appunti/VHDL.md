@@ -933,3 +933,217 @@ begin
 	end process;
 end myLN;
 ```
+
+ciò che scriviamo all'interno del process è un gruppo di statement sequenziali, ma il process può essere messo in qualsiasi posizione dell'architecture senza modificare il suo funzionamento.
+
+
+descrizione di un flip flop sensibile ai segnali di salita
+![[Sequenziali-flipflop-semplice.svg|center|250]]
+``` vhdl
+library IEEE
+use IEEE.std_logic_1164.all;
+
+entity FF_R is
+port (
+	D, clk:in std_logic;
+	Q: out std_logic);
+end FF_R;
+
+architecture behav of FF_R is
+begin
+	process(clk) -- solo il clk perchè nessun cambiamento dell'ingresso D può direttamente provocare una commutazione su Q
+		if rising_edge(clk) then-- verifichiamo se si verifica l'evento attivo del clk (fronte di salita). Usiamo il costrutto rising_edge
+			Q <= D;
+		end if;
+	end process;
+end behav;
+```
+
+supponendo che il FF sia sensibile al fronte di discesa
+![[Sequenziali-flipflop-discesa.svg|center|250]]
+``` vhdl
+library IEEE
+use IEEE.std_logic_1164.all;
+
+entity FF_F is
+port (
+	D, clk:in std_logic;
+	Q: out std_logic);
+end FF_F;
+
+architecture behav of FF_F is
+begin
+	process(clk) -- solo il clk perchè nessun cambiamento dell'ingresso D può direttamente provocare una commutazione su Q
+		if falling_edge(clk) then-- verifichiamo se si verifica l'evento attivo del clk (fronte di discesa). Usiamo il costrutto falling_edge
+			Q <= D;
+		end if;
+	end process;
+end behav;
+```
+
+Supponiamo ora di inserire il preset
+![[Sequenziali-flipflop-discesa-preset.svg|center|250]]
+``` vhdl
+library IEEE
+use IEEE.std_logic_1164.all;
+
+entity FF_RP is
+port (
+	D, clk, Pr: in std_logic; -- il Pr è asincrono rispetto al clk (usiamo il Preset attivo alto, per forzare l'uscita a 1 dobbiamo portare il Pr a 1)
+	Q: out std_logic);
+end FF_RP;
+
+architecture behav of FF_RP is
+begin
+	process(clk, Pr) -- aggiungo alla sensitivity list il Pr
+		if (Pr = '1') then Q <= '1';
+		else
+			if falling_edge(clk) then
+				Q <= D;
+			end if;
+		end if;
+	end process;
+end behav;
+```
+
+Supponiamo di voler descrivere il comportamento di un registro a 4 bit
+questo registra usa 4 FF_RP
+ogni FF riceve una parola in ingresso a 4 bit, il segnale di clock condiviso (arriva a tutti e 4), anche il Pr condiviso da tutti i FF e restituiscono Q
+![[Sequenziali-pipo-preset.svg|center]]
+Lo possiamo rappresentare con un singolo blocco
+![[Sequenziali-registro-4bit.svg|center|300]]
+``` vhdl
+library IEEE
+use IEEE.std_logic_1164.all;
+
+entity Reg4b is
+	port(
+		clk, Pr: in std_logic;
+		D: in std_logic_vector(3 downto 0);
+		Q: out std_logic_vector(3 downto 0));
+end Reg4b
+
+architecture myReg4b of Reg4b is
+-- non ci servono signal perchè tutti i FF ricevono direttamente gli ingressi
+-- ho però bisogno del component per riprendere FF_RP
+component FF_RP port(
+	D, clk, Pr: in std_logic;
+	Q: out std_logic);
+end component;
+begin
+	FF0: FF_RP port map(D(0), clk, Pr, Q(0));
+	FF1: FF_RP port map(D(1), clk, Pr, Q(1));
+	FF2: FF_RP port map(D(2), clk, Pr, Q(2));
+	FF3: FF_RP port map(D(3), clk, Pr, Q(3));
+	-- si potrebbe usare anche il for generate con lo stesso risultato
+end myReg4;
+```
+si può fare anche
+``` vhdl
+architecture myReg4b of Reg4b is
+begin
+	process(clk, Pr) begin
+		for i in 0 to 3 loop
+			if (Pr = '1') then Q(i) <= '1'; else
+				if falling_edge(clk) then Q(i) <= D(i);
+				end if;
+			end if;
+		end loop;
+	end process;
+end architecture;
+```
+ma possiamo anche lavorare direttamente con il vettore
+``` vhdl
+architecture myReg4b of Reg4b is
+begin
+	process(clk, Pr) begin
+		if (Pr = '1') then Q <= (others => '1'); else
+			if falling_edge(clk) then Q <= D;
+			end if;
+		end if;
+	end process;
+end architecture;
+```
+modificare leggermente il codice del registro a 4 bit ad un codice generico a N bit
+``` vhdl
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity RegNb is
+generic(n: integer := 4);
+
+entity Reg4b is
+	port(
+		clk, Pr: in std_logic;
+		D: in std_logic_vector(n-1 downto 0);
+		Q: out std_logic_vector(n-1 downto 0));
+end Reg4b
+
+architecture myRegNb of RegNb is
+begin
+	process(clk, Pr) begin
+		if (Pr = '1') then Q <= (others => '1'); else
+			if falling_edge(clk) then Q <= D;
+			end if;
+		end if;
+	end process;
+end architecture;
+```
+
+se usiamo un if then else fuori dal process o una instaziazione fuori dal process all'esame sono considerati errori gravi
+>[!important] Duty cycle
+>rapporto tra durata stato alto e l'intero periodo di clock in percentuale
+
+
+![[VHDL-timing-testbench-clock.svg|center|500]]
+
+>[!question] Osservazione
+>Dopo l'evento attivo del clk (fronte di discesa a 10 ns, dove viene campionato D = 1), da 11 ns in poi (a $t_{hold}$ rispettato) D potrebbe già cambiare. Il nuovo valore verrebbe letto al successivo evento attivo, cioè a 20 ns.
+>Non ha senso variare D non appena finisce il $t_{hold}$: basta mantenerlo stabile fino al successivo evento attivo meno il $t_{setup}$, cioè $20 - 2 = 18$ ns. In questo modo il $t_{hold}$ è soddisfatto automaticamente.
+>Lo stesso vale per il cambio successivo: D torna a 0 a 18 ns (letto a 20 ns) e a 1 a 28 ns (letto a 30 ns, $30 - 2 = 28$).
+
+``` vhdl
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity tb_Reg is
+	generic(n: integer := 8);
+end tb_Reg;
+
+architecture SimReg of tb_Reg is
+component RegNb
+	port(
+		clk, Pr: in std_logic;
+		D: in std_logic_vector(n-1 downto 0);
+		Q: in std_logic_vector(n-1 downto 0));
+end component;
+
+signal clk, Pr: std_logic := '0';
+signal D, Q: std_logic_vector (n-1 downto 0);
+constant T:time := 10 ns;
+
+begin
+	circ: RegNb port map(clk, Pr, D, Q);
+	-- definiamo dei process che agiranno in parallelo
+	ProcPr: process begin -- t = 0
+		Pr <= '0';
+		wait for 2 ns; -- t = 2 ns
+		Pr <= '1';
+		wait for 2 ns; -- t = 4 ns
+		Pr <= '0'
+	end process;
+	ProcD: process begin -- il tempo di attesa tra un cambiamento e l'altro di D sarà sempre pari al periodo del clk, quindi a questo punto definiamo una costante
+		D <= (others => '0');
+		wait for 8 ns; -- t = 8 ns
+		D <= (others => '1');
+		wait for T; -- t = 18 ns
+		D <= (others => '0');
+		wait for T; -- t = 28 ns
+		D <= (others => '1')
+	end process;
+	Prclk: process begin -- il clk ha già un valore iniziale specificato nella sua dichiarazione
+		wait for T/2;
+		clk <= not clk;
+	end process;
+end simReg;
+```

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="170" viewBox="0 0 360 170">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="100" y="45" width="160" height="80" rx="4" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<text x="115" y="90" font-size="14" text-anchor="start" fill="#b8b8b8" font-style="italic">D</text>
+<text x="245" y="90" font-size="14" text-anchor="end" fill="#b8b8b8" font-style="italic">Q</text>
+<line x1="60" y1="85" x2="100" y2="85" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="75" y1="79" x2="85" y2="91" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<text x="58" y="76" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">D[3:0]</text>
+<line x1="260" y1="85" x2="300" y2="85" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="275" y1="79" x2="285" y2="91" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+<text x="302" y="76" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic">Q[3:0]</text>
+<line x1="60" y1="115" x2="90" y2="115" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="95" cy="115" r="5" fill="none" stroke="#b8b8b8" stroke-width="2.5"/>
+<polyline points="100,108 109,115 100,122" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="113" y="119" font-size="13" text-anchor="start" fill="#b8b8b8" font-style="italic">ck</text>
+<line x1="180" y1="15" x2="180" y2="45" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round"/>
+<text x="180" y="63" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">Pr</text>
+</svg>

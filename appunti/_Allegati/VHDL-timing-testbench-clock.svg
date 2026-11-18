@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="355" viewBox="0 0 640 355">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="188" y="216" width="32" height="90" fill="#e07b6a" fill-opacity="0.12"/>
+<rect x="220" y="216" width="16" height="90" fill="#e07b6a" fill-opacity="0.25"/>
+<rect x="348" y="216" width="32" height="90" fill="#e07b6a" fill-opacity="0.12"/>
+<rect x="508" y="216" width="32" height="90" fill="#e07b6a" fill-opacity="0.12"/>
+<line x1="92" y1="12" x2="92" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="124" y1="12" x2="124" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="140" y1="12" x2="140" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="188" y1="12" x2="188" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="220" y1="12" x2="220" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="236" y1="12" x2="236" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="300" y1="12" x2="300" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="348" y1="12" x2="348" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="380" y1="12" x2="380" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="460" y1="12" x2="460" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="508" y1="12" x2="508" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="540" y1="12" x2="540" y2="306" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<text x="40" y="60" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">Pr</text>
+<line x1="60" y1="85" x2="596" y2="85" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="591,81 598,85 591,89" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="618" y="90" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,85 92,85 92,30 124,30 124,85 556,85" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="40" y="160" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">clk</text>
+<line x1="60" y1="190" x2="596" y2="190" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="591,186 598,190 591,194" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="618" y="195" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,190 140,190 140,135 220,135 220,190 300,190 300,135 380,135 380,190 460,190 460,135 540,135 540,190 556,190" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="220" y1="135" x2="220" y2="190" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="214,180 220,190 226,180" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="380" y1="135" x2="380" y2="190" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="374,180 380,190 386,180" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="540" y1="135" x2="540" y2="190" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="534,180 540,190 546,180" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="40" y="265" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">D</text>
+<line x1="60" y1="282" x2="596" y2="282" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="591,278 598,282 591,286" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="618" y="287" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,238 183,238 193,282 343,282 353,238 503,238 513,282 556,282" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="60,282 183,282 193,238 343,238 353,282 503,282 513,238 556,238" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="124" y="265" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic">0</text>
+<text x="268" y="265" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic">1</text>
+<text x="428" y="265" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic">0</text>
+<text x="549" y="265" font-size="15" text-anchor="middle" fill="#b8b8b8" font-style="italic">1</text>
+<text x="204" y="300" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="364" y="300" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="524" y="300" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="240" y="300" font-size="12" text-anchor="start" fill="#e07b6a" font-style="italic">t_hold</text>
+<text x="92" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">2 ns</text>
+<text x="140" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">5 ns</text>
+<text x="188" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">8 ns</text>
+<text x="220" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">10 ns</text>
+<text x="300" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">15 ns</text>
+<text x="348" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">18 ns</text>
+<text x="380" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">20 ns</text>
+<text x="460" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">25 ns</text>
+<text x="508" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">28 ns</text>
+<text x="540" y="328" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">30 ns</text>
+<text x="124" y="345" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">4 ns</text>
+<text x="236" y="345" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">11 ns</text>
+</svg>
