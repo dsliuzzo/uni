@@ -670,7 +670,7 @@ $$
 >- Il latch positivo con clock è il [[1. Reti logiche#Reti sequenziali sincrone|FF Fc]] di Reti logiche: $F$ corrisponde a $D$ e $c$ a $Clk$; la tabella è la stessa.
 >- In VHDL un latch si può ottenere anche senza volerlo: [[VHDL#Latch involontari|latch involontari]].
 
-## Flip flop
+## Flip-Flop
 >[!important] Flip flop
 >Il flip flop **memorizza il dato quando il clock "sale"**: è sensibile ai **fronti** del clock (slide 4). $Q$ può cambiare **solo** in corrispondenza dell'evento attivo del clock. Nel simbolo il fronte si indica con il **triangolino** sull'ingresso del clock.
 

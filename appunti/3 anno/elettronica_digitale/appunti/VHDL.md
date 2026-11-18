@@ -690,11 +690,6 @@ end myCLA
 ```
 
 
-
-
----
-xc7z020clg400-3
-
 ``` vhdl
 entity FA is
 	port(	a, b, cin : in bit;
@@ -829,10 +824,6 @@ end Struct;
 ```
 
 
----
-
-[...] recupera il generic
-
 ``` vhdl
 library IEEE; -- senior member
 use IEEE.std_logic_1164.all;
@@ -911,9 +902,14 @@ begin
 end Sim;
 ```
 
+# Circuiti sequenziali in vhdl
+[[Circuiti integrati digitali#Circuiti sequenziali]]
 
----
+Ciò che scriviamo all'interno del process è un gruppo di statement sequenziali, ma il process può essere messo in qualsiasi posizione dell'architecture senza modificare il suo funzionamento.
 
+Usare un `if then else` fuori dal `process` o una instaziazione fuori dal process all'esame sono considerati errori gravi
+## Latch
+[[Circuiti integrati digitali#Latch]]
 ``` vhdl
 Library IEEE
 use ieee.std_logic_1164.all;
@@ -934,9 +930,8 @@ begin
 end myLN;
 ```
 
-ciò che scriviamo all'interno del process è un gruppo di statement sequenziali, ma il process può essere messo in qualsiasi posizione dell'architecture senza modificare il suo funzionamento.
-
-
+## Flip-Flop
+[[Circuiti integrati digitali#Flip flop]]
 descrizione di un flip flop sensibile ai segnali di salita
 ![[Sequenziali-flipflop-semplice.svg|center|250]]
 ``` vhdl
@@ -1006,6 +1001,8 @@ begin
 end behav;
 ```
 
+## Registri
+[[Circuiti integrati digitali#Registri]]
 Supponiamo di voler descrivere il comportamento di un registro a 4 bit
 questo registra usa 4 FF_RP
 ogni FF riceve una parola in ingresso a 4 bit, il segnale di clock condiviso (arriva a tutti e 4), anche il Pr condiviso da tutti i FF e restituiscono Q
@@ -1064,6 +1061,7 @@ begin
 	end process;
 end architecture;
 ```
+
 modificare leggermente il codice del registro a 4 bit ad un codice generico a N bit
 ``` vhdl
 library IEEE;
@@ -1090,11 +1088,13 @@ begin
 end architecture;
 ```
 
-se usiamo un if then else fuori dal process o una instaziazione fuori dal process all'esame sono considerati errori gravi
+### Test bench registro
 >[!important] Duty cycle
 >rapporto tra durata stato alto e l'intero periodo di clock in percentuale
 
-
+Definiamo:
+- $t_{\text{hold}}=1 \ ns$
+- $t_{\text{setup}} = 2 \ ns$
 ![[VHDL-timing-testbench-clock.svg|center|500]]
 
 >[!question] Osservazione
