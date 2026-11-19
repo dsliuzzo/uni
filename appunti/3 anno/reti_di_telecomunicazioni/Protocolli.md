@@ -958,39 +958,39 @@ La maggior parte dei protocolli IGP si basa su due filosofie di routing:
 >[!protocollo] IPv6
 >**IPv6** (*Internet Protocol version 6*, RFC 2460) è la nuova versione del protocollo [[#IPv4|IP]]: ha uno spazio di indirizzamento molto più grande (indirizzi di **128 bit** invece di 32), un'intestazione fissa di 40 byte estendibile con degli *extension header* e supporta in modo nativo autoconfigurazione, sicurezza e mobilità.
 
-Fonti: slide `Lez IPv6.pdf` e lezione del 19/11/2026.
 ### Perché un nuovo protocollo
 Un indirizzo IPv4 è composto da 4 byte, quindi si possono gestire al massimo $2^{32}$ indirizzi pubblici. Gli indirizzi di [[Modello TCP IP#Classi di indirizzi IP|classe]] A e B sono pochi e difficili da gestire (parte host troppo grande), quelli di classe C a volte hanno una parte host troppo piccola: tra classe C e classe B c'è un salto molto grande (da 254 a circa 65.000 host).
 La IANA ha praticamente esaurito gli indirizzi di classe C e di classe B.
 
 Già alla fine degli anni '80 si iniziava a pensare a IPv6 per il timore di esaurire gli indirizzi; negli anni '90 si arriva alla decisione di implementarlo.
 Nel frattempo sono nate delle tecniche che permettono di mitigare il problema, come il [[Modello TCP IP#Indirizzi privati|NAT]]: con la coppia indirizzo-porta un solo indirizzo IPv4 pubblico può servire circa 65.000 host.
-%% riprendi NAT %%
+
 Il problema della scarsità degli indirizzi è stato quindi risolto a prescindere, ma è rimasta l'esigenza di un protocollo più performante: IPv6, nato come protocollo "di emergenza", è diventato il nuovo standard, con uno spazio di indirizzamento molto più grande (indirizzi di **128 bit**) che vuole risolvere il problema alla radice.
 
-IPv4 è nato prima di internet come la conosciamo oggi: è disordinato, ha un header di lunghezza variabile, campi di cui non è chiaro il ruolo (es. non si sa se il time to live si misura in hop o in tempo) e non è stato pensato per la sicurezza (IPsec è stato aggiunto dopo).
-IPv6 gode invece di una serie di benefici, proprio perché è stato pensato dopo:
-1. **Intestazione limitata al necessario**
-2. **Spazio di indirizzamento immenso** (da 32 a 128 bit)
-   possiamo assegnare un indirizzo pubblico a qualsiasi host che si vuole connettere alla rete: non servono più indirizzi privati né host nascosti, tutti gli host possono essere raggiungibili e quindi fare da "server" $\to$ ad esempio il **peer-to-peer** si può fare in modo molto più agevole. Si ha una reale connettività globale.
-3. **Cifratura del traffico**
-   è possibile usare sistemi di sicurezza punto-punto: si può stabilire un flusso totalmente cifrato tra due nodi. Con IPv4 si può fare ma con più difficoltà, IPv6 lo supporta in modo nativo.
-4. **Autoconfigurazione**
-   per le reti IPv4 vanno configurati i nuovi dispositivi (indirizzo IP, maschera, conoscere il server DHCP…); al massimo un DHCP concede un indirizzo privato, per un indirizzo pubblico serve un amministratore di rete.
-   IPv6 invece è **plug and play**: un dispositivo collegato può comunicare immediatamente con i dispositivi sulla stessa rete e poi, comunicando con il router, stabilisce in automatico il suo indirizzo globale. Si possono usare 64 bit per l'host con la garanzia di unicità (vedi [[#Subnet prefix e host identifier|host identifier]]).
-5. **Multihoming**
-   quando un nodo della rete può connettersi attraverso reti diverse (es. un'azienda con sedi separate, con reti e indirizzamenti diversi): gestire l'accesso dello stesso nodo su reti diverse è molto più semplice.
-6. **Facilità di renumbering**
-   es. se abbiamo due subnet ma ne vogliamo aggiungere una terza, in IPv4 bisogna cambiare maschere e sottoreti e riconfigurare tutto; in IPv6 esistono delle procedure di renumbering automatiche: i router comunicano tra di loro e si riconfigurano da soli, senza l'intervento di un amministratore. È uno dei motivi per cui gli operatori usano IPv6 nel loro core.
-7. **Intestazione più efficiente ed estensibile**
-   header principale con un numero minore di campi e una dimensione fissa, sempre uguale (efficienza di routing, prestazioni). All'occorrenza si possono aggiungere delle [[#Extension header|estensioni di intestazione]], solo quando servono (miglior gestione delle opzioni).
-8. **I pacchetti non possono più essere frammentati in transito**
-   elimina tutti i problemi legati alla perdita di un singolo frammento di IPv4. Prima di stabilire un flusso si individua il collo di bottiglia ($\min_i MTU_i$) e ad origine i pacchetti sono dimensionati in modo da non dover essere ulteriormente frazionati. Si appesantisce il lavoro di mittente e destinatario, ma si alleggerisce quello dei router: si sollevano i router dall'onere di dover frammentare $\to$ router più veloci, migliori prestazioni.
-9. **Mobilità**
-   normalmente collegandosi ad una nuova rete otteniamo un nuovo IP: con IPv4, se sposto il mio PC in un'altra rete, chi cerca il mio vecchio indirizzo non mi trova, perché il routing è geografico e punta alla rete di origine.
-   IPv6 invece, usando le estensioni [[#Routing (43)|routing]] e [[#Destination options (60)|destination options]], permette a un nodo di mantenere il suo indirizzo a prescindere da dove si trovi (Mobile IPv6).
-10. **Maggiore utilizzo del multicast** (sostituisce il broadcast)
-11. **Uso più efficiente della rete**
+IPv4 è nato prima di internet come la conosciamo oggi: è disordinato, ha un header di lunghezza variabile, campi di cui non è chiaro il ruolo (es. non si sa se il time to live si misura in hop o in tempo) e non è stato pensato per la sicurezza (IPsec è stato aggiunto dopo). IPv6 invece, essendo stato pensato dopo, nasce con i requisiti chiari.
+
+>[!important] Caratteristiche
+>Avendo 128 bit di indirizzo:
+>- reale **connettività globale**
+>- non più reti o host nascosti (non servono gli indirizzi privati)
+>- tutti gli host possono essere raggiungibili e quindi fare da "server" (es. il peer-to-peer diventa molto più agevole)
+>- è possibile usare sistemi di sicurezza punto-punto
+
+>[!check] Vantaggi
+>1. **Pulito**, con intestazione limitata al necessario, e con uno **spazio di indirizzamento immenso** $\implies$ non c'è bisogno di nascondere gli indirizzi, ogni host può avere un indirizzo pubblico. Si possono anche stabilire **connessioni cifrate** tra due nodi (con IPv4 si può, ma con più difficoltà: IPv6 lo supporta in modo nativo).
+>2. **Autoconfigurazione**: in IPv4 un PC collegato a un cavo LAN va configurato (indirizzo, maschera, server DHCP…). Con IPv6 si fa **plug and play**: senza inserire alcun dato il nodo può comunicare subito con tutti i nodi della sua rete, per poi passare all'interlocuzione con il router, che gli dà le informazioni per terminare l'autoconfigurazione (indirizzo globale).
+>	- **Multihoming**: un dispositivo può connettersi attraverso reti diverse, con indirizzamenti diversi (es. azienda con sedi diverse)
+>	- **Renumbering**: se si vuole cambiare il piano di indirizzamento (es. da 2 a 3 subnet), in IPv4 bisogna ridefinire maschere, blocchi ecc.; in IPv6 esistono procedure automatiche in cui i router si accordano tra loro (per questo gli operatori usano IPv6 nel core)
+>3. **Intestazione efficiente ed estensibile**:
+>	- meno campi e dimensione fissa $\implies$ efficienza di routing (si alleggerisce il lavoro dei router) e migliori prestazioni
+>	- all'occorrenza si possono aggiungere delle [[#Extension header|estensioni]], solo quando servono
+>	- non è possibile **frammentare** i pacchetti in transito: l'esigenza ci potrebbe essere, ma prima di stabilire un flusso si individua il collo di bottiglia ($\min_i MTU_i$) e ad origine i pacchetti sono dimensionati su quella MTU. Si appesantisce il lavoro di mittente e destinatario ma si sollevano i router dall'onere di frammentare, ed è eliminato il problema della perdita di un singolo frammento
+>4. Maggiore utilizzo del **multicast**, che sostituisce il broadcast
+>5. **Mobilità** dei nodi: in IPv4, se un host si sposta in un'altra rete, il suo vecchio indirizzo non lo raggiunge più (il routing è geografico); grazie alle estensioni di header ([[#Routing (43)|routing]] e [[#Destination options (60)|destination options]]) in IPv6 un nodo mantiene il suo indirizzo ovunque si trovi (Mobile IPv6)
+>6. Uso più **efficiente** della rete
+
+>[!warning] Problemi
+>È impensabile sostituire da un giorno all'altro tutti gli apparati con apparati che supportano IPv6: infatti **IPv4** è ancora immensamente utilizzato (vedi [[#Convivenza con IPv4|convivenza con IPv4]]).
 
 >[!check] Esempio (renumbering)
 >L'Unical ha un indirizzo di classe B, `160.97.x.y`, partizionato in tante subnet: ad esempio al DIMES sono assegnate le sottoreti da `160.97.24` a `160.97.29`, usate per la rete wireless, del personale, dei laboratori, dei server. Se si volesse cambiare questa numerazione con IPv4 bisognerebbe riconfigurare tutto a mano (o quasi), con IPv6 le procedure di renumbering lo fanno in automatico.
