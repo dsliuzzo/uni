@@ -1036,6 +1036,87 @@ print(knapsack(W, wt, val, n))
 
 **complessità**
 L'algoritmo è composto da due cicli for innestati, quindi vengono eseguite un numero di operazioni pari a $n \cdot W$, ma con una analisi più approfondita sulla complessità calcolata sulla dimensione dell'input la situazione cambia: $W$ è un valore numerico, che in bit ha dimensione $\log_2(W)$. Questo tipo di algoritmi prende il nome di **complessità pseudo polinomiale** e la sua reale complessità è $O(n \cdot \log_2(W))$.
+## Bellman-Ford
+L'algoritmo di Bellman-Ford individua il cammino a lunghezza minima tra un nodo $s$ e tutti gli altri nodi di un grafo $G$ **aumentando progressivamente il numero di rami** ([[#Dijkstra - albero dei cammini minimi a partire da un nodo|Dijkstra]] invece aumenta progressivamente la distanza).
+
+Costruisce dei percorsi parzialmente ottimali partendo da percorsi che hanno al più 1 arco, poi al più 2 e così via:
+- al primo passo individua i cammini minimi tra il nodo sorgente e gli altri nodi con il vincolo che i cammini contengano **al più 1 ramo**
+- al secondo passo individua i cammini minimi con il vincolo che i cammini contengano **al più 2 rami**
+- si itera il procedimento fino al valore massimo di rami possibili in un cammino
+
+Si arriva al punto in cui l'aggiunta di un ramo non porta percorsi migliori: la soluzione si stabilizza, l'algoritmo si ferma e il protocollo può procedere alla creazione della tabella di instradamento.
+
+**Notazioni**
+- $N$: insieme dei nodi del grafo
+- $s$: nodo sorgente
+- $h$: massimo numero di rami in un cammino correntemente consentito dall'algoritmo
+- $w(i,j)$: peso (costo) del ramo $(i,j)$
+	- $w(i,i) = 0$
+	- $w(i,j) \geq 0$ se i vertici $i$ e $j$ sono connessi direttamente
+	- $w(i,j) = \infty$ se i vertici $i$ e $j$ non sono connessi direttamente
+- $L_h(n)$: costo del cammino a costo minimo tra il nodo $s$ ed il nodo $n$, con il vincolo che il numero di rami non sia superiore ad $h$
+
+**Inizializzazione**
+$$\displaylines{L_0(n) = \infty \quad \forall n \neq s \\ L_h(s) = 0 \quad \forall h}$$
+**Aggiornamento**
+Per tutti i valori successivi di $h \geq 0$ e per ogni $n \neq s$ si calcola:
+$$L_{h+1}(n) = \min_j\left[L_h(j) + w(j,n)\right]$$
+e si connette il nodo $n$ con il nodo predecessore $j$ che raggiunge il minimo, eliminando le connessioni di $n$ con altri predecessori individuati nelle iterazioni precedenti.
+Cioè per ogni nodo $n$ si prova ogni possibile predecessore $j$ (costo del cammino fino a $j$ più il ramo che da $j$ raggiunge $n$) e si sceglie quello che rende minimo il costo.
+In pratica a ogni passo "sblocco" un nuovo arco e verifico se la sua somma è minore del costo del percorso attuale per connettere i due nodi.
+
+**Termine**
+L'algoritmo termina quando all'iterazione $h+1$ non cambia il valore dei percorsi minimi rispetto all'iterazione precedente, cioè $L_{h+1}(n) = L_h(n)$ per ogni $n$.
+Questa condizione basta: $L_{h+2}$ si calcola **soltanto** a partire da $L_{h+1}$ con la formula di aggiornamento, quindi se $L_{h+1}(n) = L_h(n)$ per **tutti** i nodi $n$ anche $L_{h+2}$ sarà uguale a $L_{h+1}$, e così via: nessun arco ulteriore può migliorare qualcosa.
+$$L_{h+2}(n) = \min_j\left[L_{h+1}(j) + w(j,n)\right] = \min_j\left[L_h(j) + w(j,n)\right] = L_{h+1}(n)$$
+Basta però che cambi **un solo** nodo perché si debba proseguire.
+
+### Esempio
+Grafo orientato, sorgente $V_1$. In rosso i nodi raggiunti, il loro costo $L_h$ e l'albero dei predecessori al passo $h$.
+
+>[!multi-column]
+>
+>>[!blank]
+>>**h = 1**
+>>![[Algoritmi-bellman-ford-h1.svg]]
+>>$L_1(2)=2$, $L_1(4)=1$, $L_1(3)=5$
+>>$L_1(i)=\infty$ per $i=5,6$
+>
+>>[!blank]
+>>**h = 2**
+>>![[Algoritmi-bellman-ford-h2.svg]]
+>>$L_2(2)=2$, $L_2(4)=1$, $L_2(3)=4$, $L_2(5)=2$, $L_2(6)=10$
+
+>[!multi-column]
+>
+>>[!blank]
+>>**h = 3**
+>>![[Algoritmi-bellman-ford-h3.svg]]
+>>$L_3(2)=2$, $L_3(4)=1$, $L_3(3)=3$, $L_3(5)=2$, $L_3(6)=4$
+>
+>>[!blank]
+>>**h = 4**
+>>![[Algoritmi-bellman-ford-h4.svg]]
+>>Nessun valore cambia: $L_4(n) = L_3(n)$ per ogni $n$, l'algoritmo termina.
+
+Gli stessi passi in tabella (tra parentesi il predecessore scelto):
+
+| $h$ | $L_h(2)$ | $L_h(3)$ | $L_h(4)$ | $L_h(5)$ | $L_h(6)$ |
+| --- | -------- | -------- | -------- | -------- | -------- |
+| 0   | $\infty$ | $\infty$ | $\infty$ | $\infty$ | $\infty$ |
+| 1   | 2 (1)    | 5 (1)    | 1 (1)    | $\infty$ | $\infty$ |
+| 2   | 2 (1)    | 4 (4)    | 1 (1)    | 2 (4)    | 10 (3)   |
+| 3   | 2 (1)    | 3 (5)    | 1 (1)    | 2 (4)    | 4 (5)    |
+| 4   | 2 (1)    | 3 (5)    | 1 (1)    | 2 (4)    | 4 (5)    |
+
+### Complessità
+Al termine si individua uno **spanning tree** del grafo di partenza che contiene i cammini a costo minimo tra il nodo sorgente e tutti gli altri nodi.
+Più precisamente è l'albero dei **cammini minimi** radicato in $s$ (come quello di [[#Dijkstra - albero dei cammini minimi a partire da un nodo|Dijkstra]]), non il minimo albero ricoprente di [[#Prim - minimo albero ricoprente|Prim]]/[[#Kruskal - minimo albero ricoprente|Kruskal]], che in generale è un albero diverso.
+
+La complessità dell'algoritmo è $O(|V||E|)$, ovvero nel caso peggiore in cui $|E| = |V|^2$ si ha $O(|V|^3)$: ci sono $|V|-1$ iterazioni del loop interno (la formula di aggiornamento) e ogni iterazione richiede l'esame dei pesi di ogni ramo.
+In pratica posso fermarmi prima di fare tutte le $|V|-1$ iterazioni: basta che a un'iterazione nulla cambi, come nella condizione di termine.
+
+Nel caso peggiore la complessità è cubica nel numero di nodi (perché $|E| = |V|^2$ vale solo per una rete completamente connessa), ma dal punto di vista pratico non è così grave: le reti pienamente connesse sono poche. Internet è frutto di reti eterogenee che si connettono, quindi è molto improbabile che le reti siano così tanto connesse.
 # Algoritmi di codifica
 Per comprimere un dato sfruttiamo le caratteristiche del linguaggio, anche se in modo implicito.
 Normalmente ogni codice ascii per essere rappresentato utilizza 8 bit, indipendentemente da quanto quel carattere appare all'interno del testo.

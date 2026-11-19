@@ -461,23 +461,9 @@ Serve la [[#Grafi connessi, alberi|caratterizzazione degli alberi]] vista prima:
 >\end{pmatrix}
 >\begin{array}{c} \text{②} \\ \text{④} \\ \text{③} \\ \text{⑤} \end{array}
 >$$
+>
+>Per ricavare i flussi di base da questa $B$ si veda l'[[#Osservazioni|esempio nelle osservazioni]].
 
-%%
-definiamo il vettore $f$ come segue per risolvere il problema
-$$
-f = \binom{f_B}{f_N} = \binom{B^{-1}\tilde{b}}{0}
-$$
-non stiamo facendo altro che risolvere il sistema $B f_B = \tilde{b}$.
-Per risolvere questo sistema non è necessario calcolare la matrice inversa $B^{-1}$, ma è sufficiente risolvere il sistema per sostituzione partendo dal basso: il peggio che può capitare è che siano coinvolte le variabili già trovate.
-
-$-f_{45} =$ divergenza del nodo 5
-salendo il peggio che può capitare è che siano coinvolte le variabili già trovate
-risoluzione di sistemi normalissima
-lavoriamo per sostituzioni successive dal basso verso l'alto
-serve a questo triangolarizzare la matrice
-costa computazionalmente la triangolazione, ma il sistema ottenuto è più semplice da risolvere.
-In questo modo semplifichiamo l'applicazione del simplesso, non abbiamo bisogno di invertire $B^{-1}$ per calcolare i flussi di base
-%%
 ### Lemma 1
 >[!info] Lemma 1
 >Sia $H = \langle V, T \rangle$ un albero ricoprente i nodi del grafo $G$, sia $B$ la sottomatrice corrispondente di $\tilde{A}$. Allora, opportunamente permutando le sue righe e le sue colonne, $B$ può essere posta in forma triangolare superiore con elementi diagonali non nulli ($\Rightarrow det(B) \neq 0$).
@@ -609,6 +595,26 @@ B \cdot f_B = \tilde{b}
 $$
 - Se le divergenze dei nodi sono numeri interi, $b \in \mathbb{Z}^m$, allora tutte le soluzioni di base, e quindi la soluzione ottima di base, del problema (MCFP) avranno **componenti intere**. Infatti gli elementi diagonali della matrice $B$ hanno valore $B_{ii} \in \{-1, 1\}$, e le uniche divisioni necessarie nella risoluzione del sistema triangolare hanno tali elementi come divisori.
 
+>[!check] Esempio: calcolo di $f_B$ per sostituzione
+>Con la $B$ triangolare dell'esempio sull'albero ricoprente (righe ②, ④, ③, ⑤; colonne $e_1, e_3, e_4, e_6$, cioè gli archi $(1,2), (2,4), (2,3), (4,5)$) il sistema $B f_B = \tilde{b}$ è
+>$$
+>\begin{cases}
+>-f_{12} + f_{24} + f_{23} = b_2 \\
+>-f_{24} + f_{45} = b_4 \\
+>-f_{23} = b_3 \\
+>-f_{45} = b_5
+>\end{cases}
+>$$
+>Si risolve **dal basso verso l'alto**, senza calcolare $B^{-1}$: a ogni passo compare una sola incognita nuova, le altre sono già state trovate.
+>1. $f_{45} = -b_5$
+>2. $f_{23} = -b_3$
+>3. $f_{24} = f_{45} - b_4 = -b_4 - b_5$
+>4. $f_{12} = f_{24} + f_{23} - b_2 = -(b_2 + b_3 + b_4 + b_5) = b_1$, perché $\sum_{i \in V} b_i = 0$
+>
+>L'ultima riga corrisponde a una **foglia** dell'albero (il nodo ⑤): il suo flusso dipende solo dalla sua divergenza. Risalire il sistema equivale a risalire l'albero dalle foglie. Il risultato $f_{12} = b_1$ è coerente: il nodo ① è collegato all'albero solo dall'arco $e_1$, quindi tutta la sua divergenza passa di lì.
+>
+>La soluzione di base completa è $f = \binom{f_B}{f_N}$ con $f_N = 0$.
+
 Può accadere che la matrice di incidenza $A$ abbia rango strettamente minore di $m - 1$?
 
 >[!info] Lemma 3
@@ -623,5 +629,7 @@ Viceversa, se esiste in $G$ un albero ricoprente, $H = \langle V, T \rangle$, al
 >[!info] Teorema
 >Sia $G = \langle V, E \rangle$ un grafo orientato, $|V| = m$, $|E| = n$; sia $A$ la sua matrice di incidenza. Allora $rango(A) = m - 1$ se e solo se $G$ è connesso.
 
+%%
 #dimostrazione
 Osserviamo che $rango(A) = m - 1$ se e solo se esiste una sottomatrice quadrata $B$ di $\tilde{A}$ di ordine $m - 1$ che è una base. Per il [[#Caratterizzazione delle basi nei problemi di flusso|Teorema sulla caratterizzazione delle basi]] ciò avviene se e solo se esiste un albero ricoprente $G$, e quindi, per il [[#Osservazioni|Lemma 3]], se e solo se $G$ è connesso.
+%%

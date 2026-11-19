@@ -224,7 +224,8 @@ L'obbiettivo fondamentale di questo livello è quello di individuare il partner 
 La PDU del livello 3 è il **pacchetto** (datagramma in Internet): l'header contiene principalmente gli indirizzi di sorgente e destinazione usati per l'instradamento. Il formato dell'header IP andrà descritto in [[Protocolli#IP|IP]].
 
 ## Protocolli
-- [[Protocolli#IP|IP]], con [[Protocolli#Indirizzo IP|indirizzo IP]]
+- [[Protocolli#IP|IP]]; [[Protocolli#ARP e RARP|ARP e RARP]]; protocolli di routing ([[Protocolli#Protocolli di routing (IGP)|IGP]])
+- Indirizzamento e instradamento in Internet: [[Modello TCP IP#Indirizzamento|indirizzamento IP]], [[Modello TCP IP#Instradamento|instradamento]]
 
 # Livello trasporto (livello 4)
 Fornisce alle entità di livello sessione le connessioni di livello trasporto.

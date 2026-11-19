@@ -520,6 +520,13 @@ SELECT coppieNo.c2, coppieNo.c1
 FROM coppieNo
 ```
 
+12) Per ogni società finanziaria che gestisca almeno 50 investimenti, restituire il clienti che abbia sottoscritto il maggior numero di investimenti di quella società finanziaria, considerando solo gli investimenti di importo superiore a 5000 euro. L’importo corrisposto per una singola sottoscrizione di investimento è pari al numero di quote sottoscritte moltiplicato per il valore di una singola quota.
+%% da fare %%
+
+13) Per ogni città i cui clienti hanno sottoscritto almeno 100 investimenti di tipo “fondo azionario”, restituire il cliente che ha investito complessivamente di più considerando tutte le sue sottoscrizioni di investimenti. L’importo corrisposto per una singola sottoscrizione di investimento è pari al numero di quote sottoscritte moltiplicato per il valore di una singola quota.
+%% da fare %%
+
+
 # Prova esame 8 luglio 2019
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -675,6 +682,17 @@ EXCEPT
 SELECT s2, s1
 FROM coppieNo
 ```
+
+8) Per ogni stazione S indicare la tratta dalla quale partono il maggior numero di autobus e la cui stazione di destinazione è S
+%% da fare %%
+
+9) Per ogni stazione S che è partenza di almeno 200 tratte, indicare la tratta dalla quale partono il maggior numero di autobus e la cui stazione di destinazione è S, considerando solo le tratte la cui stazione di partenza è una stazione da cui partono almeno 20 tratte
+%% da fare %%
+
+10) Per ogni città C in cui esiste un numero di stazioni superiore alle stazioni della città di Roma, restituire ogni tipologia di autobus che, sommando le tratte percorse dagli autobus di tale tipologia che partono da una stazione di C, ricopre la minima distanza cumulativa.
+%% da fare %%
+
+
 # Prova esame 24 marzo 2022
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -815,6 +833,10 @@ WHERE   I1.codiceFiscale = coppieSi.i1
 	AND I2.codiceFiscale = coppieSi.i2
 ```
 
+5) Per ogni condominio che abbia ricavato almeno 3000€ da tutti i propri affitti iniziati nell'anno 2022, restituire l’appartamento che è stato affittato per un importo mensile massimo considerando gli affitti iniziati nel 2022 (NOTA BENE: Il ricavo di un affitto è dato da `durataMesi × importoMensile`)
+%% da fare %%
+
+
 # Prova esame 30 giugno 2022
 ## Esercizio 3
 Sia dato il seguente schema di database:
@@ -941,3 +963,7 @@ EXCEPT
 SELECT s2 AS s1, s1 AS s2
 FROM coppieNo
 ```
+
+5) Per ogni città, indicare lo scrittore che ha scritto più articoli della stessa categoria nell'anno 2020, considerando gli scrittori di età minore di 60 anni che sono accreditati per almeno 5 categorie differenti.
+%% da fare %%
+
