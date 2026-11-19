@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="330" viewBox="0 0 720 330">
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .r{fill:#e07b6a} </style>
+<!-- scala: 32 bit = 640 px (20 px/bit), x0 = 40 -->
+<text class="ts" x="42" y="16" style="text-anchor:start">0</text>
+<text class="ts" x="678" y="16" style="text-anchor:end">31</text>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <line x1="40" y1="28" x2="680" y2="28" stroke-width="1.5"/>
+ <line x1="40" y1="23" x2="40" y2="33" stroke-width="1.5"/>
+ <line x1="680" y1="23" x2="680" y2="33" stroke-width="1.5"/>
+ <!-- riga 1 -->
+ <rect x="42" y="40" width="76" height="44" rx="6"/>
+ <rect x="122" y="40" width="156" height="44" rx="6"/>
+ <rect x="282" y="40" width="396" height="44" rx="6"/>
+ <!-- riga 2: campi ereditati da IPv4 ma rinominati -->
+ <rect x="42" y="92" width="316" height="44" rx="6" stroke="#e07b6a" stroke-width="3.5"/>
+ <rect x="362" y="92" width="156" height="44" rx="6" stroke="#e07b6a" stroke-width="3.5"/>
+ <rect x="522" y="92" width="156" height="44" rx="6" stroke="#e07b6a" stroke-width="3.5"/>
+ <!-- indirizzi -->
+ <rect x="42" y="144" width="636" height="64" rx="6"/>
+ <rect x="42" y="216" width="636" height="64" rx="6"/>
+</g>
+<text class="t" x="80" y="55">Ver</text><text class="ts" x="80" y="72">4</text>
+<text class="t" x="200" y="55">Traffic Class</text><text class="ts" x="200" y="72">8</text>
+<text class="t" x="480" y="55">Flow Label</text><text class="ts" x="480" y="72">20</text>
+<text class="t r" x="200" y="107">Payload Length</text><text class="ts r" x="200" y="124">16</text>
+<text class="t r" x="440" y="107">Next Header</text><text class="ts r" x="440" y="124">8</text>
+<text class="t r" x="600" y="107">Hop Limit</text><text class="ts r" x="600" y="124">8</text>
+<text class="t" x="360" y="168">Source Address</text><text class="ts" x="360" y="186">128 bit</text>
+<text class="t" x="360" y="240">Destination Address</text><text class="ts" x="360" y="258">128 bit</text>
+<text class="ts r" x="360" y="308">in rosso: campi ereditati da IPv4 ma rinominati · totale 40 byte</text>
+</svg>

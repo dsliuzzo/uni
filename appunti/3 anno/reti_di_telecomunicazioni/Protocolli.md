@@ -636,7 +636,7 @@ Ogni livello è caratterizzato da un indirizzo e ne esistono di vario tipo:
 Ogni dispositivo sulla LAN è identificato da un **indirizzo MAC**, utile a discriminare i dispositivi fisicamente collegati sulla stessa rete.
 L'indirizzo MAC è associato alla scheda di rete utilizzata (a livello firmware, sono memorizzate nella ROM dell'adattatore della scheda).
 È composto da 6 coppie di valori esadecimali, per un totale di 48 bit ed è suddiviso in due parti principali
-- 3 coppie che rappresentano il produttore della scheda (Organization Unit Identify - OUI)
+- 3 coppie che rappresentano il produttore della scheda (Organization Unique Identifier - OUI)
 - 3 coppie che rappresentano il numero specifico progressivo, che identifica la scheda (deciso dal costruttore)
 
 La [[Reti di telecomunicazioni#Informazioni utente e di controllo, PDU, SAP|PDU]] del MAC ha degli elementi comuni a tutti i sottolivelli:
@@ -770,7 +770,8 @@ Il campo *protocol* di Ethernet serve a indirizzare il SAP verso il livello di r
 Equivalente TCP/IP: [[Modello TCP IP#Livello di rete (livello 2)|livello di rete]]
 Teoria del livello: [[Modello ISO OSI#Livello rete (livello 3)]]
 Indirizzamento, instradamento e sistemi autonomi: [[Modello TCP IP#Livello di rete (livello 2)|Modello TCP/IP]]
-## IP
+## IPv4
+%% sistema ipv4 %%
 ![[Protocolli-IP-animazione.gif|center|680]]
 
 
@@ -953,9 +954,370 @@ La maggior parte dei protocolli IGP si basa su due filosofie di routing:
 #### Distance vector
 %% da aggiungere %%
 
+## IPv6
+>[!protocollo] IPv6
+>**IPv6** (*Internet Protocol version 6*, RFC 2460) è la nuova versione del protocollo [[#IPv4|IP]]: ha uno spazio di indirizzamento molto più grande (indirizzi di **128 bit** invece di 32), un'intestazione fissa di 40 byte estendibile con degli *extension header* e supporta in modo nativo autoconfigurazione, sicurezza e mobilità.
+
+Fonti: slide `Lez IPv6.pdf` e lezione del 19/11/2026.
+### Perché un nuovo protocollo
+Un indirizzo IPv4 è composto da 4 byte, quindi si possono gestire al massimo $2^{32}$ indirizzi pubblici. Gli indirizzi di [[Modello TCP IP#Classi di indirizzi IP|classe]] A e B sono pochi e difficili da gestire (parte host troppo grande), quelli di classe C a volte hanno una parte host troppo piccola: tra classe C e classe B c'è un salto molto grande (da 254 a circa 65.000 host).
+La IANA ha praticamente esaurito gli indirizzi di classe C e di classe B.
+
+Già alla fine degli anni '80 si iniziava a pensare a IPv6 per il timore di esaurire gli indirizzi; negli anni '90 si arriva alla decisione di implementarlo.
+Nel frattempo sono nate delle tecniche che permettono di mitigare il problema, come il [[Modello TCP IP#Indirizzi privati|NAT]]: con la coppia indirizzo-porta un solo indirizzo IPv4 pubblico può servire circa 65.000 host.
+%% riprendi NAT %%
+Il problema della scarsità degli indirizzi è stato quindi risolto a prescindere, ma è rimasta l'esigenza di un protocollo più performante: IPv6, nato come protocollo "di emergenza", è diventato il nuovo standard, con uno spazio di indirizzamento molto più grande (indirizzi di **128 bit**) che vuole risolvere il problema alla radice.
+
+IPv4 è nato prima di internet come la conosciamo oggi: è disordinato, ha un header di lunghezza variabile, campi di cui non è chiaro il ruolo (es. non si sa se il time to live si misura in hop o in tempo) e non è stato pensato per la sicurezza (IPsec è stato aggiunto dopo).
+IPv6 gode invece di una serie di benefici, proprio perché è stato pensato dopo:
+1. **Intestazione limitata al necessario**
+2. **Spazio di indirizzamento immenso** (da 32 a 128 bit)
+   possiamo assegnare un indirizzo pubblico a qualsiasi host che si vuole connettere alla rete: non servono più indirizzi privati né host nascosti, tutti gli host possono essere raggiungibili e quindi fare da "server" $\to$ ad esempio il **peer-to-peer** si può fare in modo molto più agevole. Si ha una reale connettività globale.
+3. **Cifratura del traffico**
+   è possibile usare sistemi di sicurezza punto-punto: si può stabilire un flusso totalmente cifrato tra due nodi. Con IPv4 si può fare ma con più difficoltà, IPv6 lo supporta in modo nativo.
+4. **Autoconfigurazione**
+   per le reti IPv4 vanno configurati i nuovi dispositivi (indirizzo IP, maschera, conoscere il server DHCP…); al massimo un DHCP concede un indirizzo privato, per un indirizzo pubblico serve un amministratore di rete.
+   IPv6 invece è **plug and play**: un dispositivo collegato può comunicare immediatamente con i dispositivi sulla stessa rete e poi, comunicando con il router, stabilisce in automatico il suo indirizzo globale. Si possono usare 64 bit per l'host con la garanzia di unicità (vedi [[#Subnet prefix e host identifier|host identifier]]).
+5. **Multihoming**
+   quando un nodo della rete può connettersi attraverso reti diverse (es. un'azienda con sedi separate, con reti e indirizzamenti diversi): gestire l'accesso dello stesso nodo su reti diverse è molto più semplice.
+6. **Facilità di renumbering**
+   es. se abbiamo due subnet ma ne vogliamo aggiungere una terza, in IPv4 bisogna cambiare maschere e sottoreti e riconfigurare tutto; in IPv6 esistono delle procedure di renumbering automatiche: i router comunicano tra di loro e si riconfigurano da soli, senza l'intervento di un amministratore. È uno dei motivi per cui gli operatori usano IPv6 nel loro core.
+7. **Intestazione più efficiente ed estensibile**
+   header principale con un numero minore di campi e una dimensione fissa, sempre uguale (efficienza di routing, prestazioni). All'occorrenza si possono aggiungere delle [[#Extension header|estensioni di intestazione]], solo quando servono (miglior gestione delle opzioni).
+8. **I pacchetti non possono più essere frammentati in transito**
+   elimina tutti i problemi legati alla perdita di un singolo frammento di IPv4. Prima di stabilire un flusso si individua il collo di bottiglia ($\min_i MTU_i$) e ad origine i pacchetti sono dimensionati in modo da non dover essere ulteriormente frazionati. Si appesantisce il lavoro di mittente e destinatario, ma si alleggerisce quello dei router: si sollevano i router dall'onere di dover frammentare $\to$ router più veloci, migliori prestazioni.
+9. **Mobilità**
+   normalmente collegandosi ad una nuova rete otteniamo un nuovo IP: con IPv4, se sposto il mio PC in un'altra rete, chi cerca il mio vecchio indirizzo non mi trova, perché il routing è geografico e punta alla rete di origine.
+   IPv6 invece, usando le estensioni [[#Routing (43)|routing]] e [[#Destination options (60)|destination options]], permette a un nodo di mantenere il suo indirizzo a prescindere da dove si trovi (Mobile IPv6).
+10. **Maggiore utilizzo del multicast** (sostituisce il broadcast)
+11. **Uso più efficiente della rete**
+
+>[!check] Esempio (renumbering)
+>L'Unical ha un indirizzo di classe B, `160.97.x.y`, partizionato in tante subnet: ad esempio al DIMES sono assegnate le sottoreti da `160.97.24` a `160.97.29`, usate per la rete wireless, del personale, dei laboratori, dei server. Se si volesse cambiare questa numerazione con IPv4 bisognerebbe riconfigurare tutto a mano (o quasi), con IPv6 le procedure di renumbering lo fanno in automatico.
+
+### Convivenza con IPv4
+Il problema fondamentale: in periferia, quando si implementa una LAN, si usa ancora IPv4 (è più facile da gestire, le macchine e gli apparati sono sempre stati IPv4). Pensare di switchare da un giorno all'altro non poteva avere successo: le aziende (o un ente come l'Unical) avrebbero dovuto investire troppi soldi per sostituire tutti gli apparati. Inoltre con il NAT l'esigenza di cambiare è diventata meno pressante.
+
+Nel tempo quindi IPv4 e IPv6 **convivono pacificamente**:
+- in periferia (le "foglie" della rete) è rimasto IPv4
+- IPv6 si sta diffondendo nel **core** della rete, ad esempio nelle reti degli operatori che interconnettono centrali e server farm
+
+Come ultimo step nella trasmissione delle informazioni si passa da IPv6 a IPv4 per raggiungere le foglie della rete (gli operatori portano la connettività ai clienti in IPv4).
+
+### Formato dell'header
+Rispetto a [[#Formato dell'unità dati|IPv4]] **IHL, identification, flag, fragment offset e header checksum non sono più presenti** in IPv6: non servono più perché l'header ha lunghezza fissa e i router non frammentano.
+L'header IPv6 è di **40 byte** (senza le extension header).
+![[Protocolli-IPv6-header.svg|center|620]]
+- **Version** (4 bit)
+  vale 6, distingue IPv4 da IPv6: a un dispositivo basta leggere i primi bit del pacchetto per capire come gestirlo
+- **Traffic class** (8 bit)
+  esigenze relative alla qualità del servizio, identifica la priorità del pacchetto (simile al TOS di IPv4): es. traffico urgente o traffico che non deve perdere dati. Possibili applicazioni:
+  - differenziare il traffico immesso nella rete di un ISP da un suo cliente
+  - l'ISP può modificare questo campo per tutti i pacchetti in uscita verso altre reti, per assegnare una classe di servizio concordata con altri ISP
+- **Flow label** (20 bit)
+  identifica un flusso (es. di un'applicazione): permette di riconoscere i pacchetti che appartengono a uno stesso flusso, per distinguerli o metterli assieme. Serve a supportare la qualità del servizio (servizi integrati/differenziati), mentre IPv4 non garantisce nulla: es. un router può far passare prima un flusso urgente e ritardare quelli senza esigenze temporali. Nelle slide: utilizzo ancora non chiaro, usato per Mobile IPv6
+- **Payload length** (16 bit)
+  è il total length di IPv4, ma conta solo i dati: non abbiamo bisogno di sapere quanto è lungo l'header, è fisso. Misura pacchetti al massimo di 64 KB; con l'opzione **jumbo payload** (vedi [[#Hop-by-hop options (00)|hop-by-hop]]) il pacchetto può essere ben più grande
+- **Next header** (8 bit)
+  puntatore alla prossima estensione dell'header, se presente; le estensioni possono essere più di una e si puntano a cascata. Se dopo c'è un protocollo di livello superiore, i valori sono compatibili con quelli del campo protocol di IPv4
+- **Hop limit** (8 bit)
+  è il time to live di IPv4: definisce quanti salti può fare il pacchetto prima di considerarlo non più consegnabile (e scartarlo)
+- **Source address** (128 bit = 16 byte)
+- **Destination address** (128 bit = 16 byte)
+
+### Extension header
+Il payload di IPv6 trasporta i segmenti TCP o UDP che arrivano dall'alto. Senza estensioni, nel campo next header c'è un codice che fa capire che subito dopo ci sono i dati (es. next header = TCP).
+Le extension header sono il nuovo modo di implementare le opzioni: si aggiungono dopo l'header di base. Quando si aggiunge un'estensione viene indicata nel campo next header dell'header principale (non c'è scritto "routing", ma il codice che lo identifica); a sua volta l'estensione ha un suo campo next header che dice cosa c'è dopo.
+Le estensioni possono essere zero, una o più di una: se sono più di una sono **concatenate** (*daisy chain*).
+
+```
+[IPv6 header | NH = TCP]     [TCP header + dati]
+[IPv6 header | NH = Routing] [Routing header | NH = TCP] [TCP header + dati]
+[IPv6 header | NH = Routing] [Routing header | NH = ESP] [ESP header | NH = TCP] [TCP header + dati]
+```
+
+Identificativi delle estensioni (next header):
+
+| Codice | Header |
+|---|---|
+| 00 | Hop-by-hop options |
+| 43 | Routing |
+| 44 | Fragment |
+| 51 | Authentication |
+| 60 | Destination options |
+| 50 | Encapsulating security payload |
+| 58 | ICMPv6 |
+| 59 | nessun next header |
+| xx | protocolli di livello più alto, come per IPv4 |
+
+#### Hop-by-hop options (00)
+C'è bisogno di spedire informazioni che devono essere lette **da ogni nodo** lungo il percorso del pacchetto. Opzioni usate:
+- **router alert** (RFC 2711): mandare un avviso a tutti i router del cammino
+- **jumbo payload** (RFC 2675): spedire pacchetti più grandi di quelli previsti dallo standard, lo si fa sapere a tutti i router del percorso
+#### Routing (43)
+- Simile all'opzione **loose source route** di IPv4 (vedi le options di [[#Formato dell'unità dati|IPv4]])
+- Indica una lista di router che devono essere obbligatoriamente attraversati prima di arrivare a destinazione
+- L'header è valutato solo dai router specificati: ognuno di questi aggiorna la destinazione del pacchetto con l'indirizzo IPv6 del prossimo router della lista (migliora le prestazioni rispetto a IPv4)
+- È usato per la mobilità (**Mobile IPv6**) e il **multihoming**: un nodo può mantenere il suo indirizzo a prescindere da dove si trovi
+
+>[!check] Esempio (mobilità)
+>Il prof ha un indirizzo dell'Unical e va per un periodo in Cina. Se il suo interlocutore sa in quale rete si trova, scrive nel routing header "prima di arrivare all'Unical passa da questo router": il pacchetto va prima lì, il router sa che il nodo è in mobilità ed è registrato lì, quindi non lo rimanda all'Unical ma lo consegna al vecchio indirizzo. (Il meccanismo reale è più complesso.)
+#### Fragment (44)
+Usato **soltanto dall'host mittente per l'host destinatario**: i router non frammentano più.
+Se si incontra un collo di bottiglia (una MTU più piccola) IPv4 frammenta e va avanti; in IPv6 invece il router blocca il pacchetto, lo scarta e rinvia indietro un messaggio di errore che descrive il collo di bottiglia. Il mittente quindi frammenta il pacchetto e rispedisce i frammenti.
+Se i frammenti incontrano un altro collo di bottiglia vengono scartati e il processo si ripete, fino a quando i frammenti riescono ad arrivare a destinazione.
+
+IPv6 prevede:
+- una **MTU minima di 1280 byte** (68 byte in IPv4): i link senza questa capacità devono gestire frammentazione e riassemblaggio a livello data-link
+- che ogni nodo implementi una procedura di **Path MTU Discovery** (non strettamente necessario)
+- per inviare pacchetti più grandi della massima MTU consentita si usano i fragment header
+#### Destination options (60)
+Trasporta informazioni opzionali che saranno valutate **solo dal destinatario** e non dai nodi intermedi.
+Usato per supportare la mobilità (Mobile IPv6): se il mittente sapesse che mi trovo in una posizione diversa metterebbe un routing header verso la nuova destinazione, ma per saperlo lo devo informare. Gli invio quindi un pacchetto con questa estensione, al cui interno inserisco l'indirizzo da usare nel routing header, in modo da far andare il pacchetto verso la nuova destinazione. Insieme al routing header risolve il problema del routing "triangolare".
+Può occupare 2 posizioni nella daisy chain: prima del routing header (elaborata dai router specificati) o alla fine (elaborata solo dalla destinazione), vedi [[#Ordine delle estensioni|ordine]].
+#### Authentication (51) e ESP (50)
+Supporto nativo alla sicurezza: IPsec è nativo su IPv6. Tutte le implementazioni di IPv6 *dovrebbero* garantire il supporto alla sicurezza, in realtà non è così.
+- **Authentication header** (51)
+  fornisce l'autenticazione: consente di verificare che l'indirizzo del mittente sia autentico e che il pacchetto non sia stato alterato durante il percorso. Il destinatario ha la certezza di ricevere i dati da chi dichiara di averli spediti
+- **Encapsulating security payload** (ESP, 50)
+  consente di cifrare le informazioni scambiate tra mittente e destinatario: definiti un algoritmo e una chiave di cifratura, solo il destinatario autorizzato sarà in grado di leggere il pacchetto, chi lo intercetta no. Come in IPv4 ha due modalità: **transport** o **tunnel** (es. collegare due reti remote con un tunnel totalmente cifrato)
+
+>[!question] Osservazione
+>Negli anni passati c'era una forte opposizione alla diffusione di IPv6, soprattutto da parte degli Stati Uniti, per motivi di sicurezza nazionale: se chiunque può cifrare il traffico in modo nativo, le agenzie (es. NSA) non riescono più a intercettare le informazioni.
+#### Ordine delle estensioni
+La concatenazione delle estensioni avviene (dovrebbe avvenire) in questo ordine:
+
+| Header | Chi lo elabora |
+|---|---|
+| IPv6 | |
+| Hop by hop | ogni nodo |
+| Destination | ogni router specificato nel routing header |
+| Routing | specifica la lista di router da attraversare |
+| Fragmentation | nodo destinazione |
+| Authentication | nodo destinazione (dopo il riassemblaggio) |
+| Security (ESP) | cifra il contenuto di tutto ciò che segue |
+| Destination | solo il nodo destinazione |
+| Upper layer | payload vero e proprio (TCP, UDP, …) |
+
+Quindi un pacchetto IPv6 ha sempre l'intestazione fissa di 40 byte, poi le estensioni solo se servono, altrimenti si passa direttamente al payload.
+
+### Indirizzi IPv6
+IPv4 = 32 bit, IPv6 = 128 bit: non 4 volte il numero di indirizzi, ma **4 volte il numero di bit**.
+- $2^{128} \approx 3{,}4 \cdot 10^{38}$ nodi indirizzabili (massimo teorico)
+- $10^{30}$ indirizzi per ogni persona del pianeta
+- in realtà, con la stessa efficienza di assegnazione della rete IPv4, avremmo circa $10^{33}$ indirizzi IPv6
+#### Notazione
+`X:X:X:X:X:X:X:X`: 8 campi da 16 bit in notazione esadecimale, divisi da `:`.
+- non è case sensitive: `2001:0000:1234:0000:0000:00D0:ABCD:0532` = `2001:0000:1234:0000:0000:00D0:abcd:0532`
+- gli 0 a sinistra di ogni campo si possono omettere (un campo `0000` diventa `0`): `2001:0:1234:0:0:D0:ABCD:532`
+- campi consecutivi di soli 0 si possono omettere lasciando solo `::` (in mezzo ci sono campi di soli 0, quanti ne servono per arrivare a 8 campi): `2001:0:1234::D0:ABCD:532`
+- `::` si può usare **solo una volta**, altrimenti non si sa quanti zeri ci sono in ciascun punto: `2001::1234::C1C0:ABCD:876` non è valido
+
+```
+2001:760:2:0:0:0:0:0 => 2001:760:2::
+FF02:0:0:0:0:0:0:1   => FF02::1
+0:0:0:0:0:0:0:1      => ::1
+0:0:0:0:0:0:0:0      => ::
+```
+
+Gli indirizzi IPv6 negli URL devono essere scritti tra **parentesi quadre** (se non è tra parentesi quadre è un indirizzo IPv4):
+`http://[2001:1:4F3A::206:AE14]:8888/index.html`
+I programmi che usano gli URL (browser ecc.) sono stati modificati, ma è scomodo per gli utenti: si usa soprattutto per scopi diagnostici. Come in IPv4 è più comodo usare il nome di dominio (DNS).
+#### Tipologie di indirizzi
+- **Unicast**: indirizzi di nodi, identificano un'interfaccia
+- **Multicast**: indirizzi di gruppi di nodi
+- **Anycast**: indirizzi di servizi (novità rispetto a IPv4), un servizio che può rispondere da diverse parti: più nodi possono offrire lo stesso servizio e alla richiesta risponde quello più conveniente
+
+>[!check] Esempio (anycast)
+>Il servizio DNS è offerto da tanti server sparsi per il mondo: un server vicino e uno in Canada darebbero la stessa risposta, ma conviene rivolgersi a quello più vicino (tempi più brevi, meno strada). Se la richiesta è inviata a un indirizzo anycast invece che a un server specifico, arriva al server più comodo.
+#### Architettura degli indirizzi
+Il tipo di indirizzo si riconosce dal prefisso (da calcolare sui primi 16 bit, es. `2000`–`3FFF` $\to$ `0010 0000 0000 0000` – `0011 1111 1111 1111`: prefisso `001`).
+
+| Prefisso | Hex | Size | Allocazione |
+|---|---|---|---|
+| 0000 0000 | 0000–00FF | 1/256 | Reserved |
+| 0000 0001 | 0100–01FF | 1/256 | Unassigned |
+| 0000 001 | 0200–03FF | 1/128 | NSAP |
+| 0000 010 | 0400–05FF | 1/128 | Unassigned |
+| 0000 011 | 0600–07FF | 1/128 | Unassigned |
+| 0000 1 | 0800–0FFF | 1/32 | Unassigned |
+| 0001 | 1000–1FFF | 1/16 | Unassigned |
+| **001** | **2000–3FFF** | 1/8 | **Aggregatable**: IANA to registries |
+| 010, 011, 100, 101, 110 | 4000–CFFF | 5/8 | Unassigned |
+| 1110 | D000–EFFF | 1/16 | Unassigned |
+| 1111 0 | F000–F7FF | 1/32 | Unassigned |
+| 1111 10 | F800–FBFF | 1/64 | Unassigned |
+| 1111 110 | FC00–FDFF | 1/128 | Unassigned |
+| 1111 1110 0 | FE00–FE7F | 1/512 | Unassigned |
+| **1111 1110 10** | **FE80–FEBF** | 1/1024 | **Link-local** |
+| **1111 1110 11** | **FEC0–FEFF** | 1/1024 | **Site-local** |
+| **1111 1111** | **FF00–FFFF** | 1/256 | **Multicast** |
+
+La maggior parte dello spazio è ancora non assegnata.
+#### Indirizzi unicast
+Gli indirizzi unicast sono associati a un'interfaccia:
+- **Unspecified**
+  `0:0:0:0:0:0:0:0` o semplicemente `::`, indica l'assenza di indirizzo: si usa quando non si conosce il proprio indirizzo e si riempie il campo mittente di zeri. Può essere usato nella richiesta iniziale DHCP per ottenere il mio indirizzo e nella Duplicate Address Detection (DAD). Come `0.0.0.0` in IPv4 (`::/0` indica la rotta di default)
+- **Loopback**
+  `0:0:0:0:0:0:0:1` o semplicemente `::1`, identifica il nodo stesso: è il localhost di IPv4 (`127.0.0.1`). Per controllare se lo stack IPv6 funziona: `ping6 ::1`
+- **IPv4 compatible**
+  la coesistenza tra IPv4 e IPv6 non è scontata (es. se devo inviare un pacchetto da un nodo IPv4 a un nodo IPv6, che indirizzi scrivo?), per gestirla nascono degli indirizzi speciali. Permettono di inserire indirizzi IPv4 in indirizzi IPv6: i primi **96 bit sono a 0**, negli ultimi 32 si appende l'indirizzo IPv4. Utilizzati per la transizione IPv4-IPv6
+  `0:0:0:0:0:0:192.168.0.1` = `::192.168.0.1` (in esadecimale `::C0A8:1`)
+- **IPv4 mapped**
+  permettono di definire indirizzi IPv6 per nodi che supportano **solo IPv4**: i primi **80 bit sono a 0**, i successivi **16 a 1** (`FFFF`), gli ultimi 32 sono l'indirizzo IPv4. Anche questi per la transizione IPv4-IPv6
+  `0:0:0:0:0:FFFF:192.168.0.1` = `::FFFF:192.168.0.1` (in esadecimale `::FFFF:C0A8:1`)
+- **Indirizzi scoped**: link-local e site-local, con range d'azione limitato al link o al site (vedi [[#Link-local e site-local|sotto]])
+- **Aggregatable global**: gli indirizzi globali, i veri indirizzi pubblici visibili da qualunque parte
+
+>[!question] Osservazione
+>Nelle slide 37 e 38 la forma esadecimale di `192.168.0.1` è scritta `C0A8:1E01`, ma `1E01` corrisponde a `30.1` (`0x1E` = 30): `192.168.0.1` in esadecimale è `C0A8:0001`, quindi `::C0A8:1` e `::FFFF:C0A8:1`.
+#### Subnet prefix e host identifier
+Un indirizzo unicast IPv6 si compone di due parti:
+
+| Subnet prefix (64 bit) | Host identifier (64 bit) |
+|---|---|
+| `XXXX:XXXX:XXXX:XXXX` | `XXXX:XXXX:XXXX:XXXX` |
+
+Mentre in IPv4 net id e host id hanno lunghezze diverse (classi, CIDR), qui la separazione è **fissa e netta**: 128 bit divisi esattamente in due parti uguali.
+Il subnet prefix (net id) deve essere assegnato da qualcuno: assegnare un indirizzo pubblico a un'organizzazione significa assegnarle solo questa parte. La parte host id invece (come in IPv4) è lasciata alla libertà di chi gestisce il nodo, e può essere scelta:
+- manualmente
+- a partire dal MAC address dell'interfaccia, ricalcolato per essere usato come parte host (**EUI-64**)
+
+**Formato EUI-64**
+L'interface ID identifica univocamente un'interfaccia (deve essere univoco su un link) e può essere ricavato dall'identificatore **EUI-64**, evoluzione del [[#Indirizzi MAC|MAC address]]: identifica produttore e numero di serie di un'apparecchiatura, ma con 64 bit invece di 48.
+Esiste una procedura per passare dall'EUI-48 (MAC address) all'EUI-64: si divide il MAC address nei due set da 24 bit (produttore e seriale) e in mezzo si inserisce la sequenza `FF-FE` (`11111111 11111110`, una serie di 1 conclusa da uno 0). Per ottenere l'interface ID si complementa poi il bit **U/L** (7° bit del primo byte).
+```
+IEEE 802 Address   cccccc00 cccccccc cccccccc xxxxxxxx xxxxxxxx xxxxxxxx
+EUI-64 Address     cccccc00 cccccccc cccccccc 11111111 11111110 xxxxxxxx xxxxxxxx xxxxxxxx
+Interface ID       cccccc1c cccccccc cccccccc 11111111 11111110 xxxxxxxx xxxxxxxx xxxxxxxx
+```
+
+>[!check] Esempio
+>MAC address: `00-AA-00-3F-2A-1C`
+>EUI-64: `00-AA-00-FF-FE-3F-2A-1C`
+>complementando U/L: `02-AA-00-FF-FE-3F-2A-1C`
+>in notazione IPv6: `02AA:00FF:FE3F:2A1C`
+
+**Privacy**
+Così però l'interface ID resta sempre lo stesso (anche se il prefisso cambia nel tempo) e l'indirizzo IPv6 permette di **tracciare** un utente: il problema c'era già con gli indirizzi IPv4 statici, ma il MAC address è più associabile alla persona.
+Inoltre se faccio viaggiare in internet un indirizzo che contiene l'indirizzo fisico della mia macchina sto comunicando un'informazione che può essere usata contro di me: chi volesse fingersi me potrebbe costruire pacchetti con il mio indirizzo come mittente (**spoofing**).
+Questa ipotesi è stata quindi abbandonata quasi subito: oggi l'host id si scrive comunque prendendo il MAC dell'interfaccia, ma **rielaborandolo** con un algoritmo che ne costruisce una variazione abbastanza casuale (RFC 3041: stringa pseudocasuale di 64 bit, il cui seed è un'elaborazione dell'indirizzo MAC).
+Non è più garantita l'univocità, ma la probabilità che nello stesso link (stesso prefisso) due macchine generino lo stesso host id è praticamente pari a 0.
+#### Link-local e site-local
+Il net id si usa anche per definire link e site:
+- un **link** è una rete fisica unica, ad esempio una LAN (anche VLAN o WLAN) o un collegamento punto-punto; i nodi sullo stesso link sono detti **neighbor** (vicini)
+- un **site** è un gruppo di link gestiti da un'unica autorità, es. il campus di un'università (parallelo IPv4: site = rete/AS, link = sottoreti del site, es. Unical = site e le LAN dei dipartimenti = link)
+
+Si chiamano **scoped address** (novità di IPv6) perché hanno un raggio d'azione diverso: il link è più piccolo del site.
+
+>[!multi-column]
+>
+>>[!important] Link-local
+>>- scope = link locale (LAN, VLAN)
+>>- esiste e ha senso solo ed esclusivamente dentro quel link, non può essere instradato fuori (alternativa agli indirizzi privati di IPv4)
+>>- configurato **automaticamente** su ogni interfaccia, usando l'interface identifier
+>>- fornisce ad ogni nodo un indirizzo IPv6 per iniziare le comunicazioni
+>>
+>>`FE80:0:0:0:<interface id>`
+>>
+>>| 10 bit | 54 bit | 64 bit |
+>>|---|---|---|
+>>| `1111111010` | 0 | interface ID |
+>
+>>[!important] Site-local
+>>- scope = site (una rete di link)
+>>- usato solo fra nodi dello stesso site, non fuori (es. Internet): molto simile agli indirizzi privati IPv4
+>>- **non** configurato di default
+>>- permette un piano di indirizzamento per un intero sito: es. numerare un site prima di connetterlo a Internet, indirizzamento privato (stampanti locali)
+>>
+>>`FEC0:0:0:<subnet id>:<interface id>`
+>>
+>>| 10 bit | 38 bit | 16 bit | 64 bit |
+>>|---|---|---|---|
+>>| `1111111011` | 0 | subnet ID | interface ID |
+>>
+>>subnet id = 16 bit = 64K subnet
+
+Un nodo in un link genera da sé la parte host id e, dato che il prefisso link-local è fisso, si costruisce il suo indirizzo link-local: a quel punto può comunicare con tutti i nodi della sua LAN. Per questo con IPv6 è facile l'uso **plug and play** della rete. Ogni interfaccia ha il suo indirizzo (es. un PC con bluetooth, Wi-Fi, 5G e NFC si genera 4 indirizzi).
+
+>[!check] Esempio
+>`fe80::7f:5ee1:5788:ee3d` (indirizzo link-local del PC di Claudia): prefisso `fe80::/64` e interface ID `007f:5ee1:5788:ee3d`. Non contiene `FF-FE`, quindi non è un EUI-64 ricavato dal MAC ma un identificativo pseudocasuale.
+
+Con l'indirizzo link-local il nodo può poi parlare con l'interfaccia del router che sta sulla sua rete (se la LAN è collegata a internet) e farsi dare il prefisso globale (vedi l'indirizzo multicast *all routers*, [[#Multicast|sotto]]).
+Allo stesso modo, conoscendo il subnet ID del site, con l'indirizzo site-local posso comunicare con tutti i nodi del site; con il link-local solo con quelli del mio link.
+
+>[!attention] AGGIUNTA
+>Gli indirizzi site-local (`FEC0::/10`) sono stati in seguito deprecati (RFC 3879) e sostituiti dagli *unique local address* `FC00::/7`. Non è nelle slide.
+
+Site-local e link-local sono quindi indirizzi privati che lavorano a livello di site o di link. Se voglio uscire dal site devo passare agli indirizzi **aggregatable global**.
+#### Aggregatable global
+Sono gli indirizzi con validità globale, assegnati dalla IANA (come in IPv4, la IANA distribuisce gli indirizzi ai registri). La politica di assegnazione è ancora in discussione, al momento è usata una policy provvisoria:
+- **/23** Regional Registries (RIR)
+- **/32** Local Internet Registries
+- **/48** Site $\to$ $2^{16}$ = 65536 subnet per site
+- **/64** Link
+
+![[Protocolli-IPv6-allocazione.svg|center|600]]
+
+>[!check] Esempio (Italia)
+>La IANA gestisce `2001::/16`; RIPE NCC (il RIR europeo) ha ottenuto 4 blocchi /23: `2001:0600::/23`, `2001:0800::/23`, `2001:0A00::/23`, `2001:1400::/23`.
+>Il GARR (il consorzio che gestisce la connettività di università e centri di ricerca italiani) ha ricevuto da RIPE NCC il blocco `2001:0760::/32` e lo ripartisce con prefissi /48 tra i consorziati (es. CASPUR, Roma Tre, l'Unical). Ogni università usa i 16 bit da 48 a 64 per indirizzare le sue subnet, gli ultimi 64 sono dell'host.
+#### Multicast
+Multicast = uno a tanti, ha la stessa semantica del multicast di IPv4, cambia il formato.
+**IPv6 non prevede l'indirizzo broadcast**: al suo posto si usano gli indirizzi multicast, soprattutto nei link locali. Gli scoped address sostituiscono il TTL di IPv4 (limitano fin dove arriva il pacchetto).
+
+`FF<flags><scope>::<group id>`
+
+| 8 bit | 4 bit | 4 bit | 112 bit |
+|---|---|---|---|
+| `11111111` (FF) | flag | scope | group ID |
+
+- **flag**: 0 permanente / 1 temporaneo
+- **scope**: node (1), link (2), site (5), organization (8), global (E)
+- **group ID**: identifica un gruppo multicast in un dato scope
+
+>[!check] Esempio (group ID All-Nodes = 1)
+>- `FF01::1`: tutte le interfacce sullo stesso nodo
+>- `FF02::1`: tutte le interfacce sullo stesso link
+>- `FF05::1`: tutte le interfacce sullo stesso site
+>- `FF0E::1`: tutte le interfacce su internet $\to$ semantica di broadcast totale. Nella pratica è **disabilitato** (i router lo bloccano) per evitare attacchi DoS: una macchina qualsiasi potrebbe inviare pacchetti a tutto il mondo. È come il `255.255.255.255` di IPv4, disabilitato anche lì.
+
+Alcuni indirizzi multicast riservati:
+
+| Indirizzo | Scope | Tipo |
+|---|---|---|
+| `FF01::1` | node | All Nodes |
+| `FF02::1` | link | All Nodes |
+| `FF01::2` | node | All Routers |
+| `FF02::2` | link | All Routers |
+| `FF05::2` | site | All Routers |
+| `FF02::1:FFXX:XXXX` | link | Solicited-Node |
+
+Quando un nodo vuole comunicare con tutti i router del suo link (es. per conoscere il prefisso globale) invia a `FF02::2` e gli risponderà uno dei router; per tutti i router del site usa `FF05::2`.
+#### Anycast
+- Non sono distinguibili dagli indirizzi unicast: sono indirizzi unicast assegnati a un insieme di interfacce (normalmente di nodi diversi)
+- Ai nodi deve essere detto esplicitamente che gli si sta assegnando un indirizzo anycast
+- Indicano il server più vicino a un mittente: il pacchetto si ferma al primo server (es. DNS) che incontra
+- Alcuni indirizzi anycast sono riservati per usi specifici: router subnet, Mobile IPv6 home-agent discovery
+#### Indirizzi di un host
+Un host può possedere più indirizzi IPv6. Deve riconoscere come propri:
+- un indirizzo link-local per ogni interfaccia
+- gli indirizzi unicast/anycast assegnati (manualmente o automaticamente), almeno un unicast globale che lo identifica nella rete
+- l'indirizzo di loopback
+- l'indirizzo del gruppo multicast All-Nodes
+- gli indirizzi Solicited-node multicast per ogni indirizzo unicast/anycast assegnato
+- gli indirizzi multicast di tutti gli altri gruppi di cui fa parte (se opportunamente configurato)
+
+Questi indirizzi sono ripetuti per ognuna delle sue interfacce, perché ognuna appartiene a un link (e quindi a un site): il nodo deve saper processare tutti i pacchetti che arrivano a uno qualsiasi di questi indirizzi.
+#### Selezione dell'indirizzo
+Un nodo può usare vari prefissi di rete, quindi può avere più indirizzi IPv6 sulla stessa interfaccia (anche più indirizzi globali). Quale usa come sorgente e destinazione di un flusso? La scelta si fa principalmente con queste regole:
+- **usare lo scope giusto** in base alla destinazione (il più piccolo possibile): se il destinatario è sul mio link uso il link-local, se è nel mio site il site-local, se è in un altro site il globale
+- **usare l'indirizzo più simile a quello di destinazione** (IPv4 o IPv6): se il destinatario è un nodo solo IPv4 si cerca di usare IPv4; se non si può, IPv6 con indirizzi IPv4 compatibili, e viceversa
+
+L'algoritmo di scelta può essere sovrascritto dallo stack o dall'applicazione. Tutto questo lo gestisce lo stack protocollare del nodo (hardware e software), che implementa entrambi gli stack IPv4 e IPv6 o uno solo dei due.
 ## ARP e RARP
 >[!protocollo] ARP e RARP
->**ARP** (Address Resolution Protocol, RFC 826) e **RARP** (Reverse Address Resolution Protocol, RFC 903) sono protocolli di supporto a [[#IP]] che si occupano della **traduzione degli indirizzi**:
+>**ARP** (Address Resolution Protocol, RFC 826) e **RARP** (Reverse Address Resolution Protocol, RFC 903) sono protocolli di supporto a [[#IPv4|IP]] che si occupano della **traduzione degli indirizzi**:
 >- **ARP**: dato un [[Modello TCP IP#Indirizzamento|indirizzo IP]] restituisce l'indirizzo fisico (di livello 2) associato
 >- **RARP**: dato un indirizzo fisico restituisce l'indirizzo IP associato
 >

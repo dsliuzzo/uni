@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="360" viewBox="0 0 680 360">
+ <defs>
+  <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b8b8b8"/></marker>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#e07b6a"/></marker>
+ </defs>
+ <style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .r{fill:#e07b6a} </style>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+ <!-- IANA -->
+ <rect x="290" y="16" width="100" height="36" rx="6"/>
+ <!-- RIR -->
+ <rect x="70" y="110" width="110" height="36" rx="6"/>
+ <rect x="285" y="110" width="110" height="36" rx="6" stroke="#e07b6a" stroke-width="3.5"/>
+ <rect x="500" y="110" width="110" height="36" rx="6"/>
+ <!-- GARR -->
+ <rect x="290" y="190" width="100" height="36" rx="6" stroke="#e07b6a" stroke-width="3.5"/>
+ <!-- site -->
+ <rect x="150" y="268" width="110" height="34" rx="6"/>
+ <rect x="420" y="268" width="110" height="34" rx="6"/>
+ <!-- frecce -->
+ <line x1="310" y1="52" x2="140" y2="108" marker-end="url(#a)"/>
+ <line x1="340" y1="52" x2="340" y2="107" stroke="#e07b6a" stroke-width="3.5" marker-end="url(#ar)"/>
+ <line x1="370" y1="52" x2="540" y2="108" marker-end="url(#a)"/>
+ <line x1="340" y1="146" x2="340" y2="187" stroke="#e07b6a" stroke-width="3.5" marker-end="url(#ar)"/>
+ <line x1="315" y1="226" x2="225" y2="266" marker-end="url(#a)"/>
+ <line x1="365" y1="226" x2="455" y2="266" marker-end="url(#a)"/>
+ <line x1="125" y1="146" x2="125" y2="180" stroke-dasharray="5 6" stroke-width="1.5"/>
+ <line x1="555" y1="146" x2="555" y2="180" stroke-dasharray="5 6" stroke-width="1.5"/>
+ <line x1="340" y1="226" x2="340" y2="260" stroke-dasharray="5 6" stroke-width="1.5"/>
+ <!-- LAN /64 -->
+ <line x1="180" y1="302" x2="160" y2="330" stroke-width="1.5"/>
+ <line x1="205" y1="302" x2="205" y2="330" stroke-width="1.5"/>
+ <line x1="230" y1="302" x2="250" y2="330" stroke-width="1.5"/>
+ <line x1="450" y1="302" x2="430" y2="330" stroke-width="1.5"/>
+ <line x1="475" y1="302" x2="475" y2="330" stroke-width="1.5"/>
+ <line x1="500" y1="302" x2="520" y2="330" stroke-width="1.5"/>
+ <circle cx="160" cy="338" r="8"/><circle cx="205" cy="338" r="8"/><circle cx="250" cy="338" r="8"/>
+ <circle cx="430" cy="338" r="8"/><circle cx="475" cy="338" r="8"/><circle cx="520" cy="338" r="8"/>
+</g>
+<text class="th" x="340" y="34">IANA</text>
+<text class="ts" x="450" y="34">2001::/16</text>
+<text class="t" x="125" y="128">ARIN</text>
+<text class="t r" x="340" y="128">RIPE NCC</text>
+<text class="t" x="555" y="128">APNIC</text>
+<text class="ts" x="620" y="128" style="text-anchor:start">RIR</text>
+<text class="t r" x="340" y="208">GARR</text>
+<text class="ts" x="400" y="208" style="text-anchor:start">LIR · 2001:760::/32</text>
+<text class="t" x="205" y="285">CASPUR</text>
+<text class="t" x="475" y="285">Roma Tre</text>
+<text class="ts" x="540" y="285" style="text-anchor:start">site</text>
+<text class="ts" x="600" y="338" style="text-anchor:start">LAN (link)</text>
+<text class="ts r" x="208" y="72">/23</text>
+<text class="ts r" x="356" y="80" style="text-anchor:start">/23</text>
+<text class="ts r" x="472" y="72">/23</text>
+<text class="ts r" x="356" y="167" style="text-anchor:start">/32</text>
+<text class="ts r" x="255" y="240">/48</text>
+<text class="ts r" x="425" y="240">/48</text>
+<text class="ts r" x="140" y="318">/64</text>
+<text class="ts r" x="540" y="318">/64</text>
+</svg>

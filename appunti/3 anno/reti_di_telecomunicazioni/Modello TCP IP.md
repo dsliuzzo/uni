@@ -23,7 +23,7 @@ Le sue principali funzioni sono:
 - **servizio senza connessione**
   il livello fornisce un servizio di strato senza connessione. I dati (datagrammi) vengono inviati nella rete senza stabilire preventivamente un canale dedicato.
 
-Protocolli: [[Protocolli#IP]] (formato del datagramma, frammentazione), [[Protocolli#ARP e RARP]], [[Protocolli#Protocolli di routing (IGP)|IGP]]
+Protocolli: [[Protocolli#IPv4|IP]] (formato del datagramma, frammentazione), [[Protocolli#ARP e RARP]], [[Protocolli#IGP (protocolli di routing)|IGP]]
 
 ## Indirizzamento
 Per far comunicare tra loro tutti i sistemi connessi a Internet serve un metodo **globalmente accettato** per identificare e indirizzare in modo univoco ogni sistema. È stato quindi definito un nuovo schema di indirizzamento, perché le sottoreti pre-esistenti avevano schemi propri, diversi tra loro e non univoci globalmente (indirizzi Ethernet, indirizzi X.25, numeri telefonici…).
