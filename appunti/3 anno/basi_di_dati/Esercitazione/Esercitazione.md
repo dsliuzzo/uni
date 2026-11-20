@@ -521,6 +521,7 @@ FROM coppieNo
 ```
 
 12) Per ogni società finanziaria che gestisca almeno 50 investimenti, restituire il clienti che abbia sottoscritto il maggior numero di investimenti di quella società finanziaria, considerando solo gli investimenti di importo superiore a 5000 euro. L’importo corrisposto per una singola sottoscrizione di investimento è pari al numero di quote sottoscritte moltiplicato per il valore di una singola quota.
+%% da fare %%
 ``` sql
 SELECT 
 FROM 

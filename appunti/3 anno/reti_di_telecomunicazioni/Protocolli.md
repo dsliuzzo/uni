@@ -879,20 +879,8 @@ Per capire i protocolli di routing è fondamentale capire gli algoritmi che ques
 Per Dijkstra i nodi devono inviare messaggi a tutti gli altri nodi della rete: il pacchetto (di tipo link state) deve arrivare a tutti, altrimenti l'informazione non viene presa in considerazione da tutti i nodi. Ogni pacchetto deve arrivare a tutti gli altri, e questo per ogni nodo: il numero di pacchetti diventa **quadratico** sul numero dei nodi.
 Bellman-Ford invece permette la comunicazione con i soli nodi adiacenti: si presta ad una implementazione **distribuita e dinamica**, per questo è associato al **distance vector**, mentre Dijkstra ha bisogno di una centralizzazione dei dati (link state).
 
->[!question] Osservazione
->Se la rete ha dimensioni elevate si crea un **loop fittizio** (vedi gli effetti collaterali dell'[[Modello TCP IP#Instradamento dinamico|instradamento dinamico]]): è come se l'algoritmo lavorasse su dati che non rappresentano davvero la rete. La rete a una certa distanza potrebbe essere già cambiata, ma l'informazione deve ancora arrivare (infinite hop count). **Alcune stelle che vediamo potrebbero essere già diventate buchi neri.**
->Per questo Bellman-Ford si usa in reti non troppo grandi, mentre la famiglia dei protocolli link state può lavorare su reti più grandi. Ci sono delle modifiche ai distance vector che rendono meno grave questo comportamento.
->Oltre al loop fittizio c'è la **bad news propagation**: le notizie peggiori (es. un link che cade) arrivano in ritardo.
-
->[!question] Approfondimento
->Una delle modifiche è lo **split horizon** (usato da RIP v2): un router **non annuncia** a un vicino le rotte che ha imparato proprio da quel vicino. Così due router non si rimandano a vicenda una rotta ormai non valida, aumentandone il costo a ogni scambio fino a "infinito" (conteggio all'infinito).
-
->[!question] Osservazione
->- Nell'implementazione distribuita un nodo che conosce solo un grafo **parziale** ha comunque un costo ottimale rispetto a ciò che conosce, e lo aggiorna man mano che arrivano informazioni dai vicini.
->- Un nodo vede solo ciò che gli dicono i vicini, quindi **non percepisce direttamente i cambiamenti** della rete; con il link state invece ogni variazione viene diffusa a tutti i nodi.
-
 ### Classificazione dei protocolli di routing
-Ogni protocollo IGP determina le tabelle di instradamento con un proprio algoritmo, ognuno con i suoi pro e contro. Sono **alternative** (un AS ne sceglie uno), raggruppate in due famiglie, [[#Link state|link state]] e [[#Distance vector|distance vector]] (vedi tabella più sotto):
+Ogni protocollo **IGP** determina le tabelle di instradamento con un proprio algoritmo, ognuno con i suoi pro e contro. Sono **alternative** (un AS ne sceglie uno), raggruppate in due famiglie, [[#Link state|link state]] e [[#Distance vector|distance vector]] (vedi tabella più sotto):
 - **link state**: **OSPF**, basato sull'algoritmo **SPF** (*Shortest Path First*, cioè Dijkstra)
 - **distance vector**: **RIP** (per mitigare l'infinite hop count RIP v2 usa lo [[#Dijkstra vs Bellman-Ford|split horizon]]), **GGP**, IGRP, EIGRP
 - altri citati a lezione: **SPREAD**
@@ -952,7 +940,37 @@ La maggior parte dei protocolli IGP si basa su due filosofie di routing:
 %% da aggiungere %%
 %% manca anche slide 9 %%
 #### Distance vector
-%% da aggiungere %%
+I protocolli di classe **Distance Vector** utilizzano l'algoritmo di [[Algoritmi#Bellman-Ford|Bellman-Ford]] in versione **distribuita**: tutti i nodi della rete possono eseguire in modo sincrono ogni iterazione dell'algoritmo calcolando i propri costi del cammino e inviando dati ai nodi vicini.
+La procedura terminerebbe al raggiungimento di $N$ iterazioni, ma l'algoritmo viene rilanciato su base periodica o al verificarsi di un determinato evento per implementare degli aggiornamenti della rete.
+
+La condizione di sincronia tra tutti i nodi è difficilmente raggiungibile, di conseguenza i protocolli distance vector implementano una versione asincrona di Bellman-Ford:
+ogni nodo esegue in modo asincrono il calcolo
+$$
+L(n) = \min_{j \in N(s)} [L(j) + w(j,n)]
+$$
+usando l'ultima stima di $L(j)$ ricevuta dai nodi adiacenti.
+L’algoritmo distribuito converge a soluzione se la dinamica delle variazioni è più lenta della velocità di convergenza dell'algoritmo.
+
+>[!question] Osservazione
+>Se la rete ha dimensioni elevate si crea un **loop fittizio** (vedi gli effetti collaterali dell'[[Modello TCP IP#Instradamento dinamico|instradamento dinamico]]): è come se l'algoritmo lavorasse su dati che non rappresentano davvero la rete. La rete a una certa distanza potrebbe essere già cambiata, ma l'informazione deve ancora arrivare (infinite hop count). **Alcune stelle che vediamo potrebbero essere già diventate buchi neri.**
+>Per questo Bellman-Ford si usa in reti non troppo grandi, mentre la famiglia dei protocolli link state può lavorare su reti più grandi. Ci sono delle modifiche ai distance vector che rendono meno grave questo comportamento.
+>Oltre al loop fittizio c'è la **bad news propagation**: le notizie peggiori (es. un link che cade) arrivano in ritardo.
+
+>[!question] Approfondimento
+>Una delle modifiche è lo **split horizon** (usato da RIP v2): un router **non annuncia** a un vicino le rotte che ha imparato proprio da quel vicino. Così due router non si rimandano a vicenda una rotta ormai non valida, aumentandone il costo a ogni scambio fino a "infinito" (conteggio all'infinito).
+
+>[!question] Osservazione
+>- Nell'implementazione distribuita un nodo che conosce solo un grafo **parziale** ha comunque un costo ottimale rispetto a ciò che conosce, e lo aggiorna man mano che arrivano informazioni dai vicini.
+>- Un nodo vede solo ciò che gli dicono i vicini, quindi **non percepisce direttamente i cambiamenti** della rete; con il link state invece ogni variazione viene diffusa a tutti i nodi.
+
+Ogni router mantiene, oltre alla tabella di instradamento, una struttura dati, detta distance vector, per ogni sua linea attiva. Il distance vector contiene informazioni ricavate dalle tabelle di instradamento dei router collegati all'altro estremo della linea. Il distance vector è un insieme di coppie \[indirizzo-distanza], la distanza è espressa tramite metriche classiche, quali numero di hop e costo.
+Il calcolo delle tabelle di routing avviene tramite la fusione (merge) di tutti i distance vector associati alle linee attive di un router.
+
+Tutte le volte che un router modifica la sua tabella di routing, la invia ai router adiacenti (cioè direttamente connessi alla stessa rete) sotto forma di pacchetto distance vector.
+
+Ciascun router apprende tramite un protocollo di neighbor greetings le informazioni relative ai nodi adiacenti: invio di pacchetti di HELLO su base periodica. Gli intervalli sono più ridotti rispetto agli intervalli di invio di pacchetti distance vector.
+
+Quando un router memorizza un distance vector nella sua struttura dati locale, verifica se sono presenti variazioni rispetto al distance vector precedentemente memorizzato: in caso affermativo ricalcola le tabelle di instradamento fondendo tutti i distance vector delle linee attive.
 
 ## IPv6
 >[!protocollo] IPv6
@@ -967,7 +985,7 @@ Nel frattempo sono nate delle tecniche che permettono di mitigare il problema, c
 
 Il problema della scarsità degli indirizzi è stato quindi risolto a prescindere, ma è rimasta l'esigenza di un protocollo più performante: IPv6, nato come protocollo "di emergenza", è diventato il nuovo standard, con uno spazio di indirizzamento molto più grande (indirizzi di **128 bit**) che vuole risolvere il problema alla radice.
 
-IPv4 è nato prima di internet come la conosciamo oggi: è disordinato, ha un header di lunghezza variabile, campi di cui non è chiaro il ruolo (es. non si sa se il time to live si misura in hop o in tempo) e non è stato pensato per la sicurezza (IPsec è stato aggiunto dopo). IPv6 invece, essendo stato pensato dopo, nasce con i requisiti chiari.
+IPv4 è nato prima di internet come la conosciamo oggi: è disordinato, ha un header di lunghezza variabile, campi di cui non è chiaro il ruolo (es. non si sa se il time to live si misura in hop o in tempo) e non è stato pensato per la sicurezza. IPv6 invece, essendo stato pensato dopo, nasce con i requisiti chiari.
 
 >[!important] Caratteristiche
 >Avendo 128 bit di indirizzo:
@@ -1015,7 +1033,7 @@ L'header IPv6 è di **40 byte** (senza le extension header).
   - differenziare il traffico immesso nella rete di un ISP da un suo cliente
   - l'ISP può modificare questo campo per tutti i pacchetti in uscita verso altre reti, per assegnare una classe di servizio concordata con altri ISP
 - **Flow label** (20 bit)
-  identifica un flusso (es. di un'applicazione): permette di riconoscere i pacchetti che appartengono a uno stesso flusso, per distinguerli o metterli assieme. Serve a supportare la qualità del servizio (servizi integrati/differenziati), mentre IPv4 non garantisce nulla: es. un router può far passare prima un flusso urgente e ritardare quelli senza esigenze temporali. Nelle slide: utilizzo ancora non chiaro, usato per Mobile IPv6
+  identifica un flusso (es. di un'applicazione): permette di riconoscere i pacchetti che appartengono a uno stesso flusso, per distinguerli o metterli assieme. Serve a supportare la qualità del servizio (servizi integrati/differenziati), mentre IPv4 non garantisce nulla: es. un router può far passare prima un flusso urgente e ritardare quelli senza esigenze temporali.
 - **Payload length** (16 bit)
   è il total length di IPv4, ma conta solo i dati: non abbiamo bisogno di sapere quanto è lungo l'header, è fisso. Misura pacchetti al massimo di 64 KB; con l'opzione **jumbo payload** (vedi [[#Hop-by-hop options (00)|hop-by-hop]]) il pacchetto può essere ben più grande
 - **Next header** (8 bit)
@@ -1052,8 +1070,8 @@ Identificativi delle estensioni (next header):
 
 #### Hop-by-hop options (00)
 C'è bisogno di spedire informazioni che devono essere lette **da ogni nodo** lungo il percorso del pacchetto. Opzioni usate:
-- **router alert** (RFC 2711): mandare un avviso a tutti i router del cammino
-- **jumbo payload** (RFC 2675): spedire pacchetti più grandi di quelli previsti dallo standard, lo si fa sapere a tutti i router del percorso
+- **router alert**: mandare un avviso a tutti i router del cammino
+- **jumbo payload**: spedire pacchetti più grandi di quelli previsti dallo standard, lo si fa sapere a tutti i router del percorso
 #### Routing (43)
 - Simile all'opzione **loose source route** di IPv4 (vedi le options di [[#Formato dell'unità dati|IPv4]])
 - Indica una lista di router che devono essere obbligatoriamente attraversati prima di arrivare a destinazione
@@ -1076,7 +1094,7 @@ Trasporta informazioni opzionali che saranno valutate **solo dal destinatario** 
 Usato per supportare la mobilità (Mobile IPv6): se il mittente sapesse che mi trovo in una posizione diversa metterebbe un routing header verso la nuova destinazione, ma per saperlo lo devo informare. Gli invio quindi un pacchetto con questa estensione, al cui interno inserisco l'indirizzo da usare nel routing header, in modo da far andare il pacchetto verso la nuova destinazione. Insieme al routing header risolve il problema del routing "triangolare".
 Può occupare 2 posizioni nella daisy chain: prima del routing header (elaborata dai router specificati) o alla fine (elaborata solo dalla destinazione), vedi [[#Ordine delle estensioni|ordine]].
 #### Authentication (51) e ESP (50)
-Supporto nativo alla sicurezza: IPsec è nativo su IPv6. Tutte le implementazioni di IPv6 *dovrebbero* garantire il supporto alla sicurezza, in realtà non è così.
+Supporto nativo alla sicurezza. Tutte le implementazioni di IPv6 *dovrebbero* garantire il supporto alla sicurezza, in realtà non è così.
 - **Authentication header** (51)
   fornisce l'autenticazione: consente di verificare che l'indirizzo del mittente sia autentico e che il pacchetto non sia stato alterato durante il percorso. Il destinatario ha la certezza di ricevere i dati da chi dichiara di averli spediti
 - **Encapsulating security payload** (ESP, 50)
