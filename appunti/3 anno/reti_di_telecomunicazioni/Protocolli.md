@@ -936,9 +936,6 @@ La maggior parte dei protocolli IGP si basa su due filosofie di routing:
 | Link state                   | Dijkstra (SPF) | **OSPF**              |
 | Distance vector tradizionale | Bellman-Ford   | GGP, **RIP**, IGRP (Cisco) |
 | Distance vector avanzato     | DUAL           | EIGRP (Cisco)         |
-#### Link state
-%% da aggiungere %%
-%% manca anche slide 9 %%
 #### Distance vector
 I protocolli di classe **Distance Vector** utilizzano l'algoritmo di [[Algoritmi#Bellman-Ford|Bellman-Ford]] in versione **distribuita**: tutti i nodi della rete possono eseguire in modo sincrono ogni iterazione dell'algoritmo calcolando i propri costi del cammino e inviando dati ai nodi vicini.
 La procedura terminerebbe al raggiungimento di $N$ iterazioni, ma l'algoritmo viene rilanciato su base periodica o al verificarsi di un determinato evento per implementare degli aggiornamenti della rete.
@@ -971,6 +968,52 @@ Tutte le volte che un router modifica la sua tabella di routing, la invia ai rou
 Ciascun router apprende tramite un protocollo di neighbor greetings le informazioni relative ai nodi adiacenti: invio di pacchetti di HELLO su base periodica. Gli intervalli sono più ridotti rispetto agli intervalli di invio di pacchetti distance vector.
 
 Quando un router memorizza un distance vector nella sua struttura dati locale, verifica se sono presenti variazioni rispetto al distance vector precedentemente memorizzato: in caso affermativo ricalcola le tabelle di instradamento fondendo tutti i distance vector delle linee attive.
+I pacchetti che arrivano senza variazioni servono solo al **mantenimento** della rete, quindi l'algoritmo viene riapplicato **solo se il nuovo distance vector contiene cambiamenti**. Questo non influisce sull'invio: i pacchetti distance vector vengono comunque inviati periodicamente, anche se poi chi li riceve può non rieseguire l'algoritmo.
+
+![[Protocolli-distance-vector-schema.svg|center]]
+
+Il protocollo DV prevede che il router operi così:
+1. quando riceve un messaggio (distance vector) da un router adiacente, confronta ogni coppia (destinazione, costo) con il contenuto della sua tabella di routing e:
+	- se la destinazione **non è in tabella**, crea una nuova entry per la nuova destinazione
+	- se la destinazione è in tabella e il **next hop è il router adiacente** che ha fatto l'annuncio, aggiorna il costo ed il next hop nella entry
+	- se la destinazione è in tabella e il costo indica un **percorso migliore**, aggiorna il costo e il next hop nella entry
+2. ad intervalli regolari trasmette ai router adiacenti un messaggio (distance vector) che riporta tutte le coppie (destinazione, costo) contenute nella tabella di routing
+
+>[!question] Osservazione
+>Non serve mantenere il percorso completo verso ogni destinazione: bastano **destinazione, next hop e costo**. Il distance vector ha una riga per ogni rete della configurazione (vettore $L_x$ qui sotto), quindi cresce con il numero di destinazioni e non con il numero di hop dei cammini.
+
+##### Notazioni
+Ogni nodo $x$ mantiene al suo interno tre vettori:
+$$
+W_x = \begin{bmatrix} w(x,1) \\ \vdots \\ w(x,M) \end{bmatrix}
+\qquad
+L_x = \begin{bmatrix} L(x,1) \\ \vdots \\ L(x,N) \end{bmatrix}
+\qquad
+R_x = \begin{bmatrix} R(x,1) \\ \vdots \\ R(x,N) \end{bmatrix}
+$$
+- $W_x$: **vettore dei costi** uscenti dal nodo
+- $L_x$: **vettore delle distanze** minime verso le altre reti
+- $R_x$: **vettore next hop** verso le altre reti
+
+dove:
+- $M$: numero di reti a cui il nodo $x$ è direttamente connesso
+- $w(x,i)$: costo associato al ramo uscente dal nodo $x$ verso la rete $i$ ($1 \le i \le M$)
+- $N$: numero di reti nella configurazione
+- $L(x,j)$: stima della lunghezza del cammino minimo dal nodo $x$ alla rete $j$ (**distance vector**)
+- $R(x,j)$: next-hop router nel cammino a minima lunghezza dal nodo $x$ alla rete $j$
+
+##### Algoritmo
+- Ogni nodo applica l'algoritmo di [[Algoritmi#Bellman-Ford|Bellman-Ford]] in modo distribuito
+- Periodicamente (circa **30 s**) ogni nodo scambia il suo distance vector $L_x$ con quelli dei nodi vicini
+- Sulla base delle informazioni contenute in tutti i distance vector ricevuti, il nodo $x$ aggiorna i suoi vettori così:
+$$
+L(x,j) = \min_{y \in A} [L(y,j) + w(x, N_{xy})] \qquad R(x,j) = y
+$$
+dove $A$ è l'insieme dei nodi vicini al nodo $x$ e $N_{xy}$ è la rete che interconnette i nodi $x$ e $y$ ($y$ è il vicino che realizza il minimo).
+
+#### Link state
+%% da aggiungere %%
+%% manca anche slide 9 %%
 
 ## IPv6
 >[!protocollo] IPv6

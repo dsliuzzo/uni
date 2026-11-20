@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="180" viewBox="0 0 560 180">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central;font-size:14px} .th{font-weight:500;font-size:15px} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect x="195" y="45" width="170" height="90" rx="6" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="th" x="280" y="90">Tabella di routing</text>
+<g stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)">
+<line x1="105" y1="30" x2="190" y2="70"/>
+<line x1="105" y1="90" x2="190" y2="90"/>
+<line x1="105" y1="150" x2="190" y2="110"/>
+<line x1="370" y1="70" x2="455" y2="30"/>
+<line x1="370" y1="90" x2="455" y2="90"/>
+<line x1="370" y1="110" x2="455" y2="150"/>
+</g>
+<text x="52" y="78">Distance</text><text x="52" y="96">vector</text><text x="52" y="114">ricevuti</text>
+<text x="505" y="78">Distance</text><text x="505" y="96">vector</text><text x="505" y="114">trasmessi</text>
+</svg>
