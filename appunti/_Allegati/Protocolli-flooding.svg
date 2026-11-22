@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="250" viewBox="0 0 700 250">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central;font-size:14px} .n{font-weight:500;font-size:15px} </style>
+<mask id="holes"><rect x="-1000" y="-1000" width="3000" height="3000" fill="white"/><circle cx="120" cy="190" r="16" fill="black"/><circle cx="120" cy="40" r="16" fill="black"/><circle cx="290" cy="190" r="16" fill="black"/><circle cx="290" cy="40" r="16" fill="black"/><circle cx="40" cy="120" r="16" fill="black"/><circle cx="400" cy="120" r="16" fill="black"/><circle cx="480" cy="190" r="16" fill="black"/><circle cx="480" cy="40" r="16" fill="black"/><circle cx="650" cy="190" r="16" fill="black"/><circle cx="650" cy="40" r="16" fill="black"/></mask>
+<defs>
+<marker id="red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<!-- passo 1: D invia ai vicini -->
+<g stroke="#b8b8b8" stroke-width="2" fill="none" mask="url(#holes)">
+<line x1="120" y1="40" x2="290" y2="40"/><line x1="290" y1="40" x2="290" y2="190"/><line x1="290" y1="190" x2="120" y2="190"/>
+<line x1="120" y1="190" x2="120" y2="40"/><line x1="40" y1="120" x2="120" y2="40"/><line x1="40" y1="120" x2="120" y2="190"/>
+</g>
+<g stroke="#e07b6a" stroke-width="3" fill="none" stroke-linecap="round" marker-end="url(#red)">
+<line x1="135" y1="170" x2="135" y2="62"/><line x1="142" y1="178" x2="266" y2="178"/><line x1="102" y1="186" x2="58" y2="146"/>
+</g>
+<!-- passo 2: A, C, E ritrasmettono -->
+<g transform="translate(360,0)"><mask id="holes2"><rect x="-1000" y="-1000" width="3000" height="3000" fill="white"/><circle cx="120" cy="40" r="16" fill="black"/><circle cx="290" cy="40" r="16" fill="black"/><circle cx="290" cy="190" r="16" fill="black"/><circle cx="120" cy="190" r="16" fill="black"/><circle cx="40" cy="120" r="16" fill="black"/></mask>
+<g stroke="#b8b8b8" stroke-width="2" fill="none" mask="url(#holes2)">
+<line x1="120" y1="40" x2="290" y2="40"/><line x1="290" y1="40" x2="290" y2="190"/><line x1="290" y1="190" x2="120" y2="190"/>
+<line x1="120" y1="190" x2="120" y2="40"/><line x1="40" y1="120" x2="120" y2="40"/><line x1="40" y1="120" x2="120" y2="190"/>
+</g>
+<g stroke="#e07b6a" stroke-width="3" fill="none" stroke-linecap="round" marker-end="url(#red)">
+<line x1="142" y1="28" x2="266" y2="28"/><line x1="100" y1="44" x2="54" y2="90"/><line x1="64" y1="110" x2="106" y2="66"/><line x1="304" y1="168" x2="304" y2="62"/>
+</g>
+</g>
+<g fill="#1e1e1e" fill-opacity="0" stroke="#b8b8b8" stroke-width="2">
+<circle cx="120" cy="40" r="16"/><circle cx="290" cy="40" r="16"/><circle cx="290" cy="190" r="16"/><circle cx="40" cy="120" r="16"/>
+<circle cx="480" cy="40" r="16"/><circle cx="650" cy="40" r="16"/><circle cx="650" cy="190" r="16"/><circle cx="400" cy="120" r="16"/>
+</g>
+<circle cx="120" cy="190" r="16" fill="none" stroke="#e07b6a" stroke-width="3"/>
+<circle cx="480" cy="190" r="16" fill="none" stroke="#e07b6a" stroke-width="3"/>
+<g class="n">
+<text class="n" x="120" y="40">A</text><text class="n" x="290" y="40">B</text><text class="n" x="290" y="190">C</text><text class="n" x="120" y="190">D</text><text class="n" x="40" y="120">E</text>
+<text class="n" x="480" y="40">A</text><text class="n" x="650" y="40">B</text><text class="n" x="650" y="190">C</text><text class="n" x="480" y="190">D</text><text class="n" x="400" y="120">E</text>
+</g>
+<text x="165" y="232">1. D invia il suo LSP ai vicini</text>
+<text x="525" y="232">2. A, C, E lo ritrasmettono</text>
+</svg>

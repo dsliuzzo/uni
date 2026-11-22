@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="370" viewBox="0 0 360 370">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central;font-size:14px} .n{font-weight:500;font-size:15px} </style>
+<mask id="holes"><rect x="-1000" y="-1000" width="3000" height="3000" fill="white"/><circle cx="120" cy="120" r="16" fill="black"/><circle cx="120" cy="220" r="16" fill="black"/><circle cx="120" cy="330" r="16" fill="black"/><circle cx="230" cy="120" r="16" fill="black"/><circle cx="230" cy="260" r="16" fill="black"/><circle cx="300" cy="330" r="16" fill="black"/><circle cx="300" cy="50" r="16" fill="black"/><circle cx="60" cy="40" r="16" fill="black"/></mask>
+<g stroke="#b8b8b8" stroke-width="2" fill="none" mask="url(#holes)">
+<line x1="60" y1="40" x2="120" y2="120"/>
+<line x1="120" y1="120" x2="230" y2="120"/>
+<line x1="230" y1="120" x2="300" y2="50"/>
+<line x1="120" y1="120" x2="120" y2="220"/>
+<line x1="230" y1="120" x2="230" y2="260"/>
+<line x1="120" y1="220" x2="230" y2="260"/>
+<line x1="120" y1="220" x2="120" y2="330"/>
+<line x1="230" y1="260" x2="300" y2="330"/>
+<line x1="120" y1="330" x2="300" y2="330"/>
+</g>
+<text x="80" y="88">2</text><text x="175" y="106">3</text><text x="278" y="95">1</text>
+<text x="106" y="170">2</text><text x="244" y="190">1</text><text x="170" y="228">2</text>
+<text x="106" y="275">5</text><text x="276" y="288">1</text><text x="210" y="344">4</text>
+<g fill="none" stroke="#b8b8b8" stroke-width="2">
+<circle cx="60" cy="40" r="16"/><circle cx="120" cy="120" r="16"/><circle cx="300" cy="50" r="16"/><circle cx="230" cy="120" r="16"/>
+<circle cx="120" cy="220" r="16"/><circle cx="230" cy="260" r="16"/><circle cx="120" cy="330" r="16"/><circle cx="300" cy="330" r="16"/>
+</g>
+<text class="n" x="60" y="40">A</text><text class="n" x="120" y="120">B</text><text class="n" x="300" y="50">C</text><text class="n" x="230" y="120">D</text>
+<text class="n" x="120" y="220">E</text><text class="n" x="230" y="260">G</text><text class="n" x="120" y="330">F</text><text class="n" x="300" y="330">H</text>
+</svg>

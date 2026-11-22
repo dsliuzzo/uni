@@ -1010,10 +1010,101 @@ $$
 L(x,j) = \min_{y \in A} [L(y,j) + w(x, N_{xy})] \qquad R(x,j) = y
 $$
 dove $A$ è l'insieme dei nodi vicini al nodo $x$ e $N_{xy}$ è la rete che interconnette i nodi $x$ e $y$ ($y$ è il vicino che realizza il minimo).
-
 #### Link state
-%% da aggiungere %%
-%% manca anche slide 9 %%
+Un protocollo di tipo **Link State** (LS) assume che ogni router disponga della **mappa completa della rete**, su cui calcola gli instradamenti ottimali con l'algoritmo di [[Algoritmi#Dijkstra|Dijkstra]].
+- La mappa della rete è costruita direttamente dai router tramite i **Link State Packet** (LSP).
+- Quando un router si attiva, determina il costo dei link su ciascuna delle sue interfacce di rete.
+- Ogni router, tramite protocolli di **neighbor greetings**, apprende la propria situazione locale (indirizzi delle sottoreti connesse e dei router direttamente raggiungibili, cioè dei nodi adiacenti).
+	- Come nel distance vector: se per un po' non ricevo gli HELLO di un vicino, lo considero perso e aggiorno la tabella. Il numero di HELLO mancati necessario a rimuovere un vicino è configurabile.
+- Le informazioni di adiacenza sono incluse in un LSP che viene inviato a **tutti gli altri router** della rete.
+
+Il LSP generato da ogni router contiene:
+- identificativo del router che emette il LSP
+- stato di ogni link connesso al router
+- identità di ogni vicino connesso all'altro estremo del link
+- costo del link
+- **numero di sequenza** del LSP, che serve a distinguere le diverse versioni emesse dallo stesso router e scegliere la più recente: se circola un LSP con numero di sequenza precedente a uno già accettato, lo si scarta perché contiene informazioni vecchie.
+
+Ogni router contiene un **LSP database** in cui memorizza il LSP più recente generato da ogni router; da questo database ogni router si costruisce una mappa della rete con i costi associati, cioè la topologia su cui applicare Dijkstra. La condizione per avviare Dijkstra è aver ottenuto le informazioni di tutti i nodi.
+
+Il LSP database (la mappa logica della rete) **non è ancora la tabella di instradamento**, ma è un'informazione necessaria e sufficiente perché un router la calcoli:
+- ogni router calcola la sua tabella di instradamento **indipendentemente** dagli altri, applicando alla mappa l'algoritmo di Dijkstra (o **SPF**, *Shortest Path First*), che trasforma una rete (grafo) in una rete ad **albero** scegliendo i percorsi a costo più basso, con radice nel router che applica l'algoritmo;
+- da questo albero si estraggono, per ogni destinazione, il **next hop** e il **costo totale** del percorso.
+
+>[!check] Esempio: LSP database
+>>[!multi-column]
+>>
+>>>[!blank]
+>>>![[Protocolli-link-state-grafo.svg|center|260]]
+>>
+>>>[!blank]
+>>>| Router | LSP |
+>>>|---|---|
+>>>| A | B/2 |
+>>>| B | A/2 D/3 E/2 |
+>>>| C | D/1 |
+>>>| D | B/3 C/1 G/1 |
+>>>| E | B/2 F/5 G/2 |
+>>>| F | E/5 H/4 |
+>>>| G | D/1 E/2 H/1 |
+>>>| H | F/4 G/1 |
+>
+>Ogni riga è il LSP di un router (vicino/costo). Il database è **replicato su ogni router**: non è riferito al singolo nodo sorgente, è la mappa dell'intera rete, uguale per tutti; ciò che cambia da router a router è l'albero che ognuno ci calcola sopra.
+
+>[!check] Esempio: tabella di routing di B
+>>[!multi-column]
+>>
+>>>[!blank]
+>>>![[Protocolli-link-state-albero-B.svg|center|260]]
+>>
+>>>[!blank]
+>>>| Destinazione | Linea |
+>>>|---|---|
+>>>| A | L1 |
+>>>| C | L2 |
+>>>| D | L2 |
+>>>| E | L3 |
+>>>| F | L3 |
+>>>| G | L3 |
+>>>| H | L3 |
+>
+>In rosso l'albero dei cammini minimi con radice in B; $L_1, L_2, L_3$ sono le linee di B verso A, D ed E.
+
+>[!question] Osservazione
+>Differenza con il distance vector: lì i router **cooperano per calcolare le tabelle** di instradamento; qui cooperano per **mantenere aggiornata la mappa** della rete, poi ognuno calcola la propria tabella in modo autonomo.
+
+- In caso di variazioni significative sullo stato dei link, il router invia un **nuovo LSP** in rete. Quindi c'è l'invio periodico come nel distance vector, ma anche un invio **triggerato** da certe condizioni (es. cambiamento significativo di una metrica, interruzione di un collegamento).
+- Un aspetto critico è la **sincronizzazione** tra i router: se i router hanno LSP database diversi, sono possibili dei **loop**.
+
+##### Operazione di un router
+>[!important] Flooding
+>Il **flooding** ("inondazione") è una tecnica di diffusione in cui un nodo, ricevuto un pacchetto, lo **ritrasmette su tutti i suoi link** (tranne quello da cui è arrivato). Così il pacchetto raggiunge **tutti i nodi della rete** senza bisogno di tabelle di instradamento. Per evitare che circoli all'infinito, ogni nodo inoltra solo i pacchetti che non ha già visto (es. LSP con numero di sequenza nuovo).
+
+- Il LSP è trasmesso in **flooding** su tutti i link del router.
+- Il flooding è pensato per assicurare la diffusione più rapida possibile delle variazioni di topologia.
+
+![[Protocolli-link-state-operazione-router.svg|center]]
+
+Il flooding è **selettivo**, non cieco: il LSP viene ritrasmesso su tutte le interfacce **tranne quella da cui è arrivato** (es. A riceve da D, non c'è bisogno di rimandarlo a D).
+
+![[Protocolli-flooding.svg|center]]
+
+Nel passo 2 A sta solo **inoltrando** il LSP di D, non le sue informazioni: poi A creerà il suo LSP che verrà a sua volta inviato a tutti. Ogni router deve ricevere almeno un LSP per ogni nodo della rete: il meccanismo è molto più oneroso, ma tipicamente **converge prima**.
+
+#### Distance vector vs Link state
+>[!multi-column]
+>
+>>[!important] Distance vector
+>>- ogni router invia le informazioni di routing ai **router adiacenti**
+>>- l'informazione trasmessa è una **stima** del costo verso tutte le reti
+>>- l'informazione è trasmessa su **base periodica** regolare
+>>- un router determina il next hop con l'algoritmo di **Bellman-Ford distribuito** sulle stime dei costi ricevute
+>
+>>[!important] Link state
+>>- ogni router invia le informazioni di routing a **tutti gli altri router**
+>>- l'informazione trasmessa è il **valore esatto** del costo dei link verso le reti adiacenti
+>>- l'informazione è trasmessa **quando avviene un cambiamento**
+>>- un router costruisce prima una descrizione della **topologia** della rete e poi usa un algoritmo di routing qualsiasi per calcolare il next hop (tipicamente **Dijkstra**)
 
 ## IPv6
 >[!protocollo] IPv6

@@ -265,6 +265,8 @@ $$
 >dove $b_i$ è un domanda/offerta al nodo che non fa parte del normale flusso, è una interazione con l'esterno.
 >cioè la differenza tra la somma dei flussi uscenti dal nodo $i$ e la somma dei flussi entranti nel nodo $i$ deve eguagliare la divergenza del nodo $i$.
 
+^conservazioneflusso
+
 Si distinguono i seguenti casi possibili
 - $b_i > 0$$$\sum_{j:(i,j) \in E} f_{ij} -\sum_{j:(j,i) \in E} f_{ji} = b_i \qquad \forall i \in V$$
 - $b_i < 0$$$\sum_{j:(i,j) \in E} f_{ij} - b_i = \sum_{j:(j,i) \in E} f_{ji} \qquad \forall i \in V$$
@@ -650,15 +652,10 @@ Osserviamo che $rango(A) = m - 1$ se e solo se esiste una sottomatrice quadrata 
 >\hat{c}_N^\top = c_N^\top - c_B^\top B^{-1} N \geq 0
 >$$
 >una condizione **sufficiente** di ottimo è data dalla non negatività dei coefficienti di costo ridotto.
-
-%%
-problema: nonostante lo abbiamo evitato prima qui in questa operazione necessitiamo di $B^{-1}$, verifichiamo se esiste un modo di calcolare $\hat{c}_N^\top$ senza utilizzare la matrice inversa e quindi senza neanche la necessità di usare il tableau del simplesso. Per farlo usiamo la teoria della dualità. Usiamo $y:= c_B^\top B^{-1}$ le variabili duali.
-verifica dell'ammissibilità vista nelle variabili duali.
-%%
-
-Non abbiamo a disposizione il tableau del metodo del simplesso, e non abbiamo calcolato $B^{-1}$ per ottenere $f_B$ (lo abbiamo trovato [[#Osservazioni|per sostituzione]]). Come calcoliamo $\hat{c}_N^\top$?
-
 ### Calcolo dei coefficienti di costo ridotto
+Nonostante lo abbiamo evitato [[#Osservazioni|prima]], per calcolare $\hat{c}_N^\top$ necessitiamo di $B^{-1}$.
+Verifichiamo se esiste un modo di calcolarlo senza utilizzare la matrice inversa e quindi senza neanche la necessità di usare il tableau del simplesso.
+Per farlo usiamo la teoria della dualità:
 Coppia primale-duale di (MCFP):
 
 >[!multi-column]
@@ -693,44 +690,30 @@ Coppia primale-duale di (MCFP):
 >>\end{cases}
 >>$$
 
->[!attention] AGGIUNTA
->Il duale ha una variabile $\lambda_i$ per ogni **nodo** e un vincolo per ogni **arco**: la colonna di $A$ dell'arco $(i,j)$ ha $+1$ in riga $i$ e $-1$ in riga $j$, quindi il vincolo è $\lambda_i - \lambda_j \leq c_{ij}$.
+Ciò che prima chiamavamo $y$ ora prende il nome di $\lambda$.
+Il duale ha una variabile $\lambda_i$ per ogni **nodo** e un vincolo per ogni **arco**: la colonna di $A$ dell'arco $(i,j)$ ha $+1$ in riga $i$ e $-1$ in riga $j$, quindi il vincolo è $\lambda_i - \lambda_j \leq c_{ij}$.
 
-%%
-ciò che prima chiamavamo $y$ ora prende il nome di $\lambda$
-scrivendolo anche per esteso caratterizziamo $A$ ad essere non una qualunque matrice, ma una matrice di incidenza
-$Af = b$ è equivalente alla forma estesa che rappresenta l'equazione di conservazione del flusso (da verificare come si chiama)
-leggendo le colonne del sistema di vincoli del primale notiamo che abbiamo un 1 e un -1
-nel duale dobbiamo scrivere tanti vincoli quanti sono le colonne che non sono altro che gli archi
-nel duale ci deve essere un vincolo per ogni arco
-se io prendo l'arco ij e leggo come è fatta la colonna che caratterizza l'arco ij sarà di tutti 0 tranne per 1 in posizione i e -1 in posizione j
-quindi moltiplicando scalarmente per $\lambda$ otteniamo $\lambda_i - \lambda_j \leq c_{ij}$
-sono utili entrambi i nodi perché gli archi sono partizionabili in due insiemi, quelli in base e quelli fuori dalla base
-%%
+Scritto per esteso, il problema mostra che $A$ non è una matrice qualunque, ma la **matrice di incidenza** del grafo: il sistema $Af = b$ coincide con i vincoli di conservazione del flusso della forma estesa.
+
+Per ottenere il duale si legge $A$ per colonne. Ogni colonna corrisponde a un arco $(i,j)$ e contiene solo zeri, tranne un $+1$ in posizione $i$ e un $-1$ in posizione $j$. Nel duale c'è un vincolo per ogni colonna di $A$, cioè per ogni arco, e si ottiene moltiplicando la colonna per $\lambda$:
+$$
+\lambda_i - \lambda_j \leq c_{ij}
+$$
+Ogni vincolo coinvolge quindi i due nodi estremi dell'arco. Gli archi si dividono in due gruppi: quelli **in base** e quelli **fuori base**, e il vincolo duale dell'arco si comporta in modo diverso nei due casi (vedi sotto).
 
 Dalla dimostrazione del [[Problemi di ottimizzazione#Dualità forte|teorema di dualità forte]] è noto che, data una soluzione di base ammissibile per il problema primale
 $$
 \bar{f}_B = B^{-1} \tilde{b} \qquad \bar{f}_N = 0
 $$
-%%
-quando abbiamo fatto la dualità forte data una base abbiamo definito il duale
-%%
 è sempre possibile definire il **vettore complementare**
 $$
-\bar{\lambda} = (B^\top)^{-1} c_B
+\bar{\lambda} = c_B^\top B^{-1} = (B^\top)^{-1} c_B
 $$
-%%
-questo vettore soddisfa per uguaglianza la prima porzione di vincoli del problema duale $B^\top \bar{\lambda} = c_B$
-se faccio il complementare di una soluzione che non è ottima il sistema $A^\top \lambda \leq c$ è incompatibile e le disuguaglianze rappresentano gli slack
-%%
 che, per costruzione, gode della proprietà:
 $$
-c^\top \bar{f} = c_B^\top \bar{f}_B = \bar{\lambda}^\top \tilde{b}
+c^\top \bar{f} = c_B^\top \bar{f}_B = c_B^\top B^{-1} \tilde{b} = \bar{\lambda}^\top \tilde{b}
 $$
-%%
-importante proprietà per dopo
-%%
-
+in quanto $f_N = 0$ e $f_B = B^{-1} \tilde{b}$
 Il vettore di variabili duali $\bar{\lambda} = (B^\top)^{-1} c_B$ soddisfa **per uguaglianza** il primo gruppo di vincoli duali (quelli degli archi in base):
 $$
 B^\top \bar{\lambda} = c_B
@@ -744,35 +727,19 @@ $$
 \bar{\lambda}^\top N = c_B^\top B^{-1} N \leq c_N^\top \iff c_N^\top - c_B^\top B^{-1} N = \hat{c}_N^\top \geq 0
 $$
 Cioè $\bar{\lambda}$ è ammissibile per $(D)$ se e solo se $\bar{f}$ è ottimale per $(P)$, risultato già noto dallo studio della dualità.
-%%
-l'ammissibilità duale equivale all'ottimalità primale
-%%
-%%
-ma per trovare $\bar{\lambda}$ dovremmo comunque invertire $B$
-ma noi abbiamo il sistema $B^\top \bar{\lambda} = c_B$ dato che $B$ è triangolare superiore allora la sua trasposta sarà triangolare inferiore e possiamo comunque risolvere il sistema per sostituzioni successive ma dall'alto verso il basso. Questa è la chiave di tutto.
-il fatto che $B$ sia triangolare superiore non solo ci consente di calcolare il flusso di base, ma anche i vettori complementari senza invertire la matrice
-%%
+
+Al momento però per calcolare $\bar{\lambda}$ dovremmo comunque calcolare $B^{-1}$.
+Siamo però arrivati al risultato 
+$$B^\top \bar{\lambda} = c_B$$
+dato che $B$ è **triangolare superiore** allora la sua trasposta sarà **triangolare inferiore**, il che ci permette comunque di risolvere il sistema per sostituzioni successive, ma dall'alto verso il basso.
+Questa è la chiave di tutto.
+Il fatto che $B$ sia triangolare superiore non solo ci consente di calcolare il flusso di base, ma anche i vettori complementari senza invertire la matrice.
+
 >[!important] Calcolo dei coefficienti di costo ridotto
 >1. Calcola $\bar{\lambda}$ risolvendo il sistema $B^\top \lambda = c_B$.
 >2. Sostituisci $\bar{\lambda}$ nei rimanenti vincoli duali ($N^\top \lambda \leq c_N$) e calcola il vettore delle **slack** corrispondenti.
 
 ### Determinazione della soluzione duale per (MCFP)
-%%
-$B$ ha dimensione $(m-1) \times (m-1)$ ragionando con i vincoli in modo esplicito
-$$
-\begin{array}{c}
-\lambda_i - \lambda_j \leq c_{ij} \forall (i,j) \in T \\
-\lambda_i - \lambda_j \leq c_{ij} \forall (i,j) \in E \backslash T
-\end{array}
-$$
-soddisfo per eguaglianza i primi vincoli per ottenere i potenziali
-poi prendo i lambda trovati e soddisfo i secondi vincoli per verificare l'ammissibilità del duale / ottimalità del primale (credo)
-i primi sono tanti quanti sono gli archi dell'albero ricoprente m-1 (equazioni) e ci sono 2 variabili decisionali per ogni vincolo, N nodi coinvolti, c'è una incognita in più, ma non mi crea problemi, possiamo eliminare una riga che è linearmente dipendente dalle altre.
-Parametrizziamo rispetto ad una variabile $\lambda$ e tra le infinite soluzioni la poniamo pari a $0$.
-Questo corrisponde all'eliminazione di un nodo da $A$
-%%
-
-
 Bisogna risolvere il sistema
 $$
 \lambda_i - \lambda_j = c_{ij} \quad \forall (i,j) \in T
@@ -790,6 +757,10 @@ $$
 la cui matrice, per il [[#Lemma 1]], è **triangolare inferiore** (trasposta di una triangolare superiore).
 
 La soluzione potrà essere ottenuta per sostituzioni successive a partire dalla prima equazione, cioè esplorando l'albero **dalla radice verso le foglie** (al contrario di $f_B$, che si calcola dalle foglie verso la radice).
+
+Sono tanti quanti sono gli archi dell'albero ricoprente m-1 (equazioni) e ci sono 2 variabili decisionali per ogni vincolo, N nodi coinvolti, c'è una incognita in più, ma non mi crea problemi, possiamo eliminare una riga che è linearmente dipendente dalle altre.
+Parametrizziamo rispetto ad una variabile $\lambda$ e tra le infinite soluzioni la poniamo pari a $0$.
+Questo corrisponde all'eliminazione di un nodo da $A$.
 
 >[!check] Esempio (Lemma 1)
 >Riprendiamo l'albero dell'[[#Lemma 1|esempio con radice nel nodo 2]]:
@@ -839,23 +810,11 @@ allora la soluzione di base corrente è **ottima** e l'algoritmo si arresta.
 
 Altrimenti, una variabile con costo ridotto negativo dovrà entrare in base.
 
-L'eventuale indeterminazione può essere sciolta adottando la [[Problemi di ottimizzazione#Regola di Bland|regola di Bland]], la cui applicazione consente di interrompere il calcolo iterativo (per sostituzione) dei coefficienti di costo ridotto non appena si individua il primo di essi con valore negativo: la variabile corrispondente $f_{hk}$ entrerà in base.
-
-%%
-facendolo 1 alla volta posso interrompere il calcolo non appena trovo il primo coefficiente di costo negativo ottimizzando ancora di più l'algoritmo
-faccio salire in base la variabile con coefficiente di costo ridotto negativo
-faccio salire il flusso all'interno dell'arco che ha coefficiente di costo ridotto negativo
-se faccio crescere il flusso sul nuovo arco (della base)
-ho un arco in più che ha un flusso positivo, ora ho m archi
-ma m archi fanno perdere l'albero ricoprente
-riprendendo la caratterizzazione degli alberi una di quelle equivalenze l'aggiunta di un arco genera un ciclo
-dimostrazione del secondo lemma è esattamente questo, ci aiuta nella definizione del passo dello spostamento
-%%
-
+L'eventuale indeterminazione può essere sciolta adottando la [[Problemi di ottimizzazione#Regola di Bland|regola di Bland]], la cui applicazione consente di interrompere il calcolo iterativo (per sostituzione) dei coefficienti di costo ridotto **non appena si individua il primo** di essi con valore negativo: la variabile corrispondente $f_{hk}$ entrerà in base.
 ## Cambio di base
 La variabile entrante in base assumerà un valore $f_{hk} = \hat{\delta} \geq 0$. La determinazione di $\hat{\delta}$ consente di identificare la variabile che **esce** dalla base.
 
-L'ingresso in base di $f_{hk}$ equivale a dire che l'arco corrispondente $(h,k)$ dovrà far parte dell'albero ricoprente; aggiungendo tale arco all'albero di base corrente si formerà un (unico) **ciclo** $\mathcal{C}$.
+L'ingresso in base di $f_{hk}$ equivale a dire che l'arco corrispondente $(h,k)$ dovrà far parte dell'albero ricoprente; aggiungendo tale arco all'albero di base corrente si formerà un (unico) **ciclo** $\mathcal{C}$ (come nella [[#Lemma 2|dimostrazione del Lemma 2]]).
 
 >[!check] Esempio
 >Albero di base $e_1, e_3, e_4, e_6$ (in rosso) e arco entrante $e_5 = (3,4)$ (tratteggiato): si forma il ciclo $2 \to 3 \to 4$ con gli archi $e_4, e_5, e_3$.
@@ -875,9 +834,7 @@ L'ingresso in base di $f_{hk}$ equivale a dire che l'arco corrispondente $(h,k)$
 >>[!blank]
 >>![[Problemi di flusso-cambio-base-ciclo-albero.svg|center|240]]
 
-%%
-vado alla ricerca di un altro vertice che fa uscire un altra variabile dalla base $\to$ dobbiamo ricostruire un albero ricoprente che fa uscire un altro arco dalla base e dobbiamo farlo soddisfacendo i vincoli del problema
-%%
+In pratica dobbiamo ricostruire un albero ricoprente facendo uscire un altro arco dalla base, soddisfacendo i vincoli del problema.
 
 Scegliamo per $\mathcal{C}$ l'orientamento **concorde** a quello dell'arco entrante $(h,k)$, e partizioniamo $\mathcal{C}$ in archi concordi e archi discordi rispetto al verso di percorrenza scelto:
 $$
@@ -885,34 +842,23 @@ $$
 $$
 
 ![[Problemi di flusso-cambio-base-ciclo.svg|center|240]]
-%%
-aumento il flusso lungo hk (che fino ad ora era 0)
-il problema è locale, è questo nuovo ciclo che mi fa perdere l'albero ricoprente
-quindi per garantire la continuità si deve ridurre lungo jk
-ma anche su ij si deve ridurre (scaricare)
-e di conseguenza si deve ridurre anche su hi
-sto diramando in modo diverso il flusso
-per garantire la continuità vado a
-ridurre il flusso negli archi percorsi al contrario
-gli archi percorsi in avanti li incremento
-cosa mi deve limitare nella riduzione?
-l'arco percorso al contrario con flusso minore: sarà il primo a toccare lo $0$
-sarà quell'arco ad uscire dalla base
-questo risultato si basa sulla dimostrazione del secondo lemma
-%%
 
-Se il flusso sull'arco $(h,k)$ subisce un incremento pari a $\delta \geq 0$, per mantenere rispettate le equazioni di continuità sui nodi del ciclo, il flusso sugli archi concordi dovrà **crescere** di $\delta$, mentre quello sugli archi discordi dovrà **decrescere** di $\delta$.
+Il problema è locale, è questo nuovo ciclo che mi fa perdere l'albero ricoprente.
+Modifico solo gli archi del ciclo: ogni nodo del ciclo tocca due archi del ciclo e le due variazioni si compensano, quindi il suo bilancio non cambia e il resto dell'albero (anche gli archi che collegano i nodi del ciclo al resto) non viene toccato.
+
+Se il flusso sull'arco $(h,k)$ subisce un incremento pari a $\delta \geq 0$, per mantenere rispettate le [[#^conservazioneflusso|equazioni di continuità]] sui nodi del ciclo, il flusso sugli archi concordi dovrà **crescere** di $\delta$, mentre quello sugli archi discordi dovrà **decrescere** di $\delta$.
 $$
 \begin{cases}
 f'_{ij} = f_{ij} + \delta & \forall (i,j) \in \mathcal{C}^+ \\
 f'_{ij} = f_{ij} - \delta & \forall (i,j) \in \mathcal{C}^-
 \end{cases}
 $$
+Cosa mi deve limitare nella riduzione?
 Il massimo valore consentito per $\delta$ si ottiene imponendo che i nuovi valori di flusso continuino a rispettare i vincoli di non negatività
 $$
 \hat{\delta} := \min \{ f_{ij} : (i,j) \in \mathcal{C}^- \}
 $$
-Uscirà di base la variabile (ovvero uscirà dall'albero l'arco) cui corrisponde il valore $\hat{\delta}$:
+Uscirà di base la variabile (ovvero uscirà dall'albero l'arco che raggiungerà per primo 0) cui corrisponde il valore $\hat{\delta}$:
 $$
 (i^*, j^*) = \arg\min \{ f_{ij} : (i,j) \in \mathcal{C}^- \}
 $$
