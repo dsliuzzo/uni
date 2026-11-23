@@ -775,29 +775,222 @@ FROM coppieNo
 ``` sql
 SELECT COUNT(*)
 FROM Cliente
-WHERE eta <= 25 AND eta >= 15 AND citta = 'Cosenza'
+WHERE   eta <= 25
+	AND eta >= 15
+	AND citta = 'Cosenza'
 ```
 
 2) Numero di volte che è stato acquistato il prodotto `P1` a un prezzo unitario inferiore a 10 da clienti di Cosenza
 ``` sql
 SELECT COUNT(*)
-FROM Composizione Com, Cliente Cli, Fattura F
-WHERE Com.prodotto = 'P1' AND Com.prezzoU < 10 AND Com.fattura_numero = F.numero AND Com.fattura_anno = F.anno AND F.cliente = Cli.CF AND Cli.citta = 'Cosenza'
+FROM Composizione X, Cliente C, Fattura F
+WHERE   X.prodotto = 'P1'
+	AND X.prezzoU < 10
+	AND C.citta = 'Cosenza'
+	AND X.fattura_numero = F.numero
+	AND X.fattura_anno = F.anno
+	AND F.cliente = C.CF
 ```
 
 3) Per ogni cliente di Cosenza il numero di esemplari complessivi da lui acquistati del prodotto `P1`
 ``` sql
-SELECT F.cliente, SUM(Com.qnt)
-FROM Composizione Com, Fattura F, Cliente Cli
-WHERE Com.prodotto = 'P1' AND Com.fattura_numero = F.numero AND Com.fattura_anno = F.anno AND Cli.citta = 'Cosenza' AND Cli.CF = F.cliente
+SELECT F.cliente, SUM(X.qnt)
+FROM Composizione X, Fattura F, Cliente C
+WHERE   X.prodotto = 'P1'
+	AND X.fattura_numero = F.numero
+	AND X.fattura_anno = F.anno
+	AND C.citta = 'Cosenza'
+	AND C.CF = F.cliente
 GROUP BY F.cliente
 ```
 
 4) Per ogni città l'importo complessivo delle fatture intestate a clienti della città ed emesse nel 2026
 ``` sql
-SELECT Cli.citta, SUM(Com.qnt * Com.prezzoU)
-FROM Cliente Cli, Fattura F, Composizione Com
-WHERE   F.numero = Com.fattura_numero AND F.anno = Com.fattura_anno AND F.cliente = Cli.CF
+SELECT C.citta, SUM(X.qnt * X.prezzoU)
+FROM Cliente C, Fattura F, Composizione X
+WHERE   F.numero = X.fattura_numero
+	AND F.anno = X.fattura_anno
+	AND F.cliente = C.CF
 	AND F.anno = 2026
-GROUP BY Cli.citta
+GROUP BY C.citta
 ```
+
+
+
+
+
+
+
+
+---
+
+
+
+# Esercizi 7
+Voglio restituire il cliente che ha l'età minima
+
+Errore grave:
+``` sql
+SELECT CF, MIN(eta)
+FROM Cliente
+```
+non posso mettere accanto ad un aggregato un attributo non specificato nella `GROUP BY`
+
+Corretta:
+``` sql
+SELECT CF, eta
+FROM Cliente C
+WHERE C.eta IN (SELECT MIN(eta) FROM Cliente)
+```
+
+>[!warning] non si possono innestare gli aggregati
+> I criteri di raggruppamento degli aggregati sono diversi
+
+
+
+
+Conoscere i nomi dei clienti a cui sono intestate almeno 10 fatture
+
+Si può fare con una `VIEW`, ma in sql esiste la clausola `HAVING`
+È una sorta di `WHERE` usata in accoppiata a `GROUP BY`
+verifica una condizione aggregata
+``` sql
+SELECT C.nome
+FROM Cliente C, Fattura F
+WHERE C.CF = F.cliente
+GROUP BY C.nome
+HAVING COUNT(*) > 10;
+```
+
+Scrivere questo tipo di condizioni nella `WHERE` è un errore:
+``` sql
+SELECT C.nome, COUNT(*)
+FROM Cliente C, Fattura F
+WHERE   C.CF = F.cliente
+	AND COUNT(*) >= 10 --ma vengono valutate prima le cose della WHERE e poi gli aggregati: non possiamo mettere aggregati dentro la WHERE, ci vanno solo attributi che caratterizzano una singola tupla
+GROUP BY C.CF;
+```
+
+
+
+
+- **$\theta$-inner-join**
+  Se una join ha una condizione può essere chiamata $\theta$-join, che sta ad indicare che nella join è indicata una determinata condizione $\theta$.
+- **natural join**
+  La join senza nessun pedice viene chiamata natural join, leghiamo le tuple di A con le tuple di B tali che gli attributi omonimi hanno lo stesso valore. Si basa sull'assunzione che gli attributi di chiave esterna hanno lo stesso nome.
+- **left/right/full-outer-join**
+  (Join con dei trattini sui vertici) Se una tupla di A non trova nessuna tupla di B con cui legarsi viene comunque messa nel risultato riempiendo le colonne mancanti con `NULL`. Viceversa le il right e da parte di entrambe nel full.
+- **semi-join**
+  (Join non completata con la linea verticale da un lato) Equivale a una join tra A e B, il cui risultato viene proiettato solo sugli attributi di una delle relazioni (dal lato dove c'è la linea verticale) (Corrisponde all'`EXISTS` di sql)
+
+esiste anche la keyword `JOIN` in sql
+``` sql
+FROM A,B
+WHERE A.a = B.b
+```
+$\equiv$
+``` sql
+FROM A INNER JOIN B ON (A.b = B.b)
+```
+ma in questo modo le query diventano illeggibili
+
+
+
+---
+
+
+organizzazione fisica delle tuple è fatta per consentire al meglio le operazioni tipiche del DBMS (modifica dei dati)
+un DBMS deve essere veloce a inserire nuove tuple e ricercarle
+Nell'inserimento per prima cosa il dato deve essere consistente rispetto ai vincoli -> anche l'inserimento fa una ricerca (fa una `SELECT`)
+In un DBMS i dati non sono in memoria centrale: ci stanno solo temporaneamente
+quando effettuiamo quelle query una porzione di dati viene trasferita in memoria centrale
+Servono delle strutture dati per la memoria secondaria (non vanno bene le classiche [[strutture dati]])
+Le strutture a puntatori non sono implementabili in memoria secondaria, dove non possiamo accedere a un singolo dato, accediamo a pagine (link a sisop)
+Nelle basi di dati funziona come in sisop
+man mano che riempiamo una tabella il DBMS inserisce le tuple all'interno delle pagine secondo qualche criterio
+Nel momento in cui cerchiamo una tupla se so qual è la pagina in cui si trova la tupla il sistema operativo andrà nella memoria secondaria e carica in memoria centrale tutta la pagina che contiene, tra le altre, la tupla di nostro interesse.
+Se devo leggere una tupla contenuta in una pagina già presente in memoria non la ricarico: lascio la pagina in memoria finché ho spazio, conviene mantenerla per velocità
+La RAM lavora su ordini di grandezza dei Ghz, mentre per la memoria secondaria siamo nell'ordine dei Mhz.
+Si sopperisce alla lentezza prendendo dall'hard disk una pagina per volta (tipicamente 4 KB)
+Qualunque sistema si usi per inserire tuple e memorizzarle nella memoria secondaria dobbiamo cercare di rappresentarle riducendo i buchi, ottimizzando lo spazio (link alla frammentazione)
+Su queste informazioni il modello di costo delle operazioni di un DBMS si basa sul numero di pagine su cui accediamo
+I passi necessari a compiere operazioni sulle tuple una volta che sono in RAM sono di ordini di grandezza diverse (costi intrapagina), trascurabile rispetto all'accesso alle pagine.
+Conviene quindi che in una pagina ci siano il maggior numero possibile di tuple: riduco i costi effettivi.
+Bisogna evitare di avere molti attributi che ammettono `NULL` proprio per questo, aumentiamo gli spazi inutili che deve contenere una pagina.
+Devo trovare un modo che facilita le operazioni effettuate sul DBMS:
+
+**Ricerca**
+la ricerca delle tuple serve sia per le ricerche stesse che per l'inserimento
+tipicamente basata sul vincolo di chiave primaria, devo quindi considerare la chiave primaria come un aspetto fondamentale dell'allocazione
+ma non basta: potrei ordinare gli elementi in base alla chiave primaria, ma poi non avrebbe nessun effetto sull'ottimizzazione di una ricerca non basata sulla chiave primaria
+dobbiamo cercare dei criteri che supportano ricerche di ogni tipo
+quando valutiamo una bontà di una soluzione va valutata sul numero di accessi alle pagine
+Una delle strutture dati più usate normalmente nella memoria centrale è la [[Strutture dati#Tabelle Hash|tabella hash]]: la ricerca è costante, ma per calcolare la funzione di Hash ho bisogno degli attributi usati per il calcolo dell'Hash
+Ora non abbiamo più celle di un array, ma pagine in memoria secondaria. La funzione di hash non mi deve restituire l'indice di un array, ma l'indice di pagina dove tipicamente non è paragonabile al numero di oggetti che può contenere. In memoria centrale era molto importante evitare le collisioni, qui invece avere collisione vuol dire avere più tuple nella stessa pagina, ma non sono elementi da aggiungere ad una linked list che poi andrà esplorata, ma è il comportamento richiesto. Va bene che le tuple vadano nella stessa pagina, la ricerca della tupla esatta avviene solo dopo aver riportato la pagina in RAM. Rimane comunque il problema che le tuple contenute in una pagina non sono infinite.
+
+### Hashing statico
+La dimensione del numero di pagine rimane costante
+$t \to k \to H(k) = k \ \text{mod} \ M$
+dove $k$ è una chiave numerica (es somma dei codici asci dei caratteri) ed $M$ è il numero di bucket disponibili
+*es.*
+$t' \to k = 8 \to 8\text{ mod } 4 = 0$
+$t'' \to k = 13 \to 13\text{ mod } 4 = 1$
+$t''' \to k = 4 \to 4\text{ mod }4 = 0$
+
+| 0         | 1     | 2   | 3   |
+| --------- | ----- | --- | --- |
+| $t',t'''$ | $t''$ |     |     |
+
+I costi che dobbiamo considerare sono solo quelli relativi all'accesso della pagina
+Quindi la ricerca di una tupla ci costa 1 accesso alla pagina
+Anche per l'inserimento ci serve la ricerca, e poi l'inserimento effettivo: 2 accessi
+
+Nella creazione di un database c'è un modo per organizzare le tuple sulla base di una tabella hash la cui funzione di hash è basata su un attributo specifico che sappiamo avrà un ruolo chiave nella ricerca degli elementi.
+
+Come gestiamo il riempimento di  una pagina?
+creiamo delle liste di trabocco:
+non posso aumentare $M$, le tuple il cui hash è già stato calcolato andrebbero redistribuite
+creiamo delle pagine in più in cui mettere dei dati
+esattamente come in memoria centrale creiamo una ulteriore pagina linkata alla pagina piena: lista di trabocco per le pagine piene.
+
+Rispetto alla memoria centrale non funziona tanto bene questa cosa
+dobbiamo cercare di occupare le pagine al meglio, facendo in questo modo potrebbe essere creata una pagina di trabocco solo per una tupla, mentre ci sono pagine normali ancora vuote.
+Il fattore di riempimento delle pagine di trabocco è molto basso
+Peggiora ulteriormente la ricerca su attributi su cui non calcoliamo l'hash.
+Dobbiamo cercare di avere fattori di riempimento delle pagine elevati.
+
+#### Liste coalescenti
+Nel momento in cui si riempie una pagina inseriamo al suo interno un puntatore ad un altra pagina, la più vuota. In questo modo compenso sia il riempimento eccessivo della prima pagina, sia il riempimento non sufficiente della seconda.
+Se c'è un trabocco anche nella seconda a sua volta punterà ad una terza pagina, che conterrà sia i trabocchi della prima che della seconda: si presenta lo stesso problema di prima, lunghe liste di trabocco che contengono elementi di diverse pagine originarie.
+Un incubo: **frammentazione** aiuto
+
+#### Record linkati
+Ragioniamo a livello di record
+invece di assegnare ad ogni pagina un'altra pagina, creiamo una lista in cui
+per ogni tupla mantengo il numero di pagina in cui si trova quella successiva
+so a livello di tupla dove si trova la successiva
+($\neq$ liste coalescenti non per ogni pagina salvo la pagina successiva)
+%% da capire meglio %%
+Potremmo anche unire questo metodo alle pagine di trabocco, linkate non tramite pagina, ma tramite record successivi (l'unica differenza dei record linkati è che le pagine in cui inseriamo i trabocchi sono separati dalle $M$ pagine)
+a parità di numero di numero di tuple usiamo più pagine, in teoria uso peggio la memoria, ma nella prima soluzione tendo a favorire i trabocchi, riempiamo pagine che devono contenere altri elementi; il trabocco di una pagina di trabocco non favorisce il trabocco delle pagine normali.
+
+Le pagine che ho chiamato fino ad ora si chiamano Area primaria (va cambiato il nome tutte le volte che l'ho usato)
+Nell'hard disk vengono istanziate ottimizzando la loro lettura (meno spostamenti della testina), ma non possiamo dare la certezza che questo avvenga anche nelle pagine di trabocco che vengono create in maniera estemporanea.
+
+In quest'ultima soluzione anche per questo motivo i costi reali potrebbero essere maggiori.
+
+#### Hashing lineare a indirizzamento aperto
+[[Strutture dati#Indirizzamento aperto|indirizzamento aperto]]
+Uso una serie di funzioni hash $H_i(k)$ in cui
+$$
+H_i(k) = (H(k)+1) \ \text{mod} \ M
+$$
+all'$i$esimo trabocco aumento $H(k)$ di $i$
+Se ho un trabocco nella pagina 2 lo aumento di una ulteriore quantità
+**Agglomerazione primaria**
+[[Strutture dati#^2e21f9|Agglomerazione]]
+Rimangono i problemi della prima parte dei Record linkati (va chiamata anche lì agglomerazione).
+
+%% Libro consigliato: A. Albano - costruire sistemi per basi di dati %%
+### Hashing dinamico
+%% prossima lezione %%

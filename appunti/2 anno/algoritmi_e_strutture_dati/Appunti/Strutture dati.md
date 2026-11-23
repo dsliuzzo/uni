@@ -542,6 +542,9 @@ per 0 <= i < m
 >$$c(k,i) = \lfloor h_{1}(k) + i \cdot h_{2}(k) \rfloor \% m $$
 >per $0\leq i <m, h_{1}$ e $h_{2}$ funzioni hash
 
+^2e21f9
+
+^agglomerazione
 >[!bug] Una volta occupate tutte le celle con indirizzamento aperto dobbiamo aumentare lo spazio eseguendo una riallocazione
 
 #### Lista di overflow globale

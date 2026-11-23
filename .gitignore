@@ -27,7 +27,6 @@ BarberShop-master/
 .DS_Store
 /appunti/.claude
 
-# barberia-app: da tenere solo in locale
 code/web/barberia-app/
 .DS_Store
 /appunti/.claude
