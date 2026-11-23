@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="180" viewBox="0 0 580 180">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .s{fill:none;stroke:#b8b8b8;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round} .a{fill:none;stroke:#b8b8b8;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#b8b8b8" stroke-width="1.5"/></pattern></defs>
+<text class="ts" x="105" y="55">0</text>
+<text class="ts" x="195" y="55">1</text>
+<text class="ts" x="285" y="55">2</text>
+<text class="ts" x="375" y="55">3</text>
+<rect class="s" x="60" y="70" width="360" height="90" rx="6" style="fill:none"/>
+<line class="s" x1="150" y1="70" x2="150" y2="160" style=""/>
+<line class="s" x1="240" y1="70" x2="240" y2="160" style=""/>
+<line class="s" x1="330" y1="70" x2="330" y2="160" style=""/>
+<text class="t" x="80" y="90">t′</text>
+<text class="t" x="118" y="135">t‴</text>
+<text class="t" x="172" y="90">t″</text>
+<text class="t" x="520" y="40">M = 4</text>
+<path class="a" d="M405 60 L478 46" style=""/>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="215" viewBox="0 0 520 215">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .s{fill:none;stroke:#b8b8b8;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round} .a{fill:none;stroke:#b8b8b8;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="9" stroke="#b8b8b8" stroke-width="1.5"/></pattern></defs>
+<rect class="s" x="40" y="30" width="440" height="90" rx="6" style="fill:none"/>
+<line class="s" x1="150" y1="30" x2="150" y2="120" style=""/>
+<line class="s" x1="260" y1="30" x2="260" y2="120" style=""/>
+<line class="s" x1="370" y1="30" x2="370" y2="120" style=""/>
+<text class="t" x="65" y="55">t<tspan font-size="10" dy="4">1</tspan></text>
+<circle class="s" cx="112" cy="95" r="16"/>
+<text class="t" x="112" y="95">t<tspan font-size="10" dy="4">2</tspan></text>
+<text class="t" x="285" y="50">t<tspan font-size="10" dy="4">3</tspan></text>
+<circle class="s" cx="300" cy="92" r="16"/>
+<text class="t" x="300" y="92">t<tspan font-size="10" dy="4">4</tspan></text>
+<text class="t" x="405" y="55">t<tspan font-size="10" dy="4">5</tspan></text>
+<path class="a" d="M112 111 C112 165 240 150 282 99" style=""/>
+<path class="a" d="M300 108 C300 165 390 160 398 72" style=""/>
+<text class="t" x="260" y="195">record linkati</text>
+</svg>

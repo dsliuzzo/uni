@@ -908,6 +908,7 @@ Servono delle strutture dati per la memoria secondaria (non vanno bene le classi
 Le strutture a puntatori non sono implementabili in memoria secondaria, dove non possiamo accedere a un singolo dato, accediamo a pagine (link a sisop)
 Nelle basi di dati funziona come in sisop
 man mano che riempiamo una tabella il DBMS inserisce le tuple all'interno delle pagine secondo qualche criterio
+![[Esercizi Furfaro-pagine-fornitore.svg|center|600]]
 Nel momento in cui cerchiamo una tupla se so qual è la pagina in cui si trova la tupla il sistema operativo andrà nella memoria secondaria e carica in memoria centrale tutta la pagina che contiene, tra le altre, la tupla di nostro interesse.
 Se devo leggere una tupla contenuta in una pagina già presente in memoria non la ricarico: lascio la pagina in memoria finché ho spazio, conviene mantenerla per velocità
 La RAM lavora su ordini di grandezza dei Ghz, mentre per la memoria secondaria siamo nell'ordine dei Mhz.
@@ -927,6 +928,7 @@ dobbiamo cercare dei criteri che supportano ricerche di ogni tipo
 quando valutiamo una bontà di una soluzione va valutata sul numero di accessi alle pagine
 Una delle strutture dati più usate normalmente nella memoria centrale è la [[Strutture dati#Tabelle Hash|tabella hash]]: la ricerca è costante, ma per calcolare la funzione di Hash ho bisogno degli attributi usati per il calcolo dell'Hash
 Ora non abbiamo più celle di un array, ma pagine in memoria secondaria. La funzione di hash non mi deve restituire l'indice di un array, ma l'indice di pagina dove tipicamente non è paragonabile al numero di oggetti che può contenere. In memoria centrale era molto importante evitare le collisioni, qui invece avere collisione vuol dire avere più tuple nella stessa pagina, ma non sono elementi da aggiungere ad una linked list che poi andrà esplorata, ma è il comportamento richiesto. Va bene che le tuple vadano nella stessa pagina, la ricerca della tupla esatta avviene solo dopo aver riportato la pagina in RAM. Rimane comunque il problema che le tuple contenute in una pagina non sono infinite.
+![[Esercizi Furfaro-funzione-hash.svg|center|600]]
 
 ### Hashing statico
 La dimensione del numero di pagine rimane costante
@@ -940,6 +942,7 @@ $t''' \to k = 4 \to 4\text{ mod }4 = 0$
 | 0         | 1     | 2   | 3   |
 | --------- | ----- | --- | --- |
 | $t',t'''$ | $t''$ |     |     |
+![[Esercizi Furfaro-hashing-statico.svg|center|600]]
 
 I costi che dobbiamo considerare sono solo quelli relativi all'accesso della pagina
 Quindi la ricerca di una tupla ci costa 1 accesso alla pagina
@@ -952,6 +955,7 @@ creiamo delle liste di trabocco:
 non posso aumentare $M$, le tuple il cui hash è già stato calcolato andrebbero redistribuite
 creiamo delle pagine in più in cui mettere dei dati
 esattamente come in memoria centrale creiamo una ulteriore pagina linkata alla pagina piena: lista di trabocco per le pagine piene.
+![[Esercizi Furfaro-lista-trabocco.svg|center|600]]
 
 Rispetto alla memoria centrale non funziona tanto bene questa cosa
 dobbiamo cercare di occupare le pagine al meglio, facendo in questo modo potrebbe essere creata una pagina di trabocco solo per una tupla, mentre ci sono pagine normali ancora vuote.
@@ -963,6 +967,7 @@ Dobbiamo cercare di avere fattori di riempimento delle pagine elevati.
 Nel momento in cui si riempie una pagina inseriamo al suo interno un puntatore ad un altra pagina, la più vuota. In questo modo compenso sia il riempimento eccessivo della prima pagina, sia il riempimento non sufficiente della seconda.
 Se c'è un trabocco anche nella seconda a sua volta punterà ad una terza pagina, che conterrà sia i trabocchi della prima che della seconda: si presenta lo stesso problema di prima, lunghe liste di trabocco che contengono elementi di diverse pagine originarie.
 Un incubo: **frammentazione** aiuto
+![[Esercizi Furfaro-liste-coalescenti.svg|center|600]]
 
 #### Record linkati
 Ragioniamo a livello di record
@@ -970,6 +975,7 @@ invece di assegnare ad ogni pagina un'altra pagina, creiamo una lista in cui
 per ogni tupla mantengo il numero di pagina in cui si trova quella successiva
 so a livello di tupla dove si trova la successiva
 ($\neq$ liste coalescenti non per ogni pagina salvo la pagina successiva)
+![[Esercizi Furfaro-record-linkati.svg|center|600]]
 %% da capire meglio %%
 Potremmo anche unire questo metodo alle pagine di trabocco, linkate non tramite pagina, ma tramite record successivi (l'unica differenza dei record linkati è che le pagine in cui inseriamo i trabocchi sono separati dalle $M$ pagine)
 a parità di numero di numero di tuple usiamo più pagine, in teoria uso peggio la memoria, ma nella prima soluzione tendo a favorire i trabocchi, riempiamo pagine che devono contenere altri elementi; il trabocco di una pagina di trabocco non favorisce il trabocco delle pagine normali.
@@ -988,6 +994,7 @@ $$
 all'$i$esimo trabocco aumento $H(k)$ di $i$
 Se ho un trabocco nella pagina 2 lo aumento di una ulteriore quantità
 **Agglomerazione primaria**
+![[Esercizi Furfaro-agglomerazione-primaria.svg|center|600]]
 [[Strutture dati#^2e21f9|Agglomerazione]]
 Rimangono i problemi della prima parte dei Record linkati (va chiamata anche lì agglomerazione).
 
