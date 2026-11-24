@@ -26,6 +26,8 @@ BarberShop-master/
 /appunti/.obsidian/plugins/*
 # la Galassia (plugin di project_UI) è nel repo, così chi scarica il vault la ha già attiva
 !/appunti/.obsidian/plugins/project-ui-galaxy/
+# le impostazioni salvate da Obsidian restano locali: niente conflitti al pull
+/appunti/.obsidian/plugins/project-ui-galaxy/data.json
 .DS_Store
 /appunti/.claude
 
