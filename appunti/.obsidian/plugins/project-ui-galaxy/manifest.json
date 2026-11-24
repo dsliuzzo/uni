@@ -1,0 +1,9 @@
+{
+  "id": "project-ui-galaxy",
+  "name": "Galassia",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Il vault come galassia 3D: un braccio per anno, un ammasso con nebulosa per corso, i link come filamenti.",
+  "author": "Davide",
+  "isDesktopOnly": true
+}

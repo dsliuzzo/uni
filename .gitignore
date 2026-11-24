@@ -23,7 +23,9 @@ SpringProjectPSW/
 BarberShop-master/
 /appunti/.claude
 .DS_Store
-/appunti/.obsidian/plugins
+/appunti/.obsidian/plugins/*
+# la Galassia (plugin di project_UI) è nel repo, così chi scarica il vault la ha già attiva
+!/appunti/.obsidian/plugins/project-ui-galaxy/
 .DS_Store
 /appunti/.claude
 
