@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="200" viewBox="0 0 360 200">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .ts{font-size:12px} .th{font-size:14px;font-weight:500}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<rect x="60" y="60" width="200" height="70" rx="4"/>
+<line x1="87" y1="20" x2="87" y2="60"/>
+<line x1="93" y1="20" x2="93" y2="60"/>
+<line x1="227" y1="20" x2="227" y2="60"/>
+<line x1="233" y1="20" x2="233" y2="60"/>
+<line x1="300" y1="95" x2="260" y2="95" marker-end="url(#arrow)"/>
+<line x1="157" y1="130" x2="157" y2="175"/>
+<line x1="163" y1="130" x2="163" y2="175"/>
+<polyline points="82,50 90,59 98,50"/>
+<polyline points="222,50 230,59 238,50"/>
+<polyline points="152,168 160,177 168,168"/>
+</g>
+<text x="150" y="95" class="th" style="fill:#b48ead;">RCA</text>
+<text x="240" y="95" class="ts">cin</text>
+<text x="105" y="20" class="ts">A</text>
+<text x="245" y="20" class="ts">B</text>
+<text x="320" y="95" class="ts">'0'</text>
+<text x="175" y="175" class="ts">S</text>
+</svg>

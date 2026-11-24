@@ -903,39 +903,47 @@ end Sim;
 ```
 
 # Circuiti sequenziali in vhdl
-[[Circuiti integrati digitali#Circuiti sequenziali]]
+[[Circuiti integrati digitali#Circuiti sequenziali|circuiti sequenziali]]
 
 Ciò che scriviamo all'interno del process è un gruppo di statement sequenziali, ma il process può essere messo in qualsiasi posizione dell'architecture senza modificare il suo funzionamento.
 
-Usare un `if then else` fuori dal `process` o una instaziazione fuori dal process all'esame sono considerati errori gravi
+>[!warning] Usare un `if then else` fuori dal `process` o una istanziazione fuori dal process all'esame sono considerati errori gravi
+
 ## Latch
-[[Circuiti integrati digitali#Latch]]
+[[Circuiti integrati digitali#Latch|latch]]
 ``` vhdl
-Library IEEE
+Library IEEE;
 use ieee.std_logic_1164.all;
-Entity LatchN is
+
+entity LatchN is
 port(
 	D, clk: in std_logic;
 	Q: out std_logic);
-Architecture myLN of LatchN is
+end LatchN;
+
+architecture myLN of LatchN is
 -- prima di qualsiasi cosa devo verificare
 -- se clk = 0
 --   Q <= D
 -- altrimenti Q non cambia
 begin
-	process (clk, D) begin -- va aggiunta la sensitivity list (elenco di tutti i segnali o porte di ingresso o porte di ingresso del circuito che in maniera diretta possono far cambiare un altro segnale o una porta di uscita)
-		if clk = 0 then Q <= D;
+	process (clk, D) begin -- va aggiunta la sensitivity list
+		if clk = '0' then Q <= D;
+		-- else: non serve, Q non cambia e quindi non lo scrivo
 		end if;
 	end process;
 end myLN;
 ```
 
+>[!important] Sensitivity list
+>Elenco di tutti i segnali o porte di ingresso del circuito che in maniera diretta possono far cambiare un altro segnale o una porta di uscita.
+
 ## Flip-Flop
-[[Circuiti integrati digitali#Flip flop]]
+[[Circuiti integrati digitali#Flip-Flop|flip-flop]]
 descrizione di un flip flop sensibile ai segnali di salita
 ![[Sequenziali-flipflop-semplice.svg|center|250]]
 ``` vhdl
-library IEEE
+library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity FF_R is
@@ -946,7 +954,7 @@ end FF_R;
 
 architecture behav of FF_R is
 begin
-	process(clk) -- solo il clk perchè nessun cambiamento dell'ingresso D può direttamente provocare una commutazione su Q
+	process(clk) begin -- solo il clk perchè nessun cambiamento dell'ingresso D può direttamente provocare una commutazione su Q
 		if rising_edge(clk) then-- verifichiamo se si verifica l'evento attivo del clk (fronte di salita). Usiamo il costrutto rising_edge
 			Q <= D;
 		end if;
@@ -957,7 +965,7 @@ end behav;
 supponendo che il FF sia sensibile al fronte di discesa
 ![[Sequenziali-flipflop-discesa.svg|center|250]]
 ``` vhdl
-library IEEE
+library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity FF_F is
@@ -968,7 +976,7 @@ end FF_F;
 
 architecture behav of FF_F is
 begin
-	process(clk) -- solo il clk perchè nessun cambiamento dell'ingresso D può direttamente provocare una commutazione su Q
+	process(clk) begin -- solo il clk perchè nessun cambiamento dell'ingresso D può direttamente provocare una commutazione su Q
 		if falling_edge(clk) then-- verifichiamo se si verifica l'evento attivo del clk (fronte di discesa). Usiamo il costrutto falling_edge
 			Q <= D;
 		end if;
@@ -979,7 +987,7 @@ end behav;
 Supponiamo ora di inserire il preset
 ![[Sequenziali-flipflop-discesa-preset.svg|center|250]]
 ``` vhdl
-library IEEE
+library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity FF_RP is
@@ -990,7 +998,7 @@ end FF_RP;
 
 architecture behav of FF_RP is
 begin
-	process(clk, Pr) -- aggiungo alla sensitivity list il Pr
+	process(clk, Pr) begin -- aggiungo alla sensitivity list il Pr
 		if (Pr = '1') then Q <= '1';
 		else
 			if falling_edge(clk) then
@@ -1002,7 +1010,7 @@ end behav;
 ```
 
 ## Registri
-[[Circuiti integrati digitali#Registri]]
+[[Circuiti integrati digitali#Registri|registri]]
 Supponiamo di voler descrivere il comportamento di un registro a 4 bit
 questo registra usa 4 FF_RP
 ogni FF riceve una parola in ingresso a 4 bit, il segnale di clock condiviso (arriva a tutti e 4), anche il Pr condiviso da tutti i FF e restituiscono Q
@@ -1010,7 +1018,7 @@ ogni FF riceve una parola in ingresso a 4 bit, il segnale di clock condiviso (ar
 Lo possiamo rappresentare con un singolo blocco
 ![[Sequenziali-registro-4bit.svg|center|300]]
 ``` vhdl
-library IEEE
+library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity Reg4b is
@@ -1018,7 +1026,7 @@ entity Reg4b is
 		clk, Pr: in std_logic;
 		D: in std_logic_vector(3 downto 0);
 		Q: out std_logic_vector(3 downto 0));
-end Reg4b
+end Reg4b;
 
 architecture myReg4b of Reg4b is
 -- non ci servono signal perchè tutti i FF ricevono direttamente gli ingressi
@@ -1033,7 +1041,7 @@ begin
 	FF2: FF_RP port map(D(2), clk, Pr, Q(2));
 	FF3: FF_RP port map(D(3), clk, Pr, Q(3));
 	-- si potrebbe usare anche il for generate con lo stesso risultato
-end myReg4;
+end myReg4b;
 ```
 si può fare anche
 ``` vhdl
@@ -1068,14 +1076,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 entity RegNb is
-generic(n: integer := 4);
-
-entity Reg4b is
+	generic(n: integer := 4);
 	port(
 		clk, Pr: in std_logic;
 		D: in std_logic_vector(n-1 downto 0);
 		Q: out std_logic_vector(n-1 downto 0));
-end Reg4b
+end RegNb;
 
 architecture myRegNb of RegNb is
 begin
@@ -1112,10 +1118,11 @@ end tb_Reg;
 
 architecture SimReg of tb_Reg is
 component RegNb
+	generic(n: integer := 4);
 	port(
 		clk, Pr: in std_logic;
 		D: in std_logic_vector(n-1 downto 0);
-		Q: in std_logic_vector(n-1 downto 0));
+		Q: out std_logic_vector(n-1 downto 0));
 end component;
 
 signal clk, Pr: std_logic := '0';
@@ -1123,14 +1130,15 @@ signal D, Q: std_logic_vector (n-1 downto 0);
 constant T:time := 10 ns;
 
 begin
-	circ: RegNb port map(clk, Pr, D, Q);
-	-- definiamo dei process che agiranno in parallelo
+	circ: RegNb generic map(n) port map(clk, Pr, D, Q);
+	-- definiamo dei process che agiranno in parallelo (invertire ProcPr e ProcD non cambia il flusso di esecuzione)
 	ProcPr: process begin -- t = 0
 		Pr <= '0';
 		wait for 2 ns; -- t = 2 ns
 		Pr <= '1';
 		wait for 2 ns; -- t = 4 ns
-		Pr <= '0'
+		Pr <= '0';
+		wait; -- senza wait finale il process ricomincia e ripete il preset ogni 4 ns
 	end process;
 	ProcD: process begin -- il tempo di attesa tra un cambiamento e l'altro di D sarà sempre pari al periodo del clk, quindi a questo punto definiamo una costante
 		D <= (others => '0');
@@ -1139,11 +1147,182 @@ begin
 		wait for T; -- t = 18 ns
 		D <= (others => '0');
 		wait for T; -- t = 28 ns
-		D <= (others => '1')
+		D <= (others => '1');
+		wait; -- senza wait finale il process ricomincia da D = 0
 	end process;
 	Prclk: process begin -- il clk ha già un valore iniziale specificato nella sua dichiarazione
 		wait for T/2;
 		clk <= not clk;
 	end process;
-end simReg;
+end SimReg;
 ```
+
+### Registro a 8 bit con clear e set
+Registro a 8 bit con **clear asincrono** e **set sincrono** ([[Circuiti integrati digitali#Segnali di preset e clear|preset e clear]]):
+>[!multi-column]
+>
+>>[!blank]
+>>- `clr` compare nella sensitivity list ed è controllato prima del fronte di clock: appena vale `'1'` azzera l'uscita, indipendentemente dal clock;
+>>- `set` viene controllato solo all'interno di `rising_edge(clk)`: porta tutti i bit a `'1'` solo in corrispondenza di un fronte di salita;
+>>- se nessuno dei due è attivo, al fronte di salita il registro memorizza l'ingresso `D`.
+>
+>>[!blank]
+>>![[VHDL-reg8sc.svg|center]]
+
+``` vhdl
+Library IEEE;
+use ieee.std_logic_1164.all;
+
+entity Reg8SC is
+	port(
+		D: in std_logic_vector(7 downto 0);
+		clk, clr, set: in std_logic;
+		Q: out std_logic_vector(7 downto 0)
+	);
+end Reg8SC;
+
+architecture behav of Reg8SC is
+begin
+	process(clk, clr) begin
+		if (clr = '1') then Q <= (others => '0');
+		elsif rising_edge(clk) then -- alternativamente a else if
+			if (set = '1') then Q <= (others => '1');
+			else Q <= D;
+			end if;
+		end if;
+	end process;
+end behav;
+```
+^reg8sc
+
+## Sommatore sincrono (registri + RCA)
+Ripple carry sincronizzato (implementazione del clock): uniamo registri e reti combinatorie.
+- In ingresso sugli operandi mettiamo dei **registri** sensibili ai fronti di salita del clock: il circuito riceve la nuova coppia di dati solo quando c'è un fronte di salita del clock.
+- Deve essere sincronizzata anche l'uscita: inseriamo un ulteriore registro, identico a quelli usati per gli ingressi, che contiene l'uscita del ripple carry. L'uscita di questo registro diventa l'**uscita sincronizzata** del sommatore.
+- A questi registri possiamo aggiungere un ulteriore segnale di controllo (es. segnale di clear).
+
+Tutti i registri sono comandati dallo stesso clock, quindi ingressi e uscita cambiano solo sui fronti di salita.
+>[!multi-column]
+>
+>>[!blank]
+>>![[VHDL-sommatore-rca.svg|center|600]]
+>
+>>[!blank]
+>>![[VHDL-sommatore-reg-rca.svg|center]]
+
+Internamente l'RCA può essere descritto con i segnali di **generate** e **propagate** di ogni bit:
+- $g_i = A_i \cdot B_i$: il bit $i$ genera un riporto indipendentemente dal riporto entrante;
+- $p_i = A_i \oplus B_i$: il bit $i$ propaga il riporto entrante;
+- $c_{i+1} = g_i + p_i \cdot c_i$ e $S_i = p_i \oplus c_i$.
+
+![[VHDL-sommatore-carry-gp.svg|center]]
+
+Con un approccio strutturale dovremmo istanziare e collegare ogni component (registri e full adder): seguiamo quindi un approccio `behavioural`, descrivendo i registri con un process e il sommatore con assegnazioni concorrenti basate su $g$ e $p$.
+Gli ingressi sono a `4 bit` in complemento a 2. La somma di due numeri a 4 bit può richiedere 5 bit, quindi gli operandi vengono estesi in segno di un bit (il bit 4 di $p$ e $g$ si calcola ripetendo il bit di segno `A(3)`, `B(3)`) e l'uscita `SS` è a 5 bit.
+
+``` vhdl
+Library IEEE;
+use ieee.std_logic_1164.all;
+
+entity RegAdd4 is
+	port(
+		AA, BB: in std_logic_vector(3 downto 0);
+		clk, clr: in std_logic;
+		SS: out std_logic_vector(4 downto 0)
+	);
+end RegAdd4;
+
+architecture myRA of RegAdd4 is
+signal A, B: std_logic_vector(3 downto 0);
+signal S: std_logic_vector(4 downto 0);
+signal carry: std_logic_vector(5 downto 0);
+signal p, g: std_logic_vector(4 downto 0);
+
+begin
+	-- registri: il corpo del process è sequenziale
+	process(clk, clr) begin
+		if (clr = '1') then
+			A <= (others => '0');
+			B <= (others => '0');
+			SS <= (others => '0');
+		elsif rising_edge(clk) then
+			A <= AA; B <= BB; SS <= S;
+		end if;
+	end process;
+	-- sommatore: assegnazioni concorrenti fuori dal process
+	p(4) <= A(3) xor B(3);
+	g(4) <= A(3) and B(3);
+	p(3 downto 0) <= A xor B;
+	g(3 downto 0) <= A and B;
+	carry(0) <= '0';
+	carry(5 downto 1) <= g or (p and carry(4 downto 0));
+	S <= p xor carry(4 downto 0);
+end myRA;
+```
+^regadd4
+
+### Diagramma di timing
+Analizziamo il diagramma di timing del circuito, privato del segnale di clear per semplicità, per ricavare l'andamento temporale dei segnali `A, B, S, SS`.
+
+![[VHDL-sommatore-noclear.svg|center]]
+Assegniamo agli ingressi `AA, BB` dei valori arbitrari, purché rappresentabili su 4 bit in complemento a 2 (intervallo $[-8, 7]$).
+![[VHDL-sommatore-timing.svg|center]]
+Segniamo gli eventi attivi, cioè i fronti di salita del clock. Prima del primo fronte i registri non hanno ancora campionato nulla, quindi `A, B` hanno valore **indefinito** (`'x'`), e di conseguenza anche `S` e `SS`.
+![[VHDL-sommatore-timing-2.svg|center]]
+Proseguendo nel tempo:
+- ad ogni fronte di salita i registri di ingresso campionano `AA, BB` e li presentano su `A, B`: `0,0` → `3,4` → `-1,1` → `-2,4`;
+- il sommatore è una rete combinatoria: `S` cambia poco dopo `A, B`, dopo il ritardo di propagazione dell'RCA $t_{sum}$ (per questo le transizioni di `S` non coincidono con i fronti). Passa da `'x'` a $0+0=0$, poi a $3+4=7$ e a $-1+1=0$;
+- il registro di uscita campiona `S` al fronte successivo, quindi `SS` è `S` ritardato di un ciclo: resta `'x'` fino al secondo fronte, poi vale `0`, dal terzo fronte `7` e dal quarto `0`.
+
+Il risultato di una coppia di operandi è quindi disponibile su `SS` un ciclo di clock dopo il fronte in cui è stata campionata su `A, B` (es. `3,4` campionati al 2° fronte → `SS = 7` dal 3° fronte).
+![[VHDL-sommatore-timing-3.svg|center]]
+Diagramma completo:
+![[VHDL-sommatore-timing-4.svg|center]]
+
+### Vincoli sul periodo di clock
+Perché il registro di uscita campioni il risultato corretto, `S` deve essere stabile prima del fronte successivo. Ipotizzando ad esempio:
+- $t_{sum}=3 \ ns$
+- $T = 2 \ ns$
+
+il periodo di clock è più breve del tempo necessario a calcolare la somma: al fronte successivo `S` non è ancora valido e in `SS` verrebbe memorizzato un valore errato. Leggere in anticipo il dato di un sommatore vuol dire ricevere un dato **non valido**.
+Deve quindi valere la condizione:
+$$
+T \geq t_{sum} + t_{setup}
+$$
+dove $t_{setup}$ è il tempo per cui il dato deve restare stabile all'ingresso del registro prima del fronte di clock ([[Circuiti integrati digitali#Vincoli temporali|vincoli temporali]]).
+
+$t_{sum}$ non è costante: per ogni coppia di valori in ingresso, più full adder deve attraversare il riporto, maggiore sarà il tempo necessario a ricevere il risultato dal sommatore.
+Perciò $t_{sum}$ si prende pari al tempo **massimo** che il circuito impiega a generare un risultato, dato in ingresso un qualsiasi valore (**caso peggiore** $t_{sum,\,max}$): è la combinazione di operandi per cui il riporto si propaga attraverso **tutti** i FA (es. $-1+1$: `00001 + 11111`, il bit 0 genera il riporto e tutti gli altri lo propagano). Se il periodo fosse dimensionato su un caso più favorevole, per alcuni operandi il registro di uscita leggerebbe `S` in anticipo, campionando un risultato non ancora valido.
+
+Questa operazione si fa per tutti i circuiti sincroni:
+$$
+\text{worst case} + t_{setup} = \text{periodo di clock a cui lavora l'intero sistema}
+$$
+
+### Latenza e throughput
+>[!multi-column]
+>
+>>[!important] Latenza
+>>La **latenza** è il numero di cicli di clock da attendere prima di visualizzare il primo risultato valido, cioè dopo che gli operandi sono stati campionati.
+>
+>>[!important] Throughput
+>>Il **throughput** è il **rate** a cui viene restituito un risultato valido: quanti risultati validi fornisce il circuito ad ogni ciclo di clock.
+
+Solo il primo ciclo di clock ammette latenza: poi ad ogni nuovo fronte di salita del clock il circuito restituisce un valore valido.
+Nel caso dell'esempio:
+- **latenza**: $L=1 \to$ il risultato degli operandi campionati a un fronte compare su `SS` al fronte successivo, quindi si attende un ciclo di clock per il primo risultato valido;
+- **throughput**: $tp = 1 \to$ a regime il circuito restituisce un nuovo risultato ad ogni ciclo di clock, perché ad ogni fronte vengono campionati nuovi operandi mentre si memorizza la somma dei precedenti.
+
+## Prova d'esame
+Ingresso in complemento a 2
+
+| C   | A(3:0) | Ris    |                               |
+| --- | ------ | ------ | ----------------------------- |
+| '0' | -      | A + 1  | $\equiv (A+0)+1$              |
+| '1' | -      | -A + 1 | $\equiv (\overline{A} + 1)+1$ |
+
+uno degli operandi è comune: circuito sommatore che abbia un ingresso costante pari a 1
+`B = '0001'`
+A invece deve cambiare in base al valore di C
+`-A = not(A) + 1`
+Posso usare il $C_{\text{in}}$ del sommatore per gestire l'ultimo +1 rimanente

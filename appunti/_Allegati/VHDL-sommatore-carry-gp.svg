@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="330" viewBox="0 0 860 330">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .ts{font-size:12px}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<line x1="700" y1="25" x2="700" y2="40"/>
+<polyline points="673,60 673,40 733,40 733,54"/>
+<circle cx="700" cy="40" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<line x1="720" y1="25" x2="720" y2="50"/>
+<polyline points="687,60 687,50 747,50 747,55"/>
+<circle cx="720" cy="50" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<path d="M665,60 L695,60 L695,74 A15,15 0 0 1 665,74 Z"/>
+<path d="M725,60 Q740,68 755,60 Q755,82 740,92 Q725,82 725,60 Z"/><path d="M725,54 Q740,62 755,54"/>
+<polyline points="740,92 740,130 753,130 753,150"/>
+<path d="M745,150 L775,150 L775,164 A15,15 0 0 1 745,164 Z"/>
+<polyline points="680,88 680,198 693,198 693,206"/>
+<polyline points="760,179 760,192 707,192 707,206"/>
+<path d="M685,206 Q700,214 715,206 Q715,228 700,238 Q685,228 685,206 Z"/>
+<line x1="700" y1="238" x2="700" y2="275"/>
+<circle cx="700" cy="260" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<polyline points="700,260 580,260 580,138 567,138 567,150"/>
+<polyline points="810,138 767,138 767,150"/>
+<line x1="500" y1="25" x2="500" y2="40"/>
+<polyline points="473,60 473,40 533,40 533,54"/>
+<circle cx="500" cy="40" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<line x1="520" y1="25" x2="520" y2="50"/>
+<polyline points="487,60 487,50 547,50 547,55"/>
+<circle cx="520" cy="50" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<path d="M465,60 L495,60 L495,74 A15,15 0 0 1 465,74 Z"/>
+<path d="M525,60 Q540,68 555,60 Q555,82 540,92 Q525,82 525,60 Z"/><path d="M525,54 Q540,62 555,54"/>
+<polyline points="540,92 540,130 553,130 553,150"/>
+<path d="M545,150 L575,150 L575,164 A15,15 0 0 1 545,164 Z"/>
+<polyline points="480,88 480,198 493,198 493,206"/>
+<polyline points="560,179 560,192 507,192 507,206"/>
+<path d="M485,206 Q500,214 515,206 Q515,228 500,238 Q485,228 485,206 Z"/>
+<line x1="500" y1="238" x2="500" y2="275"/>
+<circle cx="500" cy="260" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<polyline points="500,260 380,260 380,138 367,138 367,150"/>
+<line x1="300" y1="25" x2="300" y2="40"/>
+<polyline points="273,60 273,40 333,40 333,54"/>
+<circle cx="300" cy="40" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<line x1="320" y1="25" x2="320" y2="50"/>
+<polyline points="287,60 287,50 347,50 347,55"/>
+<circle cx="320" cy="50" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<path d="M265,60 L295,60 L295,74 A15,15 0 0 1 265,74 Z"/>
+<path d="M325,60 Q340,68 355,60 Q355,82 340,92 Q325,82 325,60 Z"/><path d="M325,54 Q340,62 355,54"/>
+<polyline points="340,92 340,130 353,130 353,150"/>
+<path d="M345,150 L375,150 L375,164 A15,15 0 0 1 345,164 Z"/>
+<polyline points="280,88 280,198 293,198 293,206"/>
+<polyline points="360,179 360,192 307,192 307,206"/>
+<path d="M285,206 Q300,214 315,206 Q315,228 300,238 Q285,228 285,206 Z"/>
+<line x1="300" y1="238" x2="300" y2="275"/>
+<circle cx="300" cy="260" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<polyline points="300,260 180,260 180,138 167,138 167,150"/>
+<line x1="100" y1="25" x2="100" y2="40"/>
+<polyline points="73,60 73,40 133,40 133,54"/>
+<circle cx="100" cy="40" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<line x1="120" y1="25" x2="120" y2="50"/>
+<polyline points="87,60 87,50 147,50 147,55"/>
+<circle cx="120" cy="50" r="3.5" fill="#e06c75" stroke="#e06c75" stroke-width="1"/>
+<path d="M65,60 L95,60 L95,74 A15,15 0 0 1 65,74 Z"/>
+<path d="M125,60 Q140,68 155,60 Q155,82 140,92 Q125,82 125,60 Z"/><path d="M125,54 Q140,62 155,54"/>
+<polyline points="140,92 140,130 153,130 153,150"/>
+<path d="M145,150 L175,150 L175,164 A15,15 0 0 1 145,164 Z"/>
+<polyline points="80,88 80,198 93,198 93,206"/>
+<polyline points="160,179 160,192 107,192 107,206"/>
+<path d="M85,206 Q100,214 115,206 Q115,228 100,238 Q85,228 85,206 Z"/>
+<line x1="100" y1="238" x2="100" y2="275" marker-end="url(#arrow)"/>
+</g>
+<text x="700" y="15" class="ts">A(0)</text>
+<text x="724" y="15" class="ts">B(0)</text>
+<text x="662" y="110" class="ts">g(0)</text>
+<text x="760" y="110" class="ts">p(0)</text>
+<text x="718" y="275" class="ts">c(1)</text>
+<text x="810" y="126" class="ts">cin = c(0)</text>
+<text x="500" y="15" class="ts">A(1)</text>
+<text x="524" y="15" class="ts">B(1)</text>
+<text x="462" y="110" class="ts">g(1)</text>
+<text x="560" y="110" class="ts">p(1)</text>
+<text x="518" y="275" class="ts">c(2)</text>
+<text x="300" y="15" class="ts">A(2)</text>
+<text x="324" y="15" class="ts">B(2)</text>
+<text x="262" y="110" class="ts">g(2)</text>
+<text x="360" y="110" class="ts">p(2)</text>
+<text x="318" y="275" class="ts">c(3)</text>
+<text x="100" y="15" class="ts">A(3)</text>
+<text x="124" y="15" class="ts">B(3)</text>
+<text x="62" y="110" class="ts">g(3)</text>
+<text x="160" y="110" class="ts">p(3)</text>
+<text x="100" y="288" class="ts">c(4)</text>
+<text x="420" y="315" class="ts">g(i) = A(i)·B(i)    p(i) = A(i) xor B(i)    c(i+1) = g(i) + p(i)·c(i)    S(i) = p(i) xor c(i)</text>
+</svg>

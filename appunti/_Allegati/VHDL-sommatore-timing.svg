@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="250" viewBox="0 0 660 250">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .ts{font-size:12px}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<!-- assi -->
+<line x1="80" y1="75" x2="80" y2="25" marker-end="url(#arrow)"/>
+<line x1="80" y1="70" x2="625" y2="70" marker-end="url(#arrow)"/>
+<line x1="80" y1="155" x2="80" y2="100" marker-end="url(#arrow)"/>
+<line x1="80" y1="150" x2="625" y2="150" marker-end="url(#arrow)"/>
+<line x1="80" y1="235" x2="80" y2="180" marker-end="url(#arrow)"/>
+<line x1="80" y1="230" x2="625" y2="230" marker-end="url(#arrow)"/>
+<!-- clk -->
+<polyline points="80,70 160,70 160,40 220,40 220,70 300,70 300,40 360,40 360,70 440,70 440,40 500,40 500,70 580,70 580,40 605,40"/>
+<line x1="160" y1="66" x2="160" y2="48" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="300" y1="66" x2="300" y2="48" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="440" y1="66" x2="440" y2="48" stroke-width="1.5" marker-end="url(#arrow)"/>
+<line x1="580" y1="66" x2="580" y2="48" stroke-width="1.5" marker-end="url(#arrow)"/>
+<!-- AA, BB -->
+<polyline points="88,115 265,115 275,140 405,140 415,115 545,115 555,140 605,140"/>
+<polyline points="88,140 265,140 275,115 405,115 415,140 545,140 555,115 605,115"/>
+<line x1="88" y1="115" x2="88" y2="140"/>
+</g>
+<text x="45" y="45" class="ts">clk</text>
+<text x="45" y="120" class="ts">AA, BB</text>
+<text x="45" y="200" class="ts">A, B</text>
+<text x="638" y="70" class="ts">t</text>
+<text x="638" y="150" class="ts">t</text>
+<text x="638" y="230" class="ts">t</text>
+<text x="175" y="127" class="ts">0, 0</text>
+<text x="340" y="127" class="ts">3, 4</text>
+<text x="480" y="127" class="ts">-1, 1</text>
+<text x="580" y="127" class="ts">-2, 4</text>
+</svg>

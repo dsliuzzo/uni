@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="345" viewBox="0 0 420 345">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .ts{font-size:12px} .th{font-size:14px;font-weight:500}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<!-- registri -->
+<rect x="60" y="50" width="110" height="40" rx="4"/>
+<rect x="230" y="50" width="110" height="40" rx="4"/>
+<polyline points="60,62 70,70 60,78"/>
+<polyline points="230,62 240,70 230,78"/>
+<line x1="20" y1="70" x2="60" y2="70"/>
+<line x1="200" y1="70" x2="230" y2="70"/>
+<!-- AA, BB -->
+<line x1="112" y1="15" x2="112" y2="50"/>
+<line x1="118" y1="15" x2="118" y2="50"/>
+<polyline points="107,40 115,49 123,40"/>
+<line x1="282" y1="15" x2="282" y2="50"/>
+<line x1="288" y1="15" x2="288" y2="50"/>
+<polyline points="277,40 285,49 293,40"/>
+<!-- A, B -->
+<line x1="112" y1="90" x2="112" y2="140"/>
+<line x1="118" y1="90" x2="118" y2="140"/>
+<polyline points="107,130 115,139 123,130"/>
+<line x1="282" y1="90" x2="282" y2="140"/>
+<line x1="288" y1="90" x2="288" y2="140"/>
+<polyline points="277,130 285,139 293,130"/>
+<!-- RCA -->
+<rect x="80" y="140" width="240" height="70" rx="4"/>
+<line x1="370" y1="175" x2="320" y2="175" marker-end="url(#arrow)"/>
+<line x1="197" y1="210" x2="197" y2="250"/>
+<line x1="203" y1="210" x2="203" y2="250"/>
+<polyline points="192,240 200,249 208,240"/>
+<!-- registro su S -->
+<rect x="145" y="250" width="110" height="40" rx="4"/>
+<polyline points="145,262 155,270 145,278"/>
+<line x1="105" y1="270" x2="145" y2="270"/>
+<line x1="197" y1="290" x2="197" y2="335"/>
+<line x1="203" y1="290" x2="203" y2="335"/>
+<polyline points="192,328 200,337 208,328"/>
+<!-- clear -->
+<line x1="75" y1="30" x2="75" y2="50" marker-end="url(#arrow)"/>
+<line x1="245" y1="30" x2="245" y2="50" marker-end="url(#arrow)"/>
+<line x1="160" y1="228" x2="160" y2="250" marker-end="url(#arrow)"/>
+</g>
+<text x="120" y="70" class="th" style="fill:#b48ead;">Reg</text>
+<text x="290" y="70" class="th" style="fill:#b48ead;">Reg</text>
+<text x="190" y="175" class="th" style="fill:#b48ead;">RCA</text>
+<text x="298" y="175" class="ts">cin</text>
+<text x="388" y="175" class="ts">'0'</text>
+<text x="30" y="56" class="ts">clk</text>
+<text x="205" y="88" class="ts">clk</text>
+<text x="138" y="15" class="ts">AA</text>
+<text x="308" y="15" class="ts">BB</text>
+<text x="132" y="115" class="ts">A</text>
+<text x="302" y="115" class="ts">B</text>
+<text x="216" y="228" class="ts">S</text>
+<text x="205" y="270" class="th" style="fill:#b48ead;">Reg</text>
+<text x="115" y="256" class="ts">clk</text>
+<text x="220" y="318" class="ts">SS</text>
+<text x="75" y="20" class="ts">clear</text>
+<text x="245" y="20" class="ts">clear</text>
+<text x="160" y="220" class="ts">clear</text>
+</svg>

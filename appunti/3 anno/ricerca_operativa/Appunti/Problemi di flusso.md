@@ -904,3 +904,416 @@ $$
 $$
 Quindi, se nel grafo assegnato i costi sui rami sono tutti non negativi, (MCFP) non può essere inferiormente illimitato.
 %%
+
+# Esercizi sul problema MCFP
+>[!check] Esempio 1
+>Si consideri il problema di flusso di costo minimo relativo alla rete in figura, in cui le etichette sugli archi rappresentano i costi unitari di flusso e le etichette sui nodi la loro divergenza.
+>
+>![[Problemi di flusso-es1-rete.svg|center|440]]
+>
+>Per prima cosa verifichiamo la condizione necessaria di ammissibilità: la somma delle divergenze è 0 ✅
+>
+>1. Si identifichi quale tra i due insiemi di archi
+>   $$
+>   \begin{aligned}
+>   A^{(1)} &= \{(1,2), (1,4), (2,3), (4,5), (5,6), (5,8), (6,7)\} \\
+>   A^{(2)} &= \{(1,2), (1,4), (2,6), (4,5), (5,6), (5,8), (6,7)\}
+>   \end{aligned}
+>   $$
+>   rappresenta una base ammissibile per il problema di flusso e lo si identifichi con $T^{(0)}$. Si denoti con $f^{(0)}$ il flusso associato a $T^{(0)}$ e se ne calcoli il costo.
+>2. Si esegua un'iterazione dell'algoritmo del simplesso su rete a partire dalla soluzione $f^{(0)}$, determinando una nuova distribuzione di flusso $f^{(1)}$ e se ne calcoli il costo.
+>
+>**Soluzione 1**
+>$A^{(2)}$ non è un albero, in quanto tra i suoi elementi esiste il ciclo
+>$$
+>\{(1,2), (2,6), (5,6), (4,5), (1,4)\}
+>$$
+>mentre $A^{(1)}$ è un [[#Grafi connessi, alberi|albero ricoprente]]. Calcoliamo la distribuzione di flusso $f^{(0)}$ associata imponendo la continuità nei nodi relativamente agli archi di $A^{(1)}$.
+>
+>Determiniamo la matrice di base $B$ in forma triangolare superiore ([[#Lemma 1]]), scegliendo il nodo 1 come radice dell'albero:
+>$$
+>B = \begin{pmatrix}
+>-1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+>0 & -1 & 0 & 0 & 0 & 0 & 0 \\
+>0 & 0 & -1 & 1 & 0 & 0 & 0 \\
+>0 & 0 & 0 & -1 & 1 & 1 & 0 \\
+>0 & 0 & 0 & 0 & -1 & 0 & 1 \\
+>0 & 0 & 0 & 0 & 0 & -1 & 0 \\
+>\smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(1,2)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(2,3)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(1,4)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(4,5)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(5,6)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(5,8)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(6,7)}{-1}}
+>\end{pmatrix}
+>\begin{array}{c} \text{②} \\ \text{③} \\ \text{④} \\ \text{⑤} \\ \text{⑥} \\ \text{⑧} \\ \text{⑦} \end{array}
+>\vphantom{\begin{array}{c} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{array}}
+>$$
+>e risolviamo il sistema $B f_B = \tilde{b}$, dove $\tilde{b}$ è il vettore delle divergenze (senza la riga della radice, con le righe nell'ordine di $B$)
+>$$
+>\tilde{b}^\top = (0, 0, 6, 0, 0, -4, -7)
+>$$
+>Risolvendo direttamente l'ultima equazione, relativa al nodo foglia 7, e sostituendo iterativamente nelle righe superiori (dalle foglie verso la radice), otteniamo il flusso ammissibile di base **degenere**
+>$$
+>f^{(0)}_{12} = 0 \quad f^{(0)}_{23} = 0 \quad f^{(0)}_{14} = 5 \quad f^{(0)}_{45} = 11 \quad f^{(0)}_{56} = 7 \quad f^{(0)}_{58} = 4 \quad f^{(0)}_{67} = 7
+>$$
+>il cui costo è $c^\top f^{(0)} = 157$. Poniamo quindi
+>$$
+>T^{(0)} = A^{(1)} = \{(1,2), (1,4), (2,3), (4,5), (5,6), (5,8), (6,7)\}
+>$$
+>
+>**Soluzione 2**
+>In rosso l'albero $T^{(0)}$, in grigio gli archi fuori base:
+>![[Problemi di flusso-es1-T0.svg|center|440]]
+>
+>Poniamo $\lambda_1^{(0)} = 0$ e [[#Determinazione della soluzione duale per (MCFP)|risolviamo]] il sistema $B^\top \lambda = c_B$ (dalla radice verso le foglie) ottenendo
+>$$
+>\lambda_1^{(0)} = 0 \quad \lambda_2^{(0)} = -2 \quad \lambda_3^{(0)} = -7 \quad \lambda_4^{(0)} = -7 \quad \lambda_5^{(0)} = -11 \quad \lambda_6^{(0)} = -12 \quad \lambda_7^{(0)} = -21 \quad \lambda_8^{(0)} = -13
+>$$
+>Calcoliamo i coefficienti di costo ridotto delle variabili fuori base
+>$$
+>\hat{c}_{ij} = c_{ij} - \lambda_i^{(0)} + \lambda_j^{(0)}
+>$$
+>e notiamo che
+>$$
+>\hat{c}_{13} = 3 - 0 + (-7) = -4 < 0
+>$$
+>quindi la condizione di arresto non è soddisfatta e $(1,3)$ entra in base.
+>
+>>[!attention] AGGIUNTA
+>>Con la [[Problemi di ottimizzazione#Regola di Bland|regola di Bland]] $(1,3)$ è il primo arco fuori base con costo ridotto negativo, quindi il calcolo si può fermare qui.
+>>Gli altri costi ridotti (non calcolati nelle slide) sono $\hat{c}_{26} = -2$, $\hat{c}_{36} = -3$, $\hat{c}_{35} = 0$, $\hat{c}_{78} = 10$: anche senza Bland la base non sarebbe ottima, e con il criterio del costo ridotto minimo entrerebbe comunque $(1,3)$.
+>
+>Aggiungendo $(1,3)$ (tratteggiato) all'albero si forma il ciclo $1 \to 3 \leftarrow 2 \leftarrow 1$:
+>![[Problemi di flusso-es1-ciclo.svg|center|440]]
+>
+>Fissando il verso di percorrenza del ciclo concorde all'arco entrante $(1,3)$:
+>$$
+>\mathcal{C} = \mathcal{C}^+ \cup \mathcal{C}^- = \{(1,3)\} \cup \{(1,2), (2,3)\}
+>$$
+>L'incremento di flusso $\hat{\delta}$ lungo l'arco $(1,3)$ sarà
+>$$
+>\hat{\delta} = \min\{ f_{ij} : (i,j) \in \mathcal{C}^- \} = \min\{0, 0\} = 0
+>$$
+>e l'arco uscente dalla base sarà
+>$$
+>(i^*, j^*) = \arg\min\{ f_{ij} : (i,j) \in \mathcal{C}^- \} = (1,2)
+>$$
+>(c'è parità tra $(1,2)$ e $(2,3)$, entrambi a $0$).
+>Stiamo effettuando un **cambio di base degenere**.
+>
+>Le componenti di base del nuovo flusso $f^{(1)}$ sono
+>$$
+>f^{(1)}_{13} = 0 \quad f^{(1)}_{23} = 0 \quad f^{(1)}_{14} = 5 \quad f^{(1)}_{45} = 11 \quad f^{(1)}_{56} = 7 \quad f^{(1)}_{58} = 4 \quad f^{(1)}_{67} = 7
+>$$
+>rispetto all'albero ricoprente
+>$$
+>T^{(1)} = \{(1,3), (1,4), (2,3), (4,5), (5,6), (5,8), (6,7)\}
+>$$
+>![[Problemi di flusso-es1-T1.svg|center|440]]
+>
+>Il valore è rimasto $c^\top f^{(1)} = 157$, visto che il cambio di base è stato degenere ($\hat\delta = 0$, vedi [[#Casi particolari|casi particolari]]).
+
+>[!check] Esempio 2
+>Si consideri il problema di flusso di costo minimo relativo alla rete in figura, in cui le etichette sugli archi rappresentano i costi unitari di flusso e le etichette sui nodi la loro divergenza.
+>
+>A partire dalla base $T = \{(6,7), (2,7), (1,6), (4,3), (4,5), (3,1)\}$ si risolva il problema applicando la seconda fase dell'algoritmo del simplesso su rete.
+>
+>![[Problemi di flusso-es2-rete.svg|center|380]]
+>
+>La rete ha $m = 7$ nodi e $n = 12$ archi.
+>
+>**Iterazione 0**
+>In rosso l'albero $T^{(0)}$, in grigio gli archi fuori base:
+>![[Problemi di flusso-es2-T0.svg|center|380]]
+>
+>Calcoliamo il flusso di base $f^{(0)}$ **per esplorazione**: partiamo da una foglia dell'albero e risolviamo ogni volta un'equazione in una sola incognita
+>$$
+>f^{(0)}_{45} = 6 \quad f^{(0)}_{43} = 2 \quad f^{(0)}_{31} = 2 \quad f^{(0)}_{16} = 2 \quad f^{(0)}_{67} = 2 \quad f^{(0)}_{27} = 4
+>$$
+>il cui costo è
+>$$
+>c^\top f^{(0)} = 8 \cdot 6 + 8 \cdot 2 + 4 \cdot 2 + 7 \cdot 2 + 10 \cdot 2 + 9 \cdot 4 = 142
+>$$
+>Per i potenziali di nodo imponiamo $\lambda_i - \lambda_j = c_{ij}$ sugli archi di base e poniamo $\lambda_5 = 0$:
+>$$
+>\begin{cases}
+>\lambda_4 - \lambda_5 = 8 \\
+>\lambda_4 - \lambda_3 = 8 \\
+>\lambda_3 - \lambda_1 = 4 \\
+>\lambda_1 - \lambda_6 = 7 \\
+>\lambda_6 - \lambda_7 = 10 \\
+>\lambda_2 - \lambda_7 = 9
+>\end{cases}
+>\qquad
+>\lambda_4 = 8 \quad \lambda_3 = 0 \quad \lambda_1 = -4 \quad \lambda_6 = -11 \quad \lambda_7 = -21 \quad \lambda_2 = -12
+>$$
+>Calcoliamo i costi ridotti $\hat{c}_{ij} = c_{ij} - \lambda_i + \lambda_j$ degli archi fuori base:
+>$$
+>\hat{c}_{12} = 7 + 4 - 12 = -1 < 0
+>$$
+>quindi possiamo fermare l'esplorazione: **entra $(1,2)$**.
+>
+>>[!attention] AGGIUNTA
+>>Gli altri costi ridotti (non calcolati in classe) sono $\hat{c}_{71} = 22$, $\hat{c}_{65} = 17$, $\hat{c}_{23} = 18$, $\hat{c}_{51} = 0$, $\hat{c}_{14} = 22$: $(1,2)$ è l'unico arco con costo ridotto negativo.
+>
+>Il ciclo che si forma, con verso concorde all'arco entrante, è
+>$$
+>\mathcal{C} = \mathcal{C}^+ \cup \mathcal{C}^- = \{(1,2), (2,7)\} \cup \{(6,7), (1,6)\}
+>$$
+>Dobbiamo scaricare il flusso negli archi di $\mathcal{C}^-$:
+>$$
+>\hat{\delta} = \min\{f_{16}, f_{67}\} = \min\{2, 2\} = 2
+>$$
+>C'è parità: scegliamo di far **uscire $(1,6)$**. Aumentiamo di $2$ il flusso sugli archi di $\mathcal{C}^+$ e lo diminuiamo di $2$ su quelli di $\mathcal{C}^-$.
+>
+>**Iterazione 1**
+>$$
+>T^{(1)} = \{(6,7), (2,7), (1,2), (4,3), (4,5), (3,1)\}
+>$$
+>![[Problemi di flusso-es2-T1.svg|center|380]]
+>
+>$$
+>f^{(1)}_{45} = 6 \quad f^{(1)}_{43} = 2 \quad f^{(1)}_{31} = 2 \quad f^{(1)}_{12} = 2 \quad f^{(1)}_{27} = 6 \quad f^{(1)}_{67} = 0
+>$$
+>(soluzione **degenere**: $(6,7)$ è in base con flusso nullo, effetto della parità nel calcolo di $\hat\delta$)
+>$$
+>c^\top f^{(1)} = c^\top f^{(0)} + \hat{c}_{12} \cdot \hat{\delta} = 142 - 2 = 140
+>$$
+>Calcoliamo i nuovi potenziali di nodo. La maggior parte delle equazioni resta uguale: scompare $\lambda_1 - \lambda_6 = 7$ e compare $\lambda_1 - \lambda_2 = 7$.
+>$$
+>\begin{cases}
+>\lambda_4 - \lambda_5 = 8 \\
+>\lambda_4 - \lambda_3 = 8 \\
+>\lambda_3 - \lambda_1 = 4 \\
+>\lambda_1 - \lambda_2 = 7 \\
+>\lambda_2 - \lambda_7 = 9 \\
+>\lambda_6 - \lambda_7 = 10
+>\end{cases}
+>\qquad
+>\lambda_4 = 8 \quad \lambda_3 = 0 \quad \lambda_1 = -4 \quad \lambda_2 = -11 \quad \lambda_7 = -20 \quad \lambda_6 = -10
+>$$
+>Costi ridotti degli archi fuori base:
+>$$
+>\hat{c}_{16} = 7 + 4 - 10 = 1 > 0 \qquad \hat{c}_{23} = 6 + 11 + 0 = 17 > 0 \qquad \hat{c}_{14} = 10 + 4 + 8 = 22 > 0 \qquad \dots
+>$$
+
+# Casi particolari del problema del flusso di costo minimo
+- il problema del cammino di costo minimo
+- il problema dei trasporti
+- il problema dell'assegnamento
+
+## Problema del cammino di costo minimo
+Il problema del cammino di costo minimo è un caso speciale del problema di flusso di costo minimo, in cui
+- nella rete è presente un unico nodo sorgente $s$ con divergenza pari a $1$
+- nella rete è presente un unico nodo pozzo $t$ con divergenza pari a $-1$
+- $s$ è un nodo sorgente del grafo (ha solo archi uscenti), $t$ è un nodo pozzo del grafo (ha solo archi entranti)
+- i costi unitari di flusso sono tutti non negativi, $c_{ij} \geq 0 \ \forall (i,j) \in E$
+
+>[!important] Formulazione (SPP)
+>$$
+>(SPP) \begin{cases}
+>\min & \displaystyle\sum_{(i,j) \in E} c_{ij} f_{ij} \\
+>& \displaystyle\sum_{j : (s,j) \in E} f_{sj} = 1 \\
+>& \displaystyle\sum_{j : (i,j) \in E} f_{ij} - \sum_{j : (j,i) \in E} f_{ji} = 0 & \forall i \neq s,t \\
+>& \displaystyle -\sum_{j : (j,t) \in E} f_{jt} = -1 \\
+>& f_{ij} \geq 0 & \forall (i,j) \in E
+>\end{cases}
+>$$
+
+per quanto riguarda i nodi $s$ e $t$ rimangono solo le sommatorie positive per $s$ e negative per $t$ in quanto sono presenti solo archi uscenti ($s$) ed entranti ($t$).
+Essendo la somma di tutti i nodi uscenti da $s$ è pari a 1: il flusso è intero e compreso tra 0 e 1, vuol dire che stiamo uscendo da $s$ con un solo arco.
+Ripetendo questo ragionamento su tutti gli altri nodi (questa volta con uno entrante e uno uscente), fino al pozzo $t$ (che ne avrà solo uno entrante) abbiamo trovato il cammino di costo minimo.
+[[Algoritmi#Dijkstra - albero dei cammini minimi a partire da un nodo|Dijkstra]] fa la stessa cosa, ma questo problema può essere risolto anche con il simplesso.
+## Problema dei trasporti
+Il problema dei trasporti è un caso speciale del problema di flusso di costo minimo, in cui
+- i nodi del grafo $G = \langle V, E \rangle$ sono o sorgenti oppure pozzi, quindi in $V$ non ci sono nodi a divergenza nulla (nodi di transito)
+- nell'insieme degli archi $E$ non ci sono archi che collegano sorgenti tra di esse oppure pozzi tra di essi: esistono gli archi che congiungono ciascuna sorgente con tutti i pozzi
+
+Il grafo $G = \langle V, E \rangle$ con queste caratteristiche è un **grafo bipartito completo** con
+- $V = S \cup P$, $S \cap P = \emptyset$
+- $S$ è l'insieme delle sorgenti, $|S| = m_s$
+- $P$ è l'insieme dei pozzi, $|P| = m_p$
+- $d_i > 0$ è la divergenza nel nodo sorgente $i \in S$
+- $\bar{r}_j < 0$ è la divergenza nel nodo pozzo $j \in P$
+
+>[!important] Formulazione (TP)
+>$$
+>(TP) \begin{cases}
+>\min & \displaystyle\sum_{(i,j) \in E} c_{ij} f_{ij} \\
+>& \displaystyle\sum_{j : (i,j) \in E} f_{ij} = d_i & \forall i \in S \\
+>& \displaystyle -\sum_{i : (i,j) \in E} f_{ij} = \bar{r}_j & \forall j \in P \\
+>& f_{ij} \geq 0 & \forall i \in S, \forall j \in P
+>\end{cases}
+>$$
+>Ponendo $r_j = -\bar{r}_j > 0$ otteniamo
+>$$
+>(TP) \begin{cases}
+>\min & \displaystyle\sum_{i=1}^{m_s} \sum_{j=1}^{m_p} c_{ij} f_{ij} \\
+>& \displaystyle\sum_{j=1}^{m_p} f_{ij} = d_i & \forall i = 1, \dots, m_s \\
+>& \displaystyle\sum_{i=1}^{m_s} f_{ij} = r_j & \forall j = 1, \dots, m_p \\
+>& f_{ij} \geq 0 & \forall i = 1, \dots, m_s, \ \forall j = 1, \dots, m_p
+>\end{cases}
+>$$
+
+Le origini hanno solo archi uscenti (non vediamo i termini con il -).
+Le destinazioni hanno solo archi entranti (non vediamo i termini con il +).
+Dobbiamo utilizzare l'offerta dei nodi origine per soddisfare la domanda dei pozzi, senza nodi di transito.
+## Problema dell'assegnamento
+Si tratta di uno speciale [[#Problema dei trasporti|problema dei trasporti]] in cui
+- $m_s = m_p = m$
+- $d_i = 1$ per ogni $i \in S$
+- $r_j = 1$ per ogni $j \in P$
+
+>[!important] Formulazione (AP)
+>$$
+>(AP) \begin{cases}
+>\min & \displaystyle\sum_{i=1}^{m} \sum_{j=1}^{m} c_{ij} f_{ij} \\
+>& \displaystyle\sum_{j=1}^{m} f_{ij} = 1 & \forall i = 1, \dots, m \\
+>& \displaystyle\sum_{i=1}^{m} f_{ij} = 1 & \forall j = 1, \dots, m \\
+>& f_{ij} \geq 0 & \forall i = 1, \dots, m, \ \forall j = 1, \dots, m
+>\end{cases}
+>$$
+
+Assegno ad ogni singola origine una e una sola destinazione.
+Caso tipico di assegnamento di job a macchine.
+# Problema del massimo flusso
+## Notazione e ipotesi (MFP)
+Consideriamo un grafo orientato e connesso $G = \langle V, E \rangle$
+>[!important] Dati
+>- $V = \{1, \dots, m\}$ è l'insieme dei nodi, $|V| = m$
+>- $E \subseteq V \times V$ è l'insieme degli archi, $|E| = n$
+>- $b \in \mathbb{R}^m$ è il vettore delle divergenze nei nodi
+>- $u_{ij}$ è la capacità (**finita**) su ogni arco $(i,j) \in E$
+
+>[!info] Ipotesi
+>Sulla rete esistono due nodi speciali:
+>- il nodo $s$ è l'unico nodo **sorgente** e ha solo archi uscenti
+>- il nodo $t$ è l'unico nodo **terminale** e ha solo archi entranti
+>- tutti gli altri nodi sono di transito, $b_i = 0$ per ogni $i \in V \setminus \{s,t\}$
+
+**Variabili decisionali**: $f_{ij} \geq 0$ rappresenta la quantità di flusso che transita lungo l'arco $(i,j)$ per ogni $(i,j) \in E$.
+
+>[!important] Obiettivo
+>Si vuole determinare la massima quantità di flusso che può essere trasferita dal nodo sorgente al nodo terminale:
+>$$
+>v = \sum_{j : (s,j) \in E} f_{sj}
+>$$
+>Ciò equivale a massimizzare la divergenza del nodo sorgente.
+
+Non essendoci limitazioni sulle divergenze dei nodi $s$ e $t$, il valore massimo del flusso dipenderà esclusivamente dalla **topologia** del grafo e dalle **capacità** degli archi.
+
+## Formulazione
+>[!important] Max flow problem (MFP)
+>$$
+>(MFP) \begin{cases}
+>\max & v = \displaystyle\sum_{j : (s,j) \in E} f_{sj} \\
+>& \displaystyle\sum_{j : (i,j) \in E} f_{ij} - \sum_{j : (j,i) \in E} f_{ji} = 0 & \forall i \in V \setminus \{s,t\} \\
+>& 0 \leq f_{ij} \leq u_{ij} & \forall (i,j) \in E
+>\end{cases}
+>$$
+>o equivalentemente, misurando il flusso che arriva in $t$,
+>$$
+>(MFP) \begin{cases}
+>\max & v = \displaystyle\sum_{j : (j,t) \in E} f_{jt} \\
+>& \displaystyle\sum_{j : (i,j) \in E} f_{ij} - \sum_{j : (j,i) \in E} f_{ji} = 0 & \forall i \in V \setminus \{s,t\} \\
+>& 0 \leq f_{ij} \leq u_{ij} & \forall (i,j) \in E
+>\end{cases}
+>$$
+
+>[!check] Esempio
+>Le etichette sugli archi sono le capacità $u_{ij}$.
+>![[Problemi di flusso-mfp-esempio.svg|center|380]]
+>$$
+>A = \begin{pmatrix}
+>1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+>-1 & 0 & -1 & 0 & 1 & 0 & 0 & 0 \\
+>0 & -1 & 1 & 1 & 0 & 0 & 0 & 0 \\
+>0 & 0 & 0 & -1 & 0 & 1 & 1 & 0 \\
+>0 & 0 & 0 & 0 & -1 & -1 & 0 & 1 \\
+>\smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(s,1)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(s,2)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(2,1)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(2,3)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(1,4)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(3,4)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(3,t)}{-1}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(4,t)}{-1}}
+>\end{pmatrix}
+>\begin{array}{c} \text{ⓢ} \\ \text{①} \\ \text{②} \\ \text{③} \\ \text{④} \\ \text{ⓣ} \end{array}
+>\vphantom{\begin{array}{c} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{array}}
+>$$
+>Le etichette delle colonne non sono nella slide: sono ricavate dalla matrice.
+
+## Forma compatta (problema di circolazione)
+Scriviamo le [[#^conservazioneflusso|equazioni di continuità]] per tutti i nodi della rete:
+$$
+\begin{cases}
+\displaystyle\sum_{j : (s,j) \in E} f_{sj} & & = v \\
+\displaystyle\sum_{j : (i,j) \in E} f_{ij} & \displaystyle - \sum_{j : (j,i) \in E} f_{ji} & = 0 & \forall i \in V, \ i \neq s,t \\
+& \displaystyle - \sum_{j : (j,t) \in E} f_{jt} & = -v
+\end{cases}
+$$
+cioè, portando $v$ a sinistra,
+$$
+\begin{cases}
+\displaystyle\sum_{j : (s,j) \in E} f_{sj} & & - \ v & = 0 \\
+\displaystyle\sum_{j : (i,j) \in E} f_{ij} & \displaystyle - \sum_{j : (j,i) \in E} f_{ji} & & = 0 & \forall i \in V, \ i \neq s,t \\
+& \displaystyle - \sum_{j : (j,t) \in E} f_{jt} & + \ v & = 0
+\end{cases}
+$$
+Indicando con $h = (-1, 0^\top_{m-2}, 1)^\top \in \mathbb{R}^m$ otteniamo
+
+>[!important] Forma compatta (problema di circolazione)
+>$$
+>\begin{cases}
+>\max & v \\
+>& Af + hv = 0 \\
+>& f \leq u \\
+>& f \geq 0
+>\end{cases}
+>$$
+
+Il vettore $h$ ha la medesima struttura delle colonne di una [[#Rappresentazioni matriciali|matrice di incidenza]]: rappresenta infatti un arco **uscente da $t$ ed entrante in $s$**, cui è associata la variabile flusso $v$.
+
+Con l'aggiunta dell'arco fittizio $(t,s)$ si ottiene il grafo esteso $G' = \langle V, E \cup (t,s) \rangle$, in cui i nodi sorgente e terminale si trasformano in nodi di transito (**problema di circolazione**).
+
+L'obiettivo è la massimizzazione del flusso sull'arco (fittizio) $(t,s)$.
+
+>[!check] Esempio
+>Lo stesso grafo di [[#Formulazione|prima]] con l'arco fittizio $(t,s)$ a capacità $\infty$:
+>![[Problemi di flusso-mfp-circolazione.svg|center|380]]
+>$$
+>A' = (A \mid h) = \begin{pmatrix}
+>1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & -1 \\
+>-1 & 0 & -1 & 0 & 1 & 0 & 0 & 0 & 0 \\
+>0 & -1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+>0 & 0 & 0 & -1 & 0 & 1 & 1 & 0 & 0 \\
+>0 & 0 & 0 & 0 & -1 & -1 & 0 & 1 & 0 \\
+>\smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(s,1)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(s,2)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(2,1)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(2,3)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(1,4)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(3,4)}{0}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(3,t)}{-1}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(4,t)}{-1}} & \smash[b]{\underset{\textstyle\rule{0pt}{1.6em}(t,s)}{1}}
+>\end{pmatrix}
+>\begin{array}{c} \text{ⓢ} \\ \text{①} \\ \text{②} \\ \text{③} \\ \text{④} \\ \text{ⓣ} \end{array}
+>\vphantom{\begin{array}{c} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{array}}
+>$$
+
+>[!attention] Errore nella slide 23 (`RO2026_18.pdf`)
+>Nella slide la 5ª colonna di $A'$ è $(1, 0, 0, -1, 0, 0)^\top$ (cioè un arco $(s,3)$, che non esiste). Deve essere la colonna dell'arco $(1,4)$, uguale a quella di $A$ nella slide 20: $(0, 1, 0, 0, -1, 0)^\top$. Qui è già corretta.
+
+## Cammini aumentanti
+>[!important] Idea
+>Una distribuzione ammissibile di flusso $f$ **non è ottima** se e solo se è possibile inviare altro flusso da $s$ a $t$.
+>
+>In particolare, è possibile determinare una nuova soluzione ammissibile con miglior valore della funzione obiettivo modificando il flusso **solo sugli archi di un opportuno cammino** da $s$ a $t$.
+
+>[!multi-column]
+>
+>>[!info] Notazione
+>>A ogni arco viene associata una coppia di valori che rappresentano il **flusso** che attraversa l'arco e la **capacità** dell'arco.
+>
+>>[!blank]
+>>![[Problemi di flusso-cammini-notazione.svg|center|220]]
+
+>[!check] Esempio
+>Rete con le capacità $u_{ij}$:
+>![[Problemi di flusso-cammini-rete.svg|center|400]]
+>Partiamo da un **flusso ammissibile** con $v = 6$ (etichette $f_{ij}, u_{ij}$):
+>![[Problemi di flusso-cammini-v6.svg|center|400]]
+>Incremento del flusso $v = 6$ uscente da $s$ lungo il cammino $s \to 2 \to 1 \to 4 \to t$ (in rosso): gli archi $(s,2)$ e $(1,4)$ si saturano e si ottiene $v = 7$:
+>![[Problemi di flusso-cammini-v7.svg|center|400]]
+>Incremento del flusso $v = 7$ uscente da $s$: il cammino è $s \to 1 \to 2 \to 3 \to 4 \to t$, dove l'arco $(2,1)$ è percorso **all'indietro** e il suo flusso **diminuisce** ($2 \to 1$). Si ottiene $v = 8$:
+>![[Problemi di flusso-cammini-v8.svg|center|400]]
+
+>[!attention] AGGIUNTA
+>Percorrere un arco all'indietro vuol dire "restituire" flusso: invece di mandare a $1$ il flusso che arriva da $2$, lo si fa arrivare a $1$ da $s$, e il flusso di $2$ così liberato prende la strada $2 \to 3 \to 4 \to t$. Il bilancio dei nodi resta corretto:
+>- nodo 1: entrano $f_{s1} + f_{21} = 2 + 1$, esce $f_{14} = 3$
+>- nodo 2: entra $f_{s2} = 6$, escono $f_{21} + f_{23} = 1 + 5$
+>- nodo 3: entra $f_{23} = 5$, escono $f_{34} + f_{3t} = 4 + 1$
+>- nodo 4: entrano $f_{14} + f_{34} = 3 + 4$, esce $f_{4t} = 7$

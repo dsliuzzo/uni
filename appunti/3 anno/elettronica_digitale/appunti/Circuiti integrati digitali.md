@@ -698,6 +698,8 @@ Per evitare la metastabilità bisogna rispettare dei vincoli temporali intorno a
 
 Nella figura della slide 5 compare anche $t_{c2q}$ (clock-to-Q): il ritardo tra il fronte del clock e la variazione di $Q$.
 
+Questi vincoli determinano anche il periodo minimo del clock in un circuito sincrono: vedi [[VHDL#Vincoli sul periodo di clock|vincoli sul periodo di clock]] del sommatore sincrono.
+
 ### Segnali di preset e clear
 **Preset** ($Pr$) e **clear** ($Cr$) consentono di forzare l'uscita del flip flop a 1 o a 0 **indipendentemente dagli ingressi** (slide 12).
 
