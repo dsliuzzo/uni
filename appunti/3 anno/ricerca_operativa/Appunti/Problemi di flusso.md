@@ -1187,12 +1187,15 @@ Consideriamo un grafo orientato e connesso $G = \langle V, E \rangle$
 >- il nodo $t$ è l'unico nodo **terminale** e ha solo archi entranti
 >- tutti gli altri nodi sono di transito, $b_i = 0$ per ogni $i \in V \setminus \{s,t\}$
 
+![[Problemi di flusso-mfp-schema.svg|center|420]]
+
 **Variabili decisionali**: $f_{ij} \geq 0$ rappresenta la quantità di flusso che transita lungo l'arco $(i,j)$ per ogni $(i,j) \in E$.
+
 
 >[!important] Obiettivo
 >Si vuole determinare la massima quantità di flusso che può essere trasferita dal nodo sorgente al nodo terminale:
 >$$
->v = \sum_{j : (s,j) \in E} f_{sj}
+>\max \ v = \sum_{j : (s,j) \in E} f_{sj}
 >$$
 >Ciò equivale a massimizzare la divergenza del nodo sorgente.
 
@@ -1215,6 +1218,12 @@ Non essendoci limitazioni sulle divergenze dei nodi $s$ e $t$, il valore massimo
 >& 0 \leq f_{ij} \leq u_{ij} & \forall (i,j) \in E
 >\end{cases}
 >$$
+>La divergenza è una variabile decisionale, per questo non rientra tra i dati del problema, per questo non compaiono tra i vincoli.
+
+Questo problema **ammette sicuramente ottimo finito**, qualunque sia la struttura della rete:
+- è **sempre ammissibile**: esiste sempre una soluzione banale ammissibile, data dai flussi tutti nulli.
+- **non può essere illimitato**: ogni flusso non può superare la capacità assegnata, che è limitata.
+
 
 >[!check] Esempio
 >Le etichette sugli archi sono le capacità $u_{ij}$.
@@ -1231,9 +1240,11 @@ Non essendoci limitazioni sulle divergenze dei nodi $s$ e $t$, il valore massimo
 >\begin{array}{c} \text{ⓢ} \\ \text{①} \\ \text{②} \\ \text{③} \\ \text{④} \\ \text{ⓣ} \end{array}
 >\vphantom{\begin{array}{c} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{array}}
 >$$
->Le etichette delle colonne non sono nella slide: sono ricavate dalla matrice.
+>Solo che il problema non è definito sulla matrice di incidenza $A$, i vincoli non comprendono due nodi, sia $s$ che $t$.
 
 ## Forma compatta (problema di circolazione)
+Associamo $v$ ad una variabile decisionale, piuttosto che alla funzione obiettivo.
+$v$ è la divergenza nel nodo $s$. La funzione obiettivo è $v$, ma la utilizziamo all'interno dei vincoli.
 Scriviamo le [[#^conservazioneflusso|equazioni di continuità]] per tutti i nodi della rete:
 $$
 \begin{cases}
@@ -1250,7 +1261,15 @@ $$
 & \displaystyle - \sum_{j : (j,t) \in E} f_{jt} & + \ v & = 0
 \end{cases}
 $$
-Indicando con $h = (-1, 0^\top_{m-2}, 1)^\top \in \mathbb{R}^m$ otteniamo
+Ora i vincoli sono associati alla matrice di incidenza $A$.
+Indicando con
+$$
+h = \left(\begin{array}{c}
+-1 \\ 0 \\ \vdots \\ 0 \\ 1
+\end{array}\right) \in \mathbb{R}^m
+$$
+
+otteniamo
 
 >[!important] Forma compatta (problema di circolazione)
 >$$
@@ -1283,11 +1302,8 @@ L'obiettivo è la massimizzazione del flusso sull'arco (fittizio) $(t,s)$.
 >\begin{array}{c} \text{ⓢ} \\ \text{①} \\ \text{②} \\ \text{③} \\ \text{④} \\ \text{ⓣ} \end{array}
 >\vphantom{\begin{array}{c} 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{array}}
 >$$
-
->[!attention] Errore nella slide 23 (`RO2026_18.pdf`)
->Nella slide la 5ª colonna di $A'$ è $(1, 0, 0, -1, 0, 0)^\top$ (cioè un arco $(s,3)$, che non esiste). Deve essere la colonna dell'arco $(1,4)$, uguale a quella di $A$ nella slide 20: $(0, 1, 0, 0, -1, 0)^\top$. Qui è già corretta.
-
 ## Cammini aumentanti
+Aumentare il flusso da $s$ a $t$ distribuendo flusso sugli archi che stanno su un determinato cammino.
 >[!important] Idea
 >Una distribuzione ammissibile di flusso $f$ **non è ottima** se e solo se è possibile inviare altro flusso da $s$ a $t$.
 >
@@ -1310,10 +1326,3 @@ L'obiettivo è la massimizzazione del flusso sull'arco (fittizio) $(t,s)$.
 >![[Problemi di flusso-cammini-v7.svg|center|400]]
 >Incremento del flusso $v = 7$ uscente da $s$: il cammino è $s \to 1 \to 2 \to 3 \to 4 \to t$, dove l'arco $(2,1)$ è percorso **all'indietro** e il suo flusso **diminuisce** ($2 \to 1$). Si ottiene $v = 8$:
 >![[Problemi di flusso-cammini-v8.svg|center|400]]
-
->[!attention] AGGIUNTA
->Percorrere un arco all'indietro vuol dire "restituire" flusso: invece di mandare a $1$ il flusso che arriva da $2$, lo si fa arrivare a $1$ da $s$, e il flusso di $2$ così liberato prende la strada $2 \to 3 \to 4 \to t$. Il bilancio dei nodi resta corretto:
->- nodo 1: entrano $f_{s1} + f_{21} = 2 + 1$, esce $f_{14} = 3$
->- nodo 2: entra $f_{s2} = 6$, escono $f_{21} + f_{23} = 1 + 5$
->- nodo 3: entra $f_{23} = 5$, escono $f_{34} + f_{3t} = 4 + 1$
->- nodo 4: entrano $f_{14} + f_{34} = 3 + 4$, esce $f_{4t} = 7$
