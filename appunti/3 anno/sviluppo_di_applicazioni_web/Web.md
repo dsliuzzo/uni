@@ -242,7 +242,7 @@ Ruoli delle applicazioni HTTP:
 
 JDBC opera attraverso una serie di fasi per l'utilizzo dei database:
 1. **Creating Connection**:
-	- stabilisce una connessione con il database: spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **polling** per riutilizzare connessioni già aperte
+	- stabilisce una connessione con il database: spesso la fase di connection è molto costosa, per questo vengono utilizzare delle tecniche di **pooling** (*connection pooling*) per riutilizzare connessioni già aperte
 	- fase strutturale $\to$ permette di creare politiche
 2. **Statement**
    creazione dell'oggetto che consente passaggio dal livello applicativo $\to$ livello logico: consente di inviare query SQL $\to$ restituisce result set (iterabile)
@@ -276,12 +276,11 @@ public class PrimoTestJDBC {
 		    while (rs.next()) {
 		        System.out.println(rs.getInt("id") + " - " + rs.getString("name"));
 		    }
-		} catch (SQLException e) {
-		    e.printStackTrace();
-		} finally {
 		    rs.close();
 		    stmt.close();
 		    conn.close();
+		} catch (SQLException e) {
+		    e.printStackTrace();
 		}
 	}
 }
@@ -854,7 +853,7 @@ Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Fram
 >>Separazione delle varie responsabilità
 >
 >>[!important] High Cohesion
->>Ogni componente dovrebbe occuparsi di diverse responsabilità
+>>Ogni componente dovrebbe concentrarsi su responsabilità strettamente correlate
 >
 
 >[!multi-column]
@@ -868,7 +867,7 @@ Layout risultante: Frame 1 e Frame 2 impilati nella colonna sinistra (20%), Fram
 
 
 ## Java Database Connectivity
-JDC è un'API di Java che permette la connessione di applicazioni Java con database relazionali. Infatti, fornisce un'interfaccia standard per eseguire query `SQL`, aggiornare dati e gestire connessioni a DBMS. Si può utilizzare in qualunque applicazione.
+JDBC è un'API di Java che permette la connessione di applicazioni Java con database relazionali. Infatti, fornisce un'interfaccia standard per eseguire query `SQL`, aggiornare dati e gestire connessioni a DBMS. Si può utilizzare in qualunque applicazione.
 ![[Appunti-1791280412263.webp|center|541]]
 
 
@@ -1040,6 +1039,7 @@ try {
 	statement.executeUpdate(...); //op 1
 	statement.executeUpdate(...); //op 2
 	[...]
+	connection.commit(); //conferma: si arriva qui solo se tutte le op sono andate a buon fine
 } catch (Exception e) {
 	try {
 		connection.rollback();   //prima del commit si può tornare indietro
@@ -1048,13 +1048,13 @@ try {
 	}
 } finally {
 	try {
-		// sezione in cui si richiede la transazionalità dell'operazione
-		connection.commit(); //conferma
 		connection.close();
 	} catch (SQLException sqle) { … }
-	
 }
 ```
+
+>[!attention] Correzione rispetto alla slide
+>Nella slide (Lezione 03 JDBC, "Utilizzo delle Transaction") il `commit()` sta nel `finally`, quindi verrebbe eseguito anche dopo un `rollback()`. Qui è spostato alla fine del `try`.
 - `setAutoCommit(false)` fa sì che le modifiche restino **provvisorie**, visibili solo a te.
 - `commit()` le rende definitive.
 - `rollback()` le butta via e riporta il DB a com'era prima.
