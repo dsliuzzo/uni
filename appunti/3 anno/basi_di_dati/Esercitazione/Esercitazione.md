@@ -521,12 +521,60 @@ FROM coppieNo
 ```
 
 12) Per ogni società finanziaria che gestisca almeno 50 investimenti, restituire il clienti che abbia sottoscritto il maggior numero di investimenti di quella società finanziaria, considerando solo gli investimenti di importo superiore a 5000 euro. L’importo corrisposto per una singola sottoscrizione di investimento è pari al numero di quote sottoscritte moltiplicato per il valore di una singola quota.
-%% da fare %%
+``` sql
+CREATE VIEW societaOk(societa) AS (
+	SELECT I.SocietaFinanziaria AS societa
+	FROM Investimento I, Sottoscrizione S
+	WHERE   S.Investimento = I.nome
+		AND (I.ValoreSingolaQuota * S.NumeroQuote) > 5000
+	GROUP BY I.SocietaFinanziaria
+	HAVING COUNT(*) >= 50
+);
+
+-- mi serve una view societa-cliente-count
+ CREATE VIEW SocCliCount(societa, cliente, tot) AS (
+	 SELECT I.SocietaFinanziaria, S.Cliente, COUNT(*)
+	 FROM Investimento I, Sottoscrizione S
+	 WHERE   I.Nome = S.Investimento
+		 AND I.SocietaFinanziaria IN (SELECT * FROM societaOK)
+	 GROUP BY I.SocietaFinanziaria, S.Cliente
+ );
+
+SELECT X.societa, X.societa
+FROM SocCliCount X
+WHERE X.tot IN (SELECT MAX(tot)
+				FROM SocCliCount X2
+				WHERE X.societa = X2.societa);
+```
 
 13) Per ogni città i cui clienti hanno sottoscritto almeno 100 investimenti di tipo “fondo azionario”, restituire il cliente che ha investito complessivamente di più considerando tutte le sue sottoscrizioni di investimenti. L’importo corrisposto per una singola sottoscrizione di investimento è pari al numero di quote sottoscritte moltiplicato per il valore di una singola quota.
-%% da fare %%
+``` sql
+CREATE VIEW cittaOk(citta) AS (
+	SELECT C.citta
+	FROM Investimento I, Sottoscrizione S, Cliente C
+	WHERE   I.TipoInvestimento = "fondo azionario"
+		AND S.Investimento = I.Nome
+		AND S.Cliente = C.CodiceFiscale
+	GROUP BY C.Citta
+	HAVING COUNT(*) >= 100
+);
 
+-- cliente|citta|quanto ha investito
+CREATE VIEW CliInv (cliente, citta, investito) AS (
+	SELECT S.Cliente, C.citta, SUM(S.NumeroQuote * I.ValoreSingolaQuota)
+	FROM Sottoscrizione S, Investimento I, Cliente C, cittaOk
+	WHERE   I.Nome = S.Investimento
+		AND S.Cliente = C.CodiceFiscale
+		AND C.citta = cittaOk.citta
+	GROUP BY S.Cliente, S.citta
+);
 
+SELECT CI1.citta AS citta, AS cliente
+FROM CliInv AS CI1
+WHERE CI1.investito IN (SELECT MAX(CI2.investito)
+						FROM CliInv AS CI2
+						WHERE CI1.citta = CI2.citta);
+```
 # Prova esame 8 luglio 2019
 ## Esercizio 4
 Sia dato il seguente schema di database:
