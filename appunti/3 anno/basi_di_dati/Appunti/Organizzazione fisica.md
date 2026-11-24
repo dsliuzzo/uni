@@ -26,12 +26,16 @@ Qualunque sistema si usi per memorizzare le tuple in memoria secondaria, bisogna
 >Il costo di un'operazione in un DBMS si misura nel **numero di accessi alle pagine**.
 >Le operazioni sulle tuple una volta che sono in RAM (**costi intrapagina**) sono di ordini di grandezza inferiori, quindi trascurabili.
 
-Conviene quindi che una pagina contenga il **maggior numero possibile di tuple**, per ridurre i costi effettivi. Per lo stesso motivo bisogna evitare molti attributi che ammettono `NULL`: aumentano lo spazio inutile all'interno di una pagina.
+Conviene quindi che una pagina contenga il **maggior numero possibile di tuple**, per ridurre i costi effettivi: una tabella di 1000 tuple non richiede per forza 1000 passi per essere scandita, perché tutte le tuple potrebbero stare in una sola pagina.
+
+Le tecniche di organizzazione delle pagine puntano quindi a:
+- **compattamento** delle tuple nella pagina (ridurre la frammentazione interna): per questo bisogna evitare molti attributi che ammettono `NULL`, che aumentano lo spazio inutile all'interno di una pagina
+- **ordinamento** rispetto alle operazioni eseguite sul DBMS
 
 ## Ricerca
 La ricerca delle tuple serve sia per le ricerche vere e proprie sia per l'inserimento. Tipicamente è basata sul [[Modello relazionale#Vincolo di chiave primaria|vincolo di chiave primaria]], che diventa quindi un aspetto fondamentale dell'allocazione.
 
-Non basta però: ordinando le tuple per chiave primaria non otteniamo nessun vantaggio sulle ricerche basate su altri attributi. Servono criteri che supportino ricerche di **ogni tipo**, e la bontà di una soluzione si valuta sempre sul **numero di accessi alle pagine**.
+Non basta però: ordinando le tuple per chiave primaria non otteniamo nessun vantaggio sulle ricerche basate su altri attributi. Servono criteri che supportino ricerche di **ogni tipo**: il DBMS valuta le query eseguite più spesso e organizza le tuple rispetto a quei criteri. La bontà di una soluzione si valuta sempre sul **numero di accessi alle pagine**.
 
 In memoria centrale una delle strutture più usate è la [[Strutture dati#Tabelle Hash|tabella hash]]: la ricerca è costante, ma per calcolare la funzione di hash servono gli attributi su cui è calcolata.
 
@@ -67,11 +71,15 @@ Contano solo i costi di accesso alle pagine:
 
 Quando si crea un database si può scegliere di organizzare le tuple con una tabella hash calcolata su un attributo specifico, che sappiamo avrà un ruolo chiave nelle ricerche.
 
-Le pagine indirizzate dalla funzione di hash formano l'**area primaria**.
+Le pagine assegnate alla creazione del database, indirizzate dalla funzione di hash, formano l'**area primaria** di dimensione $M$.
+
+Quando una pagina si riempie si ha un **trabocco**. Non possiamo aumentare $M$: le tuple il cui hash è già stato calcolato andrebbero tutte ridistribuite.
+
+>[!important] Gestione dei trabocchi
+>- **liste separate**: le pagine di trabocco stanno fuori dall'area primaria ([[#Liste di trabocco|liste di trabocco]])
+>- **liste dentro l'area primaria**: [[#Liste coalescenti|liste coalescenti]] e [[#Record linkati|record linkati]]
 
 ### Liste di trabocco
-Come gestiamo una pagina piena?
-Non possiamo aumentare $M$: le tuple il cui hash è già stato calcolato andrebbero tutte ridistribuite.
 Come in memoria centrale, creiamo una pagina in più collegata alla pagina piena: la **lista di trabocco**.
 ![[Esercizi Furfaro-lista-trabocco.svg|center|600]]
 
@@ -96,8 +104,8 @@ Si ragiona a livello di **record**: invece di collegare ogni pagina a un'altra p
 
 ![[Esercizi Furfaro-record-linkati.svg|center|600]]
 Si può combinare questo metodo con le pagine di trabocco: i trabocchi vengono collegati per record, ma messi in un'**area di trabocco** separata dalle $M$ pagine dell'area primaria.
-- A parità di tuple si usano più pagine, quindi in teoria si usa peggio la memoria.
-- Però nella soluzione precedente i trabocchi finiscono in pagine che devono contenere altri elementi e ne favoriscono a loro volta il trabocco. Qui il trabocco di una pagina di trabocco non fa traboccare le pagine dell'area primaria.
+- A parità di tuple si usano più pagine, quindi in teoria si usa peggio la memoria (si creano buchi che non si possono riempire).
+- Però con i record linkati nell'area primaria i trabocchi finiscono in pagine che devono contenere altri elementi e ne favoriscono a loro volta il trabocco. Qui il trabocco di una pagina di trabocco non fa traboccare le pagine dell'area primaria.
 
 >[!warning] Costi reali
 >Le pagine dell'area primaria vengono allocate sul disco in modo da ottimizzarne la lettura (meno spostamenti della testina). Per le pagine di trabocco, create in modo estemporaneo, non c'è questa garanzia: anche per questo i costi reali possono essere maggiori.
@@ -110,8 +118,11 @@ $$
 all'$i$-esimo trabocco si incrementa $H(k)$ di $i$: se trabocca anche la pagina successiva, si incrementa ancora.
 
 >[!warning] Agglomerazione primaria
->Le tuple che traboccano si accumulano nelle pagine vicine e le fanno traboccare a loro volta ([[Strutture dati#^2e21f9|agglomerazione]]).
->È lo stesso problema delle [[#Liste coalescenti|liste coalescenti]].
+>Le tuple che traboccano finiscono nelle pagine vicine, che si riempiono più in fretta ([[Strutture dati#^2e21f9|agglomerazione]]). Le pagine piene formano blocchi contigui e la probabilità che una nuova tupla finisca nella pagina subito dopo il blocco cresce (nell'esempio dal 25% al 50%): i trabocchi si concentrano e le catene da scorrere si allungano.
+>È lo stesso problema dei [[#Record linkati|record linkati]] nell'area primaria.
+
+>[!attention] AGGIUNTA
+>La spiegazione dell'agglomerazione (con il 25% → 50%) viene dagli appunti di Claudia, che l'ha segnata anche lei come aggiunta: non è una fonte del corso.
 
 ![[Esercizi Furfaro-agglomerazione-primaria.svg|center|600]]
 

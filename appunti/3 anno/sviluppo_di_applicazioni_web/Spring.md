@@ -1702,7 +1702,14 @@ La configurazione prepara Spring Boot a usare Hibernate per collegarsi a Postgre
 
 ### Convention over configuration con JPA
 
-Struttura: `project/ ├─ src/ ├─ pom.xml └─ mvnw` (la dipendenza dello starter va aggiunta al `pom.xml`, il file di configurazione Maven / Project Object Model).
+Struttura: 
+```
+project/
+ ├─ src/
+ ├─ pom.xml
+ └─ mvnw
+```
+(la dipendenza dello starter va aggiunta al `pom.xml`, il file di configurazione Maven / Project Object Model).
 
 Se si seguono le convenzioni non serve configurare quasi nulla:
 
@@ -1780,5 +1787,3 @@ Se non si configura nulla, Spring crea un solo utente `user` e la password viene
 ```
 Using default security password: 087cfc6a-027d-44bc-95d7-cbb3a798a1ea
 ```
-
-``
