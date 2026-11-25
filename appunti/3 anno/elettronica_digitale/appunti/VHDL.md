@@ -1262,6 +1262,36 @@ end myRA;
 ^regadd4
 
 ### Diagramma di timing
+``` vhdl
+Library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_arith.all;
+
+entity testb is
+end testb;
+
+architecture mySim of testb is
+component RegAdd4 port( AA, BB: in std_logic_vector(3 downto 0);
+						clk, clr: in std_logic;
+						SS: std_logic_vector (4 downto 0));
+end component;
+
+signal AA, BB: std_logic_vector(3 downto 0);
+signal clk, clr: std_logic := '0';
+signal SS: std_logic_vector(4 downto 0);
+constant T: time := 10 ns; -- costante usata per definire il periodo di clock
+
+begin 
+	CUT: RegAdd4 port map(AA,BB,clk,clr,SS);
+	process begin -- questo process verrà ripetuto in maniera ciclica
+		wait for T/2;
+		clk <= not(clk);
+	end process;
+	process begin
+		clr <= '1';
+		wait for 3 ns;
+		clr <= '0';
+```
 Analizziamo il diagramma di timing del circuito, privato del segnale di clear per semplicità, per ricavare l'andamento temporale dei segnali `A, B, S, SS`.
 
 ![[VHDL-sommatore-noclear.svg|center]]
@@ -1326,3 +1356,46 @@ uno degli operandi è comune: circuito sommatore che abbia un ingresso costante 
 A invece deve cambiare in base al valore di C
 `-A = not(A) + 1`
 Posso usare il $C_{\text{in}}$ del sommatore per gestire l'ultimo +1 rimanente
+
+
+
+
+
+
+
+
+---
+
+
+parte mancante
+
+
+
+
+Progetto
+
+| $C_{1}$ | $C_{0}$ | A,B a 8 bit             | 2's complement |
+| ------- | ------- | ----------------------- | -------------- |
+| 0       | 0       | A+B                     |                |
+| 0       | 1       | A - B = A + not B + '1' |                |
+| 1       | 0       | 2A + B                  |                |
+| 1       | 1       | 2A-B = 2A + not B + '1' |                |
+Lo shifting non implica l'uso di componenti circuitali
+può essere risolto senza utilizzare alcuna risorsa aggiuntiva
+ho bisogno di introdurre da qualche parte un segnale
+`signal dueA: std_logic_vector(8 downto 0)`
+passo da 8 a 9 bit
+all'interno dell'architettura ci sarà uno statement
+``` vhdl
+dueA <= A & '0';
+```
+questa è la moltiplicazione per 2
+non richiama nessuna porta logica
+usa semplicemente un collegamento
+lo `'0'` lo abbiamo già perché è rappresentato dalla massa
+
+
+---
+
+Argomento nuovo
+Tecnica di somma particolare
