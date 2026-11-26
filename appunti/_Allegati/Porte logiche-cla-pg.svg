@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="200" viewBox="0 0 640 200">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ts{font-size:12px} .th{font-size:14px;font-weight:500} .s{font-size:10px}</style>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(50,120) rotate(90)">
+<path d="M-20,-20 H5 A20,20 0 0 1 5,20 H-20 Z"/>
+</g>
+<g transform="translate(130,120) rotate(90)">
+<path d="M-28,-20 Q-16,0 -28,20"/>
+<path d="M-20,-20 Q12,-20 30,0 Q12,20 -20,20 Q-8,0 -20,-20 Z"/>
+</g>
+<polyline points="65,30 65,60 40,60 40,100"/>
+<polyline points="115,30 115,70 60,70 60,100"/>
+<polyline points="65,60 120,60 120,100"/>
+<polyline points="115,70 140,70 140,100"/>
+<circle cx="65" cy="60" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<circle cx="115" cy="70" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="50" y1="145" x2="50" y2="180"/>
+<line x1="130" y1="150" x2="130" y2="180"/>
+<g transform="translate(200,120) rotate(90)">
+<path d="M-20,-20 H5 A20,20 0 0 1 5,20 H-20 Z"/>
+</g>
+<g transform="translate(280,120) rotate(90)">
+<path d="M-28,-20 Q-16,0 -28,20"/>
+<path d="M-20,-20 Q12,-20 30,0 Q12,20 -20,20 Q-8,0 -20,-20 Z"/>
+</g>
+<polyline points="215,30 215,60 190,60 190,100"/>
+<polyline points="265,30 265,70 210,70 210,100"/>
+<polyline points="215,60 270,60 270,100"/>
+<polyline points="265,70 290,70 290,100"/>
+<circle cx="215" cy="60" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<circle cx="265" cy="70" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="200" y1="145" x2="200" y2="180"/>
+<line x1="280" y1="150" x2="280" y2="180"/>
+<g transform="translate(350,120) rotate(90)">
+<path d="M-20,-20 H5 A20,20 0 0 1 5,20 H-20 Z"/>
+</g>
+<g transform="translate(430,120) rotate(90)">
+<path d="M-28,-20 Q-16,0 -28,20"/>
+<path d="M-20,-20 Q12,-20 30,0 Q12,20 -20,20 Q-8,0 -20,-20 Z"/>
+</g>
+<polyline points="365,30 365,60 340,60 340,100"/>
+<polyline points="415,30 415,70 360,70 360,100"/>
+<polyline points="365,60 420,60 420,100"/>
+<polyline points="415,70 440,70 440,100"/>
+<circle cx="365" cy="60" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<circle cx="415" cy="70" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="350" y1="145" x2="350" y2="180"/>
+<line x1="430" y1="150" x2="430" y2="180"/>
+<g transform="translate(500,120) rotate(90)">
+<path d="M-20,-20 H5 A20,20 0 0 1 5,20 H-20 Z"/>
+</g>
+<g transform="translate(580,120) rotate(90)">
+<path d="M-28,-20 Q-16,0 -28,20"/>
+<path d="M-20,-20 Q12,-20 30,0 Q12,20 -20,20 Q-8,0 -20,-20 Z"/>
+</g>
+<polyline points="515,30 515,60 490,60 490,100"/>
+<polyline points="565,30 565,70 510,70 510,100"/>
+<polyline points="515,60 570,60 570,100"/>
+<polyline points="565,70 590,70 590,100"/>
+<circle cx="515" cy="60" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<circle cx="565" cy="70" r="3.5" fill="#b8b8b8" stroke="#b8b8b8" stroke-width="1"/>
+<line x1="500" y1="145" x2="500" y2="180"/>
+<line x1="580" y1="150" x2="580" y2="180"/>
+</g>
+<text x="65" y="18" class="ts">a<tspan dy="4" font-size="10">3</tspan><tspan dy="-4"></tspan></text>
+<text x="115" y="18" class="ts">b<tspan dy="4" font-size="10">3</tspan><tspan dy="-4"></tspan></text>
+<text x="50" y="192" class="ts" style="fill:#98c379;">g<tspan dy="4" font-size="10">3</tspan><tspan dy="-4"></tspan></text>
+<text x="130" y="192" class="ts" style="fill:#61afef;">p<tspan dy="4" font-size="10">3</tspan><tspan dy="-4"></tspan></text>
+<text x="215" y="18" class="ts">a<tspan dy="4" font-size="10">2</tspan><tspan dy="-4"></tspan></text>
+<text x="265" y="18" class="ts">b<tspan dy="4" font-size="10">2</tspan><tspan dy="-4"></tspan></text>
+<text x="200" y="192" class="ts" style="fill:#98c379;">g<tspan dy="4" font-size="10">2</tspan><tspan dy="-4"></tspan></text>
+<text x="280" y="192" class="ts" style="fill:#61afef;">p<tspan dy="4" font-size="10">2</tspan><tspan dy="-4"></tspan></text>
+<text x="365" y="18" class="ts">a<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"></tspan></text>
+<text x="415" y="18" class="ts">b<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"></tspan></text>
+<text x="350" y="192" class="ts" style="fill:#98c379;">g<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"></tspan></text>
+<text x="430" y="192" class="ts" style="fill:#61afef;">p<tspan dy="4" font-size="10">1</tspan><tspan dy="-4"></tspan></text>
+<text x="515" y="18" class="ts">a<tspan dy="4" font-size="10">0</tspan><tspan dy="-4"></tspan></text>
+<text x="565" y="18" class="ts">b<tspan dy="4" font-size="10">0</tspan><tspan dy="-4"></tspan></text>
+<text x="500" y="192" class="ts" style="fill:#98c379;">g<tspan dy="4" font-size="10">0</tspan><tspan dy="-4"></tspan></text>
+<text x="580" y="192" class="ts" style="fill:#61afef;">p<tspan dy="4" font-size="10">0</tspan><tspan dy="-4"></tspan></text>
+</svg>

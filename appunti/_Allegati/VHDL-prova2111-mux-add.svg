@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="400" viewBox="0 0 420 400">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><polyline points="1,1 8,5 1,9" fill="none" stroke="#b8b8b8" stroke-width="1.5"/></marker></defs>
+<text x="110" y="28" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">A</text>
+<text x="200" y="28" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">not(A)</text>
+<line x1="110" y1="36" x2="110" y2="80" stroke="#b8b8b8" stroke-width="2.5" marker-end="url(#ar)"/>
+<line x1="200" y1="36" x2="200" y2="80" stroke="#b8b8b8" stroke-width="2.5" marker-end="url(#ar)"/>
+<polygon points="70,82 240,82 220,128 90,128" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="110" y="112" font-size="14" text-anchor="middle" fill="#b8b8b8">0</text>
+<text x="200" y="112" font-size="14" text-anchor="middle" fill="#b8b8b8">1</text>
+<text x="28" y="110" font-size="14" text-anchor="middle" fill="#e07b6a" font-style="italic">C</text>
+<line x1="38" y1="105" x2="78" y2="105" stroke="#e07b6a" stroke-width="2.5"/>
+<line x1="155" y1="128" x2="155" y2="196" stroke="#b8b8b8" stroke-width="2.5" marker-end="url(#ar)"/>
+<text x="166" y="168" font-size="13" fill="#b8b8b8" font-style="italic">A'</text>
+<text x="300" y="70" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">B = "0001"</text>
+<line x1="300" y1="80" x2="300" y2="196" stroke="#b8b8b8" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="110" y="198" width="230" height="100" fill="none" stroke="#b8b8b8" stroke-width="2.5" rx="2"/>
+<text x="155" y="225" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">A'</text>
+<text x="300" y="225" font-size="14" text-anchor="middle" fill="#b8b8b8" font-style="italic">B</text>
+<text x="225" y="258" font-size="26" text-anchor="middle" fill="#b8b8b8">+</text>
+<text x="315" y="275" font-size="12" text-anchor="end" fill="#e07b6a" font-style="italic">Cin</text>
+<line x1="390" y1="270" x2="342" y2="270" stroke="#e07b6a" stroke-width="2.5"/>
+<text x="400" y="275" font-size="14" text-anchor="middle" fill="#e07b6a" font-style="italic">C</text>
+<line x1="225" y1="298" x2="225" y2="360" stroke="#b8b8b8" stroke-width="2.5" marker-end="url(#ar)"/>
+<text x="240" y="345" font-size="14" fill="#b8b8b8" font-style="italic">S</text>
+</svg>

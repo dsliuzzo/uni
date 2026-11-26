@@ -30,8 +30,23 @@ Progettare un sommatore carry select che lavora su numeri in binario naturale a 
 prepariamo alla fine dei test una relazione da inviare per email s.perri@unical.it in formato pdf con elenco nominativi
 entro il 27 ottobre
 
+## Progetto 2
+Dati `A` e `B` a 8 bit in complemento a 2 e i segnali di controllo $C_1 C_0$, il circuito calcola:
 
+| $C_{1}$ | $C_{0}$ | Risultato                         |
+| ------- | ------- | --------------------------------- |
+| 0       | 0       | $A+B$                             |
+| 0       | 1       | $A - B = A + \text{not } B + 1$   |
+| 1       | 0       | $2A + B$                          |
+| 1       | 1       | $2A - B = 2A + \text{not } B + 1$ |
 
+**Moltiplicazione per 2**: è uno shift a sinistra, quindi non richiede componenti circuitali né risorse aggiuntive. Basta introdurre un segnale con un bit in più (da 8 a 9 bit) e, nell'architettura, uno statement di [[VHDL#Concatenazione|concatenazione]]:
+``` vhdl
+signal dueA: std_logic_vector(8 downto 0);
+...
+dueA <= A & '0'; -- 2A
+```
+Non richiama nessuna porta logica, è solo un collegamento: lo `'0'` c'è già perché è la massa.
 
-14 gennaio
-1 febbraio
+- Allo stesso modo $4A$ si ottiene concatenando due zeri: `A & "00"` (10 bit). Claudia scrive `'00'`, ma un vettore di più bit va tra virgolette doppie.
+- Si lavora prima solo sull'aspetto **combinatorio**, senza aggiungere registri. Poi si aggiungono i registri e si fa la sintesi; solo alla fine si calcola la dissipazione di potenza.

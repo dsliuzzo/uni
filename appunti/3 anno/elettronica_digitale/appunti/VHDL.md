@@ -683,11 +683,15 @@ signal p,g: bit_vector(2 downto 0);
 begin
 	p <= A xor B;
 	g <= A and B;
-	c(1) <= g(0) or p(0) and Cin;
-	c(2) <= g(1) or p(1) and g(0) or p(1) and p(0) and Cin;
-	c(3) <= g(2) or p(2) and g(1) or p(2) and p(1) and g(0) or p(2) and p(1) and p(0) and Cin;
-end myCLA
+	-- and e or misti richiedono le parentesi
+	c(1) <= g(0) or (p(0) and Cin);
+	c(2) <= g(1) or (p(1) and g(0)) or (p(1) and p(0) and Cin);
+	c(3) <= g(2) or (p(2) and g(1)) or (p(2) and p(1) and g(0)) or (p(2) and p(1) and p(0) and Cin);
+end myCLA;
 ```
+^cla
+
+Teoria: [[Porte logiche#Carry look ahead|carry look ahead]].
 
 
 ``` vhdl
@@ -1261,7 +1265,14 @@ end myRA;
 ```
 ^regadd4
 
-### Diagramma di timing
+### Testbench
+Il testbench del sommatore sincrono `RegAdd4` deve generare tre cose: il **clock**, l'impulso di **clear** iniziale e la sequenza di **operandi** `AA, BB`. Scelte fatte:
+- **periodo parametrizzato**: `constant T: time := 10 ns`, così tutte le attese si scrivono in funzione di $T$ e cambiando il periodo il codice resta valido;
+- **clock con duty cycle 50%**: un process dedicato che inverte `clk` ogni $T/2$. Partendo da `clk = '0'`, i fronti di salita (eventi attivi) cadono a 5, 15, 25 ns, ...;
+- **process separati** per clock e ingressi: sono concorrenti, quindi il clock gira per tutta la simulazione mentre l'altro process gestisce clear e operandi;
+- **clear solo all'inizio**: `clr` resta alto per 2 ns per azzerare i registri, poi torna a 0 (la durata è stata scelta per rispettare il $t_{setup}$, vedi [[#^oss-clear|osservazione]]);
+- **operandi**: due `for` annidati su $[-8, 7]$ (tutti i valori su 4 bit in complemento a 2), convertiti con `conv_std_logic_vector(i, 4)`; tra una coppia e la successiva si attende un periodo $T$ (vedi [[#^oss-step|osservazione]]).
+
 ``` vhdl
 Library IEEE;
 use IEEE.std_logic_1164.all;
@@ -1273,7 +1284,7 @@ end testb;
 architecture mySim of testb is
 component RegAdd4 port( AA, BB: in std_logic_vector(3 downto 0);
 						clk, clr: in std_logic;
-						SS: std_logic_vector (4 downto 0));
+						SS: out std_logic_vector (4 downto 0));
 end component;
 
 signal AA, BB: std_logic_vector(3 downto 0);
@@ -1287,11 +1298,48 @@ begin
 		wait for T/2;
 		clk <= not(clk);
 	end process;
+	-- il clear serve solo all'inizio (azzera i registri), poi questo process assegna gli ingressi
 	process begin
-		clr <= '1';
-		wait for 3 ns;
+		clr <= '1'; -- a t = 0 diventa alto
+		wait for 2 ns; -- prima era 3 ns: vedi osservazione sulla durata del clear
 		clr <= '0';
+		-- prima: wait for T/2 - 2 ns - 3 ns; (t_setup = 2 ns, 3 ns già trascorsi)
+		wait for T/2 - 2 ns - 2 ns;
+		
+		for i in -8 to 7 loop
+			AA <= conv_std_logic_vector(i, 4); -- assegnamento valori operando AA
+			for j in -8 to 7 loop
+				BB <= conv_std_logic_vector(j, 4);
+				wait for T; -- a passi di un periodo di clock i vincoli sui tempi sono rispettati
+			end loop;
+		end loop;
+	end process;
+end mySim;
 ```
+
+>[!multi-column]
+>
+>>[!blank]
+>>![[VHDL-timing-testbench-clear.svg|center|400]]
+>
+>>[!question] Osservazione - durata del clear
+>>Con $T = 10$ ns il primo fronte di salita del clock cade a $T/2 = 5$ ns. Il clear resta alto da 0 a 2 ns e azzera i registri in modo asincrono; dopo che `clr` torna a 0 bisogna applicare gli ingressi `AA, BB` rispettando il $t_{setup} = 2$ ns, cioè entro $5 - 2 = 3$ ns.
+>>Con l'impulso di clear originale da 3 ns, l'attesa `T/2 - 2ns - 3ns` = 0 ns porterebbe ad assegnare gli ingressi a 5 ns, cioè **sopra il fronte di clock** (setup violato). Le soluzioni sono due: ridurre l'impulso di clear o aumentare il periodo. Riducendo il clear a 2 ns, l'attesa `T/2 - 2ns - 2ns` = 1 ns porta a $t = 3$ ns: gli ingressi cambiano esattamente $t_{setup}$ prima del fronte.
+
+^oss-clear
+
+>[!multi-column]
+>
+>>[!blank]
+>>![[VHDL-timing-testbench-step.svg|center|500]]
+>
+>>[!question] Osservazione - step di T
+>>Nei primi 2 ns lavora solo il **clear** (zona blu): azzera i registri in modo asincrono, senza attendere il clock, e gli ingressi sono ancora `U`.
+>>Dopo il primo assegnamento a 3 ns basta avanzare a **step di $T$** (`wait for T` nel loop): gli ingressi cambiano a 3, 13, 23 ns, sempre $t_{setup}$ prima dei fronti di salita a 5, 15, 25 ns. Una volta posizionato correttamente il primo cambio, i vincoli temporali restano rispettati per ogni coppia `AA, BB`.
+
+^oss-step
+
+### Diagramma di timing
 Analizziamo il diagramma di timing del circuito, privato del segnale di clear per semplicità, per ricavare l'andamento temporale dei segnali `A, B, S, SS`.
 
 ![[VHDL-sommatore-noclear.svg|center]]
@@ -1344,58 +1392,58 @@ Nel caso dell'esempio:
 - **throughput**: $tp = 1 \to$ a regime il circuito restituisce un nuovo risultato ad ogni ciclo di clock, perché ad ogni fronte vengono campionati nuovi operandi mentre si memorizza la somma dei precedenti.
 
 ## Prova d'esame
-Ingresso in complemento a 2
+### Prova 21/11
+Ingresso `A(3:0)` in complemento a 2, segnale di controllo `C`:
 
 | C   | A(3:0) | Ris    |                               |
 | --- | ------ | ------ | ----------------------------- |
 | '0' | -      | A + 1  | $\equiv (A+0)+1$              |
 | '1' | -      | -A + 1 | $\equiv (\overline{A} + 1)+1$ |
 
-uno degli operandi è comune: circuito sommatore che abbia un ingresso costante pari a 1
-`B = '0001'`
-A invece deve cambiare in base al valore di C
-`-A = not(A) + 1`
-Posso usare il $C_{\text{in}}$ del sommatore per gestire l'ultimo +1 rimanente
+- Uno degli operandi è comune: serve un circuito sommatore con un ingresso costante pari a 1, `B = "0001"`.
+- `A` invece deve cambiare in base al valore di `C`: per `C = '1'` serve `-A = not(A) + 1`.
+- Il $C_{\text{in}}$ del sommatore si può usare per gestire l'ultimo $+1$ rimanente.
 
+![[VHDL-prova2111-mux-add.svg|center|360]]
 
+Lo stesso segnale `C` comanda sia la selezione del MUX sia il $C_{\text{in}}$ del sommatore:
 
+| C   | A' (uscita MUX) | B      | $C_{\text{in}}$ | S = A' + B + $C_{\text{in}}$    |
+| --- | --------------- | ------ | --------------- | ------------------------------- |
+| '0' | `A`             | "0001" | '0'             | $A + 1$                         |
+| '1' | `not(A)`        | "0001" | '1'             | $\overline{A} + 1 + 1 = -A + 1$ |
 
+- con `C = '0'` il MUX lascia passare `A` così com'è e il riporto entrante è nullo: il sommatore aggiunge solo `B = 1`;
+- con `C = '1'` il MUX passa `not(A)`: il $C_{\text{in}} = 1$ completa il complemento a 2 ($\overline{A} + 1 = -A$) e `B` aggiunge il $+1$ richiesto.
 
-
-
-
----
-
-
-parte mancante
-
-
-
-
-Progetto
-
-| $C_{1}$ | $C_{0}$ | A,B a 8 bit             | 2's complement |
-| ------- | ------- | ----------------------- | -------------- |
-| 0       | 0       | A+B                     |                |
-| 0       | 1       | A - B = A + not B + '1' |                |
-| 1       | 0       | 2A + B                  |                |
-| 1       | 1       | 2A-B = 2A + not B + '1' |                |
-Lo shifting non implica l'uso di componenti circuitali
-può essere risolto senza utilizzare alcuna risorsa aggiuntiva
-ho bisogno di introdurre da qualche parte un segnale
-`signal dueA: std_logic_vector(8 downto 0)`
-passo da 8 a 9 bit
-all'interno dell'architettura ci sarà uno statement
 ``` vhdl
-dueA <= A & '0';
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity circ is
+	port(
+		A: in std_logic_vector(3 downto 0);
+		C: in std_logic;
+		S: out std_logic_vector(4 downto 0)
+		);
+end circ;
+
+architecture myCirc of circ is
+	component RCA4
+	port(
+		A, B: in std_logic_vector(3 downto 0);
+		cin: in std_logic;
+		S: out std_logic_vector(4 downto 0)
+		);
+	end component;
+	
+	signal B: std_logic_vector(3 downto 0) := "0001";
+	signal AA: std_logic_vector(3 downto 0);
+	
+begin 
+	ADD: RCA4 port map (AA, B, C, S);
+	AA <= A when (C = '0') else -- con il solo "else not A" coprirei tutti gli altri valori, non solo '1'
+	-- QUINDI:
+			not A when (C = '1') else (others => 'X'); -- in tutti gli altri casi A prende 'X'
+end myCirc;
 ```
-questa è la moltiplicazione per 2
-non richiama nessuna porta logica
-usa semplicemente un collegamento
-lo `'0'` lo abbiamo già perché è rappresentato dalla massa
-
-
----
-
-Argomento nuovo
-Tecnica di somma particolare

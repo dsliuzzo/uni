@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="265" viewBox="0 0 400 265">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="108" y="12" width="32" height="200" fill="#e07b6a" fill-opacity="0.12"/>
+<line x1="92" y1="12" x2="92" y2="212" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="108" y1="12" x2="108" y2="212" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="140" y1="12" x2="140" y2="212" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="220" y1="12" x2="220" y2="212" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<text x="40" y="60" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">clk</text>
+<line x1="60" y1="85" x2="356" y2="85" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="351,81 358,85 351,89" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="378" y="90" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,85 140,85 140,30 220,30 220,85 300,85 300,30 316,30" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="140" y1="85" x2="140" y2="30" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="134,40 140,30 146,40" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="40" y="160" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">clr</text>
+<line x1="60" y1="190" x2="356" y2="190" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="351,186 358,190 351,194" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="378" y="195" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,190 60,135 92,135 92,190 316,190" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="124" y="206" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="100" y="125" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">1 ns</text>
+<text x="60" y="230" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">0</text>
+<text x="92" y="230" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">2 ns</text>
+<text x="140" y="230" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">5 ns</text>
+<text x="220" y="230" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">10 ns</text>
+<text x="300" y="230" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">15 ns</text>
+<text x="108" y="248" font-size="11" text-anchor="middle" fill="#e07b6a" font-style="italic">3 ns</text>
+</svg>

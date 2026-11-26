@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="370" viewBox="0 0 580 370">
+<style>text{font-family:"Helvetica Neue",Arial,sans-serif}</style>
+<rect x="60" y="12" width="32" height="300" fill="#5b9bd5" fill-opacity="0.15"/>
+<rect x="108" y="12" width="32" height="300" fill="#e07b6a" fill-opacity="0.12"/>
+<rect x="268" y="12" width="32" height="300" fill="#e07b6a" fill-opacity="0.12"/>
+<rect x="428" y="12" width="32" height="300" fill="#e07b6a" fill-opacity="0.12"/>
+<line x1="92" y1="12" x2="92" y2="312" stroke="#5b9bd5" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="108" y1="12" x2="108" y2="312" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="140" y1="12" x2="140" y2="312" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="268" y1="12" x2="268" y2="312" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="300" y1="12" x2="300" y2="312" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="428" y1="12" x2="428" y2="312" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<line x1="460" y1="12" x2="460" y2="312" stroke="#b8b8b8" stroke-width="1" stroke-linecap="round" stroke-dasharray="4 4"/>
+<text x="40" y="60" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">clk</text>
+<line x1="60" y1="85" x2="536" y2="85" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="531,81 538,85 531,89" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="558" y="90" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,85 140,85 140,30 220,30 220,85 300,85 300,30 380,30 380,85 460,85 460,30 500,30" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="140" y1="85" x2="140" y2="30" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="134,40 140,30 146,40" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="300" y1="85" x2="300" y2="30" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="294,40 300,30 306,40" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<line x1="460" y1="85" x2="460" y2="30" stroke="#e07b6a" stroke-width="3.5" stroke-linecap="round"/>
+<polyline points="454,40 460,30 466,40" fill="none" stroke="#e07b6a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="40" y="150" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">clr</text>
+<line x1="60" y1="175" x2="536" y2="175" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="531,171 538,175 531,179" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="558" y="180" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,175 60,120 92,120 92,175 500,175" fill="none" stroke="#5b9bd5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="100" y="140" font-size="12" text-anchor="start" fill="#5b9bd5" font-style="italic">registri azzerati</text>
+<text x="40" y="240" font-size="13" text-anchor="end" fill="#b8b8b8" font-style="italic">AA,BB</text>
+<line x1="60" y1="270" x2="536" y2="270" stroke="#707070" stroke-width="1.2" stroke-linecap="round"/>
+<polyline points="531,266 538,270 531,274" fill="none" stroke="#707070" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="558" y="275" font-size="13" text-anchor="middle" fill="#707070" font-style="italic">t</text>
+<polyline points="60,215 103,215 113,255 263,255 273,215 423,215 433,255 500,255" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="60,255 103,255 113,215 263,215 273,255 423,255 433,215 500,215" fill="none" stroke="#b8b8b8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="82" y="240" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">U</text>
+<text x="188" y="240" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">-8, -8</text>
+<text x="348" y="240" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">-8, -7</text>
+<text x="470" y="240" font-size="13" text-anchor="middle" fill="#b8b8b8" font-style="italic">-8, -6</text>
+<line x1="112" y1="200" x2="264" y2="200" stroke="#707070" stroke-width="1.2"/>
+<polyline points="118,196 112,200 118,204" fill="none" stroke="#707070" stroke-width="1.2"/>
+<polyline points="258,196 264,200 258,204" fill="none" stroke="#707070" stroke-width="1.2"/>
+<text x="188" y="195" font-size="12" text-anchor="middle" fill="#707070" font-style="italic">T</text>
+<line x1="272" y1="200" x2="424" y2="200" stroke="#707070" stroke-width="1.2"/>
+<polyline points="278,196 272,200 278,204" fill="none" stroke="#707070" stroke-width="1.2"/>
+<polyline points="418,196 424,200 418,204" fill="none" stroke="#707070" stroke-width="1.2"/>
+<text x="348" y="195" font-size="12" text-anchor="middle" fill="#707070" font-style="italic">T</text>
+<text x="124" y="292" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="284" y="292" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="444" y="292" font-size="12" text-anchor="middle" fill="#e07b6a" font-style="italic">t_setup</text>
+<text x="92" y="334" font-size="11" text-anchor="middle" fill="#5b9bd5" font-style="italic">2 ns</text>
+<text x="140" y="334" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">5 ns</text>
+<text x="300" y="334" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">15 ns</text>
+<text x="460" y="334" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">25 ns</text>
+<text x="108" y="352" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">3 ns</text>
+<text x="268" y="352" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">13 ns</text>
+<text x="428" y="352" font-size="11" text-anchor="middle" fill="#b8b8b8" font-style="italic">23 ns</text>
+</svg>
