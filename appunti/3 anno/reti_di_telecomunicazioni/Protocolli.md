@@ -938,7 +938,7 @@ La maggior parte dei protocolli IGP si basa su due filosofie di routing:
 | Distance vector avanzato     | DUAL           | EIGRP (Cisco)         |
 #### Distance vector
 I protocolli di classe **Distance Vector** utilizzano l'algoritmo di [[Algoritmi#Bellman-Ford|Bellman-Ford]] in versione **distribuita**: tutti i nodi della rete possono eseguire in modo sincrono ogni iterazione dell'algoritmo calcolando i propri costi del cammino e inviando dati ai nodi vicini.
-La procedura terminerebbe al raggiungimento di $N$ iterazioni, ma l'algoritmo viene rilanciato su base periodica o al verificarsi di un determinato evento per implementare degli aggiornamenti della rete.
+La procedura terminerebbe al raggiungimento di $N$ iterazioni, ma l'algoritmo viene rilanciato su base periodica o al verificarsi di un determinato **evento** per implementare degli aggiornamenti della rete.
 
 La condizione di sincronia tra tutti i nodi è difficilmente raggiungibile, di conseguenza i protocolli distance vector implementano una versione asincrona di Bellman-Ford:
 ogni nodo esegue in modo asincrono il calcolo
@@ -1073,9 +1073,12 @@ Il LSP database (la mappa logica della rete) **non è ancora la tabella di instr
 >[!question] Osservazione
 >Differenza con il distance vector: lì i router **cooperano per calcolare le tabelle** di instradamento; qui cooperano per **mantenere aggiornata la mappa** della rete, poi ognuno calcola la propria tabella in modo autonomo.
 
-- In caso di variazioni significative sullo stato dei link, il router invia un **nuovo LSP** in rete. Quindi c'è l'invio periodico come nel distance vector, ma anche un invio **triggerato** da certe condizioni (es. cambiamento significativo di una metrica, interruzione di un collegamento).
+- In caso di variazioni significative sullo stato dei link, il router invia un **nuovo LSP** in rete. Quindi c'è l'invio periodico come nel distance vector, ma anche un invio **triggerato** da certe condizioni:
+	- cambia un peso di un collegamento
+	- viene aggiunto un nuovo nodo alla rete (manderà un HELLO packet)
+	- cade un nodo/un collegamento (un altro nodo apprende questo da un numero definito di HELLO mancati)
+	- 
 - Un aspetto critico è la **sincronizzazione** tra i router: se i router hanno LSP database diversi, sono possibili dei **loop**.
-
 ##### Operazione di un router
 >[!important] Flooding
 >Il **flooding** ("inondazione") è una tecnica di diffusione in cui un nodo, ricevuto un pacchetto, lo **ritrasmette su tutti i suoi link** (tranne quello da cui è arrivato). Così il pacchetto raggiunge **tutti i nodi della rete** senza bisogno di tabelle di instradamento. Per evitare che circoli all'infinito, ogni nodo inoltra solo i pacchetti che non ha già visto (es. LSP con numero di sequenza nuovo).

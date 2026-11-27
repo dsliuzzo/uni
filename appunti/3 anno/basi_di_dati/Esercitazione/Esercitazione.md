@@ -731,16 +731,79 @@ SELECT s2, s1
 FROM coppieNo
 ```
 
-8) Per ogni stazione S indicare la tratta dalla quale partono il maggior numero di autobus e la cui stazione di destinazione è S
-%% da fare %%
+8) Per ogni stazione S, fra le tratte che hanno S come `stazioneDestinazione`, trova quella coperta dal maggior numero di autobus.
+``` sql
+CREATE VIEW trattaNum (tratta, destinazione, n) AS (
+	SELECT A.trattaCoperta, T.stazioneDestinazione, COUNT(*) AS n
+	FROM Autobus A, Tratta T
+	WHERE A.trattaCoperta = T.codice
+	GROUP BY A.trattaCoperta, T.stazioneDestinazione
+);
 
-9) Per ogni stazione S che è partenza di almeno 200 tratte, indicare la tratta dalla quale partono il maggior numero di autobus e la cui stazione di destinazione è S, considerando solo le tratte la cui stazione di partenza è una stazione da cui partono almeno 20 tratte
-%% da fare %%
+SELECT TN1.destinazione, TN1.tratta
+FROM trattaNum TN1
+WHERE TN1.n IN(SELECT MAX(TN2.n)
+			FROM trattaNum TN2
+			WHERE TN1.destinazione = TN2.destinazione);
+```
+
+9) Per ogni stazione S che è partenza di almeno 200 tratte, indicare la tratta T dalla quale partono il maggior numero di autobus e la cui stazione di destinazione è S, considerando solo le tratte T la cui stazione di partenza S è una stazione da cui partono almeno 20 tratte.
+``` sql
+CREATE VIEW tratteNum (tratta, destinazione, n) AS (
+	SELECT A.trattaCoperta, T.stazioneDestinazione, COUNT(*)
+	FROM Tratta T, Autobus A
+	WHERE A.trattaCoperta = T.codice
+	AND T.stazionePartenza IN ( SELECT T2.stazionePartenza
+								FROM Tratta T2
+								GROUP BY T2.stazionePartenza
+								HAVING COUNT(*) >= 20)
+	GROUP BY A.trattaCoperta, T.stazioneDestinazione
+);
+
+CREATE VIEW almeno200 (stazione) AS (
+	SELECT T.stazionePartenza
+	FROM Tratta T
+	GROUP BY T.stazionePartenza
+	HAVING COUNT(*) >= 200
+);
+
+SELECT T.stazioneDestinazione, T.codice
+FROM tratteNum TN1, Tratta T
+WHERE T.codice = TN1.tratta
+AND T.stazioneDestinazione IN (SELECT * FROM almeno200)
+AND TN1.n IN (  SELECT MAX(TN2.n)
+				FROM tratteNum TN2
+				WHERE TN2.destinazione = T.stazioneDestinazione);
+```
 
 10) Per ogni città C in cui esiste un numero di stazioni superiore alle stazioni della città di Roma, restituire ogni tipologia di autobus che, sommando le tratte percorse dagli autobus di tale tipologia che partono da una stazione di C, ricopre la minima distanza cumulativa.
-%% da fare %%
+``` sql
+CREATE VIEW cittaC (citta) AS (
+	SELECT DISTINCT S.citta
+	FROM Stazione S
+	WHERE S.citta IN ( SELECT S1.citta
+						FROM Stazione S1
+						GROUP BY S1.citta
+						HAVING COUNT(*) > ( SELECT COUNT(*)
+											FROM Stazione S2
+											WHERE S2.citta = "Roma"))
+);
 
+CREATE VIEW CTD(citta, tipologia, distanza) AS (
+	SELECT S.citta, A.tipologiaAutobus, SUM(T.distanza)
+	FROM Stazione S, Autobus A, Tratta T
+	WHERE A.trattaCoperta = T.codice
+	AND T.stazionePartenza = S.codice
+	AND S.citta IN (SELECT * FROM cittaC)
+	GROUP BY S.citta, A.tipologiaAutobus
+);
 
+SELECT CTD1.citta, CTD1.tipologia 
+FROM CTD AS CTD1
+WHERE CTD1.distanza IN (SELECT MIN(CTD2.distanza)
+						FROM CTD AS CTD2
+						WHERE CTD2.citta = CTD1.citta)
+```
 # Prova esame 24 marzo 2022
 ## Esercizio 4
 Sia dato il seguente schema di database:
@@ -882,7 +945,24 @@ WHERE   I1.codiceFiscale = coppieSi.i1
 ```
 
 5) Per ogni condominio che abbia ricavato almeno 3000€ da tutti i propri affitti iniziati nell'anno 2022, restituire l’appartamento che è stato affittato per un importo mensile massimo considerando gli affitti iniziati nel 2022 (NOTA BENE: Il ricavo di un affitto è dato da `durataMesi × importoMensile`)
-%% da fare %%
+``` sql
+CREATE VIEW condominioOk(nome) AS (
+	SELECT A.appCondominio
+	FROM Affitto A
+	WHERE YEAR(A.dataInizio) = 2022
+	GROUP BY A.appCondominio
+	HAVING SUM(A.durataMesi * A.importoMensile) >= 3000
+);
+
+SELECT Aff.appCondominio, Aff.appInterno
+FROM Affitto Aff
+WHERE Aff.appCondominio IN (SELECT * FROM condominioOK)
+AND YEAR(Aff.dataInizio) = 2022
+AND Aff.importoMensile IN ( SELECT MAX(Aff1.importoMensile)
+							FROM Affitto Aff1
+							WHERE YEAR(Aff1.dataInizio) = 2022
+							AND Aff.appCondominio = Aff1.appCondominio)
+```
 
 
 # Prova esame 30 giugno 2022
@@ -1012,6 +1092,54 @@ SELECT s2 AS s1, s1 AS s2
 FROM coppieNo
 ```
 
-5) Per ogni città, indicare lo scrittore che ha scritto più articoli della stessa categoria nell'anno 2020, considerando gli scrittori di età minore di 60 anni che sono accreditati per almeno 5 categorie differenti.
-%% da fare %%
+versione Nardiello, direttamente sql
+coppie di scrittori `<s1,s2>` per cui
+- non deve esistere una categoria per cui `s1` ha scritto articoli e `s2` non ha scritto articoli
+- non deve esistere una categoria per cui `s2` ha scritto articoli e `s1` non ha scritto articoli
+``` sql
+SELECT S1.CF, S2.CF
+FROM Scrittore S1, Scrittore S2
+WHERE NOT EXISTS(SELECT *
+				FROM Categoria C1, Articolo AS1
+				WHERE C1.id = AS1.categoria
+				AND AS1.scrittore = S1.CF
+				AND C1.id NOT IN (  SELECT AS2.Categoria
+									FROM Articolo AS2
+									WHERE AS2.scrittore = S2.CF))
+AND NOT EXISTS (SELECT *
+				FROM Categoria C2, Articolo AS2
+				WHERE C2.id = AS2.categoria
+				AND AS2.scrittore = S2.CF
+				AND C2.id NOT IN (  SELECT AS1.categoria
+									FROM Articolo AS1
+									WHERE AS1.scrittore = S1.CF));
+```
 
+5) Per ogni città, indicare lo scrittore che ha scritto più articoli della stessa categoria nell'anno 2020, considerando gli scrittori di età minore di 60 anni che sono accreditati per almeno 5 categorie differenti.
+
+``` sql
+CREATE VIEW scrittoreOk(scrittore) AS (
+	SELECT S.CF AS scrittore
+	FROM Scrittore S, Accreditato A
+	WHERE S.eta < 60
+	AND A.scrittore = S.CF
+	GROUP BY S.CF
+	HAVING COUNT(DISTINCT A.categoria) >= 5
+);
+
+CREATE VIEW numA (scrittore, categoria, n) AS (
+	SELECT A.scrittore scrittore, A.categoria categoria, COUNT(*) AS n
+	FROM Articolo A
+	WHERE A.scrittore IN (SELECT * FROM scrittoreOk)
+	AND YEAR(A.data) = 2020
+	GROUP BY A.scrittore, A.categoria
+);
+
+SELECT S1.citta, S1.CF
+FROM Scrittore S1, numA NA
+WHERE S1.CF = NA.scrittore
+AND NA.n IN(SELECT MAX(NA2.n)
+			FROM numA NA2, Scrittore S2
+			WHERE NA2.scrittore = S2.CF
+			AND S2.citta = S1.citta)
+```

@@ -1308,6 +1308,9 @@ Aumentare il flusso da $s$ a $t$ distribuendo flusso sugli archi che stanno su u
 >Una distribuzione ammissibile di flusso $f$ **non è ottima** se e solo se è possibile inviare altro flusso da $s$ a $t$.
 >
 >In particolare, è possibile determinare una nuova soluzione ammissibile con miglior valore della funzione obiettivo modificando il flusso **solo sugli archi di un opportuno cammino** da $s$ a $t$.
+>
+>Abbiamo definito una condizione necessaria di ottimalità.
+
 
 >[!multi-column]
 >
@@ -1322,7 +1325,311 @@ Aumentare il flusso da $s$ a $t$ distribuendo flusso sugli archi che stanno su u
 >![[Problemi di flusso-cammini-rete.svg|center|400]]
 >Partiamo da un **flusso ammissibile** con $v = 6$ (etichette $f_{ij}, u_{ij}$):
 >![[Problemi di flusso-cammini-v6.svg|center|400]]
+>L'idea alla base è quella di incrementare di una unità un arco per volta. Se riesco ad aumentarla vuol dire che il flusso non è ottimo.
 >Incremento del flusso $v = 6$ uscente da $s$ lungo il cammino $s \to 2 \to 1 \to 4 \to t$ (in rosso): gli archi $(s,2)$ e $(1,4)$ si saturano e si ottiene $v = 7$:
 >![[Problemi di flusso-cammini-v7.svg|center|400]]
+>Ogni incremento viene fatto se l'arco non è saturo.
 >Incremento del flusso $v = 7$ uscente da $s$: il cammino è $s \to 1 \to 2 \to 3 \to 4 \to t$, dove l'arco $(2,1)$ è percorso **all'indietro** e il suo flusso **diminuisce** ($2 \to 1$). Si ottiene $v = 8$:
 >![[Problemi di flusso-cammini-v8.svg|center|400]]
+>Dato che l'arco 1-4 è saturo e devo soddisfare la continuità in 1, potrei scaricare il flusso di un arco che scorre in senso contrario: posso aumentare il flusso nell'arco s-1 a patto di scaricare una unità nell'arco 2-1. Le 6 unità che entrano in 2 possono essere riorientate verso 3 piuttosto che 1.
+>Posso fare questa riduzione solo finché non ho un arco completamente scarico (con flusso pari a 0).
+>La non ottimalità della soluzione corrente si verifica tramite questo processo che ci permette inoltre di costruire una nuova soluzione ammissibile che è migliore della precedente.
+
+Notiamo come nel cammino da s a t sicuramente ci sono almeno due archi nello stesso verso del cammino: l'arco uscente da $s$ e l'arco entrante in $t$.
+
+Consideriamo il cammino semplice $P = [s, i, k, t]$ e il flusso ammissibile $f$. Il cammino può essere **orientato** (tutti gli archi concordi con il verso $s \to t$) oppure una **catena** (alcuni archi discordi):
+![[Problemi di flusso-cammino-catena.svg|center|420]]
+Il cammino orientato è un caso particolare della catena semplice.
+- Nel cammino orientato per continuità se ho un aumento di flusso pari a $\delta$ nel primo arco lo avrò di conseguenza in tutti i successivi.
+- Nella catena semplice invece aumentando di $\delta$ il flusso $f_{si}$ per continuità il flusso $f_{ki}$ diminuirà di una quantità $\delta$. A sua volta per continuità aumenterà di $\delta$ il flusso $f_{kt}$.
+### Cammino orientato
+Se si incrementa il flusso sull'arco $(s,i)$ ponendo $f'_{si} = f_{si} + \delta$, $\delta > 0$, anche il flusso sull'arco $(i,k)$ deve crescere della stessa quantità, per rispettare l'[[#^conservazioneflusso|equazione di continuità]] nel nodo $i$:
+$$
+\sum_{j : (i,j) \in E} f'_{ij} - \sum_{j : (j,i) \in E} f'_{ji} = \left( \sum_{j : (i,j) \in E} f_{ij} + \delta \right) - \left( \sum_{j : (j,i) \in E} f_{ji} + \delta \right) = 0
+$$
+Lo stesso vale sul nodo $k$, e di conseguenza il valore di flusso che entra in $t$ aumenterà di $\delta$:
+$$
+v' = v + \delta
+$$
+Il massimo valore dell'incremento $\delta$ si determina con i vincoli di capacità sugli archi del cammino:
+$$
+\begin{cases}
+f_{si} + \delta \leq u_{si} \\
+f_{ik} + \delta \leq u_{ik} \\
+f_{kt} + \delta \leq u_{kt}
+\end{cases}
+\implies
+\begin{cases}
+\delta \leq u_{si} - f_{si} \\
+\delta \leq u_{ik} - f_{ik} \\
+\delta \leq u_{kt} - f_{kt}
+\end{cases}
+\implies
+\delta \leq \hat{\delta} = \min \{ u_{ij} - f_{ij} \mid (i,j) \in P \}
+$$
+I nuovi flussi aumentano tutti di $\delta$, ma la nuova distribuzione deve soddisfare la capacità.
+Ricaviamo quindi $\delta$ dalle disuguaglianze e sarà pari al flusso residuo inviabile lungo un arco.
+Il minimo di questi scarti sarà proprio la quantità $\delta$ di flusso che possono inviare lungo il cammino.
+
+Se $\hat{\delta} = 0$ c'è almeno un arco **saturo**, quindi il cammino non è utile per incrementare il flusso sulla rete.
+
+### Catena
+Consideriamo la catena $P = [s, i, k, t]$: il suo orientamento è sempre da $s$ a $t$, ma alcuni archi possono essere discordi rispetto a tale orientamento. Partizioniamo gli archi in due insiemi, $P^+$ (archi **concordi** con $s \to t$) e $P^-$ (archi **discordi**):
+$$
+P = P^+ \cup P^- \qquad (s,i), (k,t) \in P^+, \quad (k,i) \in P^-
+$$
+Se $f'_{si} = f_{si} + \delta$, essendo $(s,i)$ e $(k,i)$ entrambi **entranti** in $i$ (nessun arco uscente subisce variazioni), dovrà essere $f'_{ki} = f_{ki} - \delta$:
+$$
+\sum_{j : (i,j) \in E} f'_{ij} - \sum_{j : (j,i) \in E} f'_{ji} = \sum_{j : (i,j) \in E} f_{ij} - \left( \sum_{j : (j,i) \in E} f_{ji} + \delta - \delta \right) = 0
+$$
+Analogamente per il nodo $k$, per il quale gli archi di interesse $(k,i)$ e $(k,t)$ sono entrambi **uscenti**:
+$$
+f'_{ki} = f_{ki} - \delta \implies f'_{kt} = f_{kt} + \delta
+$$
+e quindi $v' = v + \delta$.
+
+Il massimo valore consentito per $\delta$ si ottiene imponendo il rispetto delle limitazioni inferiori e superiori sul flusso degli archi di $P$:
+$$
+\hat{\delta} = \min \{ \delta^+, \delta^- \}
+$$
+dove
+$$
+\delta^+ = \min \{ u_{ij} - f_{ij} \mid (i,j) \in P^+ \} \qquad \delta^- = \min \{ f_{ij} \mid (i,j) \in P^- \}
+$$
+%%
+Quando vado ad aumentare guardo la capacità
+Quando riduco vedo lo 0
+Per identificare $\hat{\delta}$ quindi distinguiamo il calcolo in $\delta^+$ e $\delta^-$
+Una volta calcolati identifico $\hat{\delta}$ come il minimo tra queste due quantità, in quanto la quantità di flusso da sottrarre/sommare deve essere comune a entrambi gli insiemi di archi
+%%
+
+Se $\hat{\delta} = 0$ la catena non è utile per incrementare il flusso: succede se almeno un arco di $P^+$ è **saturo** oppure almeno un arco di $P^-$ ha flusso nullo, cioè è **scarico**.
+
+### Definizione di cammino aumentante
+>[!important] Cammino aumentante
+>Dato il grafo $G = \langle V, E \rangle$ ed una distribuzione di flusso ammissibile $f$ di valore $v$ su $G$, si definisce **cammino aumentante** per $f$ su $G$ una catena $P$ da $s$ a $t$ tale che, posto
+>$$
+>P = P^+ \cup P^-
+>$$
+>dove $P^+$ e $P^-$ sono i sottoinsiemi degli archi di $P$ concordi e discordi rispetto all'orientamento $s \to t$, si abbia:
+>$$
+>\begin{cases}
+>f_{ij} < u_{ij} & \forall (i,j) \in P^+ \\
+>f_{ij} > 0 & \forall (i,j) \in P^-
+>\end{cases}
+>$$
+>Gli archi che sono in $P^+$ non sono saturi
+>Gli archi che sono in $P^-$ non sono scarichi
+
+È una definizione legata alla rete, non è una proprietà del grafo.
+
+Abbiamo così dimostrato la seguente:
+
+>[!info] Proposizione
+>Sia $G = \langle V, E \rangle$ una rete di flusso con sorgente $s$, terminale $t$ e capacità $u_{ij}$ sugli archi; sia $f$ una distribuzione ammissibile di flusso su $G$ di valore $v$. Se esiste $P$ cammino aumentante per $f$, allora la distribuzione di flusso
+>$$
+>f'_{ij} = \begin{cases}
+>f_{ij} + \hat{\delta} & (i,j) \in P^+ \\
+>f_{ij} - \hat{\delta} & (i,j) \in P^- \\
+>f_{ij} & (i,j) \notin P
+>\end{cases}
+>$$
+>è ammissibile, con valore di flusso $v' = v + \hat{\delta} > v$.
+
+Da cui segue
+
+>[!info] Corollario (condizione necessaria di ottimalità)
+>Se esiste un cammino aumentante per $f$ su $G$, allora $f$ **non** è soluzione ottima per il problema del massimo flusso su $G$.
+
+## Algoritmo di Ford-Fulkerson
+>[!important] Schema
+>1. Calcola una distribuzione di flusso ammissibile iniziale $f$ e sia $v$ il valore di flusso corrispondente (per esempio $f = 0$, $v = 0$).
+>2. Cerca un cammino aumentante per $f$ su $G$.
+>3. Se esiste un cammino aumentante per $f$ su $G$, calcola $\hat{\delta}$, $f'$, $v' = v + \hat{\delta}$ e itera (vai a 2).
+>4. Altrimenti STOP: $f^* := f$, $v^* := v$.
+
+>[!question] Osservazione
+>1. La definizione di cammino aumentante ha senso solo se riferita ad un dato grafo $G$ e ad una assegnata distribuzione ammissibile di flusso $f$ su $G$.
+>2. Per come è definito $\hat{\delta}$, dopo l'aggiornamento del flusso sugli archi di un cammino aumentante $P$ almeno uno degli archi di $P^+$ risulterà **saturo** o uno degli archi di $P^-$ risulterà **scarico**: perciò $P$ non potrà essere un cammino aumentante per $f'$.
+>3. Il punto 4 dell'algoritmo definisce una condizione sufficiente di ottimalità, che verrà giustificato in seguito
+
+%%
+Nel momento in cui incremento di delta cappuccio il cammino non sarà più aumentante, ho almeno scaricato un arco o saturato un altro, quindi non posso più agire sullo stesso commino.
+%%
+
+### Ricerca del cammino aumentante
+La visita del grafo avviene in due fasi:
+- **fase in avanti**: tecnica di **propagazione di etichette**;
+- **fase all'indietro**: **ricostruzione del cammino** mediante lettura delle etichette.
+
+%%
+Concentrandosi all'incremento del flusso un arco per volta potrebbe succedere che arriviamo ad un nodo che avrebbe un arco entrante scarico, ma tutte le sue uscite sono sature. In quel caso non posso aumentare ulteriormente il flusso, ma è tutto bloccato.
+L'idea è quella di non puntare su una sola uscita della sorgente, ma lavorare parallelamente su tutti gli archi
+su ogni nodo mantengo le informazioni riguardanti quanto flusso sto riuscendo a propagare
+mantengo nelle etichette il massimo flusso che sono riuscito a propagare fino al nodo i
+%%
+
+>[!important] Etichette
+>L'etichetta del nodo $i$ ha due campi: $[\text{pred}(i), \text{incr}(i)]$
+>- $\text{pred}(i) = \pm k$, con $k \in V$, indica il nodo che **precede** $i$ nel cammino parziale da $s$ ad $i$, con segno $+$ o $-$ a seconda che l'arco tra $k$ ed $i$ sia concorde o discorde rispetto all'orientamento del cammino;
+>- $\text{incr}(i)$ contiene il **massimo incremento** ammissibile di flusso sugli archi del cammino parziale da $s$ ad $i$.
+
+#### Propagazione delle etichette
+Alla generica iterazione indichiamo con $W^* \subset V$ l'insieme dei nodi già etichettati, e poniamo $W := W^*$.
+%%
+W e W* coincidono
+W contiene tutti i nodi etichettati
+come faccio a propagare flusso da un nodo etichettato
+Se sono ad un nodo i etichettato so come ci sono arrivato e quanto flusso sono riuscito a propagare, voglio quindi propagare più flusso possibile verso un nodo non etichettato
+%%
+Estraiamo $i \in W$, ponendo $W := W \setminus \{i\}$, e tentiamo di propagare l'etichetta ai nodi **adiacenti e non ancora etichettati**:
+$$
+\begin{aligned}
+(i,j) \in E : j \notin W^*, \ f_{ij} < u_{ij} &\implies \text{pred}(j) := +i, \quad \text{incr}(j) := \min \{ \text{incr}(i), \ u_{ij} - f_{ij} \} \\
+(j,i) \in E : j \notin W^*, \ f_{ji} > 0 &\implies \text{pred}(j) := -i, \quad \text{incr}(j) := \min \{ \text{incr}(i), \ f_{ji} \}
+\end{aligned}
+$$
+%%
+provo a propagare flusso agli adiacenti che non appartengono a W*
+In particolare mi interessano gli archi che mi possono dare un risultato di incremento del flusso
+- In avanti sono gli archi che non sono saturi
+  Se io riesco a raggiungere j da un nodo i e il suo arco non è scarico riesco a toccare j e quindi il predecessore di j è i, ci sto arrivando da i e l'incremento di j sarà il minimo tra tutto il flusso che riesco a propagare da i, ciò che ho propagato da i e il residuo di ciò che posso propagare verso j, dipende dalla capacità dell'arco i-j
+- Indietro sono gli archi che non sono scarichi
+  il predecessore sarà -i (percorso al contrario) e riesco a propagare il flusso che ho portato fino ad i, ma questo flusso è destinato a ridurre il flusso sull'arco j-i, quindi sarà il minimo tra il flusso presente già sull'arco e ciò che ho portato fino ad i
+%%
+Se $(i,j)$ è saturo o se $(j,i)$ è scarico, $j$ non può essere etichettato da $i$.
+Tutti i nodi etichettati da $i$ sono inseriti in $W^*$.
+La propagazione continua fino a che $t \in W^*$ oppure $W = \emptyset$.
+%%
+Se la propagazione di etichette è arrivata al nodo finale vuol dire che il cammino aumentante esiste e ha migliorato il flusso della rete.
+Se $W = \emptyset$ ho considerato tutti i possibili nodi e non sono riuscito ad etichettare il nodo terminale, avendo chiamato in causa tutti i nodi in W, questa impossibilità vuol dire che non esiste un cammino aumentante e l'algoritmo termina
+%%
+#### Ricostruzione del cammino
+- Se $t$ viene raggiunto, si è individuato un cammino aumentante da $s$ a $t$ e $\hat{\delta} = \text{incr}(t)$.
+- Procedendo **a ritroso** si ricostruisce il cammino $P$ e si aggiorna la distribuzione di flusso sui suoi archi.
+- L'ultimo arco è certamente $(\text{pred}(t), t) \in P^+$, su cui il flusso aumenta di $\hat{\delta}$.
+- Se $\text{pred}(\text{pred}(t)) = +k$, il penultimo arco è $(k, \text{pred}(t)) \in P^+$; altrimenti è $(\text{pred}(t), k) \in P^-$, e il flusso viene aggiornato di conseguenza ($+\hat{\delta}$ oppure $-\hat{\delta}$).
+- Raggiunta la sorgente $s$, si azzerano le etichette ponendo $W^* := \emptyset$ e si reitera.
+- Se invece la propagazione si conclude **senza aver etichettato $t$** ($W = \emptyset$), non esiste alcun cammino aumentante per il flusso corrente $f$ su $G$, e l'algoritmo si arresta restituendo $f^* := f$, $v^* := v$.
+
+>[!multi-column]
+>
+>>[!info] Condizione necessaria di ottimalità (già dimostrata)
+>>Se esiste un cammino aumentante per $f$ su $G$, allora $f$ non è soluzione ottima per il problema del massimo flusso su $G$.
+>
+>>[!info] Condizione sufficiente di ottimalità (da dimostrare)
+>>Se non esiste un cammino aumentante per $f$ su $G$, allora $f$ è soluzione ottima per il problema del massimo flusso su $G$.
+
+#### Pseudocodice
+Algoritmo di Ford e Fulkerson con flusso iniziale $f$ di valore $v$:
+
+$$
+\begin{array}{rl}
+1: & \Delta v = 0, \ W^* = \emptyset, \ \text{esisteCamminoAumentante} = \text{False}, \ \hat{\delta} := 0 \\
+2: & \textbf{repeat} \\
+3: & \quad \textbf{for all } j \in V \textbf{ do} \\
+4: & \quad\quad \text{pred}(j) := 0, \ \text{incr}(j) := +\infty \\
+5: & \quad \textbf{end for} \\
+6: & \quad W := \{s\}, \ W^* := \{s\} \\
+7: & \quad \textbf{while } W \neq \emptyset \textbf{ and } t \notin W \textbf{ do} \\
+8: & \quad\quad \text{estrai il nodo } i \text{ da } W, \ W := W \setminus \{i\} \\
+9: & \quad\quad \textbf{for all } j \notin W^* \textbf{ do} \\
+10: & \quad\quad\quad \textbf{if } (i,j) \in E \textbf{ and } f_{ij} < u_{ij} \textbf{ then} \\
+11: & \quad\quad\quad\quad \text{pred}(j) := +i, \ \text{incr}(j) := \min\{\text{incr}(i), u_{ij} - f_{ij}\}, \ W := W \cup \{j\} \\
+12: & \quad\quad\quad\quad W^* := W^* \cup \{j\} \\
+13: & \quad\quad\quad\quad \textbf{if } j = t \textbf{ then} \\
+14: & \quad\quad\quad\quad\quad \text{esisteCamminoAumentante} := \text{True} \\
+15: & \quad\quad\quad\quad \textbf{end if} \\
+16: & \quad\quad\quad \textbf{end if} \\
+17: & \quad\quad\quad \textbf{if } (j,i) \in E \textbf{ and } f_{ji} > 0 \textbf{ then} \\
+18: & \quad\quad\quad\quad \text{pred}(j) := -i, \ \text{incr}(j) := \min\{\text{incr}(i), f_{ji}\}, \ W := W \cup \{j\} \\
+19: & \quad\quad\quad\quad W^* := W^* \cup \{j\} \\
+20: & \quad\quad\quad \textbf{end if} \\
+21: & \quad\quad \textbf{end for} \\
+22: & \quad \textbf{end while} \\
+23: & \quad \textbf{if } \text{esisteCamminoAumentante} \textbf{ then} \\
+24: & \quad\quad \hat{\delta} := \text{incr}(t), \ \Delta v := \Delta v + \hat{\delta}, \ j := \text{pred}(t), \ f_{jt} := f_{jt} + \hat{\delta} \\
+25: & \quad\quad \textbf{while } j \neq s \textbf{ do} \\
+26: & \quad\quad\quad \textbf{if } \text{pred}(j) > 0 \textbf{ then} \\
+27: & \quad\quad\quad\quad f_{\text{pred}(j),j} := f_{\text{pred}(j),j} + \hat{\delta} \\
+28: & \quad\quad\quad \textbf{else} \\
+29: & \quad\quad\quad\quad f_{j,\text{pred}(j)} := f_{j,\text{pred}(j)} - \hat{\delta} \\
+30: & \quad\quad\quad \textbf{end if} \\
+31: & \quad\quad\quad j := \text{pred}(j) \\
+32: & \quad\quad \textbf{end while} \\
+33: & \quad \textbf{else} \\
+34: & \quad\quad v_{\max} := v + \Delta v, \ f^* := f \\
+35: & \quad \textbf{end if} \\
+36: & \textbf{until } \text{esisteCamminoAumentante} \\
+37: & \textbf{return } f^*, \ v_{\max}, \ W^*
+\end{array}
+$$
+
+%%
+W* induce una partizione tra i nodi etichettati e quelli non etichettati
+Da W viene fatta la pop dei nodi aggiunti per esplorare ogni singolo nodo
+Da W* non vengono rimossi nodi
+Le condizioni 10 e 17 verificano se l'arco è entrante o uscente
+7-22 cerchiamo il cammino aumentante
+23-35 modifico il flusso della rete conseguentemente a quanto trovato nei passi precedenti ricostruendo il cammino a retroso
+%%
+
+>[!attention] AGGIUNTA: dubbio sullo pseudocodice
+>Così come è scritto nelle slide, la riga 36 (`until esisteCamminoAumentante`) fa terminare il ciclo proprio quando un cammino **è stato trovato**, e la variabile non viene mai rimessa a False all'inizio di ogni iterazione. Il senso è: ripeti finché esiste un cammino aumentante (cioè `until not esisteCamminoAumentante`), azzerando la variabile a ogni ricerca.
+
+### Esempio
+Rete con flusso ammissibile iniziale $v = 6$ (la stessa di [[#Cammini aumentanti|sopra]]). In ogni figura: etichette $[\text{pred}, \text{incr}]$ accanto ai nodi, flussi **prima** dell'aggiornamento, cammino aumentante trovato in rosso.
+
+>[!check] Iterazione 1: $v = 6$
+>| $W$ | nodo estratto $i$ | nodi etichettati |
+>|---|---|---|
+>| $\{s\}$ | $s$ | $2: [+s, 1]$, $1: [+s, 4]$ |
+>| $\{1, 2\}$ | $1$ | $4: [+1, 1]$ |
+>| $\{2, 4\}$ | $2$ | $3: [+2, 1]$ |
+>| $\{3, 4\}$ | $3$ | — ($4$ e $t$: $4$ già etichettato, $(3,t)$ saturo) |
+>| $\{4\}$ | $4$ | $t: [+4, 1]$ |
+>
+>![[Problemi di flusso-ff-it1.svg|center|450]]
+>Cammino aumentante $s \to 1 \to 4 \to t$, $\hat{\delta} = 1$: $f_{s1}: 1 \to 2$, $f_{14}: 2 \to 3$, $f_{4t}: 5 \to 6$, quindi $v := 7$.
+
+%%
+aggiungi tabella quaderno
+%%
+
+>[!check] Iterazione 2: $v = 7$
+>| $W$ | nodo estratto $i$ | nodi etichettati |
+>|---|---|---|
+>| $\{s\}$ | $s$ | $2: [+s, 1]$, $1: [+s, 3]$ |
+>| $\{1, 2\}$ | $1$ | — ($(1,4)$ saturo) |
+>| $\{2\}$ | $2$ | $3: [+2, 1]$ |
+>| $\{3\}$ | $3$ | $4: [+3, 1]$ |
+>| $\{4\}$ | $4$ | $t: [+4, 1]$ |
+>
+>![[Problemi di flusso-ff-it2.svg|center|450]]
+>Cammino aumentante $s \to 2 \to 3 \to 4 \to t$, $\hat{\delta} = 1$: $f_{s2}: 5 \to 6$, $f_{23}: 4 \to 5$, $f_{34}: 3 \to 4$, $f_{4t}: 6 \to 7$, quindi $v := 8$.
+>
+>>[!attention] AGGIUNTA
+>>Nella slide 30 l'etichetta di $1$ è riportata come $[+s, 4]$, ma $u_{s1} - f_{s1} = 5 - 2 = 3$, come nelle altre slide della stessa iterazione: è un refuso.
+
+>[!check] Iterazione 3: $v = 8$
+>Ora $(s,2)$ è saturo, quindi da $s$ si etichetta solo $1$; il nodo $2$ si raggiunge da $1$ percorrendo **all'indietro** l'arco $(2,1)$, che ha flusso $f_{21} = 1 > 0$.
+>
+>| $W$ | nodo estratto $i$ | nodi etichettati |
+>|---|---|---|
+>| $\{s\}$ | $s$ | $1: [+s, 3]$ |
+>| $\{1\}$ | $1$ | $2: [-1, 1]$ |
+>| $\{2\}$ | $2$ | $3: [+2, 1]$ |
+>| $\{3\}$ | $3$ | $4: [+3, 1]$ |
+>| $\{4\}$ | $4$ | $t: [+4, 1]$ |
+>
+>![[Problemi di flusso-ff-it3.svg|center|450]]
+>Cammino aumentante $s \to 1 \to 2 \to 3 \to 4 \to t$ con $(2,1) \in P^-$, $\hat{\delta} = 1$: $f_{s1}: 2 \to 3$, $f_{21}: 1 \to 0$, $f_{23}: 5 \to 6$, $f_{34}: 4 \to 5$, $f_{4t}: 7 \to 8$, quindi $v := 9$.
+
+>[!check] Iterazione 4: $v = 9$
+>| $W$ | nodo estratto $i$ | nodi etichettati |
+>|---|---|---|
+>| $\{s\}$ | $s$ | $1: [+s, 2]$ |
+>| $\{1\}$ | $1$ | — ($(1,4)$ saturo, $(2,1)$ scarico) |
+>
+>$W = \emptyset$ senza aver etichettato $t$: **STOP**, $v^* = 9$, $W^* = \{s, 1\}$.
+>![[Problemi di flusso-ff-it4.svg|center|450]]

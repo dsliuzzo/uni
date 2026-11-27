@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="230" viewBox="0 0 500 230">
+<style> text{font-family:"Helvetica Neue",Arial,sans-serif;fill:#b8b8b8;text-anchor:middle;dominant-baseline:central} .t{font-size:14px} .ti{font-size:14px;font-style:italic} .lab{font-size:13px} </style>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#b8b8b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrowr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#e07b6a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<text class="t" x="250" y="22">Cammino orientato da s a t</text>
+<line x1="56.0" y1="70.0" x2="164.0" y2="70.0" stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text class="ti" x="110.0" y="54">f<tspan baseline-shift="sub" font-size="10">si</tspan> + δ</text>
+<line x1="196.0" y1="70.0" x2="304.0" y2="70.0" stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text class="ti" x="250.0" y="54">f<tspan baseline-shift="sub" font-size="10">ik</tspan> + δ</text>
+<line x1="336.0" y1="70.0" x2="444.0" y2="70.0" stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text class="ti" x="390.0" y="54">f<tspan baseline-shift="sub" font-size="10">kt</tspan> + δ</text>
+<circle cx="40" cy="70" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="40" y="70">s</text>
+<circle cx="180" cy="70" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="180" y="70">i</text>
+<circle cx="320" cy="70" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="320" y="70">k</text>
+<circle cx="460" cy="70" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="460" y="70">t</text>
+<text class="t" x="250" y="132">Catena semplice da s a t</text>
+<line x1="56.0" y1="180.0" x2="164.0" y2="180.0" stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text class="ti" x="110.0" y="164">f<tspan baseline-shift="sub" font-size="10">si</tspan> + δ</text>
+<line x1="304.0" y1="180.0" x2="196.0" y2="180.0" stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text class="ti" x="250.0" y="164">f<tspan baseline-shift="sub" font-size="10">ki</tspan> − δ</text>
+<line x1="336.0" y1="180.0" x2="444.0" y2="180.0" stroke="#b8b8b8" stroke-width="2" fill="none" stroke-linecap="round" marker-end="url(#arrow)"/>
+<text class="ti" x="390.0" y="164">f<tspan baseline-shift="sub" font-size="10">kt</tspan> + δ</text>
+<circle cx="40" cy="180" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="40" y="180">s</text>
+<circle cx="180" cy="180" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="180" y="180">i</text>
+<circle cx="320" cy="180" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="320" y="180">k</text>
+<circle cx="460" cy="180" r="16" fill="none" stroke="#e07b6a" stroke-width="2.5"/>
+<text class="ti" style="fill:#e07b6a" x="460" y="180">t</text>
+</svg>
